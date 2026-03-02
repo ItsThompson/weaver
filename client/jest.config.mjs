@@ -12,6 +12,7 @@ export default {
     '^@cloudscape-design/components/expandable-section$': '<rootDir>/__tests__/mocks/cloudscape-expandable-section.tsx',
     '^@cloudscape-design/components/header$': '<rootDir>/__tests__/mocks/cloudscape-header.tsx',
     '^@cloudscape-design/components/button$': '<rootDir>/__tests__/mocks/cloudscape-button.tsx',
+    '^@cloudscape-design/components/text-filter$': '<rootDir>/__tests__/mocks/cloudscape-text-filter.tsx',
     '^@cloudscape-design/components/(.+)$': '<rootDir>/__tests__/mocks/cloudscape-passthrough.tsx',
   },
   transform: {
