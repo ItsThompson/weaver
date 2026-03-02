@@ -92,7 +92,7 @@ function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
     <Table
       items={filtered}
       columnDefinitions={COLUMN_DEFINITIONS}
-      variant="embedded"
+      variant="borderless"
       empty={<Box textAlign="center" color="inherit">No sessions</Box>}
       filter={<TextFilter filteringText={filterText} onChange={({ detail }) => setFilterText(detail.filteringText)} />}
       onRowClick={({ detail }) => navigate(`/sessions/${detail.item.id}`)}
