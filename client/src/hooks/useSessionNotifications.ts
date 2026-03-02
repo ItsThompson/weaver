@@ -1,25 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
-import type { ActivityStatus } from '@shared/types';
-
-const ACTIVITY_LABELS: Record<string, string> = {
-  starting: 'Starting',
-  idle: 'Idle',
-  processing: 'Processing',
-  running_tool: 'Running tool',
-  pending_approval: 'Pending approval',
-};
-
-const NOTIFY_STATES = new Set<ActivityStatus>(['starting', 'idle', 'pending_approval']);
-
-function deriveActivity(eventName: string): ActivityStatus {
-  switch (eventName) {
-    case 'agentSpawn': return 'starting';
-    case 'stop': return 'idle';
-    case 'preToolUse': return 'running_tool';
-    default: return 'processing';
-  }
-}
+import { resolveNotification } from './notificationUtils';
 
 export function useSessionNotifications(): void {
   const { addNotification } = useNotifications();
@@ -35,19 +16,10 @@ export function useSessionNotifications(): void {
           eventName?: string;
           sessionName?: string;
         };
-
         if (!eventName) return;
 
-        const activity = deriveActivity(eventName);
-        const prev = lastActivity.current.get(sessionId);
-
-        // Only notify on significant state changes
-        if (activity === prev || !NOTIFY_STATES.has(activity)) return;
-        lastActivity.current.set(sessionId, activity);
-
-        const name = sessionName || sessionId.slice(0, 8);
-        const label = ACTIVITY_LABELS[activity] ?? activity;
-        addNotification(`${name} → ${label}`);
+        const message = resolveNotification(sessionId, eventName, sessionName, lastActivity.current);
+        if (message) addNotification(message);
       } catch { /* ignore */ }
     });
 
