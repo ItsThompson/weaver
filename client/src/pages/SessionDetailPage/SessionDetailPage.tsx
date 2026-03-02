@@ -4,6 +4,7 @@ import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
 import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
+import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
@@ -11,6 +12,7 @@ import type { SessionWithStatus, TurnGroup } from '@shared/types';
 import { getSession, updateSessionName } from '../../utils/api';
 import { useSessionEvents } from '../../hooks/useSessionEvents';
 import { RenameSession } from '../../components/RenameSession';
+import { ActivityIndicator } from '../../components/ActivityIndicator';
 import { TurnContainer } from './components/TurnContainer';
 
 export function SessionDetailPage() {
@@ -71,11 +73,17 @@ export function SessionDetailPage() {
       />
       {loading && <Spinner size="large" />}
       {error && <Box color="text-status-error">{error}</Box>}
-      {!loading && !error && (
+      {!loading && !error && session && (
         <SpaceBetween size="m">
           <Header
             variant="h1"
-            description={`${session?.cwd} · PID ${session?.pid} · ${session?.status}`}
+            description={
+              <SpaceBetween direction="horizontal" size="xs">
+                <span>{session.cwd} · PID {session.pid}</span>
+                <Badge color={session.status === 'open' ? 'green' : 'grey'}>{session.status}</Badge>
+                {session.status === 'open' && <ActivityIndicator activity={session.activity} />}
+              </SpaceBetween>
+            }
             actions={
               <SpaceBetween direction="horizontal" size="xs">
                 <Button iconName="refresh" onClick={fetchSession} loading={loading} />
@@ -89,7 +97,7 @@ export function SessionDetailPage() {
                 >
                   Display
                 </ButtonDropdown>
-                <RenameSession currentName={session?.customName ?? null} onRename={handleRename} />
+                <RenameSession currentName={session.customName} onRename={handleRename} />
               </SpaceBetween>
             }
           >
@@ -98,7 +106,7 @@ export function SessionDetailPage() {
           <Box fontSize="body-s" color="text-body-secondary">
             Assistant responses are not available in this view. Use <a href="/cherrypick">Cherrypick</a> to export and analyze full conversations.
           </Box>
-          {turns.map((turn) => (
+          {[...turns].reverse().map((turn) => (
             <TurnContainer
               key={turn.id}
               turn={turn}

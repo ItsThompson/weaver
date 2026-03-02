@@ -28,8 +28,11 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       const events = await parseLogFile(id);
       if (events.length === 0 && !session) return reply.status(404).send({ error: 'Log file not found' } as any);
 
+      const isOpen = isProcessRunning(session.pid);
+      const lastEvent = events.length > 0 ? events[events.length - 1].event.hook_event_name : 'agentSpawn';
+
       return {
-        session: { ...session, status: isProcessRunning(session.pid) ? 'open' : 'closed' } as SessionWithStatus,
+        session: { ...session, status: isOpen ? 'open' : 'closed', activity: isOpen ? deriveActivity(lastEvent) : undefined } as SessionWithStatus,
         turns: groupEventsByTurn(events),
       };
     },
