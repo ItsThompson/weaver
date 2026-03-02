@@ -26,8 +26,12 @@ npm install --prefix client
 ln -s ~/Documents/weaver/hooks/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
 chmod +x hooks/weaver-log.sh
 
-# Add wv alias for quick session viewing (add to ~/.zshrc or ~/.bashrc)
-alias wv='bash ~/Documents/weaver/scripts/wv.sh'
+# Install CLI dependencies
+npm install --prefix cli
+
+# Add aliases (add to ~/.zshrc or ~/.bashrc)
+alias weaver='npx --prefix ~/Documents/weaver/cli tsx ~/Documents/weaver/cli/src/index.ts'
+alias wv='weaver view'
 ```
 
 ## Development

@@ -1,6 +1,10 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+const PAGE_ROUTES: Record<string, string> = {
+  sessions: '/',
+};
+
 export function useNavigateOnView(): void {
   const navigate = useNavigate();
 
@@ -9,8 +13,12 @@ export function useNavigateOnView(): void {
 
     source.addEventListener('navigate', (event: MessageEvent) => {
       try {
-        const { sessionId } = JSON.parse(event.data) as { sessionId: string };
-        navigate(`/sessions/${sessionId}`);
+        const data = JSON.parse(event.data) as { sessionId?: string; page?: string };
+        if (data.sessionId) {
+          navigate(`/sessions/${data.sessionId}`);
+        } else if (data.page && PAGE_ROUTES[data.page]) {
+          navigate(PAGE_ROUTES[data.page]);
+        }
       } catch { /* ignore */ }
     });
 

@@ -26,6 +26,15 @@ export function registerEventRoutes(server: FastifyInstance): void {
     return { ok: true, sessionId: session.id };
   });
 
+  server.post<{ Body: { page: string } }>('/api/navigate', async (request, reply) => {
+    const { page } = request.body ?? {};
+    if (typeof page !== 'string') {
+      return reply.status(400).send({ error: 'page required' });
+    }
+    emit({ event: 'navigate', data: { page } });
+    return { ok: true };
+  });
+
   server.get('/api/events', async (_request, reply) => {
     sseReply(reply);
   });

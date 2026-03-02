@@ -1,0 +1,20 @@
+{
+  "name": "weaver-cli",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "weaver": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && tsc-alias",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
