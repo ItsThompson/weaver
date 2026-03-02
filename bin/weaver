@@ -34,11 +34,7 @@ get_caller_pid() {
   echo "$pid"
 }
 
-# For 'view' command, resolve PID and pass it as --pid flag
-if [ "${1:-}" = "view" ]; then
-  CALLER_PID=$(get_caller_pid)
-  shift
-  exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" view --pid "$CALLER_PID" "$@"
-else
-  exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" "$@"
-fi
+# Always resolve the caller PID and pass it as the first arg.
+# The TS CLI decides what to do with it.
+CALLER_PID=$(get_caller_pid)
+exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" "$CALLER_PID" "$@"

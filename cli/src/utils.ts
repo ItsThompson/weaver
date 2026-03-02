@@ -16,32 +16,3 @@ export function post(path: string, body: Record<string, unknown>): { ok: boolean
     return { ok: false, status: 0, data: null };
   }
 }
-
-export function getCallerPid(): number {
-  let pid = process.ppid;
-  const maxDepth = 10;
-
-  for (let depth = 0; depth < maxDepth; depth++) {
-    let pname: string;
-    try {
-      pname = execSync(`ps -p ${pid} -o comm=`, { encoding: 'utf-8' }).trim();
-    } catch {
-      break;
-    }
-
-    if (['sh', 'bash', 'zsh', 'dash', 'fish', '-bash', '-zsh', '-sh'].includes(pname)) {
-      let parent: string;
-      try {
-        parent = execSync(`ps -o ppid= -p ${pid}`, { encoding: 'utf-8' }).trim();
-      } catch {
-        break;
-      }
-      if (!parent || parent === '1') break;
-      pid = parseInt(parent, 10);
-    } else {
-      break;
-    }
-  }
-
-  return pid;
-}

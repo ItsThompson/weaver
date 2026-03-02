@@ -1,14 +1,6 @@
-import { post, getCallerPid } from '../utils.js';
+import { post } from '../utils.js';
 
-export function view(args: string[]): void {
-  const pidIdx = args.indexOf('--pid');
-  const pid = pidIdx !== -1 && args[pidIdx + 1] ? parseInt(args[pidIdx + 1], 10) : getCallerPid();
-
-  if (isNaN(pid)) {
-    console.error('Invalid PID');
-    process.exit(1);
-  }
-
+export function view(pid: number, _args: string[]): void {
   const { ok, status } = post('/api/view', { pid });
 
   if (status === 0) {

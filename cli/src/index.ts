@@ -2,13 +2,15 @@
 import { view } from './commands/view.js';
 import { sessions } from './commands/sessions.js';
 
-const COMMANDS: Record<string, (args: string[]) => void> = {
+// argv: [node, script, callerPid, command, ...args]
+const callerPid = parseInt(process.argv[2], 10);
+const command = process.argv[3];
+const args = process.argv.slice(4);
+
+const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   view,
   sessions,
 };
-
-const command = process.argv[2];
-const args = process.argv.slice(3);
 
 if (!command || command === '--help' || command === '-h') {
   console.log(`Usage: weaver <command>
@@ -25,4 +27,4 @@ if (!handler) {
   process.exit(1);
 }
 
-handler(args);
+handler(callerPid, args);
