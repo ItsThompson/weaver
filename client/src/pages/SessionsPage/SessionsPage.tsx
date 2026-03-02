@@ -1,31 +1,22 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '@cloudscape-design/components/header';
-import Tabs from '@cloudscape-design/components/tabs';
-import Button from '@cloudscape-design/components/button';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import Badge from '@cloudscape-design/components/badge';
+import Header from '@cloudscape-design/components/header';
 import Box from '@cloudscape-design/components/box';
-import { useSessions } from '../../context/SessionsContext';
-import { useSessionEvents } from '../../hooks/useSessionEvents';
-import { getOrphanCount } from '../../utils/api';
+import Button from '@cloudscape-design/components/button';
+import Badge from '@cloudscape-design/components/badge';
+import Tabs from '@cloudscape-design/components/tabs';
+import { useSessionsQuery, useOrphanCountQuery, revalidateSessions } from '../../hooks/queries';
 import { SessionTable } from './components/SessionTable';
 import { OPEN_COLUMNS, CLOSED_COLUMNS } from './constants';
 
 export function SessionsPage() {
-  const { state, fetchSessions } = useSessions();
+  const { data: sessions = [], error, isLoading } = useSessionsQuery();
+  const { data: orphanData } = useOrphanCountQuery();
   const navigate = useNavigate();
-  const [orphanCount, setOrphanCount] = useState(0);
 
-  useEffect(() => { fetchSessions(); }, [fetchSessions]);
-  useSessionEvents({ onUpdate: () => fetchSessions(true) });
-
-  useEffect(() => {
-    getOrphanCount().then(({ count }) => setOrphanCount(count)).catch(() => {});
-  }, []);
-
-  const open = state.sessions.filter((s) => s.status === 'open');
-  const closed = state.sessions.filter((s) => s.status === 'closed');
+  const orphanCount = orphanData?.count ?? 0;
+  const open = sessions.filter((s) => s.status === 'open');
+  const closed = sessions.filter((s) => s.status === 'closed');
 
   return (
     <SpaceBetween size="l">
@@ -41,13 +32,13 @@ export function SessionsPage() {
                 </SpaceBetween>
               </Button>
             )}
-            <Button iconName="refresh" onClick={() => fetchSessions()} loading={state.loading}>Refresh</Button>
+            <Button iconName="refresh" onClick={() => revalidateSessions()} loading={isLoading}>Refresh</Button>
           </SpaceBetween>
         }
       >
         Sessions
       </Header>
-      {state.error && <Box color="text-status-error">{state.error}</Box>}
+      {error && <Box color="text-status-error">{error.message}</Box>}
       <Tabs
         tabs={[
           { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} /> },

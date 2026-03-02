@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { MemoryRouter } from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
 
 jest.unstable_mockModule('../../utils/api', () => ({
@@ -10,6 +10,9 @@ jest.unstable_mockModule('../../utils/api', () => ({
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
+  getOrphanCount: jest.fn<() => Promise<{ count: number }>>().mockResolvedValue({ count: 0 }),
+  getOrphans: jest.fn(),
+  assignOrphans: jest.fn(),
 }));
 
 jest.unstable_mockModule('react-router-dom', () => ({
@@ -55,7 +58,11 @@ const mockTurns: TurnGroup[] = [
 ];
 
 function renderComponent() {
-  return render(<SessionDetailPage />);
+  return render(
+    <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
+      <SessionDetailPage />
+    </SWRConfig>
+  );
 }
 
 // Mock useParams to return our test session ID
@@ -70,7 +77,6 @@ describe('SessionDetailPage', () => {
   it('shows loading state initially', () => {
     mockGetSession.mockImplementation(() => new Promise(() => {}));
     renderComponent();
-    // Component renders without crashing during loading
     expect(document.body).toBeInTheDocument();
   });
 
