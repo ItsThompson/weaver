@@ -74,6 +74,7 @@ export function SessionDetailPage() {
                   showTools={showTools}
                   onToggleTools={togglePageTools}
                   currentName={session.customName}
+                  sessionPid={session.pid}
                   onRename={handleRename}
                 />
               </div>
