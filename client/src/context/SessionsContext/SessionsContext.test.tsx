@@ -34,7 +34,7 @@ function TestConsumer() {
       {state.sessions.map((s) => (
         <span key={s.id} data-testid={`session-${s.id}`}>{s.customName ?? 'unnamed'}</span>
       ))}
-      <button data-testid="fetch" onClick={fetchSessions}>fetch</button>
+      <button data-testid="fetch" onClick={() => fetchSessions()}>fetch</button>
       <button data-testid="rename" onClick={() => renameSession('aaa', 'renamed')}>rename</button>
     </div>
   );

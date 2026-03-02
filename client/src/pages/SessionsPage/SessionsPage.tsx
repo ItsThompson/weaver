@@ -13,7 +13,7 @@ export function SessionsPage() {
   const { state, fetchSessions } = useSessions();
 
   useEffect(() => { fetchSessions(); }, [fetchSessions]);
-  useSessionEvents({ onUpdate: () => fetchSessions() });
+  useSessionEvents({ onUpdate: () => fetchSessions(true) });
 
   const open = state.sessions.filter((s) => s.status === 'open');
   const closed = state.sessions.filter((s) => s.status === 'closed');
@@ -22,7 +22,7 @@ export function SessionsPage() {
     <SpaceBetween size="l">
       <Header
         variant="h1"
-        actions={<Button iconName="refresh" onClick={fetchSessions} loading={state.loading}>Refresh</Button>}
+        actions={<Button iconName="refresh" onClick={() => fetchSessions()} loading={state.loading}>Refresh</Button>}
       >
         Sessions
       </Header>

@@ -25,19 +25,19 @@ export function SessionDetailPage() {
   const [showTools, setShowTools] = useState(true);
   const [expandedTurns, setExpandedTurns] = useState<Set<number>>(new Set());
 
-  const fetchSession = useCallback(() => {
+  const fetchSession = useCallback((silent = false) => {
     if (!id) return;
-    setLoading(true);
+    if (!silent) setLoading(true);
     getSession(id)
-      .then(({ session, turns }) => { setSession(session); setTurns(turns); })
+      .then(({ session, turns }) => { setSession(session); setTurns(turns); setError(null); })
       .catch((err) => setError(err instanceof Error ? err.message : String(err)))
-      .finally(() => setLoading(false));
+      .finally(() => { if (!silent) setLoading(false); });
   }, [id]);
 
   useEffect(() => { fetchSession(); }, [fetchSession]);
 
   useSessionEvents({
-    onUpdate: (sessionId) => { if (sessionId === id) fetchSession(); },
+    onUpdate: (sessionId) => { if (sessionId === id) fetchSession(true); },
   });
 
   const handleRename = async (name: string) => {
@@ -86,7 +86,7 @@ export function SessionDetailPage() {
             }
             actions={
               <SpaceBetween direction="horizontal" size="xs">
-                <Button iconName="refresh" onClick={fetchSession} loading={loading} />
+                <Button iconName="refresh" onClick={() => fetchSession()} loading={loading} />
                 <ButtonDropdown
                   items={[{
                     id: 'toggle-tools',

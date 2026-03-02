@@ -8,8 +8,8 @@ export const SessionsContext = createContext<SessionsContextValue | null>(null);
 export function SessionsProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(sessionsReducer, initialState);
 
-  const fetchSessions = useCallback(async () => {
-    dispatch({ type: 'FETCH_START' });
+  const fetchSessions = useCallback(async (silent = false) => {
+    if (!silent) dispatch({ type: 'FETCH_START' });
     try {
       const sessions = await getSessions();
       dispatch({ type: 'FETCH_SUCCESS', sessions });

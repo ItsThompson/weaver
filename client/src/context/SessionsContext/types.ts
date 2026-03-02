@@ -14,6 +14,6 @@ export type SessionsAction =
 
 export interface SessionsContextValue {
   state: SessionsState;
-  fetchSessions: () => Promise<void>;
+  fetchSessions: (silent?: boolean) => Promise<void>;
   renameSession: (id: string, customName: string) => Promise<void>;
 }
