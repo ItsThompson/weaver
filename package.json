@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently --names server,client --prefix-colors blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
     "build": "npm run build --prefix server && npm run build --prefix client",
-    "test": "npm test --prefix server"
+    "test": "npm test --prefix server && bash hooks/weaver-log.test.sh"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
