@@ -4,6 +4,7 @@ import { registerSessionRoutes } from './routes/sessions.js';
 import { registerEventRoutes } from './routes/events.js';
 import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
+import { startKeepAwake } from './services/keep-awake.js';
 import { log } from './utils/logger.js';
 
 const PORT = 8143;
@@ -24,6 +25,7 @@ async function start(): Promise<void> {
   await ensureDataDir();
   startStaleSessionCleanup();
   startPidPolling((sessionId) => broadcast(sessionId));
+  startKeepAwake();
   await server.listen({ port: PORT, host: '0.0.0.0' });
   log({ timestamp: new Date().toISOString(), event: 'server_started', port: PORT });
 }
