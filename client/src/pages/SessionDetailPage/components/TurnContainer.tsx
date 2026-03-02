@@ -47,9 +47,18 @@ export function TurnContainer({ turn, showTools, onToggleTools }: TurnContainerP
             <Box variant="p">{turn.userPrompt}</Box>
           </Box>
         )}
-        {hasTools && showTools && turn.toolCalls.map((tc, i) => (
-          <ToolCallCard key={`${tc.toolName}-${i}`} toolCall={tc} />
-        ))}
+        {hasTools && showTools && (
+          <>
+            {turn.toolCalls.map((tc, i) => (
+              <ToolCallCard key={`${tc.toolName}-${i}`} toolCall={tc} />
+            ))}
+            {onToggleTools && (
+              <Button variant="inline-link" onClick={onToggleTools}>
+                Hide tool calls
+              </Button>
+            )}
+          </>
+        )}
         {hasTools && !showTools && onToggleTools && (
           <Button variant="inline-link" onClick={onToggleTools}>
             Show {turn.toolCalls.length} tool call{turn.toolCalls.length > 1 ? 's' : ''}

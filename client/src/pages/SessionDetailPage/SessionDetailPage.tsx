@@ -102,8 +102,8 @@ export function SessionDetailPage() {
             <TurnContainer
               key={turn.id}
               turn={turn}
-              showTools={showTools || expandedTurns.has(turn.id)}
-              onToggleTools={!showTools ? () => toggleTurn(turn.id) : undefined}
+              showTools={expandedTurns.has(turn.id) ? !showTools : showTools}
+              onToggleTools={turn.toolCalls.length > 0 ? () => toggleTurn(turn.id) : undefined}
             />
           ))}
         </SpaceBetween>
