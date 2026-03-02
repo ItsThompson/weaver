@@ -10,6 +10,8 @@ const ACTIVITY_LABELS: Record<string, string> = {
   pending_approval: 'Pending approval',
 };
 
+const NOTIFY_STATES = new Set<ActivityStatus>(['starting', 'idle', 'pending_approval']);
+
 function deriveActivity(eventName: string): ActivityStatus {
   switch (eventName) {
     case 'agentSpawn': return 'starting';
@@ -39,8 +41,8 @@ export function useSessionNotifications(): void {
         const activity = deriveActivity(eventName);
         const prev = lastActivity.current.get(sessionId);
 
-        // Only notify on state change
-        if (activity === prev) return;
+        // Only notify on significant state changes
+        if (activity === prev || !NOTIFY_STATES.has(activity)) return;
         lastActivity.current.set(sessionId, activity);
 
         const name = sessionName || sessionId.slice(0, 8);
