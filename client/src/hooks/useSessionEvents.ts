@@ -13,7 +13,7 @@ export function useSessionEvents({ onUpdate, debounceMs = 1000 }: UseSessionEven
     const pending = new Map<string, ReturnType<typeof setTimeout>>();
     const source = new EventSource('/api/events');
 
-    source.onmessage = (event) => {
+    source.addEventListener('update', (event: MessageEvent) => {
       try {
         const { sessionId } = JSON.parse(event.data) as { sessionId: string };
         const existing = pending.get(sessionId);
@@ -23,7 +23,7 @@ export function useSessionEvents({ onUpdate, debounceMs = 1000 }: UseSessionEven
           callbackRef.current(sessionId);
         }, debounceMs));
       } catch { /* ignore malformed */ }
-    };
+    });
 
     return () => {
       source.close();

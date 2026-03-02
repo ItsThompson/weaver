@@ -5,6 +5,7 @@ import SideNavigation, { type SideNavigationProps } from '@cloudscape-design/com
 import { SessionsPage } from './pages/SessionsPage';
 import { SessionDetailPage } from './pages/SessionDetailPage';
 import { CherrypickPage } from './pages/CherrypickPage';
+import { useNavigateOnView } from './hooks/useNavigateOnView';
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: 'link', text: 'Sessions', href: '/' },
@@ -15,6 +16,7 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(true);
+  useNavigateOnView();
 
   const handleFollow: SideNavigationProps['onFollow'] = (event) => {
     event.preventDefault();

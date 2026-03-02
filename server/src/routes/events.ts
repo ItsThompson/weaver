@@ -1,8 +1,8 @@
 import type { FastifyInstance } from 'fastify';
-import { broadcast, sseReply } from '../services/event-bus.js';
+import { broadcast, emit, sseReply } from '../services/event-bus.js';
+import { readSessions } from '../services/storage.js';
 
 export function registerEventRoutes(server: FastifyInstance): void {
-  // Hook script POSTs here to notify of session updates
   server.post<{ Body: { sessionId: string } }>('/api/notify', async (request, reply) => {
     const { sessionId } = request.body ?? {};
     if (typeof sessionId !== 'string') {
@@ -12,9 +12,21 @@ export function registerEventRoutes(server: FastifyInstance): void {
     return { ok: true };
   });
 
-  // Client connects here for real-time updates
+  server.post<{ Body: { pid: number } }>('/api/view', async (request, reply) => {
+    const { pid } = request.body ?? {};
+    if (typeof pid !== 'number') {
+      return reply.status(400).send({ error: 'pid required' });
+    }
+    const sessions = await readSessions();
+    const session = sessions.filter((s) => s.pid === pid).pop();
+    if (!session) {
+      return reply.status(404).send({ error: 'No session found for PID' });
+    }
+    emit({ event: 'navigate', data: { sessionId: session.id } });
+    return { ok: true, sessionId: session.id };
+  });
+
   server.get('/api/events', async (_request, reply) => {
     sseReply(reply);
-    // Keep connection open — Fastify won't auto-close since we wrote to reply.raw
   });
 }

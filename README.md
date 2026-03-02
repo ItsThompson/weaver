@@ -25,6 +25,9 @@ npm install --prefix client
 # Install hook scripts (see hooks/README.md for details)
 ln -s ~/Documents/weaver/hooks/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
 chmod +x hooks/weaver-log.sh
+
+# Add wv alias for quick session viewing (add to ~/.zshrc or ~/.bashrc)
+alias wv='bash ~/Documents/weaver/scripts/wv.sh'
 ```
 
 ## Development

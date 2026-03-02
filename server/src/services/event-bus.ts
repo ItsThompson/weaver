@@ -1,6 +1,11 @@
 import type { FastifyReply } from 'fastify';
 
-type Listener = (sessionId: string) => void;
+interface SSEMessage {
+  event: string;
+  data: Record<string, unknown>;
+}
+
+type Listener = (msg: SSEMessage) => void;
 
 const listeners = new Set<Listener>();
 
@@ -10,8 +15,12 @@ export function subscribe(listener: Listener): () => void {
 }
 
 export function broadcast(sessionId: string): void {
+  emit({ event: 'update', data: { sessionId } });
+}
+
+export function emit(msg: SSEMessage): void {
   for (const listener of listeners) {
-    listener(sessionId);
+    listener(msg);
   }
 }
 
@@ -22,8 +31,8 @@ export function sseReply(reply: FastifyReply): () => void {
     Connection: 'keep-alive',
   });
 
-  const unsubscribe = subscribe((sessionId) => {
-    reply.raw.write(`data: ${JSON.stringify({ sessionId })}\n\n`);
+  const unsubscribe = subscribe((msg) => {
+    reply.raw.write(`event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`);
   });
 
   reply.raw.on('close', unsubscribe);
