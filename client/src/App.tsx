@@ -3,6 +3,7 @@ import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import SideNavigation, { type SideNavigationProps } from '@cloudscape-design/components/side-navigation';
 import { SessionsPage } from './pages/SessionsPage';
+import { SessionDetailPage } from './pages/SessionDetailPage';
 import { CherrypickPage } from './pages/CherrypickPage';
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
@@ -35,6 +36,7 @@ export function App() {
       content={
         <Routes>
           <Route path="/" element={<SessionsPage />} />
+          <Route path="/sessions/:id" element={<SessionDetailPage />} />
           <Route path="/cherrypick" element={<CherrypickPage />} />
         </Routes>
       }
