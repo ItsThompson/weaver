@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import type { HookEvent } from '@shared/types.js';
+import type { HookEvent } from '@weaver/shared/types';
 
 // Mock fs modules before importing
 jest.unstable_mockModule('node:fs/promises', () => ({

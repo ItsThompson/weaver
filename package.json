@@ -2,12 +2,14 @@
   "name": "weaver",
   "version": "0.1.0",
   "private": true,
+  "workspaces": ["shared", "server", "client", "cli", "hook-handler"],
   "scripts": {
-    "dev": "concurrently --names server,client --prefix-colors blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
-    "build": "npm run build --prefix server && npm run build --prefix client",
-    "test": "npm test --prefix server && npm test --prefix cli && bash hooks/weaver-log.test.sh && bash bin/weaver.test.sh"
+    "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
+    "build": "turbo build",
+    "test": "turbo test"
   },
+  "packageManager": "npm@10.8.2",
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "turbo": "^2.4.0"
   }
 }

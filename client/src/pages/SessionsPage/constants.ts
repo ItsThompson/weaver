@@ -1,6 +1,6 @@
 import React from 'react';
 import type { TableProps } from '@cloudscape-design/components/table';
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 import { ActionsCell } from './components/ActionsCell';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
 

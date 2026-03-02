@@ -10,7 +10,7 @@ Stand up the foundational project structure, tooling, and shared infrastructure 
 - Client loads Cloudscape-styled shell at `http://localhost:5173` (Vite default) and proxies API calls to the server
 - Server responds to health check at `http://localhost:8143/api/health`
 - Shared TypeScript types are importable by both client and server
-- Hook scripts exist in `hooks/` with README instructions for manual installation
+- Hook handler exists in `hook-handler/` with README instructions for manual installation
 - `~/.weaver/` directory is created on first server start
 
 ### Assumptions & Constraints
@@ -61,8 +61,8 @@ weaver/
 │   ├── package.json                 # Minimal package for module resolution
 │   ├── types.ts                     # Shared interfaces (session, conversation, etc.)
 │   └── tsconfig.json
-├── hooks/                           # Kiro CLI hook scripts (manual install)
-│   ├── weaver-log.sh                # Main hook script
+├── hook-handler/                    # Kiro CLI hook handler (manual install)
+│   ├── weaver-log.sh                # Main hook handler script
 │   └── README.md                    # Installation instructions
 ├── .gitignore                       # Git ignore rules
 ├── package.json                     # Root: dev scripts, concurrently
@@ -147,13 +147,13 @@ Note: `AppContext.tsx` is deferred to WEAVER-002 when session state shape is def
 Create the improved hook script with cwd-hashed session ID handling, orphan fallback, and log truncation.
 
 **Files:**
-- `hooks/weaver-log.sh` — the main hook script:
+- `hook-handler/weaver-log.sh` — the main hook handler script:
   - Uses `$PPID` to identify the calling kiro-cli process. Includes a shell-skipping process tree walk as fallback (walks up from `$PPID`, skips `sh`/`bash`/`zsh`/`dash`/`fish`, returns first non-shell ancestor PID). Verified empirically: kiro-cli spawns hooks directly, so `$PPID` is the kiro-cli PID.
   - On `agentSpawn`: generate UUID via `uuidgen`, write session ID to `~/.weaver/.current-session-<CALLER_PID>`, append session metadata line (including `pid` field) to `~/.weaver/sessions.jsonl`, create `~/.weaver/logs/<session-id>.jsonl`
   - On all other events: read session ID from `~/.weaver/.current-session-<CALLER_PID>`. If missing, fall back to `SESSION_ID=orphan`, log warning to STDERR, and exit 0 (don't disrupt user workflow)
   - Append timestamped event to `~/.weaver/logs/<session-id>.jsonl`
   - Truncate `tool_response.result` entries longer than 500 chars (configurable via `WEAVER_MAX_RESPONSE_LENGTH` env var). Applies to all tool responses for simplicity — may be revisited per-tool based on real-world usage.
-- `hooks/README.md` — step-by-step instructions for:
+- `hook-handler/README.md` — step-by-step instructions for:
   - Copying `weaver-log.sh` to `~/.config/amazonq/global/hooks/`
   - Making it executable
   - Adding hook entries to agent config JSON
@@ -192,8 +192,8 @@ Create the improved hook script with cwd-hashed session ID handling, orphan fall
 | `client/src/utils/api.ts` | Create | API client utility |
 | `client/src/pages/SessionsPage.tsx` | Create | Placeholder for observability |
 | `client/src/pages/CherrypickPage.tsx` | Create | Placeholder for cherrypick |
-| `hooks/weaver-log.sh` | Create | Hook script with PID-based session ID and orphan fallback |
-| `hooks/README.md` | Create | Hook installation instructions |
+| `hook-handler/weaver-log.sh` | Create | Hook handler script with PID-based session ID and orphan fallback |
+| `hook-handler/README.md` | Create | Hook handler installation instructions |
 | `README.md` | Create | Project README |
 
 ---

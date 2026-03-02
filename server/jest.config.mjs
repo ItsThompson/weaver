@@ -4,7 +4,7 @@ export default {
   testEnvironment: 'node',
   testMatch: ['<rootDir>/src/**/*.test.ts'],
   moduleNameMapper: {
-    '^@shared/(.*)$': '<rootDir>/../shared/$1',
+    '^@weaver/shared/(.*)$': '<rootDir>/../shared/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
   },
   transform: {

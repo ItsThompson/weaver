@@ -22,9 +22,9 @@ npm install
 npm install --prefix server
 npm install --prefix client
 
-# Install hook scripts (see hooks/README.md for details)
-ln -s ~/Documents/weaver/hooks/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
-chmod +x hooks/weaver-log.sh
+# Install hook handler (see hook-handler/README.md for details)
+ln -s ~/Documents/weaver/hook-handler/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
+chmod +x hook-handler/weaver-log.sh
 
 # Install CLI dependencies
 npm install --prefix cli

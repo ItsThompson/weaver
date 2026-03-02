@@ -1,4 +1,4 @@
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 
 export interface SessionsState {
   sessions: SessionWithStatus[];

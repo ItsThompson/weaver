@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Table, { type TableProps } from '@cloudscape-design/components/table';
 import TextFilter from '@cloudscape-design/components/text-filter';
 import Box from '@cloudscape-design/components/box';
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 
 interface SessionTableProps {
   sessions: SessionWithStatus[];

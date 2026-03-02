@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && tsc-alias && vite build",
+    "build": "tsc && vite build",
     "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {
+    "@weaver/shared": "*",
     "@cloudscape-design/components": "^3.0.0",
     "@cloudscape-design/global-styles": "^1.0.0",
     "react": "^19.1.0",
@@ -29,7 +30,6 @@
     "jest-environment-jsdom": "^30.2.0",
     "jsdom": "^28.1.0",
     "ts-jest": "^29.4.6",
-    "tsc-alias": "^1.8.16",
     "typescript": "^5.8.3",
     "vite": "^6.3.4",
     "vitest": "^4.0.18"
