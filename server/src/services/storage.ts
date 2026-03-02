@@ -10,6 +10,7 @@ const LOGS_DIR = () => join(DATA_DIR(), 'logs');
 const SESSIONS_FILE = () => join(DATA_DIR(), 'sessions.jsonl');
 
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+const PID_POLL_INTERVAL_MS = 30 * 1000;
 
 export async function ensureDataDir(): Promise<void> {
   try {
@@ -84,15 +85,37 @@ export function isProcessRunning(pid: number): boolean {
 }
 
 let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+let pidPollInterval: ReturnType<typeof setInterval> | null = null;
+const openPids = new Set<number>();
 
 export function startStaleSessionCleanup(): void {
   cleanStaleSessions();
   cleanupInterval = setInterval(cleanStaleSessions, CLEANUP_INTERVAL_MS);
 }
 
+export function startPidPolling(onSessionClosed: (sessionId: string) => void): void {
+  const poll = async () => {
+    const sessions = await readSessions();
+    const currentlyOpen = sessions.filter((s) => isProcessRunning(s.pid));
+    const currentPids = new Set(currentlyOpen.map((s) => s.pid));
+
+    // Detect PIDs that were open but are now dead
+    for (const pid of openPids) {
+      if (!currentPids.has(pid)) {
+        const session = sessions.find((s) => s.pid === pid);
+        if (session) onSessionClosed(session.id);
+      }
+    }
+
+    openPids.clear();
+    for (const pid of currentPids) openPids.add(pid);
+  };
+
+  poll();
+  pidPollInterval = setInterval(poll, PID_POLL_INTERVAL_MS);
+}
+
 export function stopStaleSessionCleanup(): void {
-  if (cleanupInterval) {
-    clearInterval(cleanupInterval);
-    cleanupInterval = null;
-  }
+  if (cleanupInterval) { clearInterval(cleanupInterval); cleanupInterval = null; }
+  if (pidPollInterval) { clearInterval(pidPollInterval); pidPollInterval = null; }
 }
