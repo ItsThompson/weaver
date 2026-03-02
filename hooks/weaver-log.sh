@@ -10,6 +10,7 @@ WEAVER_DIR="$HOME/.weaver"
 LOGS_DIR="$WEAVER_DIR/logs"
 SESSIONS_FILE="$WEAVER_DIR/sessions.jsonl"
 MAX_RESPONSE_LENGTH="${WEAVER_MAX_RESPONSE_LENGTH:-500}"
+WEAVER_SERVER="${WEAVER_SERVER:-http://localhost:8143}"
 
 mkdir -p "$LOGS_DIR"
 
@@ -113,5 +114,10 @@ EVENT=$(truncate_response "$EVENT")
 
 # Append timestamped event to the session log
 echo "{\"timestamp\":\"$TIMESTAMP\",\"event\":$EVENT}" >> "$LOGS_DIR/$SESSION_ID.jsonl"
+
+# Notify weaver server of the update (fire-and-forget, async background)
+curl -s --max-time 1 -X POST "$WEAVER_SERVER/api/notify" \
+  -H "Content-Type: application/json" \
+  -d "{\"sessionId\":\"$SESSION_ID\"}" >/dev/null 2>&1 &
 
 exit 0
