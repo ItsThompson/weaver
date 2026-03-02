@@ -9,7 +9,7 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest && bash ../bin/weaver.test.sh"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest && bash ../bin/weaver.test.sh"
   },
   "dependencies": {},
   "devDependencies": {
