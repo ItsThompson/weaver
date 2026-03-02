@@ -1,6 +1,6 @@
 import type { ActivityStatus } from '@weaver/shared/types';
 
-export const ACTIVITY_LABELS: Record<string, string> = {
+const ACTIVITY_LABELS: Record<string, string> = {
   starting: 'Starting',
   idle: 'Idle',
   processing: 'Processing',
