@@ -7,7 +7,11 @@ export default {
     '^@shared/(.*)$': '<rootDir>/../shared/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
     '\\.(css|scss)$': 'identity-obj-proxy',
-    '^@cloudscape-design/components/(.+)$': '<rootDir>/__tests__/mocks/cloudscape-components/$1',
+    '^@cloudscape-design/components/table$': '<rootDir>/__tests__/mocks/cloudscape-table.tsx',
+    '^@cloudscape-design/components/tabs$': '<rootDir>/__tests__/mocks/cloudscape-tabs.tsx',
+    '^@cloudscape-design/components/expandable-section$': '<rootDir>/__tests__/mocks/cloudscape-expandable-section.tsx',
+    '^@cloudscape-design/components/header$': '<rootDir>/__tests__/mocks/cloudscape-header.tsx',
+    '^@cloudscape-design/components/(.+)$': '<rootDir>/__tests__/mocks/cloudscape-passthrough.tsx',
   },
   transform: {
     '^.+\\.tsx?$': ['ts-jest', { useESM: true, tsconfig: 'tsconfig.json' }],
