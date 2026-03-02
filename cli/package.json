@@ -8,11 +8,16 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias",
-    "dev": "tsx src/index.ts"
+    "dev": "tsx src/index.ts",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest"
   },
   "dependencies": {},
   "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.3",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3"
