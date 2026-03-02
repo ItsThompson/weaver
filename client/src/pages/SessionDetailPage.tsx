@@ -7,8 +7,13 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import Spinner from '@cloudscape-design/components/spinner';
+import Button from '@cloudscape-design/components/button';
+import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
+import Input from '@cloudscape-design/components/input';
+import Modal from '@cloudscape-design/components/modal';
+import FormField from '@cloudscape-design/components/form-field';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
-import { getSession } from '../utils/api';
+import { getSession, updateSessionName } from '../utils/api';
 import { ToolCallCard } from '../components/ToolCallCard';
 
 function formatRelativeTime(base: string, current: string): string {
@@ -67,6 +72,8 @@ export function SessionDetailPage() {
   const [turns, setTurns] = useState<TurnGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [renameVisible, setRenameVisible] = useState(false);
+  const [renameValue, setRenameValue] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -77,12 +84,23 @@ export function SessionDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
+  const saveRename = async () => {
+    if (!id || !session) return;
+    setRenameVisible(false);
+    if (renameValue !== (session.customName ?? '')) {
+      await updateSessionName(id, renameValue);
+      setSession({ ...session, customName: renameValue });
+    }
+  };
+
+  const displayName = session?.customName || `Session ${id?.slice(0, 8)}`;
+
   return (
     <SpaceBetween size="l">
       <BreadcrumbGroup
         items={[
           { text: 'Sessions', href: '/' },
-          { text: session?.customName || id?.slice(0, 8) || 'Session', href: '#' },
+          { text: displayName, href: '#' },
         ]}
         onFollow={(e) => { e.preventDefault(); navigate(e.detail.href); }}
       />
@@ -90,8 +108,19 @@ export function SessionDetailPage() {
       {error && <Box color="text-status-error">{error}</Box>}
       {!loading && !error && (
         <SpaceBetween size="m">
-          <Header variant="h1" description={`${session?.cwd} · PID ${session?.pid} · ${session?.status}`}>
-            {session?.customName || `Session ${id?.slice(0, 8)}`}
+          <Header
+            variant="h1"
+            description={`${session?.cwd} · PID ${session?.pid} · ${session?.status}`}
+            actions={
+              <ButtonDropdown
+                variant="inline-icon"
+                items={[{ id: 'rename', text: 'Rename session' }]}
+                onItemClick={() => { setRenameValue(session?.customName ?? ''); setRenameVisible(true); }}
+                expandToViewport
+              />
+            }
+          >
+            {displayName}
           </Header>
           <Box fontSize="body-s" color="text-body-secondary">
             Assistant text responses are not captured by hooks.
@@ -101,6 +130,28 @@ export function SessionDetailPage() {
           ))}
         </SpaceBetween>
       )}
+      <Modal
+        visible={renameVisible}
+        onDismiss={() => setRenameVisible(false)}
+        header="Rename session"
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              <Button variant="link" onClick={() => setRenameVisible(false)}>Cancel</Button>
+              <Button variant="primary" onClick={saveRename}>Save</Button>
+            </SpaceBetween>
+          </Box>
+        }
+      >
+        <FormField label="Session name">
+          <Input
+            value={renameValue}
+            onChange={({ detail }) => setRenameValue(detail.value)}
+            onKeyDown={({ detail }) => { if (detail.key === 'Enter') saveRename(); }}
+            autoFocus
+          />
+        </FormField>
+      </Modal>
     </SpaceBetween>
   );
 }
