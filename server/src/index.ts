@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { registerHealthRoute } from './routes/health.js';
+import { registerSessionRoutes } from './routes/sessions.js';
 import { ensureDataDir, startStaleSessionCleanup } from './services/storage.js';
 import { log } from './utils/logger.js';
 
@@ -14,6 +15,7 @@ server.setErrorHandler((error, _request, reply) => {
 });
 
 registerHealthRoute(server);
+registerSessionRoutes(server);
 
 async function start(): Promise<void> {
   await ensureDataDir();
