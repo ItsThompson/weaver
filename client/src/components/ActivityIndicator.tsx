@@ -1,4 +1,4 @@
-import type { ActivityStatus } from '@shared/types';
+import type { ActivityStatus } from '@weaver/shared/types';
 
 const ACTIVITY_LABELS: Record<ActivityStatus, { text: string; color: string }> = {
   starting: { text: 'Starting', color: '#888' },

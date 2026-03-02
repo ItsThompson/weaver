@@ -1,5 +1,5 @@
 import type { FastifyInstance } from 'fastify';
-import type { SessionWithStatus, TurnGroup } from '@shared/types.js';
+import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
 import { readSessions, writeSessions, isProcessRunning } from '../services/storage.js';
 import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../services/log-parser.js';
 

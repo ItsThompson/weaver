@@ -7,7 +7,7 @@ import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
-import type { SessionWithStatus, TurnGroup } from '@shared/types';
+import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
 import { getSession, updateSessionName } from '../../utils/api';
 import { useSessionEvents } from '../../hooks/useSessionEvents';
 import { ActivityIndicator } from '../../components/ActivityIndicator';

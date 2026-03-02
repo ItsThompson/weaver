@@ -2,7 +2,7 @@ import { jest } from '@jest/globals';
 import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 
 // Mock the API module before importing context
 jest.unstable_mockModule('../../utils/api', () => ({

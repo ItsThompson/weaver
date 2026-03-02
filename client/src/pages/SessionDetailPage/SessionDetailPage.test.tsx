@@ -3,7 +3,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
-import type { SessionWithStatus, TurnGroup } from '@shared/types';
+import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
 
 jest.unstable_mockModule('../../utils/api', () => ({
   apiFetch: jest.fn(),

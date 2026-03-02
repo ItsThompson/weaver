@@ -1,4 +1,4 @@
-import type { Session, SessionWithStatus, TurnGroup } from '@shared/types';
+import type { Session, SessionWithStatus, TurnGroup } from '@weaver/shared/types';
 
 const API_BASE = '/api';
 
