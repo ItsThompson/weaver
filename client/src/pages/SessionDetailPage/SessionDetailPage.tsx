@@ -85,7 +85,7 @@ export function SessionDetailPage() {
               </SpaceBetween>
             }
             actions={
-              <SpaceBetween direction="horizontal" size="xs">
+              <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'nowrap' }}>
                 <Button iconName="refresh" onClick={() => fetchSession()} loading={loading} />
                 <ButtonDropdown
                   items={[{
@@ -98,7 +98,7 @@ export function SessionDetailPage() {
                   Display
                 </ButtonDropdown>
                 <RenameSession currentName={session.customName} onRename={handleRename} />
-              </SpaceBetween>
+              </div>
             }
           >
             {displayName}
