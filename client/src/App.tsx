@@ -5,6 +5,7 @@ import SideNavigation, { type SideNavigationProps } from '@cloudscape-design/com
 import { SessionsPage } from './pages/SessionsPage';
 import { SessionDetailPage } from './pages/SessionDetailPage';
 import { CherrypickPage } from './pages/CherrypickPage';
+import { OrphansPage } from './pages/OrphansPage/OrphansPage';
 import { useNavigateOnView } from './hooks/useNavigateOnView';
 import { useSessionNotifications } from './hooks/useSessionNotifications';
 import { NotificationBar } from './components/NotificationBar';
@@ -44,6 +45,7 @@ export function App() {
           <Route path="/" element={<SessionsPage />} />
           <Route path="/sessions/:id" element={<SessionDetailPage />} />
           <Route path="/cherrypick" element={<CherrypickPage />} />
+          <Route path="/sessions/orphans" element={<OrphansPage />} />
         </Routes>
       }
       toolsHide

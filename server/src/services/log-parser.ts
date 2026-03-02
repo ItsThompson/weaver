@@ -141,7 +141,7 @@ function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
         pairs.push({
           toolName,
           input: pre.event.tool_input ?? {},
-          response: event.event.tool_response as Record<string, unknown> | undefined,
+          response: event.event.tool_response,
           startTime: pre.timestamp,
           endTime: event.timestamp,
         });
@@ -150,7 +150,7 @@ function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
         pairs.push({
           toolName,
           input: event.event.tool_input ?? {},
-          response: event.event.tool_response as Record<string, unknown> | undefined,
+          response: event.event.tool_response,
           startTime: event.timestamp,
           endTime: event.timestamp,
         });

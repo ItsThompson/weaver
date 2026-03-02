@@ -10,6 +10,9 @@ jest.unstable_mockModule('../../utils/api', () => ({
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
+  getOrphanCount: jest.fn<() => Promise<{ count: number }>>().mockResolvedValue({ count: 0 }),
+  getOrphans: jest.fn(),
+  assignOrphans: jest.fn(),
 }));
 
 const api = await import('../../utils/api');

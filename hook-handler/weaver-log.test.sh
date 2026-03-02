@@ -117,9 +117,15 @@ test_orphan_session_when_no_spawn() {
   echo "test: events without agentSpawn go to orphan log"
   setup
 
-  echo '{"hook_event_name":"userPromptSubmit","cwd":"/tmp","prompt":"orphan"}' | bash "$HOOK" 2>/dev/null
+  local stderr_output
+  stderr_output=$(echo '{"hook_event_name":"userPromptSubmit","cwd":"/tmp","prompt":"orphan"}' | bash "$HOOK" 2>&1 1>/dev/null || true)
 
   assert_file_exists "orphan log created" "$HOME/.weaver/logs/orphan.jsonl"
+
+  local line
+  line=$(cat "$HOME/.weaver/logs/orphan.jsonl")
+  assert_contains "orphan entry has pid" '"pid":' "$line"
+  assert_contains "stderr has warning" "orphan" "$stderr_output"
 
   teardown
 }

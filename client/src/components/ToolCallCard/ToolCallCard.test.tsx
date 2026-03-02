@@ -35,7 +35,7 @@ describe('ToolCallCard', () => {
   });
 
   it('shows expand button for large responses', () => {
-    const largeResponse = { data: 'x'.repeat(600) };
+    const largeResponse = { success: true, result: ['x'.repeat(600)] };
     const tc = { ...TOOL_CALL, response: largeResponse };
     render(<ToolCallCard toolCall={tc} />);
     expect(screen.getByText('Show full response')).toBeInTheDocument();

@@ -1,7 +1,8 @@
-import Fastify from 'fastify';
+import Fastify, { FastifyError } from 'fastify';
 import { registerHealthRoute } from './routes/health.js';
 import { registerSessionRoutes } from './routes/sessions.js';
 import { registerEventRoutes } from './routes/events.js';
+import { registerOrphanRoutes } from './routes/orphans.js';
 import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
 import { startKeepAwake } from './services/keep-awake.js';
@@ -11,7 +12,7 @@ const PORT = 8143;
 
 const server = Fastify();
 
-server.setErrorHandler((error, _request, reply) => {
+server.setErrorHandler((error: FastifyError, _request, reply) => {
   const statusCode = error.statusCode ?? 500;
   log({ timestamp: new Date().toISOString(), event: 'server_error', error: error.message, statusCode });
   reply.status(statusCode).send({ error: error.message, statusCode });
@@ -20,6 +21,7 @@ server.setErrorHandler((error, _request, reply) => {
 registerHealthRoute(server);
 registerSessionRoutes(server);
 registerEventRoutes(server);
+registerOrphanRoutes(server);
 
 async function start(): Promise<void> {
   await ensureDataDir();

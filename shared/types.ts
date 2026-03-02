@@ -17,6 +17,19 @@ export interface SessionWithStatus extends Session {
   activity?: ActivityStatus;
 }
 
+// Standard error shape returned by API routes
+export interface ApiError {
+  error: string;
+}
+
+// Orphaned events grouped by the PID that produced them
+export interface OrphanGroup {
+  pid: number;
+  turns: TurnGroup[];
+  eventCount: number;
+  timeRange: { start: string; end: string };
+}
+
 // Raw hook event as received from kiro-cli via STDIN
 export interface HookEventData {
   hook_event_name: string;
@@ -33,6 +46,7 @@ export interface HookEventData {
 // Timestamped wrapper written to per-session JSONL log files
 export interface HookEvent {
   timestamp: string;
+  pid?: number;
   event: HookEventData;
 }
 
@@ -40,7 +54,7 @@ export interface HookEvent {
 export interface ToolCallPair {
   toolName: string;
   input: Record<string, unknown>;
-  response?: Record<string, unknown>;
+  response?: HookEventData['tool_response'];
   startTime: string;
   endTime?: string;
 }
