@@ -4,61 +4,12 @@ import Table, { type TableProps } from '@cloudscape-design/components/table';
 import Header from '@cloudscape-design/components/header';
 import Tabs from '@cloudscape-design/components/tabs';
 import Button from '@cloudscape-design/components/button';
-import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
-import Input from '@cloudscape-design/components/input';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextFilter from '@cloudscape-design/components/text-filter';
 import Box from '@cloudscape-design/components/box';
 import type { SessionWithStatus } from '@shared/types';
 import { useSessions } from '../context/SessionsContext';
-
-function ActionsCell({ session }: { session: SessionWithStatus }) {
-  const { renameSession } = useSessions();
-  const [visible, setVisible] = useState(false);
-  const [value, setValue] = useState(session.customName ?? '');
-
-  const save = async () => {
-    setVisible(false);
-    if (value !== (session.customName ?? '')) {
-      await renameSession(session.id, value);
-    }
-  };
-
-  return (
-    <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
-      <ButtonDropdown
-        variant="inline-icon"
-        items={[{ id: 'rename', text: 'Rename session' }]}
-        onItemClick={() => { setValue(session.customName ?? ''); setVisible(true); }}
-        expandToViewport
-      />
-      <Modal
-        visible={visible}
-        onDismiss={() => setVisible(false)}
-        header="Rename session"
-        footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setVisible(false)}>Cancel</Button>
-              <Button variant="primary" onClick={save}>Save</Button>
-            </SpaceBetween>
-          </Box>
-        }
-      >
-        <FormField label="Session name">
-          <Input
-            value={value}
-            onChange={({ detail }) => setValue(detail.value)}
-            onKeyDown={({ detail }) => { if (detail.key === 'Enter') save(); }}
-            autoFocus
-          />
-        </FormField>
-      </Modal>
-    </span>
-  );
-}
+import { RenameSession } from '../components/RenameSession';
 
 const COLUMN_DEFINITIONS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
   {
@@ -72,8 +23,23 @@ const COLUMN_DEFINITIONS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
   { id: 'agentName', header: 'Agent', cell: (item) => item.agentName ?? '—' },
   { id: 'startTime', header: 'Started', cell: (item) => new Date(item.startTime).toLocaleString(), sortingField: 'startTime' },
   { id: 'lastEventTime', header: 'Last Event', cell: (item) => new Date(item.lastEventTime).toLocaleString(), sortingField: 'lastEventTime' },
-  { id: 'actions', header: '', cell: (item) => <ActionsCell session={item} />, width: 70, minWidth: 70 },
+  {
+    id: 'actions',
+    header: '',
+    cell: (item) => <ActionsCell session={item} />,
+    width: 70,
+    minWidth: 70,
+  },
 ];
+
+function ActionsCell({ session }: { session: SessionWithStatus }) {
+  const { renameSession } = useSessions();
+  return (
+    <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
+      <RenameSession currentName={session.customName} onRename={(name) => renameSession(session.id, name)} />
+    </span>
+  );
+}
 
 function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
   const navigate = useNavigate();

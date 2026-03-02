@@ -7,25 +7,14 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import Spinner from '@cloudscape-design/components/spinner';
-import Button from '@cloudscape-design/components/button';
-import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
-import Input from '@cloudscape-design/components/input';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
 import { getSession, updateSessionName } from '../utils/api';
 import { ToolCallCard } from '../components/ToolCallCard';
+import { RenameSession } from '../components/RenameSession';
 
-function formatRelativeTime(base: string, current: string): string {
-  const ms = new Date(current).getTime() - new Date(base).getTime();
-  if (ms < 1000) return `+${ms}ms`;
-  return `+${(ms / 1000).toFixed(1)}s`;
-}
-
-function TurnContainer({ turn, isFirst }: { turn: TurnGroup; isFirst: boolean }) {
+function TurnContainer({ turn }: { turn: TurnGroup }) {
   const firstEvent = turn.events[0]?.event.hook_event_name;
 
-  // agentSpawn marker
   if (firstEvent === 'agentSpawn') {
     return (
       <Box textAlign="center" margin={{ vertical: 's' }}>
@@ -72,8 +61,6 @@ export function SessionDetailPage() {
   const [turns, setTurns] = useState<TurnGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [renameVisible, setRenameVisible] = useState(false);
-  const [renameValue, setRenameValue] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -84,13 +71,10 @@ export function SessionDetailPage() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const saveRename = async () => {
+  const handleRename = async (name: string) => {
     if (!id || !session) return;
-    setRenameVisible(false);
-    if (renameValue !== (session.customName ?? '')) {
-      await updateSessionName(id, renameValue);
-      setSession({ ...session, customName: renameValue });
-    }
+    await updateSessionName(id, name);
+    setSession({ ...session, customName: name });
   };
 
   const displayName = session?.customName || `Session ${id?.slice(0, 8)}`;
@@ -111,47 +95,18 @@ export function SessionDetailPage() {
           <Header
             variant="h1"
             description={`${session?.cwd} · PID ${session?.pid} · ${session?.status}`}
-            actions={
-              <ButtonDropdown
-                variant="inline-icon"
-                items={[{ id: 'rename', text: 'Rename session' }]}
-                onItemClick={() => { setRenameValue(session?.customName ?? ''); setRenameVisible(true); }}
-                expandToViewport
-              />
-            }
+            actions={<RenameSession currentName={session?.customName ?? null} onRename={handleRename} />}
           >
             {displayName}
           </Header>
           <Box fontSize="body-s" color="text-body-secondary">
             Assistant text responses are not captured by hooks.
           </Box>
-          {turns.map((turn, i) => (
-            <TurnContainer key={turn.id} turn={turn} isFirst={i === 0} />
+          {turns.map((turn) => (
+            <TurnContainer key={turn.id} turn={turn} />
           ))}
         </SpaceBetween>
       )}
-      <Modal
-        visible={renameVisible}
-        onDismiss={() => setRenameVisible(false)}
-        header="Rename session"
-        footer={
-          <Box float="right">
-            <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setRenameVisible(false)}>Cancel</Button>
-              <Button variant="primary" onClick={saveRename}>Save</Button>
-            </SpaceBetween>
-          </Box>
-        }
-      >
-        <FormField label="Session name">
-          <Input
-            value={renameValue}
-            onChange={({ detail }) => setRenameValue(detail.value)}
-            onKeyDown={({ detail }) => { if (detail.key === 'Enter') saveRename(); }}
-            autoFocus
-          />
-        </FormField>
-      </Modal>
     </SpaceBetween>
   );
 }
