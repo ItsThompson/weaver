@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@shared/types.js';
+import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');

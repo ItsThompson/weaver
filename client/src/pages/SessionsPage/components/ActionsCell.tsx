@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 import { useSessions } from '../../../context/SessionsContext';
 import { RenameModal } from '../../../components/RenameModal';
 

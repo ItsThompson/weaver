@@ -4,7 +4,7 @@ export default {
   testEnvironment: 'jsdom',
   testMatch: ['<rootDir>/src/**/*.test.ts', '<rootDir>/src/**/*.test.tsx'],
   moduleNameMapper: {
-    '^@shared/(.*)$': '<rootDir>/../shared/$1',
+    '^@weaver/shared/(.*)$': '<rootDir>/../shared/$1',
     '^(\\.{1,2}/.*)\\.js$': '$1',
     '\\.(css|scss)$': 'identity-obj-proxy',
     '^@cloudscape-design/components/table$': '<rootDir>/__tests__/mocks/cloudscape-table.tsx',

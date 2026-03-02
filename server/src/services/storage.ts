@@ -2,7 +2,7 @@ import { mkdir, readFile, writeFile, appendFile, readdir, unlink } from 'node:fs
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import type { Session } from '@shared/types.js';
+import type { Session } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
 
 const DATA_DIR = () => join(homedir(), '.weaver');

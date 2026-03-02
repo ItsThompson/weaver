@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import { sessionsReducer, initialState } from './reducer';
-import type { SessionWithStatus } from '@shared/types';
+import type { SessionWithStatus } from '@weaver/shared/types';
 
 const SESSION: SessionWithStatus = {
   id: 'aaa', pid: 100, customName: null, cwd: '/tmp',

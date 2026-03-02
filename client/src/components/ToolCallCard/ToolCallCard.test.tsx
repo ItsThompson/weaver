@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { ToolCallCard } from '.';
-import type { ToolCallPair } from '@shared/types';
+import type { ToolCallPair } from '@weaver/shared/types';
 
 const TOOL_CALL: ToolCallPair = {
   toolName: 'fs_read',

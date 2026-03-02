@@ -4,7 +4,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Badge from '@cloudscape-design/components/badge';
 import Button from '@cloudscape-design/components/button';
 import Box from '@cloudscape-design/components/box';
-import type { TurnGroup } from '@shared/types';
+import type { TurnGroup } from '@weaver/shared/types';
 import { ToolCallCard } from '../../../components/ToolCallCard';
 
 interface TurnContainerProps {

@@ -2,13 +2,9 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "..",
-    "baseUrl": ".",
-    "jsx": "react-jsx",
-    "paths": {
-      "@shared/*": ["../shared/*"]
-    }
+    "rootDir": "src",
+    "jsx": "react-jsx"
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "../shared/**/*.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "dist"]
 }
