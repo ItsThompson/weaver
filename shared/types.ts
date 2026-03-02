@@ -10,8 +10,11 @@ export interface Session {
 }
 
 // Computed at runtime by checking if pid is still running
+export type ActivityStatus = 'starting' | 'idle' | 'processing' | 'running_tool';
+
 export interface SessionWithStatus extends Session {
   status: 'open' | 'closed';
+  activity?: ActivityStatus;
 }
 
 // Raw hook event as received from kiro-cli via STDIN

@@ -27,10 +27,14 @@ const SESSIONS: SessionWithStatus[] = [
 ];
 
 function renderTable(sessions = SESSIONS) {
+  const columns = [
+    { id: 'name', header: 'Name', cell: (item: any) => item.customName || item.id },
+    { id: 'cwd', header: 'CWD', cell: (item: any) => item.cwd },
+  ];
   return render(
     <MemoryRouter>
       <SessionsProvider>
-        <SessionTable sessions={sessions} />
+        <SessionTable sessions={sessions} columnDefinitions={columns} />
       </SessionsProvider>
     </MemoryRouter>
   );

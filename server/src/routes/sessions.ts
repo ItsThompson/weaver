@@ -1,14 +1,20 @@
 import type { FastifyInstance } from 'fastify';
 import type { SessionWithStatus, TurnGroup } from '@shared/types.js';
 import { readSessions, writeSessions, isProcessRunning } from '../services/storage.js';
-import { parseLogFile, groupEventsByTurn } from '../services/log-parser.js';
+import { parseLogFile, groupEventsByTurn, getLastEventName, deriveActivity } from '../services/log-parser.js';
 
 export function registerSessionRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SessionWithStatus[] }>('/api/sessions', async () => {
     const sessions = await readSessions();
-    return sessions
-      .map((s) => ({ ...s, status: isProcessRunning(s.pid) ? 'open' : 'closed' }) as SessionWithStatus)
-      .sort((a, b) => b.startTime.localeCompare(a.startTime));
+    const results: SessionWithStatus[] = [];
+
+    for (const s of sessions) {
+      const isOpen = isProcessRunning(s.pid);
+      const activity = isOpen ? deriveActivity(await getLastEventName(s.id) ?? 'agentSpawn') : undefined;
+      results.push({ ...s, status: isOpen ? 'open' : 'closed', activity });
+    }
+
+    return results.sort((a, b) => b.startTime.localeCompare(a.startTime));
   });
 
   server.get<{ Params: { id: string }; Reply: { session: SessionWithStatus; turns: TurnGroup[] } }>(

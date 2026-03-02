@@ -2,10 +2,34 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import type { HookEvent, TurnGroup, ToolCallPair } from '@shared/types.js';
+import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@shared/types.js';
 import { log } from '../utils/logger.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
+
+export function deriveActivity(eventName: string): ActivityStatus {
+  switch (eventName) {
+    case 'agentSpawn': return 'starting';
+    case 'stop': return 'idle';
+    case 'preToolUse': return 'running_tool';
+    default: return 'processing';
+  }
+}
+
+export async function getLastEventName(sessionId: string): Promise<string | null> {
+  const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
+  if (!existsSync(filePath)) return null;
+
+  const content = await readFile(filePath, 'utf-8');
+  const lines = content.trimEnd().split('\n');
+  for (let i = lines.length - 1; i >= 0; i--) {
+    try {
+      const event = JSON.parse(lines[i]) as HookEvent;
+      return event.event.hook_event_name;
+    } catch { /* skip malformed */ }
+  }
+  return null;
+}
 
 export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {
   const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);

@@ -1,12 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Table from '@cloudscape-design/components/table';
+import Table, { type TableProps } from '@cloudscape-design/components/table';
 import TextFilter from '@cloudscape-design/components/text-filter';
 import Box from '@cloudscape-design/components/box';
 import type { SessionWithStatus } from '@shared/types';
-import { COLUMN_DEFINITIONS } from '../constants';
 
-export function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
+interface SessionTableProps {
+  sessions: SessionWithStatus[];
+  columnDefinitions: TableProps.ColumnDefinition<SessionWithStatus>[];
+}
+
+export function SessionTable({ sessions, columnDefinitions }: SessionTableProps) {
   const navigate = useNavigate();
   const [filterText, setFilterText] = useState('');
 
@@ -23,7 +27,7 @@ export function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
   return (
     <Table
       items={filtered}
-      columnDefinitions={COLUMN_DEFINITIONS}
+      columnDefinitions={columnDefinitions}
       variant="borderless"
       empty={<Box textAlign="center" color="inherit">No sessions</Box>}
       filter={<TextFilter filteringText={filterText} onChange={({ detail }) => setFilterText(detail.filteringText)} />}

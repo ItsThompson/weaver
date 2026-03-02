@@ -15,6 +15,8 @@ jest.unstable_mockModule('../services/storage.js', () => ({
 jest.unstable_mockModule('../services/log-parser.js', () => ({
   parseLogFile: jest.fn(),
   groupEventsByTurn: jest.fn(),
+  getLastEventName: jest.fn<() => Promise<string | null>>().mockResolvedValue('stop'),
+  deriveActivity: jest.fn().mockReturnValue('idle'),
 }));
 
 jest.unstable_mockModule('../utils/logger.js', () => ({

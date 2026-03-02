@@ -6,6 +6,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Box from '@cloudscape-design/components/box';
 import { useSessions } from '../../context/SessionsContext';
 import { SessionTable } from './components/SessionTable';
+import { OPEN_COLUMNS, CLOSED_COLUMNS } from './constants';
 
 export function SessionsPage() {
   const { state, fetchSessions } = useSessions();
@@ -26,8 +27,8 @@ export function SessionsPage() {
       {state.error && <Box color="text-status-error">{state.error}</Box>}
       <Tabs
         tabs={[
-          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} /> },
-          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} /> },
+          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} /> },
+          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} columnDefinitions={CLOSED_COLUMNS} /> },
         ]}
       />
     </SpaceBetween>
