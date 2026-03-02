@@ -5,7 +5,7 @@ import { registerEventRoutes } from './routes/events.js';
 import { registerOrphanRoutes } from './routes/orphans.js';
 import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
-import { startKeepAwake } from './services/keep-awake.js';
+import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
 import { log } from './utils/logger.js';
 
 const PORT = 8143;
@@ -30,6 +30,14 @@ async function start(): Promise<void> {
   startKeepAwake();
   await server.listen({ port: PORT, host: '0.0.0.0' });
   log({ timestamp: new Date().toISOString(), event: 'server_started', port: PORT });
+
+  const shutdown = async () => {
+    stopKeepAwake();
+    await server.close();
+    process.exit(0);
+  };
+  process.on('SIGINT', shutdown);
+  process.on('SIGTERM', shutdown);
 }
 
 start().catch((err) => {
