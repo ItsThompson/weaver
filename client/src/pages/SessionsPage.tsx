@@ -51,7 +51,7 @@ function EditableName({ session }: { session: SessionWithStatus }) {
   }
 
   return (
-    <span onClick={() => setEditing(true)} style={{ cursor: 'pointer' }}>
+    <span onClick={(e) => { e.stopPropagation(); setEditing(true); }} style={{ cursor: 'pointer' }}>
       {session.customName || <Box color="text-status-inactive">Click to name</Box>}
     </span>
   );

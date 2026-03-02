@@ -10,7 +10,7 @@ mkdir -p "$LOGS_DIR"
 
 # Read hook event JSON from STDIN
 EVENT=$(cat)
-TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%S.%3NZ 2>/dev/null || date -u +%Y-%m-%dT%H:%M:%SZ)
+TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 HOOK_EVENT_NAME=$(echo "$EVENT" | grep -o '"hook_event_name":"[^"]*"' | head -1 | cut -d'"' -f4)
 CWD=$(echo "$EVENT" | grep -o '"cwd":"[^"]*"' | head -1 | cut -d'"' -f4)
 
