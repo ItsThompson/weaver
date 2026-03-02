@@ -1,4 +1,4 @@
-import { formatDuration } from '../../src/components/ToolCallCard/utils';
+import { formatDuration } from './utils';
 
 describe('formatDuration', () => {
   it('returns pending when no end time', () => {

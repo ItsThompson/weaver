@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { ToolCallCard } from '../../src/components/ToolCallCard';
+import { ToolCallCard } from '.';
 import type { ToolCallPair } from '@shared/types';
 
 const TOOL_CALL: ToolCallPair = {

@@ -5,7 +5,7 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
 
-jest.unstable_mockModule('../../src/utils/api', () => ({
+jest.unstable_mockModule('../../utils/api', () => ({
   apiFetch: jest.fn(),
   getSessions: jest.fn(),
   getSession: jest.fn(),
@@ -19,8 +19,8 @@ jest.unstable_mockModule('react-router-dom', () => ({
   BreadcrumbGroup: ({ children }: any) => React.createElement('div', {}, children),
 }));
 
-const { SessionDetailPage } = await import('../../src/pages/SessionDetailPage');
-const api = await import('../../src/utils/api');
+const { SessionDetailPage } = await import('.');
+const api = await import('../../utils/api');
 
 const mockGetSession = api.getSession as jest.MockedFunction<typeof api.getSession>;
 

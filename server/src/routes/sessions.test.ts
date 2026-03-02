@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 
 // Mock storage and log-parser before importing routes
-jest.unstable_mockModule('../../src/services/storage.js', () => ({
+jest.unstable_mockModule('../services/storage.js', () => ({
   readSessions: jest.fn(),
   writeSessions: jest.fn(),
   isProcessRunning: jest.fn(),
@@ -12,17 +12,17 @@ jest.unstable_mockModule('../../src/services/storage.js', () => ({
   cleanStaleSessions: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/services/log-parser.js', () => ({
+jest.unstable_mockModule('../services/log-parser.js', () => ({
   parseLogFile: jest.fn(),
   groupEventsByTurn: jest.fn(),
 }));
 
-jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+jest.unstable_mockModule('../utils/logger.js', () => ({
   log: jest.fn(),
 }));
 
-const storage = await import('../../src/services/storage.js');
-const logParser = await import('../../src/services/log-parser.js');
+const storage = await import('../services/storage.js');
+const logParser = await import('../services/log-parser.js');
 
 const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof storage.readSessions>;
 const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof storage.writeSessions>;
@@ -32,7 +32,7 @@ const mockGroupEventsByTurn = logParser.groupEventsByTurn as jest.MockedFunction
 
 // Dynamically import Fastify and register routes after mocks
 const { default: Fastify } = await import('fastify');
-const { registerSessionRoutes } = await import('../../src/routes/sessions.js');
+const { registerSessionRoutes } = await import('../routes/sessions.js');
 
 let server: ReturnType<typeof Fastify>;
 

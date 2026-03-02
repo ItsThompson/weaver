@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { JsonBlock, TRUNCATE_LENGTH } from '../../src/components/ToolCallCard/JsonBlock';
+import { JsonBlock, TRUNCATE_LENGTH } from './JsonBlock';
 
 describe('JsonBlock', () => {
   it('renders label', () => {

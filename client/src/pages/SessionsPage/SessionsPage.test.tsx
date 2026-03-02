@@ -5,16 +5,16 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import type { SessionWithStatus } from '@shared/types';
 
-jest.unstable_mockModule('../../src/utils/api', () => ({
+jest.unstable_mockModule('../../utils/api', () => ({
   apiFetch: jest.fn(),
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
 }));
 
-const api = await import('../../src/utils/api');
-const { SessionsProvider } = await import('../../src/context/SessionsContext');
-const { SessionsPage } = await import('../../src/pages/SessionsPage');
+const api = await import('../../utils/api');
+const { SessionsProvider } = await import('../../context/SessionsContext');
+const { SessionsPage } = await import('.');
 
 const mockGetSessions = api.getSessions as jest.MockedFunction<typeof api.getSessions>;
 

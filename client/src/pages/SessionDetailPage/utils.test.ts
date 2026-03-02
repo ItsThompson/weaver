@@ -1,4 +1,4 @@
-import { formatRelativeTime } from '../../../src/pages/SessionDetailPage/utils';
+import { formatRelativeTime } from './utils';
 
 describe('formatRelativeTime', () => {
   it('returns "just now" for recent dates', () => {

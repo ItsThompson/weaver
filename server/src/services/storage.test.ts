@@ -15,14 +15,14 @@ jest.unstable_mockModule('node:fs', () => ({
 }));
 
 // Silence logger in tests
-jest.unstable_mockModule('../../src/utils/logger.js', () => ({
+jest.unstable_mockModule('../utils/logger.js', () => ({
   log: jest.fn(),
 }));
 
 // Dynamic imports must come after all jest.unstable_mockModule calls
 const fsp = await import('node:fs/promises');
 const fs = await import('node:fs');
-const storage = await import('../../src/services/storage.js');
+const storage = await import('../services/storage.js');
 
 const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
 const { existsSync } = fs;

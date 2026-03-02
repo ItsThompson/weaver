@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import { sessionsReducer, initialState } from '../../src/context/SessionsContext/reducer';
+import { sessionsReducer, initialState } from './reducer';
 import type { SessionWithStatus } from '@shared/types';
 
 const SESSION: SessionWithStatus = {
