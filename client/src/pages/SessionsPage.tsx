@@ -4,58 +4,75 @@ import Table, { type TableProps } from '@cloudscape-design/components/table';
 import Header from '@cloudscape-design/components/header';
 import Tabs from '@cloudscape-design/components/tabs';
 import Button from '@cloudscape-design/components/button';
+import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Input from '@cloudscape-design/components/input';
+import Modal from '@cloudscape-design/components/modal';
+import FormField from '@cloudscape-design/components/form-field';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import TextFilter from '@cloudscape-design/components/text-filter';
 import Box from '@cloudscape-design/components/box';
 import type { SessionWithStatus } from '@shared/types';
 import { useSessions } from '../context/SessionsContext';
 
-const COLUMN_DEFINITIONS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
-  {
-    id: 'customName',
-    header: 'Name',
-    cell: (item) => <EditableName session={item} />,
-    sortingField: 'customName',
-    width: 200,
-  },
-  { id: 'id', header: 'Session ID', cell: (item) => item.id.slice(0, 8), width: 100 },
-  { id: 'cwd', header: 'CWD', cell: (item) => item.cwd, sortingField: 'cwd' },
-  { id: 'agentName', header: 'Agent', cell: (item) => item.agentName ?? '—' },
-  { id: 'startTime', header: 'Started', cell: (item) => new Date(item.startTime).toLocaleString(), sortingField: 'startTime' },
-  { id: 'lastEventTime', header: 'Last Event', cell: (item) => new Date(item.lastEventTime).toLocaleString(), sortingField: 'lastEventTime' },
-];
-
-function EditableName({ session }: { session: SessionWithStatus }) {
+function ActionsCell({ session }: { session: SessionWithStatus }) {
   const { renameSession } = useSessions();
-  const [editing, setEditing] = useState(false);
+  const [visible, setVisible] = useState(false);
   const [value, setValue] = useState(session.customName ?? '');
 
   const save = async () => {
-    setEditing(false);
+    setVisible(false);
     if (value !== (session.customName ?? '')) {
       await renameSession(session.id, value);
     }
   };
 
-  if (editing) {
-    return (
-      <Input
-        value={value}
-        onChange={({ detail }) => setValue(detail.value)}
-        onBlur={save}
-        onKeyDown={({ detail }) => { if (detail.key === 'Enter') save(); }}
-        autoFocus
-      />
-    );
-  }
-
   return (
-    <span onClick={(e) => { e.stopPropagation(); setEditing(true); }} style={{ cursor: 'pointer' }}>
-      {session.customName || <Box color="text-status-inactive">Click to name</Box>}
+    <span onClick={(e) => e.stopPropagation()}>
+      <ButtonDropdown
+        variant="inline-icon"
+        items={[{ id: 'rename', text: 'Rename session' }]}
+        onItemClick={() => { setValue(session.customName ?? ''); setVisible(true); }}
+      />
+      <Modal
+        visible={visible}
+        onDismiss={() => setVisible(false)}
+        header="Rename session"
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              <Button variant="link" onClick={() => setVisible(false)}>Cancel</Button>
+              <Button variant="primary" onClick={save}>Save</Button>
+            </SpaceBetween>
+          </Box>
+        }
+      >
+        <FormField label="Session name">
+          <Input
+            value={value}
+            onChange={({ detail }) => setValue(detail.value)}
+            onKeyDown={({ detail }) => { if (detail.key === 'Enter') save(); }}
+            autoFocus
+          />
+        </FormField>
+      </Modal>
     </span>
   );
 }
+
+const COLUMN_DEFINITIONS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
+  {
+    id: 'customName',
+    header: 'Name',
+    cell: (item) => item.customName || item.id.slice(0, 8),
+    sortingField: 'customName',
+    width: 200,
+  },
+  { id: 'cwd', header: 'CWD', cell: (item) => item.cwd, sortingField: 'cwd' },
+  { id: 'agentName', header: 'Agent', cell: (item) => item.agentName ?? '—' },
+  { id: 'startTime', header: 'Started', cell: (item) => new Date(item.startTime).toLocaleString(), sortingField: 'startTime' },
+  { id: 'lastEventTime', header: 'Last Event', cell: (item) => new Date(item.lastEventTime).toLocaleString(), sortingField: 'lastEventTime' },
+  { id: 'actions', header: '', cell: (item) => <ActionsCell session={item} />, width: 50 },
+];
 
 function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
   const navigate = useNavigate();
