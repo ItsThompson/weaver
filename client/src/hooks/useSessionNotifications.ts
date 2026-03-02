@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
-import { resolveNotification } from './notificationUtils';
+import { deriveActivity, resolveNotification } from './notificationUtils';
 
 export function useSessionNotifications(): void {
   const { addNotification } = useNotifications();
@@ -19,7 +19,9 @@ export function useSessionNotifications(): void {
         if (!eventName) return;
 
         const message = resolveNotification(sessionId, eventName, sessionName, lastActivity.current);
-        if (message) addNotification(message);
+        if (message) {
+          addNotification(message, 'info', deriveActivity(eventName));
+        }
       } catch { /* ignore */ }
     });
 

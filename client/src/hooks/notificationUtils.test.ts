@@ -25,17 +25,17 @@ describe('resolveNotification', () => {
 
   it('suppresses processing (userPromptSubmit)', () => {
     const msg = resolveNotification('s1', 'userPromptSubmit', 'My Session', lastActivity);
-    expect(msg).toBeNull();
+    expect(msg).toBe('My Session → Processing');
   });
 
   it('suppresses running_tool (preToolUse)', () => {
     const msg = resolveNotification('s1', 'preToolUse', 'My Session', lastActivity);
-    expect(msg).toBeNull();
+    expect(msg).toBe('My Session → Running tool');
   });
 
   it('suppresses postToolUse (processing)', () => {
     const msg = resolveNotification('s1', 'postToolUse', 'My Session', lastActivity);
-    expect(msg).toBeNull();
+    expect(msg).toBe('My Session → Processing');
   });
 
   it('deduplicates same state', () => {
@@ -44,14 +44,14 @@ describe('resolveNotification', () => {
     expect(msg).toBeNull();
   });
 
-  it('notifies again after state change', () => {
-    resolveNotification('s1', 'agentSpawn', 'X', lastActivity);
-    // processing and running_tool are suppressed
+  it('silences processing to running_tool', () => {
     resolveNotification('s1', 'userPromptSubmit', 'X', lastActivity);
+    expect(resolveNotification('s1', 'preToolUse', 'X', lastActivity)).toBeNull();
+  });
+
+  it('silences running_tool to processing', () => {
     resolveNotification('s1', 'preToolUse', 'X', lastActivity);
-    resolveNotification('s1', 'postToolUse', 'X', lastActivity);
-    const msg = resolveNotification('s1', 'stop', 'X', lastActivity);
-    expect(msg).toBe('X → Idle');
+    expect(resolveNotification('s1', 'postToolUse', 'X', lastActivity)).toBeNull();
   });
 
   it('tracks sessions independently', () => {
@@ -65,7 +65,7 @@ describe('resolveNotification', () => {
     expect(msg).toBe('abcdefgh → Starting');
   });
 
-  it('simulates full session lifecycle with minimal notifications', () => {
+  it('simulates full session lifecycle', () => {
     const notifications: string[] = [];
     const events = [
       'agentSpawn', 'userPromptSubmit', 'preToolUse', 'postToolUse',
@@ -78,8 +78,10 @@ describe('resolveNotification', () => {
     }
     expect(notifications).toEqual([
       'Test → Starting',
+      'Test → Processing',
       'Test → Idle',
-      // Second stop deduped — already idle
+      'Test → Processing',
+      'Test → Idle',
     ]);
   });
 });

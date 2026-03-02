@@ -8,8 +8,6 @@ export const ACTIVITY_LABELS: Record<string, string> = {
   pending_approval: 'Pending approval',
 };
 
-export const NOTIFY_STATES = new Set<ActivityStatus>(['starting', 'idle', 'pending_approval']);
-
 export function deriveActivity(eventName: string): ActivityStatus {
   switch (eventName) {
     case 'agentSpawn': return 'starting';
@@ -20,8 +18,7 @@ export function deriveActivity(eventName: string): ActivityStatus {
 }
 
 /**
- * Determines whether a notification should be shown for a session update.
- * Returns the notification message, or null if suppressed.
+ * Returns a notification message for every activity change, or null if the activity is unchanged.
  */
 export function resolveNotification(
   sessionId: string,
@@ -31,10 +28,14 @@ export function resolveNotification(
 ): string | null {
   const activity = deriveActivity(eventName);
   const prev = lastActivity.get(sessionId);
-
-  if (activity === prev || !NOTIFY_STATES.has(activity)) return null;
-
   lastActivity.set(sessionId, activity);
+
+  if (activity === prev) return null;
+
+  const skip = (prev === 'processing' && activity === 'running_tool')
+    || (prev === 'running_tool' && activity === 'processing');
+  if (skip) return null;
+
   const name = sessionName || sessionId.slice(0, 8);
   const label = ACTIVITY_LABELS[activity] ?? activity;
   return `${name} → ${label}`;
