@@ -12,7 +12,6 @@ jest.unstable_mockModule('../../../utils/api', () => ({
   updateSessionName: jest.fn(),
 }));
 
-const { SessionsProvider } = await import('../../../context/SessionsContext');
 const { SessionTable } = await import('./SessionTable');
 
 const SESSIONS: SessionWithStatus[] = [
@@ -33,9 +32,7 @@ function renderTable(sessions = SESSIONS) {
   ];
   return render(
     <MemoryRouter>
-      <SessionsProvider>
-        <SessionTable sessions={sessions} columnDefinitions={columns} />
-      </SessionsProvider>
+      <SessionTable sessions={sessions} columnDefinitions={columns} />
     </MemoryRouter>
   );
 }

@@ -3,7 +3,6 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import '@cloudscape-design/global-styles/index.css';
 import { applyMode, Mode } from '@cloudscape-design/global-styles';
-import { SessionsProvider } from './context/SessionsContext';
 import { NotificationProvider } from './context/NotificationContext';
 
 applyMode(Mode.Dark);
@@ -15,9 +14,7 @@ if (root) {
     <React.StrictMode>
       <BrowserRouter>
         <NotificationProvider>
-          <SessionsProvider>
-            <App />
-          </SessionsProvider>
+          <App />
         </NotificationProvider>
       </BrowserRouter>
     </React.StrictMode>,
