@@ -1,4 +1,4 @@
-import { mkdir, readFile, appendFile, readdir, unlink } from 'node:fs/promises';
+import { mkdir, readFile, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
@@ -41,6 +41,11 @@ export async function readSessions(): Promise<Session[]> {
 
 export async function appendSession(session: Session): Promise<void> {
   await appendFile(SESSIONS_FILE(), JSON.stringify(session) + '\n', 'utf-8');
+}
+
+export async function writeSessions(sessions: Session[]): Promise<void> {
+  const content = sessions.map((s) => JSON.stringify(s)).join('\n') + '\n';
+  await writeFile(SESSIONS_FILE(), content, 'utf-8');
 }
 
 export async function cleanStaleSessions(): Promise<void> {
