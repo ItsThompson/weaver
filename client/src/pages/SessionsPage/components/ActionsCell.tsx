@@ -13,12 +13,22 @@ export function ActionsCell({ session }: { session: SessionWithStatus }) {
     revalidateSessions();
   };
 
+  const displayName = session.customName || session.id.slice(0, 8);
+
   return (
     <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
       <ButtonDropdown
         variant="inline-icon"
-        items={[{ id: 'rename', text: 'Rename session' }]}
-        onItemClick={() => setRenameVisible(true)}
+        items={[
+          { id: 'rename', text: 'Rename session' },
+          { id: 'copy-name', text: 'Copy session name' },
+          { id: 'copy-pid', text: 'Copy PID' },
+        ]}
+        onItemClick={({ detail }) => {
+          if (detail.id === 'rename') setRenameVisible(true);
+          if (detail.id === 'copy-name') navigator.clipboard.writeText(displayName);
+          if (detail.id === 'copy-pid') navigator.clipboard.writeText(String(session.pid));
+        }}
         expandToViewport
       />
       <RenameModal
