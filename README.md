@@ -34,6 +34,15 @@ alias weaver='~/Documents/weaver/bin/weaver'
 alias wv='weaver view'
 ```
 
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `weaver view` | Navigate dashboard to the current kiro-cli session |
+| `weaver session` | Navigate dashboard to the sessions list |
+| `weaver session list` | Navigate dashboard to the sessions list |
+| `weaver session <PID>` | Navigate dashboard to a specific session by PID |
+
 ## Development
 
 ```bash

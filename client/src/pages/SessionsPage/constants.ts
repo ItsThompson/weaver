@@ -4,7 +4,12 @@ import type { SessionWithStatus } from '@shared/types';
 import { ActionsCell } from './components/ActionsCell';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
 
+const PID_COLUMN: TableProps.ColumnDefinition<SessionWithStatus> = {
+  id: 'pid', header: 'PID', cell: (item) => item.pid, sortingField: 'pid', width: 80,
+};
+
 const BASE_COLUMNS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
+  PID_COLUMN,
   { id: 'customName', header: 'Name', cell: (item) => item.customName || item.id.slice(0, 8), sortingField: 'customName', width: 200 },
   { id: 'cwd', header: 'CWD', cell: (item) => item.cwd, sortingField: 'cwd' },
   { id: 'agentName', header: 'Agent', cell: (item) => item.agentName ?? '—' },
@@ -21,9 +26,10 @@ const ACTIVITY_COLUMN: TableProps.ColumnDefinition<SessionWithStatus> = {
 };
 
 export const OPEN_COLUMNS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
-  BASE_COLUMNS[0],
+  BASE_COLUMNS[0],  // PID
+  BASE_COLUMNS[1],  // Name
   ACTIVITY_COLUMN,
-  ...BASE_COLUMNS.slice(1),
+  ...BASE_COLUMNS.slice(2),
 ];
 
 export const CLOSED_COLUMNS: TableProps.ColumnDefinition<SessionWithStatus>[] = BASE_COLUMNS;

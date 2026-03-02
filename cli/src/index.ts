@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { view } from './commands/view.js';
-import { sessions } from './commands/sessions.js';
+import { session } from './commands/session.js';
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -9,15 +9,17 @@ const args = process.argv.slice(4);
 
 const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   view,
-  sessions,
+  session,
 };
 
 if (!command || command === '--help' || command === '-h') {
   console.log(`Usage: weaver <command>
 
 Commands:
-  view       Navigate dashboard to the current kiro-cli session
-  sessions   Navigate dashboard to the sessions list`);
+  view              Navigate dashboard to the current kiro-cli session
+  session           Navigate dashboard to the sessions list (default: list)
+  session list      Navigate dashboard to the sessions list
+  session <PID>     Navigate dashboard to a specific session by PID`);
   process.exit(0);
 }
 
