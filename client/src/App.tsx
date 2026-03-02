@@ -8,6 +8,7 @@ import { CherrypickPage } from './pages/CherrypickPage';
 import { OrphansPage } from './pages/OrphansPage/OrphansPage';
 import { useNavigateOnView } from './hooks/useNavigateOnView';
 import { useSessionNotifications } from './hooks/useSessionNotifications';
+import { useSessionEvents } from './hooks/useSessionEvents';
 import { NotificationBar } from './components/NotificationBar';
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
@@ -21,6 +22,7 @@ export function App() {
   const [navOpen, setNavOpen] = useState(true);
   useNavigateOnView();
   useSessionNotifications();
+  useSessionEvents();
 
   const handleFollow: SideNavigationProps['onFollow'] = (event) => {
     event.preventDefault();

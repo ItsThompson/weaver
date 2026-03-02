@@ -3,6 +3,7 @@ import React from 'react';
 import { render, screen, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
+import { SWRConfig } from 'swr';
 import type { SessionWithStatus } from '@weaver/shared/types';
 
 jest.unstable_mockModule('../../utils/api', () => ({
@@ -16,7 +17,6 @@ jest.unstable_mockModule('../../utils/api', () => ({
 }));
 
 const api = await import('../../utils/api');
-const { SessionsProvider } = await import('../../context/SessionsContext');
 const { SessionsPage } = await import('.');
 
 const mockGetSessions = api.getSessions as jest.MockedFunction<typeof api.getSessions>;
@@ -33,11 +33,11 @@ const CLOSED_SESSION: SessionWithStatus = {
 
 function renderPage() {
   return render(
-    <MemoryRouter>
-      <SessionsProvider>
+    <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
+      <MemoryRouter>
         <SessionsPage />
-      </SessionsProvider>
-    </MemoryRouter>
+      </MemoryRouter>
+    </SWRConfig>
   );
 }
 

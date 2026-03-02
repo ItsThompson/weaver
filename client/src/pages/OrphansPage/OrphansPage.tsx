@@ -1,42 +1,28 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
+import Header from '@cloudscape-design/components/header';
+import Box from '@cloudscape-design/components/box';
+import Spinner from '@cloudscape-design/components/spinner';
+import Badge from '@cloudscape-design/components/badge';
+import Button from '@cloudscape-design/components/button';
 import Container from '@cloudscape-design/components/container';
 import Select, { type SelectProps } from '@cloudscape-design/components/select';
-import Button from '@cloudscape-design/components/button';
-import Box from '@cloudscape-design/components/box';
-import Badge from '@cloudscape-design/components/badge';
-import Spinner from '@cloudscape-design/components/spinner';
-import type { OrphanGroup, SessionWithStatus } from '@weaver/shared/types';
-import { getOrphans, getSessions, assignOrphans } from '../../utils/api';
+import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
+import { assignOrphans } from '../../utils/api';
+import { useOrphansQuery, useSessionsQuery, revalidateOrphans } from '../../hooks/queries';
 import { TurnContainer } from '../SessionDetailPage/components/TurnContainer';
 
 export function OrphansPage() {
   const navigate = useNavigate();
-  const [groups, setGroups] = useState<OrphanGroup[]>([]);
-  const [sessions, setSessions] = useState<SessionWithStatus[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data: orphanData, error: orphanError, isLoading: orphansLoading } = useOrphansQuery();
+  const { data: sessions = [] } = useSessionsQuery();
   const [selectedSessions, setSelectedSessions] = useState<Record<number, SelectProps.Option | null>>({});
   const [assigning, setAssigning] = useState<number | null>(null);
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [orphanData, sessionData] = await Promise.all([getOrphans(), getSessions()]);
-      setGroups(orphanData.groups);
-      setSessions(sessionData);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => { fetchData(); }, [fetchData]);
+  const groups = orphanData?.groups ?? [];
+  const loading = orphansLoading;
+  const error = orphanError;
 
   const sessionOptions: SelectProps.Options = sessions
     .sort((a, b) => b.startTime.localeCompare(a.startTime))
@@ -53,10 +39,10 @@ export function OrphansPage() {
     setAssigning(pid);
     try {
       await assignOrphans(selected.value, pid);
-      await fetchData();
+      revalidateOrphans();
       setSelectedSessions((prev) => { const next = { ...prev }; delete next[pid]; return next; });
     } catch (err) {
-      setError(err instanceof Error ? err.message : String(err));
+      // Error will surface on next revalidation
     } finally {
       setAssigning(null);
     }
@@ -79,7 +65,7 @@ export function OrphansPage() {
       </Header>
 
       {loading && <Spinner size="large" />}
-      {error && <Box color="text-status-error">{error}</Box>}
+      {error && <Box color="text-status-error">{error.message}</Box>}
 
       {!loading && groups.length === 0 && (
         <Box color="text-status-inactive" textAlign="center" padding="l">No orphaned events</Box>

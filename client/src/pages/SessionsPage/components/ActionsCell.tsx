@@ -1,12 +1,17 @@
 import { useState } from 'react';
 import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import type { SessionWithStatus } from '@weaver/shared/types';
-import { useSessions } from '../../../context/SessionsContext';
+import { updateSessionName } from '../../../utils/api';
+import { revalidateSessions } from '../../../hooks/queries';
 import { RenameModal } from '../../../components/RenameModal';
 
 export function ActionsCell({ session }: { session: SessionWithStatus }) {
-  const { renameSession } = useSessions();
   const [renameVisible, setRenameVisible] = useState(false);
+
+  const handleRename = async (name: string) => {
+    await updateSessionName(session.id, name);
+    revalidateSessions();
+  };
 
   return (
     <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
@@ -20,7 +25,7 @@ export function ActionsCell({ session }: { session: SessionWithStatus }) {
         visible={renameVisible}
         currentName={session.customName}
         onDismiss={() => setRenameVisible(false)}
-        onSave={(name) => renameSession(session.id, name)}
+        onSave={handleRename}
       />
     </span>
   );
