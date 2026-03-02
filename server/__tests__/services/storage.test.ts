@@ -4,6 +4,7 @@ import { jest } from '@jest/globals';
 jest.unstable_mockModule('node:fs/promises', () => ({
   mkdir: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readFile: jest.fn<() => Promise<string>>(),
+  writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readdir: jest.fn<() => Promise<string[]>>(),
   unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
