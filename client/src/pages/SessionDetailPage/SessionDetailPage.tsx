@@ -8,6 +8,7 @@ import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
 import { getSession, updateSessionName } from '../../utils/api';
+import { useSessionEvents } from '../../hooks/useSessionEvents';
 import { RenameSession } from '../../components/RenameSession';
 import { TurnContainer } from './components/TurnContainer';
 
@@ -29,6 +30,10 @@ export function SessionDetailPage() {
   }, [id]);
 
   useEffect(() => { fetchSession(); }, [fetchSession]);
+
+  useSessionEvents({
+    onUpdate: (sessionId) => { if (sessionId === id) fetchSession(); },
+  });
 
   const handleRename = async (name: string) => {
     if (!id || !session) return;

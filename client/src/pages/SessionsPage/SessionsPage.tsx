@@ -5,6 +5,7 @@ import Button from '@cloudscape-design/components/button';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Box from '@cloudscape-design/components/box';
 import { useSessions } from '../../context/SessionsContext';
+import { useSessionEvents } from '../../hooks/useSessionEvents';
 import { SessionTable } from './components/SessionTable';
 import { OPEN_COLUMNS, CLOSED_COLUMNS } from './constants';
 
@@ -12,6 +13,7 @@ export function SessionsPage() {
   const { state, fetchSessions } = useSessions();
 
   useEffect(() => { fetchSessions(); }, [fetchSessions]);
+  useSessionEvents({ onUpdate: () => fetchSessions() });
 
   const open = state.sessions.filter((s) => s.status === 'open');
   const closed = state.sessions.filter((s) => s.status === 'closed');
