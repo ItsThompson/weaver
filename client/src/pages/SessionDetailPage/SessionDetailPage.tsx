@@ -3,7 +3,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
 import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
@@ -11,9 +10,9 @@ import Spinner from '@cloudscape-design/components/spinner';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
 import { getSession, updateSessionName } from '../../utils/api';
 import { useSessionEvents } from '../../hooks/useSessionEvents';
-import { RenameSession } from '../../components/RenameSession';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
 import { TurnContainer } from './components/TurnContainer';
+import { SessionActions } from './components/SessionActions';
 
 export function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -87,17 +86,12 @@ export function SessionDetailPage() {
             actions={
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'nowrap' }}>
                 <Button iconName="refresh" onClick={() => fetchSession()} loading={loading} />
-                <ButtonDropdown
-                  items={[{
-                    id: 'toggle-tools',
-                    text: showTools ? 'Hide tool execution' : 'View tool execution',
-                  }]}
-                  onItemClick={togglePageTools}
-                  expandToViewport
-                >
-                  Display
-                </ButtonDropdown>
-                <RenameSession currentName={session.customName} onRename={handleRename} />
+                <SessionActions
+                  showTools={showTools}
+                  onToggleTools={togglePageTools}
+                  currentName={session.customName}
+                  onRename={handleRename}
+                />
               </div>
             }
           >
