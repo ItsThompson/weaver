@@ -1,45 +1,61 @@
-let audioCtx: AudioContext | null = null;
+export type NotificationSound = 'beep' | 'chime';
 
-function getAudioContext(): AudioContext {
-  if (!audioCtx) {
-    audioCtx = new AudioContext();
-    const resume = () => {
-      audioCtx?.resume();
-      document.removeEventListener('click', resume);
-      document.removeEventListener('keydown', resume);
-    };
-    document.addEventListener('click', resume);
-    document.addEventListener('keydown', resume);
+const SAMPLE_RATE = 44100;
+
+function generateTone(frequency: number, duration: number, volume = 0.15): Float32Array {
+  const length = Math.floor(SAMPLE_RATE * duration);
+  const samples = new Float32Array(length);
+  for (let i = 0; i < length; i++) {
+    const t = i / SAMPLE_RATE;
+    const envelope = volume * Math.pow(0.001 / volume, t / duration);
+    samples[i] = Math.sin(2 * Math.PI * frequency * t) * envelope;
   }
-  return audioCtx;
+  return samples;
 }
 
-function playTone(frequency: number, duration: number, startOffset = 0): void {
-  const ctx = getAudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.type = 'sine';
-  osc.frequency.value = frequency;
-  gain.gain.value = 0.15;
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  const start = ctx.currentTime + startOffset;
-  osc.start(start);
-  gain.gain.setValueAtTime(0.15, start);
-  gain.gain.exponentialRampToValueAtTime(0.001, start + duration);
-  osc.stop(start + duration);
+function mixSamples(...tracks: { samples: Float32Array; offsetSamples: number }[]): Float32Array {
+  const length = Math.max(...tracks.map((t) => t.offsetSamples + t.samples.length));
+  const mixed = new Float32Array(length);
+  for (const { samples, offsetSamples } of tracks) {
+    for (let i = 0; i < samples.length; i++) mixed[offsetSamples + i] += samples[i];
+  }
+  return mixed;
 }
 
-export type NotificationSound = 'chime' | 'beep';
+function samplesToWavUrl(samples: Float32Array): string {
+  const buffer = new ArrayBuffer(44 + samples.length * 2);
+  const view = new DataView(buffer);
+  const writeStr = (offset: number, str: string) => { for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i)); };
 
-const SOUND_PLAYERS: Record<NotificationSound, () => void> = {
-  chime: () => { playTone(523, 0.2); playTone(659, 0.3, 0.15); },
-  beep: () => { playTone(440, 0.15); },
+  writeStr(0, 'RIFF');
+  view.setUint32(4, 36 + samples.length * 2, true);
+  writeStr(8, 'WAVE');
+  writeStr(12, 'fmt ');
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);       // PCM
+  view.setUint16(22, 1, true);       // mono
+  view.setUint32(24, SAMPLE_RATE, true);
+  view.setUint32(28, SAMPLE_RATE * 2, true);
+  view.setUint16(32, 2, true);
+  view.setUint16(34, 16, true);      // 16-bit
+  writeStr(36, 'data');
+  view.setUint32(40, samples.length * 2, true);
+
+  for (let i = 0; i < samples.length; i++) {
+    view.setInt16(44 + i * 2, Math.max(-1, Math.min(1, samples[i])) * 0x7fff, true);
+  }
+
+  return URL.createObjectURL(new Blob([buffer], { type: 'audio/wav' }));
+}
+
+const SOUND_URLS: Record<NotificationSound, string> = {
+  beep: samplesToWavUrl(generateTone(440, 0.15)),
+  chime: samplesToWavUrl(mixSamples(
+    { samples: generateTone(523, 0.2), offsetSamples: 0 },
+    { samples: generateTone(659, 0.3), offsetSamples: Math.floor(SAMPLE_RATE * 0.15) },
+  )),
 };
 
 export function playNotificationSound(sound: NotificationSound): void {
-  SOUND_PLAYERS[sound]();
+  new Audio(SOUND_URLS[sound]).play().catch(() => {});
 }
