@@ -1,11 +1,15 @@
 import { deriveActivity, resolveNotification } from './notificationUtils';
 
 describe('deriveActivity', () => {
-  it('maps agentSpawn to starting', () => expect(deriveActivity('agentSpawn')).toBe('starting'));
-  it('maps stop to idle', () => expect(deriveActivity('stop')).toBe('idle'));
-  it('maps preToolUse to running_tool', () => expect(deriveActivity('preToolUse')).toBe('running_tool'));
-  it('maps userPromptSubmit to processing', () => expect(deriveActivity('userPromptSubmit')).toBe('processing'));
-  it('maps postToolUse to processing', () => expect(deriveActivity('postToolUse')).toBe('processing'));
+  it.each([
+    ['agentSpawn', 'starting'],
+    ['stop', 'idle'],
+    ['preToolUse', 'running_tool'],
+    ['userPromptSubmit', 'processing'],
+    ['postToolUse', 'processing'],
+  ])('maps %s to %s', (eventName, expected) => {
+    expect(deriveActivity(eventName)).toBe(expected);
+  });
 });
 
 describe('resolveNotification', () => {
@@ -13,73 +17,54 @@ describe('resolveNotification', () => {
 
   beforeEach(() => { lastActivity = new Map(); });
 
-  it('notifies on agentSpawn (starting)', () => {
-    const msg = resolveNotification('s1', 'agentSpawn', 'My Session', lastActivity);
-    expect(msg).toBe('My Session → Starting');
+  it.each([
+    ['agentSpawn', 'My Session → Starting'],
+    ['stop', 'My Session → Idle'],
+    ['userPromptSubmit', 'My Session → Processing'],
+    ['preToolUse', 'My Session → Running tool'],
+    ['postToolUse', 'My Session → Processing'],
+  ])('notifies on first %s event', (eventName, expected) => {
+    expect(resolveNotification('s1', eventName, 'My Session', lastActivity)).toBe(expected);
   });
 
-  it('notifies on stop (idle)', () => {
-    const msg = resolveNotification('s1', 'stop', 'My Session', lastActivity);
-    expect(msg).toBe('My Session → Idle');
-  });
-
-  it('suppresses processing (userPromptSubmit)', () => {
-    const msg = resolveNotification('s1', 'userPromptSubmit', 'My Session', lastActivity);
-    expect(msg).toBeNull();
-  });
-
-  it('suppresses running_tool (preToolUse)', () => {
-    const msg = resolveNotification('s1', 'preToolUse', 'My Session', lastActivity);
-    expect(msg).toBeNull();
-  });
-
-  it('suppresses postToolUse (processing)', () => {
-    const msg = resolveNotification('s1', 'postToolUse', 'My Session', lastActivity);
-    expect(msg).toBeNull();
+  it.each([
+    ['processing → running_tool', 'userPromptSubmit', 'preToolUse'],
+    ['running_tool → processing', 'preToolUse', 'postToolUse'],
+  ])('silences %s', (_label, setup, event) => {
+    resolveNotification('s1', setup, 'X', lastActivity);
+    expect(resolveNotification('s1', event, 'X', lastActivity)).toBeNull();
   });
 
   it('deduplicates same state', () => {
     resolveNotification('s1', 'stop', 'X', lastActivity);
-    const msg = resolveNotification('s1', 'stop', 'X', lastActivity);
-    expect(msg).toBeNull();
-  });
-
-  it('notifies again after state change', () => {
-    resolveNotification('s1', 'agentSpawn', 'X', lastActivity);
-    // processing and running_tool are suppressed
-    resolveNotification('s1', 'userPromptSubmit', 'X', lastActivity);
-    resolveNotification('s1', 'preToolUse', 'X', lastActivity);
-    resolveNotification('s1', 'postToolUse', 'X', lastActivity);
-    const msg = resolveNotification('s1', 'stop', 'X', lastActivity);
-    expect(msg).toBe('X → Idle');
+    expect(resolveNotification('s1', 'stop', 'X', lastActivity)).toBeNull();
   });
 
   it('tracks sessions independently', () => {
     resolveNotification('s1', 'stop', 'A', lastActivity);
-    const msg = resolveNotification('s2', 'stop', 'B', lastActivity);
-    expect(msg).toBe('B → Idle');
+    expect(resolveNotification('s2', 'stop', 'B', lastActivity)).toBe('B → Idle');
   });
 
   it('falls back to truncated session ID when no name', () => {
-    const msg = resolveNotification('abcdefgh-1234', 'agentSpawn', undefined, lastActivity);
-    expect(msg).toBe('abcdefgh → Starting');
+    expect(resolveNotification('abcdefgh-1234', 'agentSpawn', undefined, lastActivity)).toBe('abcdefgh → Starting');
   });
 
-  it('simulates full session lifecycle with minimal notifications', () => {
-    const notifications: string[] = [];
+  it('simulates full session lifecycle', () => {
     const events = [
       'agentSpawn', 'userPromptSubmit', 'preToolUse', 'postToolUse',
       'preToolUse', 'postToolUse', 'stop', 'userPromptSubmit',
       'preToolUse', 'postToolUse', 'stop',
     ];
-    for (const e of events) {
-      const msg = resolveNotification('s1', e, 'Test', lastActivity);
-      if (msg) notifications.push(msg);
-    }
+    const notifications = events
+      .map((e) => resolveNotification('s1', e, 'Test', lastActivity))
+      .filter(Boolean);
+
     expect(notifications).toEqual([
       'Test → Starting',
+      'Test → Processing',
       'Test → Idle',
-      // Second stop deduped — already idle
+      'Test → Processing',
+      'Test → Idle',
     ]);
   });
 });
