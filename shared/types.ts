@@ -33,6 +33,25 @@ export interface HookEvent {
   event: HookEventData;
 }
 
+// Matched pre/post tool use pair within a turn
+export interface ToolCallPair {
+  toolName: string;
+  input: Record<string, unknown>;
+  response?: Record<string, unknown>;
+  startTime: string;
+  endTime?: string;
+}
+
+// A logical conversation turn: user prompt → tool calls → stop
+export interface TurnGroup {
+  id: number;
+  userPrompt: string | null;
+  events: HookEvent[];
+  toolCalls: ToolCallPair[];
+  startTime: string;
+  endTime: string;
+}
+
 // Structures from /chat save output
 
 export interface ToolUseCall {
