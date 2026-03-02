@@ -56,8 +56,22 @@ truncate_response() {
   local max_len="$MAX_RESPONSE_LENGTH"
 
   if echo "$event" | grep -q '"tool_response"'; then
-    # Extract tool_response.result string content and truncate if needed
-    echo "$event" | sed -E "s/(\"result\":\[\"[^\"]{${max_len}})[^\"]*/\1...[truncated]/g"
+    echo "$event" | awk -v max="$max_len" '{
+      while (match($0, /"result":\["[^"]+"/)) {
+        prefix = substr($0, 1, RSTART - 1)
+        matched = substr($0, RSTART, RLENGTH)
+        rest = substr($0, RSTART + RLENGTH)
+        # offset past "result":[" (11 chars)
+        content_start = 11
+        content = substr(matched, content_start + 1, RLENGTH - content_start - 1)
+        if (length(content) > max) {
+          matched = substr(matched, 1, content_start + max) "...[truncated]\""
+        }
+        printf "%s%s", prefix, matched
+        $0 = rest
+      }
+      print
+    }'
   else
     echo "$event"
   fi
