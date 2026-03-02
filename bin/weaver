@@ -1,0 +1,44 @@
+#!/bin/bash
+# Thin wrapper that resolves the kiro-cli PID before handing off to the TS CLI.
+# npx spawns its own process tree, so we must capture the PID from the caller's context.
+set -euo pipefail
+
+CLI_DIR="$(cd "$(dirname "$0")/.." && pwd)/cli"
+
+# Walk up from current shell to find the kiro-cli PID
+get_caller_pid() {
+  local pid="$PPID"
+  local max_depth=10
+  local depth=0
+
+  while [ "$depth" -lt "$max_depth" ]; do
+    local pname
+    pname=$(ps -p "$pid" -o comm= 2>/dev/null || echo "")
+
+    case "$pname" in
+      sh|bash|zsh|dash|fish|-bash|-zsh|-sh)
+        local parent
+        parent=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+        if [ -z "$parent" ] || [ "$parent" = "1" ]; then
+          break
+        fi
+        pid="$parent"
+        depth=$((depth + 1))
+        ;;
+      *)
+        break
+        ;;
+    esac
+  done
+
+  echo "$pid"
+}
+
+# For 'view' command, resolve PID and pass it as --pid flag
+if [ "${1:-}" = "view" ]; then
+  CALLER_PID=$(get_caller_pid)
+  shift
+  exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" view --pid "$CALLER_PID" "$@"
+else
+  exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" "$@"
+fi

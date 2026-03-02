@@ -30,7 +30,7 @@ chmod +x hooks/weaver-log.sh
 npm install --prefix cli
 
 # Add aliases (add to ~/.zshrc or ~/.bashrc)
-alias weaver='npx --prefix ~/Documents/weaver/cli tsx ~/Documents/weaver/cli/src/index.ts'
+alias weaver='~/Documents/weaver/bin/weaver'
 alias wv='weaver view'
 ```
 

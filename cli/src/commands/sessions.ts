@@ -1,6 +1,6 @@
 import { post } from '../utils.js';
 
-export function sessions(): void {
+export function sessions(_args: string[]): void {
   const { ok, status } = post('/api/navigate', { page: 'sessions' });
 
   if (status === 0) {
