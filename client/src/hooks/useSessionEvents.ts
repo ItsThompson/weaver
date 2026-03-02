@@ -1,14 +1,7 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
+import { revalidateSessions, revalidateSession } from './queries';
 
-interface UseSessionEventsOptions {
-  onUpdate: (sessionId: string) => void;
-  debounceMs?: number;
-}
-
-export function useSessionEvents({ onUpdate, debounceMs = 1000 }: UseSessionEventsOptions): void {
-  const callbackRef = useRef(onUpdate);
-  callbackRef.current = onUpdate;
-
+export function useSessionEvents(debounceMs = 1000): void {
   useEffect(() => {
     const pending = new Map<string, ReturnType<typeof setTimeout>>();
     const source = new EventSource('/api/events');
@@ -20,7 +13,8 @@ export function useSessionEvents({ onUpdate, debounceMs = 1000 }: UseSessionEven
         if (existing) clearTimeout(existing);
         pending.set(sessionId, setTimeout(() => {
           pending.delete(sessionId);
-          callbackRef.current(sessionId);
+          revalidateSessions();
+          revalidateSession(sessionId);
         }, debounceMs));
       } catch { /* ignore malformed */ }
     });

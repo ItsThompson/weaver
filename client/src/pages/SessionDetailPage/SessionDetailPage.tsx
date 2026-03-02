@@ -1,48 +1,32 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
-import Badge from '@cloudscape-design/components/badge';
+import Header from '@cloudscape-design/components/header';
 import Box from '@cloudscape-design/components/box';
-import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
-import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
-import { getSession, updateSessionName } from '../../utils/api';
-import { useSessionEvents } from '../../hooks/useSessionEvents';
+import Badge from '@cloudscape-design/components/badge';
+import Button from '@cloudscape-design/components/button';
+import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
+import { updateSessionName } from '../../utils/api';
+import { useSessionQuery } from '../../hooks/queries';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
-import { TurnContainer } from './components/TurnContainer';
 import { SessionActions } from './components/SessionActions';
+import { TurnContainer } from './components/TurnContainer';
 
 export function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const [session, setSession] = useState<SessionWithStatus | null>(null);
-  const [turns, setTurns] = useState<TurnGroup[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { data, error, isLoading, mutate } = useSessionQuery(id);
   const [showTools, setShowTools] = useState(true);
   const [expandedTurns, setExpandedTurns] = useState<Set<number>>(new Set());
 
-  const fetchSession = useCallback((silent = false) => {
-    if (!id) return;
-    if (!silent) setLoading(true);
-    getSession(id)
-      .then(({ session, turns }) => { setSession(session); setTurns(turns); setError(null); })
-      .catch((err) => setError(err instanceof Error ? err.message : String(err)))
-      .finally(() => { if (!silent) setLoading(false); });
-  }, [id]);
-
-  useEffect(() => { fetchSession(); }, [fetchSession]);
-
-  useSessionEvents({
-    onUpdate: (sessionId) => { if (sessionId === id) fetchSession(true); },
-  });
+  const session = data?.session ?? null;
+  const turns = data?.turns ?? [];
 
   const handleRename = async (name: string) => {
-    if (!id || !session) return;
+    if (!id || !data) return;
     await updateSessionName(id, name);
-    setSession({ ...session, customName: name });
+    mutate();
   };
 
   const togglePageTools = () => {
@@ -70,9 +54,9 @@ export function SessionDetailPage() {
         ]}
         onFollow={(e) => { e.preventDefault(); navigate(e.detail.href); }}
       />
-      {loading && <Spinner size="large" />}
-      {error && <Box color="text-status-error">{error}</Box>}
-      {!loading && !error && session && (
+      {isLoading && <Spinner size="large" />}
+      {error && <Box color="text-status-error">{error.message}</Box>}
+      {!isLoading && !error && session && (
         <SpaceBetween size="m">
           <Header
             variant="h1"
@@ -85,7 +69,7 @@ export function SessionDetailPage() {
             }
             actions={
               <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'nowrap' }}>
-                <Button iconName="refresh" onClick={() => fetchSession()} loading={loading} />
+                <Button iconName="refresh" onClick={() => mutate()} loading={isLoading} />
                 <SessionActions
                   showTools={showTools}
                   onToggleTools={togglePageTools}
