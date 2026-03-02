@@ -30,9 +30,16 @@ function renderTable(sessions = SESSIONS) {
     { id: 'name', header: 'Name', cell: (item: any) => item.customName || item.id },
     { id: 'cwd', header: 'CWD', cell: (item: any) => item.cwd },
   ];
+  const contentDisplayOptions = columns.map((c) => ({ id: c.id, label: c.header as string }));
+  const defaultContentDisplay = columns.map((c) => ({ id: c.id, visible: true }));
   return render(
     <MemoryRouter>
-      <SessionTable sessions={sessions} columnDefinitions={columns} />
+      <SessionTable
+        sessions={sessions}
+        columnDefinitions={columns}
+        contentDisplayOptions={contentDisplayOptions}
+        defaultContentDisplay={defaultContentDisplay}
+      />
     </MemoryRouter>
   );
 }

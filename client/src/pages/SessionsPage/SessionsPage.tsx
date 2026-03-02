@@ -7,7 +7,7 @@ import Badge from '@cloudscape-design/components/badge';
 import Tabs from '@cloudscape-design/components/tabs';
 import { useSessionsQuery, useOrphanCountQuery, revalidateSessions } from '../../hooks/queries';
 import { SessionTable } from './components/SessionTable';
-import { OPEN_COLUMNS, CLOSED_COLUMNS } from './constants';
+import { OPEN_COLUMNS, CLOSED_COLUMNS, OPEN_DISPLAY_OPTIONS, CLOSED_DISPLAY_OPTIONS, OPEN_DEFAULT_CONTENT_DISPLAY, CLOSED_DEFAULT_CONTENT_DISPLAY } from './constants';
 
 export function SessionsPage() {
   const { data: sessions = [], error, isLoading } = useSessionsQuery();
@@ -41,8 +41,8 @@ export function SessionsPage() {
       {error && <Box color="text-status-error">{error.message}</Box>}
       <Tabs
         tabs={[
-          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} /> },
-          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} columnDefinitions={CLOSED_COLUMNS} /> },
+          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} contentDisplayOptions={OPEN_DISPLAY_OPTIONS} defaultContentDisplay={OPEN_DEFAULT_CONTENT_DISPLAY} /> },
+          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} columnDefinitions={CLOSED_COLUMNS} contentDisplayOptions={CLOSED_DISPLAY_OPTIONS} defaultContentDisplay={CLOSED_DEFAULT_CONTENT_DISPLAY} /> },
         ]}
       />
     </SpaceBetween>
