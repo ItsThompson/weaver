@@ -5,15 +5,15 @@ import '@testing-library/jest-dom';
 import type { SessionWithStatus } from '@shared/types';
 
 // Mock the API module before importing context
-jest.unstable_mockModule('../src/utils/api', () => ({
+jest.unstable_mockModule('../../src/utils/api', () => ({
   apiFetch: jest.fn(),
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
 }));
 
-const api = await import('../src/utils/api');
-const { SessionsProvider, useSessions } = await import('../src/context/SessionsContext');
+const api = await import('../../src/utils/api');
+const { SessionsProvider, useSessions } = await import('../../src/context/SessionsContext');
 
 const mockGetSessions = api.getSessions as jest.MockedFunction<typeof api.getSessions>;
 const mockUpdateSessionName = api.updateSessionName as jest.MockedFunction<typeof api.updateSessionName>;

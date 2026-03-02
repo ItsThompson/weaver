@@ -1,6 +1,11 @@
 #!/bin/bash
 set -euo pipefail
 
+# Weaver logging hook for kiro-cli.
+# Captures hook events from stdin and writes them to local files in ~/.weaver/.
+# Creates session metadata and per-session event logs that the weaver dashboard reads.
+# Does not communicate with the weaver server - only writes to disk.
+
 WEAVER_DIR="$HOME/.weaver"
 LOGS_DIR="$WEAVER_DIR/logs"
 SESSIONS_FILE="$WEAVER_DIR/sessions.jsonl"
