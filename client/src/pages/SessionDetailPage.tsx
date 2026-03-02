@@ -108,7 +108,7 @@ export function SessionDetailPage() {
             {displayName}
           </Header>
           <Box fontSize="body-s" color="text-body-secondary">
-            Assistant text responses are not captured by hooks.
+            Assistant responses are not available in this view. Use <a href="/cherrypick">Cherrypick</a> to export and analyze full conversations.
           </Box>
           {turns.map((turn) => (
             <TurnContainer key={turn.id} turn={turn} />
