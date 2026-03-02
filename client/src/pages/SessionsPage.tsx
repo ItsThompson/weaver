@@ -27,11 +27,12 @@ function ActionsCell({ session }: { session: SessionWithStatus }) {
   };
 
   return (
-    <span onClick={(e) => e.stopPropagation()}>
+    <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
       <ButtonDropdown
         variant="inline-icon"
         items={[{ id: 'rename', text: 'Rename session' }]}
         onItemClick={() => { setValue(session.customName ?? ''); setVisible(true); }}
+        expandToViewport
       />
       <Modal
         visible={visible}
@@ -71,7 +72,7 @@ const COLUMN_DEFINITIONS: TableProps.ColumnDefinition<SessionWithStatus>[] = [
   { id: 'agentName', header: 'Agent', cell: (item) => item.agentName ?? '—' },
   { id: 'startTime', header: 'Started', cell: (item) => new Date(item.startTime).toLocaleString(), sortingField: 'startTime' },
   { id: 'lastEventTime', header: 'Last Event', cell: (item) => new Date(item.lastEventTime).toLocaleString(), sortingField: 'lastEventTime' },
-  { id: 'actions', header: '', cell: (item) => <ActionsCell session={item} />, width: 50 },
+  { id: 'actions', header: '', cell: (item) => <ActionsCell session={item} />, width: 70, minWidth: 70 },
 ];
 
 function SessionTable({ sessions }: { sessions: SessionWithStatus[] }) {
