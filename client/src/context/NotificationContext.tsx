@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
 import { NOTIFICATION_AUTO_DISMISS_MS, NOTIFICATION_MAX_VISIBLE } from '../constants';
-import { playNotificationSound } from '../hooks/soundUtils';
-import type { ActivityStatus } from '@weaver/shared/types';
+import { playNotificationSound, type NotificationSound } from '../hooks/soundUtils';
 
 interface Notification {
   id: string;
@@ -12,7 +11,7 @@ interface Notification {
 
 interface NotificationContextValue {
   notifications: Notification[];
-  addNotification: (content: string, type?: Notification['type'], activity?: ActivityStatus) => void;
+  addNotification: (content: string, type?: Notification['type'], sound?: NotificationSound) => void;
   dismissNotification: (id: string) => void;
 }
 
@@ -26,7 +25,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setNotifications((prev) => prev.filter((n) => n.id !== id));
   }, []);
 
-  const addNotification = useCallback((content: string, type: Notification['type'] = 'info', activity?: ActivityStatus) => {
+  const addNotification = useCallback((content: string, type: Notification['type'] = 'info', sound?: NotificationSound) => {
     const id = `notif-${++counterRef.current}`;
     const notification: Notification = { id, content, type, timestamp: Date.now() };
 
@@ -37,7 +36,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       return next;
     });
 
-    if (activity) playNotificationSound(activity);
+    if (sound) playNotificationSound(sound);
     setTimeout(() => dismissNotification(id), NOTIFICATION_AUTO_DISMISS_MS);
   }, [dismissNotification]);
 
