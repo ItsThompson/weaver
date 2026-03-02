@@ -3,12 +3,18 @@ import { broadcast, emit, sseReply } from '../services/event-bus.js';
 import { readSessions } from '../services/storage.js';
 
 export function registerEventRoutes(server: FastifyInstance): void {
-  server.post<{ Body: { sessionId: string } }>('/api/notify', async (request, reply) => {
-    const { sessionId } = request.body ?? {};
+  server.post<{ Body: { sessionId: string; eventName?: string } }>('/api/notify', async (request, reply) => {
+    const { sessionId, eventName } = request.body ?? {};
     if (typeof sessionId !== 'string') {
       return reply.status(400).send({ error: 'sessionId required' });
     }
-    broadcast(sessionId);
+
+    // Enrich with session name for notifications
+    const sessions = await readSessions();
+    const session = sessions.find((s) => s.id === sessionId);
+    const sessionName = session?.customName || sessionId.slice(0, 8);
+
+    broadcast(sessionId, eventName, sessionName);
     return { ok: true };
   });
 

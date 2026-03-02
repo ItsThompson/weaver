@@ -6,6 +6,8 @@ import { SessionsPage } from './pages/SessionsPage';
 import { SessionDetailPage } from './pages/SessionDetailPage';
 import { CherrypickPage } from './pages/CherrypickPage';
 import { useNavigateOnView } from './hooks/useNavigateOnView';
+import { useSessionNotifications } from './hooks/useSessionNotifications';
+import { NotificationBar } from './components/NotificationBar';
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: 'link', text: 'Sessions', href: '/' },
@@ -17,6 +19,7 @@ export function App() {
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(true);
   useNavigateOnView();
+  useSessionNotifications();
 
   const handleFollow: SideNavigationProps['onFollow'] = (event) => {
     event.preventDefault();
@@ -24,6 +27,7 @@ export function App() {
   };
 
   return (
+  <>
     <AppLayout
       navigation={
         <SideNavigation
@@ -44,5 +48,7 @@ export function App() {
       }
       toolsHide
     />
+    <NotificationBar />
+  </>
   );
 }

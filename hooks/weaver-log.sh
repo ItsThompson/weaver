@@ -118,6 +118,6 @@ echo "{\"timestamp\":\"$TIMESTAMP\",\"event\":$EVENT}" >> "$LOGS_DIR/$SESSION_ID
 # Notify weaver server of the update (fire-and-forget, async background)
 curl -s --max-time 1 -X POST "$WEAVER_SERVER/api/notify" \
   -H "Content-Type: application/json" \
-  -d "{\"sessionId\":\"$SESSION_ID\"}" >/dev/null 2>&1 &
+  -d "{\"sessionId\":\"$SESSION_ID\",\"eventName\":\"$HOOK_EVENT_NAME\"}" >/dev/null 2>&1 &
 
 exit 0

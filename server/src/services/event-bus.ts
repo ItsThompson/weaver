@@ -14,8 +14,8 @@ export function subscribe(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-export function broadcast(sessionId: string): void {
-  emit({ event: 'update', data: { sessionId } });
+export function broadcast(sessionId: string, eventName?: string, sessionName?: string): void {
+  emit({ event: 'update', data: { sessionId, eventName, sessionName } });
 }
 
 export function emit(msg: SSEMessage): void {
