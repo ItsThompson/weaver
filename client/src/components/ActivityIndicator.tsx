@@ -5,6 +5,7 @@ const ACTIVITY_LABELS: Record<ActivityStatus, { text: string; color: string }> =
   idle: { text: 'Idle', color: '#2ea043' },
   processing: { text: 'Processing', color: '#d29922' },
   running_tool: { text: 'Running tool', color: '#58a6ff' },
+  pending_approval: { text: 'Pending approval', color: '#f85149' },
 };
 
 export function ActivityIndicator({ activity }: { activity?: ActivityStatus }) {

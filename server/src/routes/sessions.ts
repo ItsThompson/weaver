@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { SessionWithStatus, TurnGroup } from '@shared/types.js';
 import { readSessions, writeSessions, isProcessRunning } from '../services/storage.js';
-import { parseLogFile, groupEventsByTurn, getLastEventName, deriveActivity } from '../services/log-parser.js';
+import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../services/log-parser.js';
 
 export function registerSessionRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SessionWithStatus[] }>('/api/sessions', async () => {
@@ -10,7 +10,11 @@ export function registerSessionRoutes(server: FastifyInstance): void {
 
     for (const s of sessions) {
       const isOpen = isProcessRunning(s.pid);
-      const activity = isOpen ? deriveActivity(await getLastEventName(s.id) ?? 'agentSpawn') : undefined;
+      let activity: SessionWithStatus['activity'];
+      if (isOpen) {
+        const last = await getLastEvent(s.id);
+        activity = deriveActivity(last?.name ?? 'agentSpawn', last?.timestamp);
+      }
       results.push({ ...s, status: isOpen ? 'open' : 'closed', activity });
     }
 
@@ -29,10 +33,10 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       if (events.length === 0 && !session) return reply.status(404).send({ error: 'Log file not found' } as any);
 
       const isOpen = isProcessRunning(session.pid);
-      const lastEvent = events.length > 0 ? events[events.length - 1].event.hook_event_name : 'agentSpawn';
+      const lastEvent = events.length > 0 ? events[events.length - 1] : null;
 
       return {
-        session: { ...session, status: isOpen ? 'open' : 'closed', activity: isOpen ? deriveActivity(lastEvent) : undefined } as SessionWithStatus,
+        session: { ...session, status: isOpen ? 'open' : 'closed', activity: isOpen ? deriveActivity(lastEvent?.event.hook_event_name ?? 'agentSpawn', lastEvent?.timestamp) : undefined } as SessionWithStatus,
         turns: groupEventsByTurn(events),
       };
     },

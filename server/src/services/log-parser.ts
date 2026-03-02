@@ -7,16 +7,24 @@ import { log } from '../utils/logger.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
 
-export function deriveActivity(eventName: string): ActivityStatus {
+const PENDING_APPROVAL_THRESHOLD_MS = 15_000;
+
+export function deriveActivity(eventName: string, eventTimestamp?: string): ActivityStatus {
   switch (eventName) {
     case 'agentSpawn': return 'starting';
     case 'stop': return 'idle';
-    case 'preToolUse': return 'running_tool';
+    case 'preToolUse': {
+      if (eventTimestamp) {
+        const age = Date.now() - new Date(eventTimestamp).getTime();
+        if (age > PENDING_APPROVAL_THRESHOLD_MS) return 'pending_approval';
+      }
+      return 'running_tool';
+    }
     default: return 'processing';
   }
 }
 
-export async function getLastEventName(sessionId: string): Promise<string | null> {
+export async function getLastEvent(sessionId: string): Promise<{ name: string; timestamp: string } | null> {
   const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
   if (!existsSync(filePath)) return null;
 
@@ -25,7 +33,7 @@ export async function getLastEventName(sessionId: string): Promise<string | null
   for (let i = lines.length - 1; i >= 0; i--) {
     try {
       const event = JSON.parse(lines[i]) as HookEvent;
-      return event.event.hook_event_name;
+      return { name: event.event.hook_event_name, timestamp: event.timestamp };
     } catch { /* skip malformed */ }
   }
   return null;
