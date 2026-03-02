@@ -1,5 +1,3 @@
-import type { ActivityStatus } from '@weaver/shared/types';
-
 let audioCtx: AudioContext | null = null;
 
 function getAudioContext(): AudioContext {
@@ -35,21 +33,13 @@ function playTone(frequency: number, duration: number, startOffset = 0): void {
   osc.stop(start + duration);
 }
 
-// Two-tone ascending chime for idle — the "session done" alert
-function playIdleChime(): void {
-  playTone(523, 0.2);       // C5
-  playTone(659, 0.3, 0.15); // E5
-}
+export type NotificationSound = 'chime' | 'beep';
 
-// Short single beep for other notifications
-function playDefaultBeep(): void {
-  playTone(440, 0.15); // A4
-}
+const SOUND_PLAYERS: Record<NotificationSound, () => void> = {
+  chime: () => { playTone(523, 0.2); playTone(659, 0.3, 0.15); },
+  beep: () => { playTone(440, 0.15); },
+};
 
-export function playNotificationSound(activity: ActivityStatus): void {
-  if (activity === 'idle') {
-    playIdleChime();
-  } else {
-    playDefaultBeep();
-  }
+export function playNotificationSound(sound: NotificationSound): void {
+  SOUND_PLAYERS[sound]();
 }

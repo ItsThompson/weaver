@@ -1,6 +1,16 @@
 import { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
 import { deriveActivity, resolveNotification } from './notificationUtils';
+import type { NotificationSound } from './soundUtils';
+import type { ActivityStatus } from '@weaver/shared/types';
+
+const ACTIVITY_SOUND: Record<ActivityStatus, NotificationSound> = {
+  idle: 'chime',
+  starting: 'beep',
+  processing: 'beep',
+  running_tool: 'beep',
+  pending_approval: 'beep',
+};
 
 export function useSessionNotifications(): void {
   const { addNotification } = useNotifications();
@@ -20,7 +30,8 @@ export function useSessionNotifications(): void {
 
         const message = resolveNotification(sessionId, eventName, sessionName, lastActivity.current);
         if (message) {
-          addNotification(message, 'info', deriveActivity(eventName));
+          const activity = deriveActivity(eventName);
+          addNotification(message, 'info', ACTIVITY_SOUND[activity]);
         }
       } catch { /* ignore */ }
     });
