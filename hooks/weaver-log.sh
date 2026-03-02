@@ -81,8 +81,15 @@ if [ "$HOOK_EVENT_NAME" = "agentSpawn" ]; then
   SESSION_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
   echo "$SESSION_ID" > "$SESSION_FILE"
 
+  # Try to extract agent name from the kiro-cli process args (--agent <name>)
+  AGENT_NAME=$(ps -p "$CALLER_PID" -o args= 2>/dev/null | grep -o '\-\-agent [^ ]*' | awk '{print $2}' || echo "")
+  AGENT_JSON="null"
+  if [ -n "$AGENT_NAME" ]; then
+    AGENT_JSON="\"$AGENT_NAME\""
+  fi
+
   # Append session metadata to the index
-  SESSION_META="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":null,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\"}"
+  SESSION_META="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":$AGENT_JSON,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\"}"
   echo "$SESSION_META" >> "$SESSIONS_FILE"
 
   # Create the per-session log file

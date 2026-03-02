@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
 import Container from '@cloudscape-design/components/container';
@@ -6,6 +6,7 @@ import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
+import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
 import type { SessionWithStatus, TurnGroup } from '@shared/types';
 import { getSession, updateSessionName } from '../utils/api';
@@ -62,7 +63,7 @@ export function SessionDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  const fetchSession = useCallback(() => {
     if (!id) return;
     setLoading(true);
     getSession(id)
@@ -70,6 +71,8 @@ export function SessionDetailPage() {
       .catch((err) => setError(err instanceof Error ? err.message : String(err)))
       .finally(() => setLoading(false));
   }, [id]);
+
+  useEffect(() => { fetchSession(); }, [fetchSession]);
 
   const handleRename = async (name: string) => {
     if (!id || !session) return;
@@ -95,7 +98,12 @@ export function SessionDetailPage() {
           <Header
             variant="h1"
             description={`${session?.cwd} · PID ${session?.pid} · ${session?.status}`}
-            actions={<RenameSession currentName={session?.customName ?? null} onRename={handleRename} />}
+            actions={
+              <SpaceBetween direction="horizontal" size="xs">
+                <Button iconName="refresh" onClick={fetchSession} loading={loading} />
+                <RenameSession currentName={session?.customName ?? null} onRename={handleRename} />
+              </SpaceBetween>
+            }
           >
             {displayName}
           </Header>
