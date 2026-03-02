@@ -105,19 +105,27 @@ else
     SESSION_ID=$(cat "$SESSION_FILE")
   else
     SESSION_ID="orphan"
-    echo "weaver-log: no session file for PID $CALLER_PID, using orphan session" >&2
   fi
 fi
 
 # Truncate large tool responses before logging
 EVENT=$(truncate_response "$EVENT")
 
-# Append timestamped event to the session log
-echo "{\"timestamp\":\"$TIMESTAMP\",\"event\":$EVENT}" >> "$LOGS_DIR/$SESSION_ID.jsonl"
+# Build the log entry — include PID for orphan events so they can be grouped
+if [ "$SESSION_ID" = "orphan" ]; then
+  echo "{\"timestamp\":\"$TIMESTAMP\",\"pid\":$CALLER_PID,\"event\":$EVENT}" >> "$LOGS_DIR/orphan.jsonl"
+else
+  echo "{\"timestamp\":\"$TIMESTAMP\",\"event\":$EVENT}" >> "$LOGS_DIR/$SESSION_ID.jsonl"
+fi
 
 # Notify weaver server of the update (fire-and-forget, async background)
 curl -s --max-time 1 -X POST "$WEAVER_SERVER/api/notify" \
   -H "Content-Type: application/json" \
   -d "{\"sessionId\":\"$SESSION_ID\",\"eventName\":\"$HOOK_EVENT_NAME\"}" >/dev/null 2>&1 &
+
+if [ "$SESSION_ID" = "orphan" ]; then
+  echo "weaver: no session found for PID $CALLER_PID — event logged to orphan queue" >&2
+  exit 1
+fi
 
 exit 0
