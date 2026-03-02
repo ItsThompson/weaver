@@ -11,10 +11,18 @@ export function TurnContainer({ turn }: { turn: TurnGroup }) {
 
   if (firstEvent === 'agentSpawn') {
     return (
-      <Box textAlign="center" margin={{ vertical: 's' }}>
+      <Container
+        header={
+          <Header
+            variant="h3"
+            description={new Date(turn.startTime).toLocaleString()}
+          >
+            Turn {turn.id}
+          </Header>
+        }
+      >
         <Badge color="grey">Session started</Badge>
-        <Box fontSize="body-s" color="text-body-secondary">{new Date(turn.startTime).toLocaleString()}</Box>
-      </Box>
+      </Container>
     );
   }
 
