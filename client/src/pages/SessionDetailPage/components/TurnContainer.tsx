@@ -2,29 +2,31 @@ import Container from '@cloudscape-design/components/container';
 import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Badge from '@cloudscape-design/components/badge';
+import Button from '@cloudscape-design/components/button';
 import Box from '@cloudscape-design/components/box';
 import type { TurnGroup } from '@shared/types';
 import { ToolCallCard } from '../../../components/ToolCallCard';
 
-export function TurnContainer({ turn }: { turn: TurnGroup }) {
+interface TurnContainerProps {
+  turn: TurnGroup;
+  showTools: boolean;
+  onToggleTools?: () => void;
+}
+
+export function TurnContainer({ turn, showTools, onToggleTools }: TurnContainerProps) {
   const firstEvent = turn.events[0]?.event.hook_event_name;
 
   if (firstEvent === 'agentSpawn') {
     return (
       <Container
-        header={
-          <Header
-            variant="h3"
-            description={new Date(turn.startTime).toLocaleString()}
-          >
-            Turn {turn.id}
-          </Header>
-        }
+        header={<Header variant="h3" description={new Date(turn.startTime).toLocaleString()}>Turn {turn.id}</Header>}
       >
         <Badge color="grey">Session started</Badge>
       </Container>
     );
   }
+
+  const hasTools = turn.toolCalls.length > 0;
 
   return (
     <Container
@@ -32,7 +34,7 @@ export function TurnContainer({ turn }: { turn: TurnGroup }) {
         <Header
           variant="h3"
           description={new Date(turn.startTime).toLocaleString()}
-          counter={turn.toolCalls.length > 0 ? `${turn.toolCalls.length} tool call${turn.toolCalls.length > 1 ? 's' : ''}` : undefined}
+          counter={hasTools ? `${turn.toolCalls.length} tool call${turn.toolCalls.length > 1 ? 's' : ''}` : undefined}
         >
           Turn {turn.id}
         </Header>
@@ -45,10 +47,15 @@ export function TurnContainer({ turn }: { turn: TurnGroup }) {
             <Box variant="p">{turn.userPrompt}</Box>
           </Box>
         )}
-        {turn.toolCalls.map((tc, i) => (
+        {hasTools && showTools && turn.toolCalls.map((tc, i) => (
           <ToolCallCard key={`${tc.toolName}-${i}`} toolCall={tc} />
         ))}
-        {!turn.userPrompt && turn.toolCalls.length === 0 && (
+        {hasTools && !showTools && onToggleTools && (
+          <Button variant="inline-link" onClick={onToggleTools}>
+            Show {turn.toolCalls.length} tool call{turn.toolCalls.length > 1 ? 's' : ''}
+          </Button>
+        )}
+        {!turn.userPrompt && !hasTools && (
           <Box color="text-status-inactive" fontSize="body-s">No hook data captured for this turn</Box>
         )}
       </SpaceBetween>

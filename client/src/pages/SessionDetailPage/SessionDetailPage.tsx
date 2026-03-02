@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
 import Header from '@cloudscape-design/components/header';
 import SpaceBetween from '@cloudscape-design/components/space-between';
+import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import Spinner from '@cloudscape-design/components/spinner';
@@ -19,6 +20,8 @@ export function SessionDetailPage() {
   const [turns, setTurns] = useState<TurnGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showTools, setShowTools] = useState(true);
+  const [expandedTurns, setExpandedTurns] = useState<Set<number>>(new Set());
 
   const fetchSession = useCallback(() => {
     if (!id) return;
@@ -39,6 +42,20 @@ export function SessionDetailPage() {
     if (!id || !session) return;
     await updateSessionName(id, name);
     setSession({ ...session, customName: name });
+  };
+
+  const togglePageTools = () => {
+    setShowTools((prev) => !prev);
+    setExpandedTurns(new Set());
+  };
+
+  const toggleTurn = (turnId: number) => {
+    setExpandedTurns((prev) => {
+      const next = new Set(prev);
+      if (next.has(turnId)) next.delete(turnId);
+      else next.add(turnId);
+      return next;
+    });
   };
 
   const displayName = session?.customName || `Session ${id?.slice(0, 8)}`;
@@ -62,6 +79,16 @@ export function SessionDetailPage() {
             actions={
               <SpaceBetween direction="horizontal" size="xs">
                 <Button iconName="refresh" onClick={fetchSession} loading={loading} />
+                <ButtonDropdown
+                  items={[{
+                    id: 'toggle-tools',
+                    text: showTools ? 'Hide tool execution' : 'View tool execution',
+                  }]}
+                  onItemClick={togglePageTools}
+                  expandToViewport
+                >
+                  Display
+                </ButtonDropdown>
                 <RenameSession currentName={session?.customName ?? null} onRename={handleRename} />
               </SpaceBetween>
             }
@@ -72,7 +99,12 @@ export function SessionDetailPage() {
             Assistant responses are not available in this view. Use <a href="/cherrypick">Cherrypick</a> to export and analyze full conversations.
           </Box>
           {turns.map((turn) => (
-            <TurnContainer key={turn.id} turn={turn} />
+            <TurnContainer
+              key={turn.id}
+              turn={turn}
+              showTools={showTools || expandedTurns.has(turn.id)}
+              onToggleTools={!showTools ? () => toggleTurn(turn.id) : undefined}
+            />
           ))}
         </SpaceBetween>
       )}
