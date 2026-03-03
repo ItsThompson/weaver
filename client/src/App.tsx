@@ -11,6 +11,7 @@ import { useNavigateOnView } from './hooks/useNavigateOnView';
 import { useSessionNotifications } from './hooks/useSessionNotifications';
 import { useSessionEvents } from './hooks/useSessionEvents';
 import { NotificationBar } from './components/NotificationBar';
+import { CommandPalette } from './components/CommandPalette';
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: 'link', text: 'Sessions', href: '/' },
@@ -57,6 +58,7 @@ export function App() {
       toolsHide
     />
     <NotificationBar />
+    <CommandPalette />
   </>
   );
 }
