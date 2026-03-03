@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
     "build": "turbo build",
+    "start": "turbo build && node server/dist/index.js",
     "test": "turbo test"
   },
   "packageManager": "npm@10.8.2",
