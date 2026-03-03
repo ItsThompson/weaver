@@ -6,9 +6,10 @@ import Box from "@cloudscape-design/components/box";
 import CollectionPreferences, {
   type CollectionPreferencesProps,
 } from "@cloudscape-design/components/collection-preferences";
-import type { SessionWithStatus, WeaverConfig } from "@weaver/shared/types";
+import type { SessionWithStatus } from "@weaver/shared/types";
 import { useConfigQuery, revalidateConfig } from "../../../hooks/queries";
 import { updateConfig } from "../../../utils/api";
+import { toContentDisplay, toVisibleIds } from "../utils";
 
 type ContentDisplayItem = CollectionPreferencesProps.ContentDisplayItem;
 
@@ -18,18 +19,6 @@ interface SessionTableProps {
   contentDisplayOptions: CollectionPreferencesProps.ContentDisplayOption[];
   defaultContentDisplay: ContentDisplayItem[];
   configKey: 'open_display_options' | 'close_display_options';
-}
-
-function toContentDisplay(
-  visibleIds: string[],
-  defaults: ContentDisplayItem[],
-): ContentDisplayItem[] {
-  const visibleSet = new Set(visibleIds);
-  return defaults.map((item) => ({ ...item, visible: visibleSet.has(item.id) }));
-}
-
-function toVisibleIds(display: ContentDisplayItem[]): string[] {
-  return display.filter((d) => d.visible).map((d) => d.id);
 }
 
 export function SessionTable({
