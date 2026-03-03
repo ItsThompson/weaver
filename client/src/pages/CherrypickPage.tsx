@@ -6,6 +6,7 @@ import Button from '@cloudscape-design/components/button';
 import Alert from '@cloudscape-design/components/alert';
 import Box from '@cloudscape-design/components/box';
 import Checkbox from '@cloudscape-design/components/checkbox';
+import FileUpload from '@cloudscape-design/components/file-upload';
 import type { SavedConversation, ParsedConversation, ConversationExchange } from '@weaver/shared/types';
 import { parseConversation, pruneConversation } from '../utils/conversation-parser';
 import { ExchangeCard } from '../components/ExchangeCard';
@@ -87,15 +88,18 @@ export function CherrypickPage() {
         <Header variant="h1">Cherrypick</Header>
         {error && <Alert type="error">{error}</Alert>}
         <Container header={<Header variant="h2">Upload conversation</Header>}>
-          <Box padding="l" textAlign="center">
-            <input
-              type="file"
-              accept=".json"
-              onChange={(e) => e.target.files?.[0] && handleFile(e.target.files[0])}
-            />
-            <Box variant="p" color="text-body-secondary" padding={{ top: 's' }}>
-              Upload a <code>/chat save</code> JSON file
-            </Box>
+          <Box textAlign="center">
+            <FileUpload
+            accept=".json"
+            value={[]}
+            onChange={({ detail }) => detail.value[0] && handleFile(detail.value[0])}
+            constraintText="Upload a /chat save JSON file"
+            i18nStrings={{
+              uploadButtonText: () => 'Choose file',
+              dropzoneText: () => 'Drop file to upload',
+              removeFileAriaLabel: (i, name) => `Remove file ${name}`,
+            }}
+          />
           </Box>
         </Container>
       </SpaceBetween>
