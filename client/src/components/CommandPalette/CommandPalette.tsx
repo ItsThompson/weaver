@@ -47,8 +47,11 @@ export function CommandPalette() {
     : windows.map(toOption);
 
   const handleSelect = ({ detail }: { detail: { value: string } }) => {
+    const match = options.find((o) => o.value === detail.value);
+    const href = match ? match.value : options[0]?.value;
+    if (!href) return;
     setVisible(false);
-    if (detail.value) navigate(detail.value);
+    navigate(href);
   };
 
   return (
