@@ -6,7 +6,7 @@ import Autosuggest, {
 } from "@cloudscape-design/components/autosuggest";
 import { useWindows } from "../../context/WindowContext";
 import { useConfigQuery } from "../../hooks/queries";
-import { COMMAND_PALETTE_KEY } from "../../constants";
+import { COMMAND_PALETTE_KEY, COMMAND_PALETTE_OPEN_EVENT } from "../../constants";
 import type { WindowEntry, AutosuggestOption } from "./types";
 
 function toOption(entry: WindowEntry): AutosuggestOption {
@@ -35,8 +35,13 @@ export function CommandPalette() {
       }
       if (e.key === "Escape") setVisible(false);
     };
+    const openHandler = () => setVisible(true);
     document.addEventListener("keydown", handler);
-    return () => document.removeEventListener("keydown", handler);
+    document.addEventListener(COMMAND_PALETTE_OPEN_EVENT, openHandler);
+    return () => {
+      document.removeEventListener("keydown", handler);
+      document.removeEventListener(COMMAND_PALETTE_OPEN_EVENT, openHandler);
+    };
   }, [ghostMode]);
 
   useEffect(() => {
