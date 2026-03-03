@@ -33,6 +33,7 @@ export function App() {
 
   return (
   <>
+    <div style={{ height: 28, WebkitAppRegion: 'drag', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999 } as React.CSSProperties} />
     <AppLayout
       navigation={
         <SideNavigation
