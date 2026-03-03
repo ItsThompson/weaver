@@ -2,9 +2,18 @@
   "name": "weaver",
   "version": "0.1.0",
   "private": true,
-  "workspaces": ["shared", "server", "client", "cli", "hook-handler"],
+  "workspaces": [
+    "shared",
+    "server",
+    "client",
+    "cli",
+    "hook-handler",
+    "desktop"
+  ],
   "scripts": {
     "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
+    "app": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-electron && npm start --prefix desktop",
+    "dist": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-electron && npm run dist --prefix desktop",
     "build": "turbo build",
     "start": "turbo build && node server/dist/index.js",
     "test": "turbo test"

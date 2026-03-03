@@ -31,7 +31,7 @@ registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
 
-const clientDist = resolve(__dirname, '../../client/dist');
+const clientDist = process.env.WEAVER_CLIENT_DIST || resolve(__dirname, '../../client/dist');
 if (existsSync(clientDist)) {
   server.register(fastifyStatic, { root: clientDist, wildcard: false });
   server.setNotFoundHandler((_request, reply) => {
