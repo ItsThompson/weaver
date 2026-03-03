@@ -16,19 +16,19 @@ export function useWindowList(): WindowEntry[] {
   const { data: sessions = [] } = useSessionsQuery();
 
   return useMemo(() => {
-    const sessionWindows: WindowEntry[] = sessions
-      .filter((s) => s.status === 'open')
-      .map((s) => {
-        const name = s.customName || `Session ${s.id.slice(0, 8)}`;
-        const dir = dirName(s.cwd);
-        const parts = [name, String(s.pid), dir, s.agentName].filter(Boolean);
-        return {
-          label: name,
-          href: `/sessions/${s.id}`,
-          description: `PID ${s.pid} · ${dir}${s.agentName ? ` · ${s.agentName}` : ''}`,
-          searchableText: parts.join(' '),
-        };
+    const sessionWindows = sessions.reduce<WindowEntry[]>((acc, s) => {
+      if (s.status !== 'open') return acc;
+      const name = s.customName || `Session ${s.id.slice(0, 8)}`;
+      const dir = dirName(s.cwd);
+      const parts = [name, String(s.pid), dir, s.agentName].filter(Boolean);
+      acc.push({
+        label: name,
+        href: `/sessions/${s.id}`,
+        description: `PID ${s.pid} · ${dir}${s.agentName ? ` · ${s.agentName}` : ''}`,
+        searchableText: parts.join(' '),
       });
+      return acc;
+    }, []);
 
     return [...STATIC_WINDOWS, ...sessionWindows];
   }, [sessions]);
