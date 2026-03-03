@@ -1,11 +1,12 @@
 # Weaver
 
-A local developer tool that provides observability and conversation editing capabilities on top of kiro-cli.
+A local developer tool that provides observability and conversation editing capabilities on top of kiro-cli. Runs as a standalone Electron app with a global hotkey, or in the browser for development.
 
 ## Features
 
 - **Observability**: View conversation logs, tool usage, and session history through a web dashboard
 - **Cherrypick**: Select and remove parts of a conversation, then reload a pruned context via `/chat load`
+- **Desktop app**: Electron wrapper with global hotkey (F5), tray icon, and no Dock presence
 
 ## Prerequisites
 
@@ -21,6 +22,7 @@ npm install
 # Install package dependencies
 npm install --prefix server
 npm install --prefix client
+npm install --prefix electron
 
 # Install hook handler (see hook-handler/README.md for details)
 ln -s ~/Documents/weaver/hook-handler/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
@@ -33,6 +35,25 @@ npm install --prefix cli
 alias weaver='~/Documents/weaver/bin/weaver'
 alias wv='weaver view'
 ```
+
+## Running
+
+```bash
+# Desktop app (build + launch Electron)
+npm run app
+
+# Browser dev mode (Vite hot reload + Fastify server)
+npm run dev
+
+# Package into a distributable .app / .dmg
+npm run dist
+```
+
+The desktop app:
+- Press **F5** from anywhere to toggle the window
+- Click the tray icon (top-right menu bar) to show/hide
+- Right-click the tray icon to quit
+- No Dock icon — runs as a background panel
 
 ## CLI Commands
 
