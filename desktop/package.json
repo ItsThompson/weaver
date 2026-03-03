@@ -1,0 +1,63 @@
+{
+  "name": "weaver-electron",
+  "version": "0.1.0",
+  "description": "Weaver desktop app",
+  "author": "thompsnt",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "electron dist/main.js",
+    "dev": "tsc && electron dist/main.js",
+    "pack": "tsc && npx electron-builder --mac --dir",
+    "dist": "tsc && npx electron-builder --mac"
+  },
+  "build": {
+    "appId": "com.weaver.app",
+    "productName": "Weaver",
+    "electronVersion": "35.7.5",
+    "mac": {
+      "icon": "assets/desktop-icon.png",
+      "target": "dmg",
+      "extendInfo": {
+        "LSUIElement": true
+      }
+    },
+    "files": [
+      "dist/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../server/dist",
+        "to": "server/dist"
+      },
+      {
+        "from": "../server/node_modules",
+        "to": "server/node_modules"
+      },
+      {
+        "from": "../server/package.json",
+        "to": "server/package.json"
+      },
+      {
+        "from": "../client/dist",
+        "to": "client/dist"
+      },
+      {
+        "from": "../shared",
+        "to": "shared"
+      },
+      {
+        "from": "assets",
+        "to": "assets"
+      }
+    ]
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "electron": "^35.0.0",
+    "electron-builder": "^26.8.1",
+    "typescript": "^5.8.3"
+  }
+}
