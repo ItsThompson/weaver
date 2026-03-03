@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Fuse from 'fuse.js';
-import Modal from '@cloudscape-design/components/modal';
 import Autosuggest, { type AutosuggestProps } from '@cloudscape-design/components/autosuggest';
 import { useWindows } from '../../context/WindowContext';
 import { useConfigQuery } from '../../hooks/queries';
@@ -28,6 +27,7 @@ export function CommandPalette() {
         e.preventDefault();
         setVisible((prev) => !prev);
       }
+      if (e.key === 'Escape') setVisible(false);
     };
     document.addEventListener('keydown', handler);
     return () => document.removeEventListener('keydown', handler);
@@ -54,20 +54,28 @@ export function CommandPalette() {
     navigate(href);
   };
 
+  if (!visible) return null;
+
   return (
-    <Modal visible={visible} onDismiss={() => setVisible(false)} header="Switch to...">
-      <Autosuggest
-        ref={autosuggestRef}
-        value={filterValue}
-        onChange={({ detail }) => setFilterValue(detail.value)}
-        onSelect={handleSelect}
-        options={options}
-        filteringType="manual"
-        hideEnteredTextOption
-        enteredTextLabel={(v) => v}
-        placeholder="Search pages and sessions..."
-        empty="No matches found"
+    <>
+      <div
+        style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 10000 }}
+        onClick={() => setVisible(false)}
       />
-    </Modal>
+      <div style={{ position: 'fixed', top: 48, left: '50%', transform: 'translateX(-50%)', width: 480, zIndex: 10001 }}>
+        <Autosuggest
+          ref={autosuggestRef}
+          value={filterValue}
+          onChange={({ detail }) => setFilterValue(detail.value)}
+          onSelect={handleSelect}
+          options={options}
+          filteringType="manual"
+          hideEnteredTextOption
+          enteredTextLabel={(v) => v}
+          placeholder="Search pages and sessions..."
+          empty="No matches found"
+        />
+      </div>
+    </>
   );
 }
