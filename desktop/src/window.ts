@@ -7,8 +7,9 @@ export function createWindow(url: string): void {
     width: 900,
     height: 600,
     show: false,
+    frame: false,
+    resizable: false,
     alwaysOnTop: false,
-    titleBarStyle: 'hidden',
     skipTaskbar: true,
     type: 'panel',
     webPreferences: {
