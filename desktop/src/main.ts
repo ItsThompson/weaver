@@ -1,7 +1,11 @@
 import { app, globalShortcut } from 'electron';
+import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
 import * as server from './server';
-import { createWindow, toggleWindow, showWindow } from './window';
+import { createWindow, toggleWindow, showWindow, setGhostMode } from './window';
 import { createTray } from './tray';
+import { fetchConfig, putConfig } from './config';
+
+let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
 app.on('ready', async () => {
   if (app.dock) app.dock.hide();
@@ -17,8 +21,15 @@ app.on('ready', async () => {
     return;
   }
 
-  createWindow(server.SERVER_URL);
-  createTray(toggleWindow);
+  currentConfig = await fetchConfig(server.SERVER_URL);
+
+  createWindow(server.SERVER_URL, currentConfig);
+  createTray(toggleWindow, () => {
+    currentConfig.ghost_mode = !currentConfig.ghost_mode;
+    setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
+    putConfig(server.SERVER_URL, currentConfig);
+    return currentConfig.ghost_mode;
+  });
   globalShortcut.register('F5', toggleWindow);
   showWindow();
 });

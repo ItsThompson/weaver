@@ -91,3 +91,4 @@ All session data is stored in `~/.weaver/`:
 | `sessions.jsonl` | Session index (one JSON line per session) |
 | `logs/<session-id>.jsonl` | Per-session event logs |
 | `.current-session-<pid>` | Temporary marker files mapping kiro-cli PIDs to session IDs |
+| `config.json` | User configuration (see [`config.example.json`](config.example.json) for defaults) |

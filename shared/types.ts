@@ -167,6 +167,8 @@ export interface WeaverConfig {
   open_display_options: string[];
   close_display_options: string[];
   dark_mode: boolean;
+  ghost_mode: boolean;
+  ghost_opacity: number;
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = ['pid', 'customName', 'activity', 'cwd', 'agentName', 'startTime', 'lastEventTime', 'actions'] as const;
@@ -177,4 +179,6 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   open_display_options: [...VALID_OPEN_DISPLAY_OPTIONS],
   close_display_options: [...VALID_CLOSE_DISPLAY_OPTIONS],
   dark_mode: true,
+  ghost_mode: false,
+  ghost_opacity: 0.5,
 };

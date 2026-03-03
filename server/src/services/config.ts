@@ -66,6 +66,22 @@ export function parseAndValidateConfig(raw: string): { config: WeaverConfig; war
     else config.close_display_options = result.value!;
   }
 
+  if ('ghost_mode' in obj) {
+    if (typeof obj.ghost_mode === 'boolean') {
+      config.ghost_mode = obj.ghost_mode;
+    } else {
+      warnings.push('ghost_mode must be a boolean');
+    }
+  }
+
+  if ('ghost_opacity' in obj) {
+    if (typeof obj.ghost_opacity === 'number' && obj.ghost_opacity >= 0 && obj.ghost_opacity <= 1) {
+      config.ghost_opacity = obj.ghost_opacity;
+    } else {
+      warnings.push('ghost_opacity must be a number between 0 and 1');
+    }
+  }
+
   return { config, warnings };
 }
 

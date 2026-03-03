@@ -1,8 +1,9 @@
 import { BrowserWindow } from 'electron';
+import type { WeaverConfig } from '@weaver/shared/types';
 
 let win: BrowserWindow | null = null;
 
-export function createWindow(url: string): void {
+export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({
     width: 900,
     height: 600,
@@ -20,10 +21,20 @@ export function createWindow(url: string): void {
 
   win.loadURL(url);
 
+  if (config.ghost_mode) {
+    setGhostMode(true, config.ghost_opacity);
+  }
+
   win.on('close', (e) => {
     e.preventDefault();
     win?.hide();
   });
+}
+
+export function setGhostMode(enabled: boolean, opacity: number): void {
+  if (!win) return;
+  win.setOpacity(enabled ? opacity : 1);
+  win.setIgnoreMouseEvents(enabled);
 }
 
 export function toggleWindow(): void {

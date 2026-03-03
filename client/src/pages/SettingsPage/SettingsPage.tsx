@@ -5,11 +5,13 @@ import Container from '@cloudscape-design/components/container';
 import Form from '@cloudscape-design/components/form';
 import FormField from '@cloudscape-design/components/form-field';
 import Toggle from '@cloudscape-design/components/toggle';
+import Slider from '@cloudscape-design/components/slider';
 import Button from '@cloudscape-design/components/button';
 import Alert from '@cloudscape-design/components/alert';
 import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
 import { useConfigQuery, revalidateConfig } from '../../hooks/queries';
 import { updateConfig } from '../../utils/api';
+import { isElectron } from '../../utils/isElectron';
 
 export function SettingsPage() {
   const { data, isLoading } = useConfigQuery();
@@ -74,6 +76,19 @@ export function SettingsPage() {
                 disabled={hasWarnings}
               />
             </FormField>
+            {isElectron() && (
+              <FormField label="Ghost opacity" description="Window opacity when ghost mode is enabled (0 = fully transparent, 1 = fully opaque)">
+                <Slider
+                  value={config.ghost_opacity}
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  onChange={({ detail }) => setConfig((c) => ({ ...c, ghost_opacity: detail.value }))}
+                  disabled={hasWarnings}
+                  valueFormatter={(value) => `${Math.round(value * 100)}%`}
+                />
+              </FormField>
+            )}
           </SpaceBetween>
         </Container>
       </Form>
