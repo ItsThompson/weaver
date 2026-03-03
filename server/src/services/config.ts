@@ -66,6 +66,14 @@ export function parseAndValidateConfig(raw: string): { config: WeaverConfig; war
     else config.close_display_options = result.value!;
   }
 
+  if ('page_size' in obj) {
+    if (typeof obj.page_size === 'number' && [10, 25, 50].includes(obj.page_size)) {
+      config.page_size = obj.page_size;
+    } else {
+      warnings.push('page_size must be 10, 25, or 50');
+    }
+  }
+
   if ('ghost_mode' in obj) {
     if (typeof obj.ghost_mode === 'boolean') {
       config.ghost_mode = obj.ghost_mode;

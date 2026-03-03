@@ -19,6 +19,19 @@ jest.unstable_mockModule('../../../utils/api', () => ({
 
 const { SessionTable } = await import('./SessionTable');
 
+function makeSession(index: number): SessionWithStatus {
+  return {
+    id: `session-${index}`,
+    pid: 100 + index,
+    customName: `Session ${index}`,
+    cwd: `/projects/project-${index}`,
+    agentName: 'dev',
+    startTime: `2026-01-01T00:${String(index).padStart(2, '0')}:00Z`,
+    lastEventTime: `2026-01-01T00:${String(index).padStart(2, '0')}:00Z`,
+    status: 'open',
+  };
+}
+
 const SESSIONS: SessionWithStatus[] = [
   {
     id: 'session-1', pid: 100, customName: 'Frontend App', cwd: '/projects/frontend',
@@ -30,18 +43,19 @@ const SESSIONS: SessionWithStatus[] = [
   },
 ];
 
+const COLUMNS = [
+  { id: 'name', header: 'Name', cell: (item: any) => item.customName || item.id },
+  { id: 'cwd', header: 'CWD', cell: (item: any) => item.cwd },
+];
+
 function renderTable(sessions = SESSIONS) {
-  const columns = [
-    { id: 'name', header: 'Name', cell: (item: any) => item.customName || item.id },
-    { id: 'cwd', header: 'CWD', cell: (item: any) => item.cwd },
-  ];
-  const contentDisplayOptions = columns.map((c) => ({ id: c.id, label: c.header as string }));
-  const defaultContentDisplay = columns.map((c) => ({ id: c.id, visible: true }));
+  const contentDisplayOptions = COLUMNS.map((c) => ({ id: c.id, label: c.header as string }));
+  const defaultContentDisplay = COLUMNS.map((c) => ({ id: c.id, visible: true }));
   return render(
     <MemoryRouter>
       <SessionTable
         sessions={sessions}
-        columnDefinitions={columns}
+        columnDefinitions={COLUMNS}
         contentDisplayOptions={contentDisplayOptions}
         defaultContentDisplay={defaultContentDisplay}
         configKey="open_display_options"
@@ -89,6 +103,23 @@ describe('SessionTable', () => {
     const filter = screen.getByRole('textbox');
     fireEvent.change(filter, { target: { value: 'nonexistent' } });
     
-    expect(screen.getByText('No sessions')).toBeInTheDocument();
+    expect(screen.getByText('No matching sessions')).toBeInTheDocument();
+  });
+
+  describe('pagination', () => {
+    const manySessions = Array.from({ length: 30 }, (_, i) => makeSession(i + 1));
+
+    it('limits first page to 25 items', () => {
+      renderTable(manySessions);
+      expect(screen.getByText('Session 1')).toBeInTheDocument();
+      expect(screen.getByText('Session 25')).toBeInTheDocument();
+      expect(screen.queryByText('Session 26')).not.toBeInTheDocument();
+    });
+
+    it('shows all items when under page size', () => {
+      renderTable(SESSIONS);
+      expect(screen.getByText('Frontend App')).toBeInTheDocument();
+      expect(screen.getByText('/projects/backend')).toBeInTheDocument();
+    });
   });
 });

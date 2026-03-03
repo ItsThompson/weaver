@@ -9,6 +9,7 @@
     "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest"
   },
   "dependencies": {
+    "@cloudscape-design/collection-hooks": "^1.0.83",
     "@cloudscape-design/components": "^3.0.0",
     "@cloudscape-design/global-styles": "^1.0.0",
     "@weaver/shared": "*",
