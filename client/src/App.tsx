@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import AppLayout from '@cloudscape-design/components/app-layout';
 import SideNavigation, { type SideNavigationProps } from '@cloudscape-design/components/side-navigation';
@@ -10,6 +10,8 @@ import { SettingsPage } from './pages/SettingsPage';
 import { useNavigateOnView } from './hooks/useNavigateOnView';
 import { useSessionNotifications } from './hooks/useSessionNotifications';
 import { useSessionEvents } from './hooks/useSessionEvents';
+import { useConfigQuery } from './hooks/queries';
+import { applyMode, Mode } from '@cloudscape-design/global-styles';
 import { NotificationBar } from './components/NotificationBar';
 import { CommandPalette } from './components/CommandPalette';
 
@@ -23,9 +25,14 @@ export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
+  const { data } = useConfigQuery();
   useNavigateOnView();
   useSessionNotifications();
   useSessionEvents();
+
+  useEffect(() => {
+    applyMode(data?.config.dark_mode === false ? Mode.Light : Mode.Dark);
+  }, [data?.config.dark_mode]);
 
   const handleFollow: SideNavigationProps['onFollow'] = (event) => {
     event.preventDefault();
