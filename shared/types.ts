@@ -126,6 +126,15 @@ export interface ConversationExchange {
   toolsUsed: string[];
   assistantResponse: string;
   timestamp: string;
+  turnIndices: [number, number]; // [startIndex, endIndex] in original history array
+}
+
+// Result of parsing a /chat save JSON file for the cherrypick flow
+export interface ParsedConversation {
+  raw: SavedConversation;
+  mainExchanges: ConversationExchange[];
+  tangentExchanges: ConversationExchange[] | null;
+  isInTangent: boolean;
 }
 
 export interface TangentState {
