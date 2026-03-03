@@ -10,6 +10,11 @@ jest.unstable_mockModule('../../../utils/api', () => ({
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
+  getOrphanCount: jest.fn<() => Promise<{ count: number }>>().mockResolvedValue({ count: 0 }),
+  getOrphans: jest.fn(),
+  assignOrphans: jest.fn(),
+  getConfig: jest.fn<() => Promise<{ config: object; warnings: string[] }>>().mockResolvedValue({ config: {}, warnings: [] }),
+  updateConfig: jest.fn(),
 }));
 
 const { SessionTable } = await import('./SessionTable');
@@ -39,6 +44,7 @@ function renderTable(sessions = SESSIONS) {
         columnDefinitions={columns}
         contentDisplayOptions={contentDisplayOptions}
         defaultContentDisplay={defaultContentDisplay}
+        configKey="open_display_options"
       />
     </MemoryRouter>
   );

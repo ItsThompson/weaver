@@ -1,4 +1,4 @@
-import type { Session, SessionWithStatus, TurnGroup, OrphanGroup } from '@weaver/shared/types';
+import type { Session, SessionWithStatus, TurnGroup, OrphanGroup, WeaverConfig } from '@weaver/shared/types';
 
 const API_BASE = '/api';
 
@@ -35,4 +35,12 @@ export const assignOrphans = (targetSessionId: string, pid: number) =>
   apiFetch<{ ok: true }>('/orphans/assign', {
     method: 'POST',
     body: JSON.stringify({ targetSessionId, pid }),
+  });
+
+export const getConfig = () => apiFetch<{ config: WeaverConfig; warnings: string[] }>('/config');
+
+export const updateConfig = (config: WeaverConfig) =>
+  apiFetch<{ config: WeaverConfig }>('/config', {
+    method: 'PUT',
+    body: JSON.stringify(config),
   });
