@@ -41,8 +41,8 @@ export function SessionsPage() {
       {error && <Box color="text-status-error">{error.message}</Box>}
       <Tabs
         tabs={[
-          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} contentDisplayOptions={OPEN_DISPLAY_OPTIONS} defaultContentDisplay={OPEN_DEFAULT_CONTENT_DISPLAY} /> },
-          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} columnDefinitions={CLOSED_COLUMNS} contentDisplayOptions={CLOSED_DISPLAY_OPTIONS} defaultContentDisplay={CLOSED_DEFAULT_CONTENT_DISPLAY} /> },
+          { id: 'open', label: `Open (${open.length})`, content: <SessionTable sessions={open} columnDefinitions={OPEN_COLUMNS} contentDisplayOptions={OPEN_DISPLAY_OPTIONS} defaultContentDisplay={OPEN_DEFAULT_CONTENT_DISPLAY} configKey="open_display_options" /> },
+          { id: 'closed', label: `Closed (${closed.length})`, content: <SessionTable sessions={closed} columnDefinitions={CLOSED_COLUMNS} contentDisplayOptions={CLOSED_DISPLAY_OPTIONS} defaultContentDisplay={CLOSED_DEFAULT_CONTENT_DISPLAY} configKey="close_display_options" /> },
         ]}
       />
     </SpaceBetween>

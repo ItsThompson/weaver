@@ -6,6 +6,7 @@ import { SessionsPage } from './pages/SessionsPage';
 import { SessionDetailPage } from './pages/SessionDetailPage';
 import { CherrypickPage } from './pages/CherrypickPage';
 import { OrphansPage } from './pages/OrphansPage/OrphansPage';
+import { SettingsPage } from './pages/SettingsPage';
 import { useNavigateOnView } from './hooks/useNavigateOnView';
 import { useSessionNotifications } from './hooks/useSessionNotifications';
 import { useSessionEvents } from './hooks/useSessionEvents';
@@ -14,6 +15,7 @@ import { NotificationBar } from './components/NotificationBar';
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: 'link', text: 'Sessions', href: '/' },
   { type: 'link', text: 'Cherrypick', href: '/cherrypick' },
+  { type: 'link', text: 'Settings', href: '/settings' },
 ];
 
 export function App() {
@@ -48,6 +50,7 @@ export function App() {
           <Route path="/sessions/:id" element={<SessionDetailPage />} />
           <Route path="/cherrypick" element={<CherrypickPage />} />
           <Route path="/sessions/orphans" element={<OrphansPage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Routes>
       }
       toolsHide

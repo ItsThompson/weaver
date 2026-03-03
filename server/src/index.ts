@@ -3,6 +3,7 @@ import { registerHealthRoute } from './routes/health.js';
 import { registerSessionRoutes } from './routes/sessions.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerOrphanRoutes } from './routes/orphans.js';
+import { registerConfigRoutes } from './routes/config.js';
 import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
 import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
@@ -22,6 +23,7 @@ registerHealthRoute(server);
 registerSessionRoutes(server);
 registerEventRoutes(server);
 registerOrphanRoutes(server);
+registerConfigRoutes(server);
 
 async function start(): Promise<void> {
   await ensureDataDir();

@@ -13,6 +13,8 @@ jest.unstable_mockModule('../../utils/api', () => ({
   getOrphanCount: jest.fn<() => Promise<{ count: number }>>().mockResolvedValue({ count: 0 }),
   getOrphans: jest.fn(),
   assignOrphans: jest.fn(),
+  getConfig: jest.fn<() => Promise<{ config: object; warnings: string[] }>>().mockResolvedValue({ config: {}, warnings: [] }),
+  updateConfig: jest.fn(),
 }));
 
 jest.unstable_mockModule('react-router-dom', () => ({
