@@ -1,5 +1,6 @@
 import { mkdir, readFile, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { Session } from '@weaver/shared/types';
@@ -78,7 +79,13 @@ export async function cleanStaleSessions(): Promise<void> {
 export function isProcessRunning(pid: number): boolean {
   try {
     process.kill(pid, 0);
-    return true;
+  } catch {
+    return false;
+  }
+  // Guard against PID reuse: verify the process is actually kiro-cli
+  try {
+    const args = execFileSync('ps', ['-p', String(pid), '-o', 'args='], { encoding: 'utf-8' });
+    return args.includes('kiro-cli');
   } catch {
     return false;
   }
