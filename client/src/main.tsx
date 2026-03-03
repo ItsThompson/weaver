@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import '@cloudscape-design/global-styles/index.css';
 import { applyMode, Mode } from '@cloudscape-design/global-styles';
 import { NotificationProvider } from './context/NotificationContext';
+import { WindowProvider } from './context/WindowContext';
 
 applyMode(Mode.Dark);
 import { App } from './App';
@@ -14,7 +15,9 @@ if (root) {
     <React.StrictMode>
       <BrowserRouter>
         <NotificationProvider>
-          <App />
+          <WindowProvider>
+            <App />
+          </WindowProvider>
         </NotificationProvider>
       </BrowserRouter>
     </React.StrictMode>,
