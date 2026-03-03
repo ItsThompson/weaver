@@ -1,4 +1,8 @@
+import { resolve, dirname } from 'node:path';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
 import Fastify, { FastifyError } from 'fastify';
+import fastifyStatic from '@fastify/static';
 import { registerHealthRoute } from './routes/health.js';
 import { registerSessionRoutes } from './routes/sessions.js';
 import { registerEventRoutes } from './routes/events.js';
@@ -8,6 +12,8 @@ import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './serv
 import { broadcast } from './services/event-bus.js';
 import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
 import { log } from './utils/logger.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PORT = 8143;
 
@@ -24,6 +30,14 @@ registerSessionRoutes(server);
 registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
+
+const clientDist = resolve(__dirname, '../../client/dist');
+if (existsSync(clientDist)) {
+  server.register(fastifyStatic, { root: clientDist, wildcard: false });
+  server.setNotFoundHandler((_request, reply) => {
+    reply.sendFile('index.html');
+  });
+}
 
 async function start(): Promise<void> {
   await ensureDataDir();
