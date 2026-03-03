@@ -54,7 +54,7 @@ function createWindow(): BrowserWindow {
     height: 600,
     show: false,
     alwaysOnTop: false,
-    frame: true,
+    titleBarStyle: 'hidden',
     skipTaskbar: true,
     type: 'panel',
     webPreferences: {
@@ -66,7 +66,6 @@ function createWindow(): BrowserWindow {
   window.loadURL(SERVER_URL);
 
   window.on('close', (e) => {
-    // Hide instead of closing so the hotkey can bring it back
     e.preventDefault();
     window.hide();
   });
@@ -100,7 +99,6 @@ function createTray(): Tray {
 }
 
 app.on('ready', async () => {
-  // Hide from Dock
   if (app.dock) app.dock.hide();
 
   serverProcess = startServer();
@@ -118,7 +116,6 @@ app.on('ready', async () => {
 
   globalShortcut.register('F5', toggleWindow);
 
-  // Show on first launch
   win.show();
   win.focus();
 });
@@ -128,7 +125,6 @@ app.on('will-quit', () => {
   if (serverProcess) serverProcess.kill();
 });
 
-// Prevent app from quitting when all windows are closed (tray keeps it alive)
 app.on('window-all-closed', () => {
   // No-op: keep app alive via tray
 });
