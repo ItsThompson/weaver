@@ -14,6 +14,10 @@ jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn<() => boolean>(),
 }));
 
+jest.unstable_mockModule('node:child_process', () => ({
+  execFileSync: jest.fn<() => string>(),
+}));
+
 // Silence logger in tests
 jest.unstable_mockModule('../utils/logger.js', () => ({
   log: jest.fn(),
@@ -22,6 +26,7 @@ jest.unstable_mockModule('../utils/logger.js', () => ({
 // Dynamic imports must come after all jest.unstable_mockModule calls
 const fsp = await import('node:fs/promises');
 const fs = await import('node:fs');
+const cp = await import('node:child_process');
 const storage = await import('../services/storage.js');
 
 const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
@@ -34,6 +39,7 @@ const mockAppendFile = appendFile as jest.MockedFunction<typeof appendFile>;
 const mockReaddir = readdir as jest.MockedFunction<typeof readdir>;
 const mockUnlink = unlink as jest.MockedFunction<typeof unlink>;
 const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
+const mockExecFileSync = cp.execFileSync as jest.MockedFunction<typeof cp.execFileSync>;
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -109,6 +115,7 @@ describe('cleanStaleSessions', () => {
     // Use current process PID which is guaranteed to be running and signalable
     const livePid = process.pid;
     mockReaddir.mockResolvedValue([`.current-session-${livePid}`] as any);
+    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat\n`);
 
     await cleanStaleSessions();
     expect(mockUnlink).not.toHaveBeenCalled();
@@ -129,11 +136,17 @@ describe('cleanStaleSessions', () => {
 });
 
 describe('isProcessRunning', () => {
-  it('returns true for a running process', () => {
+  it('returns true for a running kiro-cli process', () => {
+    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat --agent dev\n`);
     expect(isProcessRunning(process.pid)).toBe(true);
   });
 
   it('returns false for a non-existent process', () => {
     expect(isProcessRunning(999999)).toBe(false);
+  });
+
+  it('returns false when PID is alive but not kiro-cli (PID reuse)', () => {
+    mockExecFileSync.mockReturnValue(`/usr/bin/some-other-process\n`);
+    expect(isProcessRunning(process.pid)).toBe(false);
   });
 });
