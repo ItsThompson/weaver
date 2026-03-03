@@ -37,14 +37,20 @@ export function setGhostMode(enabled: boolean, opacity: number): void {
   win.setIgnoreMouseEvents(enabled);
 }
 
-export function toggleWindow(): void {
-  if (!win) return;
+export function toggleWindow(): boolean {
+  if (!win) return false;
   if (win.isVisible()) {
     win.hide();
+    return false;
   } else {
     win.show();
     win.focus();
+    return true;
   }
+}
+
+export function isWindowVisible(): boolean {
+  return win?.isVisible() ?? false;
 }
 
 export function showWindow(): void {
