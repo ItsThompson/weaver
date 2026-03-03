@@ -1,0 +1,8 @@
+{
+  "enable_notification_sounds": true,
+  "open_display_options": ["pid", "customName", "activity", "cwd", "agentName", "startTime", "lastEventTime", "actions"],
+  "close_display_options": ["customName", "cwd", "agentName", "startTime", "lastEventTime", "actions"],
+  "dark_mode": true,
+  "ghost_mode": false,
+  "ghost_opacity": 0.5
+}
