@@ -1,7 +1,25 @@
 import { BrowserWindow } from 'electron';
+import { execSync } from 'child_process';
 import type { WeaverConfig } from '@weaver/shared/types';
 
 let win: BrowserWindow | null = null;
+let previousAppId: string | null = null;
+
+function getFrontmostAppId(): string | null {
+  try {
+    return execSync(
+      'osascript -e \'tell application "System Events" to get bundle identifier of first application process whose frontmost is true\'',
+    ).toString().trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+function activateApp(bundleId: string): void {
+  try {
+    execSync(`osascript -e 'tell application id "${bundleId}" to activate'`);
+  } catch { /* app may have quit */ }
+}
 
 export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({
@@ -41,8 +59,10 @@ export function toggleWindow(): boolean {
   if (!win) return false;
   if (win.isVisible()) {
     win.hide();
+    if (previousAppId) activateApp(previousAppId);
     return false;
   } else {
+    previousAppId = getFrontmostAppId();
     win.show();
     win.focus();
     return true;
