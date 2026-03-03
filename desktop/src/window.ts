@@ -1,24 +1,24 @@
 import { BrowserWindow } from 'electron';
-import { execSync } from 'child_process';
+import { execFile, type ChildProcess } from 'child_process';
 import type { WeaverConfig } from '@weaver/shared/types';
 
 let win: BrowserWindow | null = null;
 let previousAppId: string | null = null;
+let pendingActivation: ChildProcess | null = null;
 
-function getFrontmostAppId(): string | null {
-  try {
-    return execSync(
-      'osascript -e \'tell application "System Events" to get bundle identifier of first application process whose frontmost is true\'',
-    ).toString().trim() || null;
-  } catch {
-    return null;
-  }
+function getFrontmostAppId(): Promise<string | null> {
+  return new Promise((resolve) => {
+    execFile('osascript', ['-e',
+      'tell application "System Events" to get bundle identifier of first application process whose frontmost is true',
+    ], (err, stdout) => resolve(err ? null : stdout.trim() || null));
+  });
 }
 
 function activateApp(bundleId: string): void {
-  try {
-    execSync(`osascript -e 'tell application id "${bundleId}" to activate'`);
-  } catch { /* app may have quit */ }
+  pendingActivation?.kill();
+  pendingActivation = execFile('osascript', ['-e',
+    `tell application id "${bundleId}" to activate`,
+  ], () => { pendingActivation = null; });
 }
 
 export function createWindow(url: string, config: WeaverConfig): void {
@@ -62,7 +62,9 @@ export function toggleWindow(): boolean {
     if (previousAppId) activateApp(previousAppId);
     return false;
   } else {
-    previousAppId = getFrontmostAppId();
+    pendingActivation?.kill();
+    pendingActivation = null;
+    getFrontmostAppId().then((id) => { previousAppId = id; });
     win.show();
     win.focus();
     return true;
