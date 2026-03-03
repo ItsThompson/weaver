@@ -53,7 +53,9 @@
       }
     ]
   },
-  "dependencies": {},
+  "dependencies": {
+    "@weaver/shared": "*"
+  },
   "devDependencies": {
     "@types/node": "^22.15.3",
     "electron": "^35.0.0",
