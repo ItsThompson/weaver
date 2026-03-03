@@ -172,13 +172,19 @@ export function CherrypickPage() {
           <Box color="text-body-secondary">All exchanges removed — conversation will be empty.</Box>
         ) : (
           <SpaceBetween size="s">
-            {parseConversation(pruned).mainExchanges.map((ex) => (
-              <Box key={ex.id} variant="p">
-                <Box variant="strong">Exchange {ex.id}: </Box>
-                {ex.userPrompt.slice(0, 100)}{ex.userPrompt.length > 100 ? '…' : ''}
-                {ex.toolsUsed.length > 0 && <Box variant="span" color="text-body-secondary"> [{ex.toolsUsed.join(', ')}]</Box>}
-              </Box>
-            ))}
+            {(() => {
+              const prunedParsed = parseConversation(pruned);
+              return (
+                <>
+                  {prunedParsed.mainExchanges.map((ex) => (
+                    <ExchangeSummaryLine key={`main-${ex.id}`} label="Main" exchange={ex} />
+                  ))}
+                  {prunedParsed.tangentExchanges?.map((ex) => (
+                    <ExchangeSummaryLine key={`tangent-${ex.id}`} label="Tangent" exchange={ex} />
+                  ))}
+                </>
+              );
+            })()}
           </SpaceBetween>
         )}
       </Container>
@@ -192,7 +198,15 @@ export function CherrypickPage() {
   );
 }
 
-// -- Section subcomponent --
+function ExchangeSummaryLine({ label, exchange: ex }: { label: string; exchange: ConversationExchange }) {
+  return (
+    <Box variant="p">
+      <Box variant="strong">[{label}] Exchange {ex.id}: </Box>
+      {ex.userPrompt.slice(0, 100)}{ex.userPrompt.length > 100 ? '…' : ''}
+      {ex.toolsUsed.length > 0 && <Box variant="span" color="text-body-secondary"> [{ex.toolsUsed.join(', ')}]</Box>}
+    </Box>
+  );
+}
 
 function ExchangeSection({
   title,
