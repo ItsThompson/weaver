@@ -21,7 +21,7 @@ const NAV_ITEMS: SideNavigationProps.Item[] = [
 export function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [navOpen, setNavOpen] = useState(true);
+  const [navOpen, setNavOpen] = useState(false);
   useNavigateOnView();
   useSessionNotifications();
   useSessionEvents();
