@@ -4,16 +4,8 @@ import Header from '@cloudscape-design/components/header';
 import Badge from '@cloudscape-design/components/badge';
 import Box from '@cloudscape-design/components/box';
 import ExpandableSection from '@cloudscape-design/components/expandable-section';
-import type { ConversationExchange } from '@weaver/shared/types';
-
-interface ExchangeCardProps {
-  exchange: ConversationExchange;
-  selected: boolean;
-  onToggle: (id: number) => void;
-}
-
-const PROMPT_PREVIEW_LEN = 200;
-const RESPONSE_PREVIEW_LEN = 300;
+import { PROMPT_PREVIEW_LEN, RESPONSE_PREVIEW_LEN } from './constants';
+import type { ExchangeCardProps } from './types';
 
 function truncate(text: string, max: number): { text: string; truncated: boolean } {
   if (text.length <= max) return { text, truncated: false };
