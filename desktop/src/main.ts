@@ -1,7 +1,7 @@
 import { app, globalShortcut } from 'electron';
 import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
 import * as server from './server';
-import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible } from './window';
+import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible, isMiniMode, navigateToMini, navigateToMain } from './window';
 import { createTray } from './tray';
 import { fetchConfig, putConfig } from './config';
 
@@ -24,12 +24,24 @@ app.on('ready', async () => {
   currentConfig = await fetchConfig(server.SERVER_URL);
 
   createWindow(server.SERVER_URL, currentConfig);
-  createTray(toggleWindow, isWindowVisible, () => {
-    currentConfig.ghost_mode = !currentConfig.ghost_mode;
-    setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
-    putConfig(server.SERVER_URL, currentConfig);
-    return currentConfig.ghost_mode;
-  });
+  createTray(
+    toggleWindow,
+    isWindowVisible,
+    () => {
+      currentConfig.ghost_mode = !currentConfig.ghost_mode;
+      setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
+      putConfig(server.SERVER_URL, currentConfig);
+      return currentConfig.ghost_mode;
+    },
+    () => {
+      if (isMiniMode()) {
+        navigateToMain(server.SERVER_URL);
+      } else {
+        navigateToMini(server.SERVER_URL);
+      }
+    },
+    isMiniMode,
+  );
   globalShortcut.register('F5', toggleWindow);
   showWindow();
 });
