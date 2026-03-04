@@ -23,8 +23,13 @@ jest.unstable_mockModule('../utils/logger.js', () => ({
   log: jest.fn(),
 }));
 
+jest.unstable_mockModule('../services/event-bus.js', () => ({
+  broadcast: jest.fn(),
+}));
+
 const storage = await import('../services/storage.js');
 const logParser = await import('../services/log-parser.js');
+const eventBus = await import('../services/event-bus.js');
 
 const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof storage.readSessions>;
 const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof storage.writeSessions>;
@@ -125,6 +130,57 @@ describe('PATCH /api/sessions/:id', () => {
       method: 'PATCH',
       url: '/api/sessions/aaa',
       payload: { customName: 123 },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+});
+
+const mockBroadcast = eventBus.broadcast as jest.MockedFunction<typeof eventBus.broadcast>;
+
+describe('POST /api/rename', () => {
+  it('renames session by PID and persists', async () => {
+    mockReadSessions.mockResolvedValue([{ ...SESSION_A }, { ...SESSION_B }]);
+    mockWriteSessions.mockResolvedValue(undefined as never);
+
+    const res = await server.inject({
+      method: 'POST',
+      url: '/api/rename',
+      payload: { pid: 100, customName: 'new name' },
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.customName).toBe('new name');
+    expect(mockWriteSessions).toHaveBeenCalledWith(
+      expect.arrayContaining([expect.objectContaining({ id: 'aaa', customName: 'new name' })]),
+    );
+    expect(mockBroadcast).toHaveBeenCalledWith('aaa');
+  });
+
+  it('returns 404 when no session matches PID', async () => {
+    mockReadSessions.mockResolvedValue([SESSION_A]);
+    const res = await server.inject({
+      method: 'POST',
+      url: '/api/rename',
+      payload: { pid: 999, customName: 'test' },
+    });
+    expect(res.statusCode).toBe(404);
+  });
+
+  it('returns 400 when pid is missing', async () => {
+    const res = await server.inject({
+      method: 'POST',
+      url: '/api/rename',
+      payload: { customName: 'test' },
+    });
+    expect(res.statusCode).toBe(400);
+  });
+
+  it('returns 400 when customName is missing', async () => {
+    const res = await server.inject({
+      method: 'POST',
+      url: '/api/rename',
+      payload: { pid: 100 },
     });
     expect(res.statusCode).toBe(400);
   });
