@@ -7,6 +7,7 @@ jest.unstable_mockModule('./utils', () => ({
 const { post } = await import('./utils.js');
 const { view } = await import('./commands/view.js');
 const { session } = await import('./commands/session.js');
+const { rename } = await import('./commands/rename.js');
 
 const mockPost = post as jest.MockedFunction<typeof post>;
 let logSpy: jest.SpiedFunction<typeof console.log>;
@@ -64,5 +65,29 @@ describe('session', () => {
       }
       expect(logSpy).toHaveBeenCalledWith(expected);
     });
+  });
+});
+
+describe('rename', () => {
+  it.each([
+    [200, true, 'Session renamed to "my feature"'],
+    [404, false, 'No Weaver session found for PID 12345'],
+    [0, false, 'Weaver server not running'],
+    [500, false, 'Weaver server error (500)'],
+  ])('status %i → "%s"', (status, ok, expected) => {
+    mockPost.mockReturnValue({ ok, status, data: null });
+    rename(12345, ['my', 'feature']);
+    expect(mockPost).toHaveBeenCalledWith('/api/rename', { pid: 12345, customName: 'my feature' });
+    expect(logSpy).toHaveBeenCalledWith(expected);
+  });
+
+  it('exits with error when no name provided', () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => undefined as never);
+    rename(12345, []);
+    expect(errorSpy).toHaveBeenCalledWith('Usage: weaver rename <name>');
+    expect(exitSpy).toHaveBeenCalledWith(1);
+    errorSpy.mockRestore();
+    exitSpy.mockRestore();
   });
 });
