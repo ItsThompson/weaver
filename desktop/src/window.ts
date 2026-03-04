@@ -15,10 +15,9 @@ export function createWindow(url: string, config: WeaverConfig): void {
     height: MAIN_SIZE.height,
     show: false,
     backgroundColor: config.dark_mode ? "#161d26" : "#ffffff",
-    titleBarStyle: "hidden",
-    trafficLightPosition: { x: -20, y: -20 },
+    frame: false,
     resizable: false,
-    alwaysOnTop: false,
+    alwaysOnTop: true,
     skipTaskbar: true,
     type: "panel",
     webPreferences: {
@@ -39,18 +38,19 @@ export function createWindow(url: string, config: WeaverConfig): void {
     if (isMini === miniMode) return;
     miniMode = isMini;
     if (!win) return;
+    const [x, y] = win.getPosition();
     if (isMini) {
-      win.setSize(MINI_WIDTH, MINI_MIN_HEIGHT);
+      win.setBounds({ x, y, width: MINI_WIDTH, height: MINI_MIN_HEIGHT });
     } else {
-      win.setSize(MAIN_SIZE.width, MAIN_SIZE.height);
+      win.setBounds({ x, y, width: MAIN_SIZE.width, height: MAIN_SIZE.height });
     }
-    win.setAlwaysOnTop(isMini);
   });
 
   ipcMain.on("mini-resize", (_event, height: number) => {
     if (!win || !miniMode) return;
     const clamped = Math.max(MINI_MIN_HEIGHT, Math.round(height));
-    win.setSize(MINI_WIDTH, clamped);
+    const [x, y] = win.getPosition();
+    win.setBounds({ x, y, width: MINI_WIDTH, height: clamped });
   });
 
   win.on("close", (e) => {

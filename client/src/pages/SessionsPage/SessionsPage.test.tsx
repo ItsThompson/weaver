@@ -16,6 +16,7 @@ jest.unstable_mockModule('../../utils/api', () => ({
   assignOrphans: jest.fn(),
   getConfig: jest.fn<() => Promise<{ config: object; warnings: string[] }>>().mockResolvedValue({ config: {}, warnings: [] }),
   updateConfig: jest.fn(),
+  deleteSession: jest.fn(),
 }));
 
 const api = await import('../../utils/api');
@@ -59,7 +60,7 @@ describe('SessionsPage', () => {
     mockGetSessions.mockResolvedValue([OPEN_SESSION, CLOSED_SESSION]);
     await act(async () => { renderPage(); });
 
-    expect(screen.getByText('My Session')).toBeInTheDocument();
+    expect(screen.getAllByText('My Session').length).toBeGreaterThan(0);
   });
 
   it('shows tab counts', async () => {
