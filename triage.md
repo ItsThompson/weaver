@@ -19,4 +19,3 @@ This might be a separate client UI separate from the main client and only access
 Desktop (electron) will have a menubar toggle to toggle between mini mode and main mode. When mini mode is toggled on, the main app will be hidden and the mini mode app will be shown. When mini mode is toggled off, the mini mode app will be hidden and the main app will be shown.
 
 Does this make sense?
-

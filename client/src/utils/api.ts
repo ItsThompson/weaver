@@ -43,6 +43,12 @@ export const assignOrphans = (targetSessionId: string, pid: number) =>
     body: JSON.stringify({ targetSessionId, pid }),
   });
 
+export const deleteOrphans = (pid: number) =>
+  fetch(`${API_BASE}/orphans/${pid}`, { method: 'DELETE' }).then((r) => {
+    if (!r.ok) throw new Error(`Delete failed: ${r.status}`);
+    return r.json() as Promise<{ ok: true }>;
+  });
+
 export const getConfig = () => apiFetch<{ config: WeaverConfig; warnings: string[] }>('/config');
 
 export const updateConfig = (config: WeaverConfig) =>
