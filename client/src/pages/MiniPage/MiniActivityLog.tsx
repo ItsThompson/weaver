@@ -1,7 +1,7 @@
-import { useActivityLog } from '../../context/ActivityLogContext';
-import { ACTIVITY_COLORS } from '../../utils/activityColors';
+import { useActivityLog } from "../../context/ActivityLogContext";
+import { ACTIVITY_COLORS } from "../../utils/activityColors";
 
-const MAX_VISIBLE = 8;
+const MAX_VISIBLE = 10;
 
 export function MiniActivityLog() {
   const { entries } = useActivityLog();
@@ -10,11 +10,30 @@ export function MiniActivityLog() {
   if (visible.length === 0) return null;
 
   return (
-    <div style={{ borderTop: '1px solid #2a2f38', padding: '6px 12px' }}>
+    <div style={{ borderTop: "1px solid #2a2f38", padding: "6px 12px" }}>
       {visible.map((entry) => (
-        <div key={entry.id} style={{ fontSize: 11, color: '#6b7280', padding: '2px 0', display: 'flex', gap: 6 }}>
-          <span style={{ color: ACTIVITY_COLORS[entry.activity], flexShrink: 0 }}>●</span>
-          <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+        <div
+          key={entry.id}
+          style={{
+            fontSize: 11,
+            color: "#6b7280",
+            padding: "2px 0",
+            display: "flex",
+            gap: 6,
+          }}
+        >
+          <span
+            style={{ color: ACTIVITY_COLORS[entry.activity], flexShrink: 0 }}
+          >
+            ●
+          </span>
+          <span
+            style={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
             {entry.message}
           </span>
         </div>
