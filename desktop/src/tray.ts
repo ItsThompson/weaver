@@ -7,6 +7,8 @@ export function createTray(
   onToggle: () => boolean,
   isVisible: () => boolean,
   onGhostToggle: () => boolean,
+  onMiniToggle: () => void,
+  isMini: () => boolean,
 ): void {
   const iconPath = app.isPackaged
     ? resolve(process.resourcesPath, 'assets/tray-iconTemplate.png')
@@ -23,6 +25,9 @@ export function createTray(
     { label: 'Ghost Mode', type: 'checkbox', checked: false, click: (menuItem) => {
       const nowEnabled = onGhostToggle();
       menuItem.checked = nowEnabled;
+    }},
+    { label: 'Mini Mode', type: 'checkbox', checked: isMini(), click: () => {
+      onMiniToggle();
     }},
     { type: 'separator' },
     { label: 'Quit', click: () => { app.exit(); } },
