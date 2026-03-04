@@ -2,11 +2,15 @@ import { BrowserWindow } from "electron";
 import type { WeaverConfig } from "@weaver/shared/types";
 
 let win: BrowserWindow | null = null;
+let miniMode = false;
+
+const MAIN_SIZE = { width: 900, height: 600 };
+const MINI_SIZE = { width: 300, height: 220 };
 
 export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({
-    width: 900,
-    height: 600,
+    width: MAIN_SIZE.width,
+    height: MAIN_SIZE.height,
     show: false,
     backgroundColor: config.dark_mode ? "#161d26" : "#ffffff",
     titleBarStyle: "hidden",
@@ -26,6 +30,15 @@ export function createWindow(url: string, config: WeaverConfig): void {
   if (config.ghost_mode) {
     setGhostMode(true, config.ghost_opacity);
   }
+
+  win.webContents.on("did-navigate-in-page", (_event, url) => {
+    const isMini = new URL(url).pathname === "/mini";
+    miniMode = isMini;
+    if (!win) return;
+    const size = isMini ? MINI_SIZE : MAIN_SIZE;
+    win.setSize(size.width, size.height);
+    win.setAlwaysOnTop(isMini);
+  });
 
   win.on("close", (e) => {
     e.preventDefault();
@@ -58,4 +71,24 @@ export function isWindowVisible(): boolean {
 export function showWindow(): void {
   win?.show();
   win?.focus();
+}
+
+export function isMiniMode(): boolean {
+  return miniMode;
+}
+
+export async function navigateToMini(serverUrl: string): Promise<void> {
+  await fetch(`${serverUrl}/api/navigate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ page: "mini" }),
+  });
+}
+
+export async function navigateToMain(serverUrl: string): Promise<void> {
+  await fetch(`${serverUrl}/api/navigate`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ page: "sessions" }),
+  });
 }
