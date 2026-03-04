@@ -33,6 +33,7 @@ app.on('ready', async () => {
       putConfig(server.SERVER_URL, currentConfig);
       return currentConfig.ghost_mode;
     },
+    () => currentConfig.ghost_mode,
     () => {
       if (isMiniMode()) {
         navigateToMain(server.SERVER_URL);
