@@ -4,18 +4,3 @@ Since we have turn data for the agents, what if on the STOP turn we run some spe
 
 
 Like user will describe their testing framework? and then we can run the tests?
-
----
-
-Mini mode: Provides less data but takes up less screen space. 
-SSE events drive the UI updates just like the main app.
-
-It will just contain the name and activity of the agent but the activity of the agent is displayed as a just colored dot as this feature is for advanced userse who are already familiar with our ui.
-
-Will only show 5 sessions sorted by most recent activity.
-
-This might be a separate client UI separate from the main client and only accessible in the desktop (electron) app. we can ignore web for this feature. Will not be resizable just like the main app but we willh ave a set size thats smaller.
-
-Desktop (electron) will have a menubar toggle to toggle between mini mode and main mode. When mini mode is toggled on, the main app will be hidden and the mini mode app will be shown. When mini mode is toggled off, the mini mode app will be hidden and the main app will be shown.
-
-Does this make sense?

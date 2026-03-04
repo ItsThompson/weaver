@@ -1,8 +1,18 @@
-import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react';
-import { deriveActivity, resolveNotification } from '../hooks/notificationUtils';
-import type { ActivityStatus } from '@weaver/shared/types';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useRef,
+  type ReactNode,
+} from "react";
+import {
+  deriveActivity,
+  resolveNotification,
+} from "../hooks/notificationUtils";
+import type { ActivityStatus } from "@weaver/shared/types";
 
-const MAX_ENTRIES = 20;
+const MAX_ENTRIES = 10;
 
 export interface ActivityLogEntry {
   id: number;
@@ -15,7 +25,9 @@ interface ActivityLogContextValue {
   entries: ActivityLogEntry[];
 }
 
-const ActivityLogContext = createContext<ActivityLogContextValue>({ entries: [] });
+const ActivityLogContext = createContext<ActivityLogContextValue>({
+  entries: [],
+});
 
 export function ActivityLogProvider({ children }: { children: ReactNode }) {
   const [entries, setEntries] = useState<ActivityLogEntry[]>([]);
@@ -23,18 +35,25 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
   const lastActivity = useRef(new Map<string, string>());
 
   useEffect(() => {
-    const source = new EventSource('/api/events');
+    const source = new EventSource("/api/events");
 
-    source.addEventListener('update', (event: MessageEvent) => {
+    source.addEventListener("update", (event: MessageEvent) => {
       try {
-        const { sessionId, eventName, sessionName } = JSON.parse(event.data) as {
+        const { sessionId, eventName, sessionName } = JSON.parse(
+          event.data,
+        ) as {
           sessionId: string;
           eventName?: string;
           sessionName?: string;
         };
         if (!eventName) return;
 
-        const message = resolveNotification(sessionId, eventName, sessionName, lastActivity.current);
+        const message = resolveNotification(
+          sessionId,
+          eventName,
+          sessionName,
+          lastActivity.current,
+        );
         if (!message) return;
 
         const entry: ActivityLogEntry = {
@@ -45,7 +64,9 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
         };
 
         setEntries((prev) => [entry, ...prev].slice(0, MAX_ENTRIES));
-      } catch { /* ignore */ }
+      } catch {
+        /* ignore */
+      }
     });
 
     return () => source.close();
