@@ -8,6 +8,7 @@ const { post } = await import('./utils.js');
 const { view } = await import('./commands/view.js');
 const { session } = await import('./commands/session.js');
 const { rename } = await import('./commands/rename.js');
+const { toggle } = await import('./commands/toggle.js');
 
 const mockPost = post as jest.MockedFunction<typeof post>;
 let logSpy: jest.SpiedFunction<typeof console.log>;
@@ -89,5 +90,18 @@ describe('rename', () => {
     expect(exitSpy).toHaveBeenCalledWith(1);
     errorSpy.mockRestore();
     exitSpy.mockRestore();
+  });
+});
+
+describe('toggle', () => {
+  it.each([
+    [200, true, 'Toggled Weaver mode'],
+    [0, false, 'Weaver server not running'],
+    [500, false, 'Weaver server error (500)'],
+  ])('status %i → "%s"', (status, ok, expected) => {
+    mockPost.mockReturnValue({ ok, status, data: null });
+    toggle(12345, []);
+    expect(mockPost).toHaveBeenCalledWith('/api/navigate', { page: 'toggle', pid: 12345 });
+    expect(logSpy).toHaveBeenCalledWith(expected);
   });
 });
