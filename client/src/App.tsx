@@ -22,7 +22,6 @@ import { COMMAND_PALETTE_OPEN_EVENT } from "./constants";
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: "link", text: "Sessions", href: "/" },
   { type: "link", text: "Cherrypick", href: "/cherrypick" },
-  { type: "link", text: "Mini", href: "/mini" },
   { type: "link", text: "Settings", href: "/settings" },
   { type: "link", text: "Command Palette", href: "#command-palette" },
 ];
