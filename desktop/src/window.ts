@@ -71,8 +71,7 @@ export function toggleWindow(): boolean {
     win.hide();
     return false;
   } else {
-    win.show();
-    win.focus();
+    win.showInactive();
     return true;
   }
 }
@@ -82,8 +81,7 @@ export function isWindowVisible(): boolean {
 }
 
 export function showWindow(): void {
-  win?.show();
-  win?.focus();
+  win?.showInactive();
 }
 
 export function isMiniMode(): boolean {
