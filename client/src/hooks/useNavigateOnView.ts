@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const PAGE_ROUTES: Record<string, string> = {
   sessions: '/',
@@ -8,6 +8,9 @@ const PAGE_ROUTES: Record<string, string> = {
 
 export function useNavigateOnView(): void {
   const navigate = useNavigate();
+  const location = useLocation();
+  const locationRef = useRef(location.pathname);
+  locationRef.current = location.pathname;
 
   useEffect(() => {
     const source = new EventSource('/api/events');
@@ -17,6 +20,8 @@ export function useNavigateOnView(): void {
         const data = JSON.parse(event.data) as { sessionId?: string; page?: string };
         if (data.sessionId) {
           navigate(`/sessions/${data.sessionId}`);
+        } else if (data.page === 'toggle') {
+          navigate(locationRef.current === '/mini' ? '/' : '/mini');
         } else if (data.page && PAGE_ROUTES[data.page]) {
           navigate(PAGE_ROUTES[data.page]);
         }

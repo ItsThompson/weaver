@@ -2,6 +2,7 @@
 import { view } from './commands/view.js';
 import { session } from './commands/session.js';
 import { rename } from './commands/rename.js';
+import { toggle } from './commands/toggle.js';
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -12,6 +13,7 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   view,
   session,
   rename,
+  toggle,
 };
 
 if (!command || command === '--help' || command === '-h') {
@@ -22,7 +24,8 @@ Commands:
   session           Navigate dashboard to the sessions list (default: list)
   session list      Navigate dashboard to the sessions list
   session <PID>     Navigate dashboard to a specific session by PID
-  rename <name>     Rename the current kiro-cli session`);
+  rename <name>     Rename the current kiro-cli session
+  toggle            Toggle between main and mini mode`);
   process.exit(0);
 }
 
