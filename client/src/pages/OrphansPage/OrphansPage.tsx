@@ -9,7 +9,9 @@ import Button from '@cloudscape-design/components/button';
 import Container from '@cloudscape-design/components/container';
 import Select, { type SelectProps } from '@cloudscape-design/components/select';
 import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import { assignOrphans } from '../../utils/api';
+import Modal from '@cloudscape-design/components/modal';
+import Alert from '@cloudscape-design/components/alert';
+import { assignOrphans, deleteOrphans } from '../../utils/api';
 import { useOrphansQuery, useSessionsQuery, revalidateOrphans } from '../../hooks/queries';
 import { TurnContainer } from '../SessionDetailPage/components/TurnContainer';
 
@@ -19,6 +21,8 @@ export function OrphansPage() {
   const { data: sessions = [] } = useSessionsQuery();
   const [selectedSessions, setSelectedSessions] = useState<Record<number, SelectProps.Option | null>>({});
   const [assigning, setAssigning] = useState<number | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ pid: number; eventCount: number } | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const groups = orphanData?.groups ?? [];
   const loading = orphansLoading;
@@ -45,6 +49,18 @@ export function OrphansPage() {
       // Error will surface on next revalidation
     } finally {
       setAssigning(null);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await deleteOrphans(deleteTarget.pid);
+      revalidateOrphans();
+    } finally {
+      setDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -89,6 +105,13 @@ export function OrphansPage() {
                     filteringType="auto"
                   />
                   <Button
+                    variant="normal"
+                    onClick={() => setDeleteTarget({ pid: group.pid, eventCount: group.eventCount })}
+                    style={{ root: { color: { default: '#d91515', hover: '#b80000', active: '#a10000' }, borderColor: { default: '#d91515', hover: '#b80000', active: '#a10000' } } }}
+                  >
+                    Delete
+                  </Button>
+                  <Button
                     variant="primary"
                     onClick={() => handleAssign(group.pid)}
                     disabled={!selectedSessions[group.pid]}
@@ -113,6 +136,24 @@ export function OrphansPage() {
           </SpaceBetween>
         </Container>
       ))}
+
+      <Modal
+        visible={deleteTarget !== null}
+        onDismiss={() => setDeleteTarget(null)}
+        header="Delete orphaned events"
+        footer={
+          <Box float="right">
+            <SpaceBetween direction="horizontal" size="xs">
+              <Button variant="link" onClick={() => setDeleteTarget(null)}>Cancel</Button>
+              <Button variant="primary" loading={deleting} onClick={handleDelete}>Delete</Button>
+            </SpaceBetween>
+          </Box>
+        }
+      >
+        <Alert type="warning">
+          This will permanently delete {deleteTarget?.eventCount} orphaned events for <strong>PID {deleteTarget?.pid}</strong>. This action cannot be undone.
+        </Alert>
+      </Modal>
     </SpaceBetween>
   );
 }

@@ -119,4 +119,46 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
       return { ok: true };
     },
   );
+
+  server.delete<{ Params: { pid: string }; Reply: { ok: true } | ApiError }>(
+    '/api/orphans/:pid',
+    async (request, reply) => {
+      const pid = Number(request.params.pid);
+      if (!Number.isFinite(pid)) {
+        return reply.status(400).send({ error: 'Invalid PID' });
+      }
+
+      const filePath = ORPHAN_PATH();
+      if (!existsSync(filePath)) {
+        return reply.status(404).send({ error: 'No orphan log found' });
+      }
+
+      const content = await readFile(filePath, 'utf-8');
+      const lines = content.split('\n').filter((l) => l.trim().length > 0);
+      const toKeep: string[] = [];
+      let deleted = 0;
+
+      for (const line of lines) {
+        try {
+          const event = JSON.parse(line) as HookEvent;
+          if ((event.pid ?? 0) === pid) {
+            deleted++;
+          } else {
+            toKeep.push(line);
+          }
+        } catch {
+          toKeep.push(line);
+        }
+      }
+
+      if (deleted === 0) {
+        return reply.status(404).send({ error: `No orphan events found for PID ${pid}` });
+      }
+
+      await writeFile(filePath, toKeep.length > 0 ? toKeep.join('\n') + '\n' : '');
+
+      log({ timestamp: new Date().toISOString(), event: 'orphans_deleted', pid, count: deleted });
+      return { ok: true };
+    },
+  );
 }
