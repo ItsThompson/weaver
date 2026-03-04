@@ -1,11 +1,13 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
+import { resolve } from "node:path";
 import type { WeaverConfig } from "@weaver/shared/types";
 
 let win: BrowserWindow | null = null;
 let miniMode = false;
 
 const MAIN_SIZE = { width: 900, height: 600 };
-const MINI_SIZE = { width: 300, height: 380 };
+const MINI_WIDTH = 300;
+const MINI_MIN_HEIGHT = 60;
 
 export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({
@@ -22,6 +24,7 @@ export function createWindow(url: string, config: WeaverConfig): void {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      preload: resolve(__dirname, "preload.js"),
     },
   });
 
@@ -36,9 +39,18 @@ export function createWindow(url: string, config: WeaverConfig): void {
     if (isMini === miniMode) return;
     miniMode = isMini;
     if (!win) return;
-    const size = isMini ? MINI_SIZE : MAIN_SIZE;
-    win.setSize(size.width, size.height);
+    if (isMini) {
+      win.setSize(MINI_WIDTH, MINI_MIN_HEIGHT);
+    } else {
+      win.setSize(MAIN_SIZE.width, MAIN_SIZE.height);
+    }
     win.setAlwaysOnTop(isMini);
+  });
+
+  ipcMain.on("mini-resize", (_event, height: number) => {
+    if (!win || !miniMode) return;
+    const clamped = Math.max(MINI_MIN_HEIGHT, Math.round(height));
+    win.setSize(MINI_WIDTH, clamped);
   });
 
   win.on("close", (e) => {
