@@ -12,7 +12,7 @@ export function registerEventRoutes(server: FastifyInstance): void {
     // Enrich with session name for notifications
     const sessions = await readSessions();
     const session = sessions.find((s) => s.id === sessionId);
-    const sessionName = session?.customName || sessionId.slice(0, 8);
+    const sessionName = session?.customName || session?.cwd.split('/').pop() || sessionId.slice(0, 8);
 
     broadcast(sessionId, eventName, sessionName);
     return { ok: true };
