@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 const PAGE_ROUTES: Record<string, string> = {
   sessions: '/',
+  mini: '/mini',
 };
 
 export function useNavigateOnView(): void {
