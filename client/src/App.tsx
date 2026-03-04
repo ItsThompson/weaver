@@ -9,6 +9,7 @@ import { SessionDetailPage } from "./pages/SessionDetailPage";
 import { CherrypickPage } from "./pages/CherrypickPage";
 import { OrphansPage } from "./pages/OrphansPage/OrphansPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { MiniPage } from "./pages/MiniPage";
 import { useNavigateOnView } from "./hooks/useNavigateOnView";
 import { useSessionNotifications } from "./hooks/useSessionNotifications";
 import { useSessionEvents } from "./hooks/useSessionEvents";
@@ -21,6 +22,7 @@ import { COMMAND_PALETTE_OPEN_EVENT } from "./constants";
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: "link", text: "Sessions", href: "/" },
   { type: "link", text: "Cherrypick", href: "/cherrypick" },
+  { type: "link", text: "Mini", href: "/mini" },
   { type: "link", text: "Settings", href: "/settings" },
   { type: "link", text: "Command Palette", href: "#command-palette" },
 ];
@@ -46,6 +48,18 @@ export function App() {
     }
     navigate(event.detail.href);
   };
+
+  const isMini = location.pathname === "/mini";
+
+  if (isMini) {
+    return (
+      <>
+        <MiniPage />
+        <NotificationBar />
+        <CommandPalette />
+      </>
+    );
+  }
 
   return (
     <>
