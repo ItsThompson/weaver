@@ -6,7 +6,7 @@ import type { SessionWithStatus } from '@weaver/shared/types';
 const MAX_SESSIONS = 5;
 
 function displayName(session: SessionWithStatus): string {
-  return session.customName || session.id.slice(0, 8);
+  return session.customName || session.cwd.split('/').pop() || session.id.slice(0, 8);
 }
 
 export function MiniPage() {
