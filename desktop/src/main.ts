@@ -44,7 +44,7 @@ app.on('ready', async () => {
     isMiniMode,
   );
   globalShortcut.register('F5', toggleWindow);
-  showWindow();
+  showWindow(); // marks visible=true; actual show happens on ready-to-show
 });
 
 app.on('will-quit', () => {

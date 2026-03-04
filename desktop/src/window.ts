@@ -4,10 +4,28 @@ import type { WeaverConfig } from "@weaver/shared/types";
 
 let win: BrowserWindow | null = null;
 let miniMode = false;
+let visible = false;
+let ghostEnabled = false;
+let ghostOpacityValue = 1;
 
 const MAIN_SIZE = { width: 900, height: 600 };
 const MINI_WIDTH = 300;
 const MINI_MIN_HEIGHT = 60;
+
+/** Apply opacity + mouse-event passthrough based on visible and ghost state. */
+function applyVisualState(): void {
+  if (!win) return;
+  if (!visible) {
+    win.setOpacity(0);
+    win.setIgnoreMouseEvents(true);
+  } else if (ghostEnabled) {
+    win.setOpacity(ghostOpacityValue);
+    win.setIgnoreMouseEvents(true);
+  } else {
+    win.setOpacity(1);
+    win.setIgnoreMouseEvents(false);
+  }
+}
 
 export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({
@@ -30,8 +48,17 @@ export function createWindow(url: string, config: WeaverConfig): void {
   win.loadURL(url);
 
   if (config.ghost_mode) {
-    setGhostMode(true, config.ghost_opacity);
+    ghostEnabled = true;
+    ghostOpacityValue = config.ghost_opacity;
   }
+
+  // Show the window once so it permanently exists in the OS window list.
+  // Visibility is then controlled purely via opacity to avoid triggering
+  // AeroSpace's window-added/removed focus logic.
+  win.once("ready-to-show", () => {
+    win?.showInactive();
+    applyVisualState();
+  });
 
   win.webContents.on("did-navigate-in-page", (_event, url) => {
     const isMini = new URL(url).pathname === "/mini";
@@ -55,33 +82,31 @@ export function createWindow(url: string, config: WeaverConfig): void {
 
   win.on("close", (e) => {
     e.preventDefault();
-    win?.hide();
+    visible = false;
+    applyVisualState();
   });
 }
 
 export function setGhostMode(enabled: boolean, opacity: number): void {
-  if (!win) return;
-  win.setOpacity(enabled ? opacity : 1);
-  win.setIgnoreMouseEvents(enabled);
+  ghostEnabled = enabled;
+  ghostOpacityValue = opacity;
+  applyVisualState();
 }
 
 export function toggleWindow(): boolean {
   if (!win) return false;
-  if (win.isVisible()) {
-    win.hide();
-    return false;
-  } else {
-    win.showInactive();
-    return true;
-  }
+  visible = !visible;
+  applyVisualState();
+  return visible;
 }
 
 export function isWindowVisible(): boolean {
-  return win?.isVisible() ?? false;
+  return visible;
 }
 
 export function showWindow(): void {
-  win?.showInactive();
+  visible = true;
+  applyVisualState();
 }
 
 export function isMiniMode(): boolean {
