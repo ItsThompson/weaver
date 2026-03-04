@@ -31,8 +31,10 @@ chmod +x hook-handler/weaver-log.sh
 # Install CLI dependencies
 npm install --prefix cli
 
-# Add aliases (add to ~/.zshrc or ~/.bashrc)
-alias weaver='~/Documents/weaver/bin/weaver'
+# Add weaver to your PATH (works in bash, zsh, and kiro-cli)
+ln -s ~/Documents/weaver/bin/weaver ~/.local/bin/weaver
+
+# Optional: add a shorthand alias (add to ~/.zshrc or ~/.bashrc)
 alias wv='weaver view'
 ```
 
