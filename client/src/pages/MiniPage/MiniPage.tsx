@@ -17,14 +17,15 @@ export function MiniPage() {
   const { data: sessions } = useSessionsQuery();
   const navigate = useNavigate();
   const rootRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = rootRef.current;
+    const el = contentRef.current;
     const weaver = (window as any).weaver;
     if (!el || !weaver?.resizeMini) return;
 
     const observer = new ResizeObserver(() => {
-      weaver.resizeMini(el.scrollHeight);
+      weaver.resizeMini(el.offsetHeight);
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -44,11 +45,11 @@ export function MiniPage() {
       ref={rootRef}
       style={{
         background: "#161d26",
-        minHeight: "100vh",
         color: "#d1d5db",
         fontFamily: "'Open Sans', sans-serif",
       }}
     >
+      <div ref={contentRef}>
       <div
         style={
           {
@@ -62,7 +63,7 @@ export function MiniPage() {
           } as React.CSSProperties
         }
       />
-      <div>
+      <div style={{ padding: "28px 0" }}>
         {openSessions.length === 0 && (
           <div style={{ padding: "16px 12px", fontSize: 13, color: "#6b7280" }}>
             No open sessions
@@ -99,6 +100,7 @@ export function MiniPage() {
         ))}
       </div>
       <MiniActivityLog />
+      </div>
     </div>
   );
 }
