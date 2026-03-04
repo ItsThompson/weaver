@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import '@cloudscape-design/global-styles/index.css';
 import { NotificationProvider } from './context/NotificationContext';
+import { ActivityLogProvider } from './context/ActivityLogContext';
 import { WindowProvider } from './context/WindowContext';
 
 import { App } from './App';
@@ -12,11 +13,13 @@ if (root) {
   createRoot(root).render(
     <React.StrictMode>
       <BrowserRouter>
-        <NotificationProvider>
-          <WindowProvider>
-            <App />
-          </WindowProvider>
-        </NotificationProvider>
+        <ActivityLogProvider>
+          <NotificationProvider>
+            <WindowProvider>
+              <App />
+            </WindowProvider>
+          </NotificationProvider>
+        </ActivityLogProvider>
       </BrowserRouter>
     </React.StrictMode>,
   );

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useNotifications } from '../context/NotificationContext';
-import { deriveActivity, resolveNotification } from './notificationUtils';
+import { useActivityLog, type ActivityLogEntry } from '../context/ActivityLogContext';
 import type { NotificationSound } from './soundUtils';
 import type { ActivityStatus } from '@weaver/shared/types';
 
@@ -14,28 +14,16 @@ const ACTIVITY_SOUND: Record<ActivityStatus, NotificationSound> = {
 
 export function useSessionNotifications(): void {
   const { addNotification } = useNotifications();
-  const lastActivity = useRef(new Map<string, string>());
+  const { entries } = useActivityLog();
+  const seenRef = useRef(0);
 
   useEffect(() => {
-    const source = new EventSource('/api/events');
+    const unseen = entries.filter((e) => e.id > seenRef.current);
+    if (unseen.length === 0) return;
+    seenRef.current = entries[0].id;
 
-    source.addEventListener('update', (event: MessageEvent) => {
-      try {
-        const { sessionId, eventName, sessionName } = JSON.parse(event.data) as {
-          sessionId: string;
-          eventName?: string;
-          sessionName?: string;
-        };
-        if (!eventName) return;
-
-        const message = resolveNotification(sessionId, eventName, sessionName, lastActivity.current);
-        if (message) {
-          const activity = deriveActivity(eventName);
-          addNotification(message, 'info', ACTIVITY_SOUND[activity]);
-        }
-      } catch { /* ignore */ }
-    });
-
-    return () => source.close();
-  }, [addNotification]);
+    for (const entry of unseen) {
+      addNotification(entry.message, 'info', ACTIVITY_SOUND[entry.activity]);
+    }
+  }, [entries, addNotification]);
 }
