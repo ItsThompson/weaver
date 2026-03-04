@@ -33,6 +33,7 @@ export function createWindow(url: string, config: WeaverConfig): void {
 
   win.webContents.on("did-navigate-in-page", (_event, url) => {
     const isMini = new URL(url).pathname === "/mini";
+    if (isMini === miniMode) return;
     miniMode = isMini;
     if (!win) return;
     const size = isMini ? MINI_SIZE : MAIN_SIZE;
