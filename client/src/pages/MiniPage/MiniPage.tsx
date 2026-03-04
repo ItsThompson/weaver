@@ -19,7 +19,7 @@ export function MiniPage() {
     .slice(0, MAX_SESSIONS);
 
   return (
-    <div style={{ background: '#161d26', minHeight: '100vh', color: '#d1d5db' }}>
+    <div style={{ background: '#161d26', minHeight: '100vh', color: '#d1d5db', fontFamily: "'Open Sans', sans-serif" }}>
       <div
         style={{
           height: 28,
