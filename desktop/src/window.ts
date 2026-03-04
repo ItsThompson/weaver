@@ -5,7 +5,7 @@ let win: BrowserWindow | null = null;
 let miniMode = false;
 
 const MAIN_SIZE = { width: 900, height: 600 };
-const MINI_SIZE = { width: 300, height: 220 };
+const MINI_SIZE = { width: 300, height: 380 };
 
 export function createWindow(url: string, config: WeaverConfig): void {
   win = new BrowserWindow({

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useSessionsQuery } from '../../hooks/queries';
 import { ACTIVITY_COLORS } from '../../utils/activityColors';
+import { MiniActivityLog } from './MiniActivityLog';
 import type { SessionWithStatus } from '@weaver/shared/types';
 
 const MAX_SESSIONS = 5;
@@ -57,6 +58,7 @@ export function MiniPage() {
           </div>
         ))}
       </div>
+      <MiniActivityLog />
     </div>
   );
 }

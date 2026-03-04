@@ -55,7 +55,6 @@ export function App() {
     return (
       <>
         <MiniPage />
-        <NotificationBar />
         <CommandPalette />
       </>
     );
