@@ -7,6 +7,7 @@ export function createTray(
   onToggle: () => boolean,
   isVisible: () => boolean,
   onGhostToggle: () => boolean,
+  isGhost: () => boolean,
   onMiniToggle: () => void,
   isMini: () => boolean,
 ): void {
@@ -22,7 +23,7 @@ export function createTray(
       const nowVisible = onToggle();
       menuItem.checked = nowVisible;
     }},
-    { label: 'Ghost Mode', type: 'checkbox', checked: false, click: (menuItem) => {
+    { label: 'Ghost Mode', type: 'checkbox', checked: isGhost(), click: (menuItem) => {
       const nowEnabled = onGhostToggle();
       menuItem.checked = nowEnabled;
     }},
