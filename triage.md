@@ -4,3 +4,5 @@ Since we have turn data for the agents, what if on the STOP turn we run some spe
 
 
 Like user will describe their testing framework? and then we can run the tests?
+
+We would need to develop some sort of convention/schema for how our .weaver files would be structured.
