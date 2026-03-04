@@ -27,6 +27,12 @@ export const updateSessionName = (id: string, customName: string) =>
     body: JSON.stringify({ customName }),
   });
 
+export const deleteSession = (id: string) =>
+  fetch(`${API_BASE}/sessions/${id}`, { method: 'DELETE' }).then((r) => {
+    if (!r.ok) throw new Error(`Delete failed: ${r.status}`);
+    return r.json() as Promise<{ ok: true }>;
+  });
+
 export const getOrphans = () => apiFetch<{ groups: OrphanGroup[] }>('/orphans');
 
 export const getOrphanCount = () => apiFetch<{ count: number }>('/orphans/count');
