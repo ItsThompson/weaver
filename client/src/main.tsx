@@ -5,6 +5,7 @@ import '@cloudscape-design/global-styles/index.css';
 import { NotificationProvider } from './context/NotificationContext';
 import { ActivityLogProvider } from './context/ActivityLogContext';
 import { WindowProvider } from './context/WindowContext';
+import { ComposeProviders } from './components/ComposeProviders';
 
 import { App } from './App';
 
@@ -13,13 +14,9 @@ if (root) {
   createRoot(root).render(
     <React.StrictMode>
       <BrowserRouter>
-        <ActivityLogProvider>
-          <NotificationProvider>
-            <WindowProvider>
-              <App />
-            </WindowProvider>
-          </NotificationProvider>
-        </ActivityLogProvider>
+        <ComposeProviders providers={[ActivityLogProvider, NotificationProvider, WindowProvider]}>
+          <App />
+        </ComposeProviders>
       </BrowserRouter>
     </React.StrictMode>,
   );

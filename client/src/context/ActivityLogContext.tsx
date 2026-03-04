@@ -4,6 +4,7 @@ import {
   useState,
   useEffect,
   useRef,
+  useCallback,
   type ReactNode,
 } from "react";
 import {
@@ -11,6 +12,7 @@ import {
   resolveNotification,
 } from "../hooks/notificationUtils";
 import type { ActivityStatus } from "@weaver/shared/types";
+import { NOTIFICATION_AUTO_DISMISS_MS } from "../constants";
 
 const MAX_ENTRIES = 10;
 
@@ -34,6 +36,10 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
   const counterRef = useRef(0);
   const lastActivity = useRef(new Map<string, string>());
 
+  const dismissEntry = useCallback((id: number) => {
+    setEntries((prev) => prev.filter((e) => e.id !== id));
+  }, []);
+
   useEffect(() => {
     const source = new EventSource("/api/events");
 
@@ -56,21 +62,23 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
         );
         if (!message) return;
 
+        const id = ++counterRef.current;
         const entry: ActivityLogEntry = {
-          id: ++counterRef.current,
+          id,
           message,
           activity: deriveActivity(eventName),
           timestamp: Date.now(),
         };
 
         setEntries((prev) => [entry, ...prev].slice(0, MAX_ENTRIES));
+        setTimeout(() => dismissEntry(id), NOTIFICATION_AUTO_DISMISS_MS);
       } catch {
         /* ignore */
       }
     });
 
     return () => source.close();
-  }, []);
+  }, [dismissEntry]);
 
   return (
     <ActivityLogContext.Provider value={{ entries }}>
