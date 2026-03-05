@@ -3,6 +3,11 @@ import type { Stats } from 'node:fs';
 
 jest.unstable_mockModule('node:fs/promises', () => ({
   stat: jest.fn<() => Promise<Stats>>(),
+  readFile: jest.fn<() => Promise<string>>(),
+}));
+
+jest.unstable_mockModule('node:fs', () => ({
+  existsSync: jest.fn<() => boolean>(),
 }));
 
 const { stat } = await import('node:fs/promises');

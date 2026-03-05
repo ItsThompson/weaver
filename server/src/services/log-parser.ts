@@ -1,11 +1,9 @@
-import { readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
 import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
-import { FileCache } from './file-cache.js';
+import { FileCache, parseJsonlFile } from './file-cache.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
 
@@ -38,21 +36,11 @@ export async function getLastEvent(sessionId: string): Promise<{ name: string; t
 
 export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {
   const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
-  return logCache.get(filePath, async () => {
-    if (!existsSync(filePath)) return [];
-    const content = await readFile(filePath, 'utf-8');
-    return content
-      .split('\n')
-      .filter((line) => line.trim().length > 0)
-      .reduce<HookEvent[]>((events, line) => {
-        try {
-          events.push(JSON.parse(line) as HookEvent);
-        } catch {
-          log({ timestamp: new Date().toISOString(), event: 'malformed_log_line', sessionId, line });
-        }
-        return events;
-      }, []);
-  });
+  return logCache.get(filePath, () =>
+    parseJsonlFile<HookEvent>(filePath, (line) =>
+      log({ timestamp: new Date().toISOString(), event: 'malformed_log_line', sessionId, line }),
+    ),
+  );
 }
 
 export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {

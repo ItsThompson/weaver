@@ -1,11 +1,10 @@
-import { mkdir, readFile, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { mkdir, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { Session } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
-import { FileCache } from './file-cache.js';
+import { FileCache, parseJsonlFile } from './file-cache.js';
 
 const DATA_DIR = () => join(homedir(), '.weaver');
 const LOGS_DIR = () => join(DATA_DIR(), 'logs');
@@ -29,21 +28,11 @@ export async function ensureDataDir(): Promise<void> {
 
 export async function readSessions(): Promise<Session[]> {
   const filePath = SESSIONS_FILE();
-  return sessionCache.get(filePath, async () => {
-    if (!existsSync(filePath)) return [];
-    const content = await readFile(filePath, 'utf-8');
-    return content
-      .split('\n')
-      .filter((line) => line.trim().length > 0)
-      .reduce<Session[]>((sessions, line) => {
-        try {
-          sessions.push(JSON.parse(line) as Session);
-        } catch {
-          log({ timestamp: new Date().toISOString(), event: 'malformed_session_line', line });
-        }
-        return sessions;
-      }, []);
-  });
+  return sessionCache.get(filePath, () =>
+    parseJsonlFile<Session>(filePath, (line) =>
+      log({ timestamp: new Date().toISOString(), event: 'malformed_session_line', line }),
+    ),
+  );
 }
 
 export async function appendSession(session: Session): Promise<void> {
