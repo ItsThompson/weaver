@@ -10,9 +10,9 @@ import {
 import {
   deriveActivity,
   resolveNotification,
-} from "../hooks/notifications/notificationUtils";
+} from "../../hooks/notifications/notificationUtils";
 import type { ActivityStatus } from "@weaver/shared/types";
-import { NOTIFICATION_AUTO_DISMISS_MS } from "../constants";
+import { NOTIFICATION_AUTO_DISMISS_MS } from "../../constants";
 
 const MAX_ENTRIES = 10;
 
