@@ -41,7 +41,7 @@ export function createWindow(url: string, config: WeaverConfig): void {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: resolve(__dirname, "preload.js"),
+      preload: resolve(__dirname, "preload.cjs"),
     },
   });
 

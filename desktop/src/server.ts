@@ -26,7 +26,7 @@ export function killPortOccupant(): void {
 }
 
 export function start(): void {
-  const serverEntry = resolve(resourcesPath, 'dist/index.js');
+  const serverEntry = resolve(resourcesPath, 'dist/index.mjs');
   const env = { ...process.env };
   if (isPacked) {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, 'client/dist');
