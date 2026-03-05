@@ -5,8 +5,12 @@ import { homedir } from 'node:os';
 import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
 import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
+import { FileCache } from './file-cache.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
+
+const logCache = new FileCache<HookEvent[]>();
+export const _logCache = logCache;
 
 export function deriveActivity(eventName: string, eventTimestamp?: string): ActivityStatus {
   switch (eventName) {
@@ -24,36 +28,31 @@ export function deriveActivity(eventName: string, eventTimestamp?: string): Acti
 }
 
 export async function getLastEvent(sessionId: string): Promise<{ name: string; timestamp: string } | null> {
-  const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
-  if (!existsSync(filePath)) return null;
-
-  const content = await readFile(filePath, 'utf-8');
-  const lines = content.trimEnd().split('\n');
-  for (let i = lines.length - 1; i >= 0; i--) {
-    try {
-      const event = JSON.parse(lines[i]) as HookEvent;
-      return { name: event.event.hook_event_name, timestamp: event.timestamp };
-    } catch { /* skip malformed */ }
+  const events = await parseLogFile(sessionId);
+  for (let i = events.length - 1; i >= 0; i--) {
+    const e = events[i];
+    if (e.event.hook_event_name) return { name: e.event.hook_event_name, timestamp: e.timestamp };
   }
   return null;
 }
 
 export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {
   const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
-  if (!existsSync(filePath)) return [];
-
-  const content = await readFile(filePath, 'utf-8');
-  return content
-    .split('\n')
-    .filter((line) => line.trim().length > 0)
-    .reduce<HookEvent[]>((events, line) => {
-      try {
-        events.push(JSON.parse(line) as HookEvent);
-      } catch {
-        log({ timestamp: new Date().toISOString(), event: 'malformed_log_line', sessionId, line });
-      }
-      return events;
-    }, []);
+  return logCache.get(filePath, async () => {
+    if (!existsSync(filePath)) return [];
+    const content = await readFile(filePath, 'utf-8');
+    return content
+      .split('\n')
+      .filter((line) => line.trim().length > 0)
+      .reduce<HookEvent[]>((events, line) => {
+        try {
+          events.push(JSON.parse(line) as HookEvent);
+        } catch {
+          log({ timestamp: new Date().toISOString(), event: 'malformed_log_line', sessionId, line });
+        }
+        return events;
+      }, []);
+  });
 }
 
 export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
