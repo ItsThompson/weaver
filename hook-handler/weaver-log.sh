@@ -62,22 +62,14 @@ truncate_response() {
   local max_len="$MAX_RESPONSE_LENGTH"
 
   if echo "$event" | grep -q '"tool_response"'; then
-    echo "$event" | awk -v max="$max_len" '{
-      while (match($0, /"result":\["[^"]+"/)) {
-        prefix = substr($0, 1, RSTART - 1)
-        matched = substr($0, RSTART, RLENGTH)
-        rest = substr($0, RSTART + RLENGTH)
-        # offset past "result":[" (11 chars)
-        content_start = 11
-        content = substr(matched, content_start + 1, RLENGTH - content_start - 1)
-        if (length(content) > max) {
-          matched = substr(matched, 1, content_start + max) "...[truncated]\""
-        }
-        printf "%s%s", prefix, matched
-        $0 = rest
-      }
-      print
-    }'
+    echo "$event" | jq -c --argjson max "$max_len" '
+      if .tool_response.result then
+        .tool_response.result |= map(
+          if type == "string" and (length > $max) then .[:$max] + "...[truncated]"
+          else . end
+        )
+      else . end
+    '
   else
     echo "$event"
   fi
