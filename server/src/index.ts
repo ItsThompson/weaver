@@ -8,7 +8,7 @@ import { registerSessionRoutes } from './routes/sessions.js';
 import { registerEventRoutes } from './routes/events.js';
 import { registerOrphanRoutes } from './routes/orphans.js';
 import { registerConfigRoutes } from './routes/config.js';
-import { ensureDataDir, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
+import { ensureDataDir, stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
 import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
 import { log } from './utils/logger.js';
@@ -48,6 +48,7 @@ async function start(): Promise<void> {
   log({ timestamp: new Date().toISOString(), event: 'server_started', port: PORT });
 
   const shutdown = async () => {
+    stopStaleSessionCleanup();
     stopKeepAwake();
     await server.close();
     process.exit(0);
