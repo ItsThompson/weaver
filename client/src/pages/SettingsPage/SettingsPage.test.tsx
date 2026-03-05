@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -26,6 +26,7 @@ const api = await import('../../utils/api');
 const { SettingsPage } = await import('./SettingsPage');
 
 const mockGetConfig = api.getConfig as jest.MockedFunction<typeof api.getConfig>;
+const mockUpdateConfig = api.updateConfig as jest.MockedFunction<typeof api.updateConfig>;
 
 function renderPage() {
   return render(
@@ -40,20 +41,25 @@ function renderPage() {
 beforeEach(() => jest.clearAllMocks());
 
 describe('SettingsPage', () => {
-  it('renders settings header', async () => {
+  it('renders current config values', async () => {
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     await act(async () => { renderPage(); });
 
     expect(screen.getByText('Settings')).toBeInTheDocument();
-    // Toggle with children text is rendered by passthrough mock
-    expect(screen.getByText('Advanced')).toBeInTheDocument();
+    expect(screen.getByText('Notification sounds')).toBeInTheDocument();
+    expect(screen.getByText('Webhook URL')).toBeInTheDocument();
+    expect(screen.getByText('Dark mode')).toBeInTheDocument();
   });
 
-  it('calls getConfig on mount', async () => {
+  it('save button calls updateConfig', async () => {
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => { renderPage(); });
 
-    expect(mockGetConfig).toHaveBeenCalled();
+    const saveBtn = screen.getByText('Save');
+    await act(async () => { fireEvent.click(saveBtn); });
+
+    expect(mockUpdateConfig).toHaveBeenCalled();
   });
 
   it('displays validation warnings', async () => {

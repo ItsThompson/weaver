@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals';
 import React from 'react';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import { SWRConfig } from 'swr';
@@ -22,6 +22,7 @@ const api = await import('../../utils/api');
 const { OrphansPage } = await import('./OrphansPage');
 
 const mockGetOrphans = api.getOrphans as jest.MockedFunction<typeof api.getOrphans>;
+const mockDeleteOrphans = api.deleteOrphans as jest.MockedFunction<typeof api.deleteOrphans>;
 
 function renderPage() {
   return render(
@@ -36,7 +37,7 @@ function renderPage() {
 beforeEach(() => jest.clearAllMocks());
 
 describe('OrphansPage', () => {
-  it('renders header and empty state when no orphans', async () => {
+  it('renders empty state when no orphans', async () => {
     mockGetOrphans.mockResolvedValue({ groups: [] });
     await act(async () => { renderPage(); });
 
@@ -44,7 +45,7 @@ describe('OrphansPage', () => {
     expect(screen.getByText('No orphaned events')).toBeInTheDocument();
   });
 
-  it('renders orphan group container', async () => {
+  it('renders orphan groups', async () => {
     mockGetOrphans.mockResolvedValue({
       groups: [{
         pid: 100,
@@ -55,14 +56,31 @@ describe('OrphansPage', () => {
     });
     await act(async () => { renderPage(); });
 
-    // With orphan data present, the empty-state message should not appear
-    expect(screen.queryByText('No orphaned events')).not.toBeInTheDocument();
+    expect(screen.getByText('PID 100')).toBeInTheDocument();
+    expect(screen.getByText('3 events')).toBeInTheDocument();
   });
 
-  it('calls getOrphans on mount', async () => {
-    mockGetOrphans.mockResolvedValue({ groups: [] });
+  it('delete action calls API and refreshes', async () => {
+    mockGetOrphans.mockResolvedValue({
+      groups: [{
+        pid: 100,
+        turns: [],
+        eventCount: 2,
+        timeRange: { start: '2026-01-01T00:00:00Z', end: '2026-01-01T01:00:00Z' },
+      }],
+    });
+    mockDeleteOrphans.mockResolvedValue({ ok: true });
+
     await act(async () => { renderPage(); });
 
-    expect(mockGetOrphans).toHaveBeenCalled();
+    // Click Delete on the group
+    const deleteBtns = screen.getAllByText('Delete');
+    await act(async () => { fireEvent.click(deleteBtns[0]); });
+
+    // Confirm in the modal
+    const confirmBtns = screen.getAllByText('Delete');
+    await act(async () => { fireEvent.click(confirmBtns[confirmBtns.length - 1]); });
+
+    expect(mockDeleteOrphans).toHaveBeenCalledWith(100);
   });
 });
