@@ -107,31 +107,33 @@ Leave empty to disable. Must start with `http://` or `https://`.
   "event": "preToolUse",
   "activity": "running_tool",
   "timestamp": "2026-03-05T12:58:00.000Z",
-  "session": {
-    "id": "abc-123",
-    "name": "my-project",
-    "pid": 12345,
-    "cwd": "/Users/me/project"
-  },
-  "context": {
-    "prompt": "add error handling to the upload function",
-    "tool_name": "fs_write",
-    "tool_input": { "command": "str_replace", "path": "/src/upload.ts" }
-  },
+  "session_id": "abc-123",
+  "session_name": "my-project",
+  "session_pid": 12345,
+  "session_cwd": "/Users/me/project",
+  "prompt": "add error handling to the upload function",
+  "tool_name": "fs_write",
+  "tool_input": "{\"command\":\"str_replace\",\"path\":\"/src/upload.ts\"}",
+  "tool_response": null,
   "source": "weaver"
 }
 ```
+
+All values are flat (strings, numbers, or null) for compatibility with Slack Workflow Builder and similar tools that don't support nested JSON.
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `event` | `string` | Hook event name: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop` |
 | `activity` | `string` | Derived status: `starting`, `processing`, `running_tool`, `pending_approval`, `idle` |
 | `timestamp` | `string` | ISO 8601 timestamp of when the webhook was dispatched |
-| `session.id` | `string` | Session UUID |
-| `session.name` | `string` | Custom name or directory name fallback |
-| `session.pid` | `number` | kiro-cli process ID |
-| `session.cwd` | `string` | Working directory of the session |
-| `context` | `object \| null` | Event-specific data (see below) |
+| `session_id` | `string` | Session UUID |
+| `session_name` | `string` | Custom name or directory name fallback |
+| `session_pid` | `number` | kiro-cli process ID |
+| `session_cwd` | `string` | Working directory of the session |
+| `prompt` | `string \| null` | User prompt from the current turn |
+| `tool_name` | `string \| null` | Tool name (for tool events) |
+| `tool_input` | `string \| null` | JSON-stringified tool input (for tool events) |
+| `tool_response` | `string \| null` | JSON-stringified tool response (for `postToolUse` only) |
 | `source` | `"weaver"` | Static identifier |
 
 ### Context by event type
