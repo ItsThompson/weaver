@@ -84,6 +84,76 @@ npm run dev
 npm test --prefix server
 ```
 
+## Webhooks
+
+Weaver can POST event payloads to a configured URL when session events occur. Useful for Slack/Discord notifications, especially for pending tool approvals.
+
+### Setup
+
+Set `webhook_url` in the Settings page or directly in `~/.weaver/config.json`:
+
+```json
+{
+  "webhook_url": "https://hooks.slack.com/services/T00/B00/xxx"
+}
+```
+
+Leave empty to disable. Must start with `http://` or `https://`.
+
+### Payload schema
+
+```json
+{
+  "event": "preToolUse",
+  "activity": "running_tool",
+  "timestamp": "2026-03-05T12:58:00.000Z",
+  "session": {
+    "id": "abc-123",
+    "name": "my-project",
+    "pid": 12345,
+    "cwd": "/Users/me/project"
+  },
+  "context": {
+    "prompt": "add error handling to the upload function",
+    "tool_name": "fs_write",
+    "tool_input": { "command": "str_replace", "path": "/src/upload.ts" }
+  },
+  "source": "weaver"
+}
+```
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `event` | `string` | Hook event name: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop` |
+| `activity` | `string` | Derived status: `starting`, `processing`, `running_tool`, `pending_approval`, `idle` |
+| `timestamp` | `string` | ISO 8601 timestamp of when the webhook was dispatched |
+| `session.id` | `string` | Session UUID |
+| `session.name` | `string` | Custom name or directory name fallback |
+| `session.pid` | `number` | kiro-cli process ID |
+| `session.cwd` | `string` | Working directory of the session |
+| `context` | `object \| null` | Event-specific data (see below) |
+| `source` | `"weaver"` | Static identifier |
+
+### Context by event type
+
+| Event | `context` contents |
+|-------|-------------------|
+| `agentSpawn`, `stop` | `null` |
+| `userPromptSubmit` | `{ prompt }` |
+| `preToolUse` | `{ prompt, tool_name, tool_input }` |
+| `postToolUse` | `{ prompt, tool_name, tool_input, tool_response }` |
+| `pending_approval` | Same as `preToolUse` |
+
+### Pending approval
+
+When a `preToolUse` event is not resolved by a `postToolUse` or `stop` within 15 seconds, a second webhook fires with `activity: "pending_approval"`. The `event` field remains `preToolUse`.
+
+### Delivery
+
+- Fire-and-forget: no retries, no delivery guarantees
+- 5-second timeout per request
+- Failures are logged server-side but never block the event pipeline
+
 ## Data Directory
 
 All session data is stored in `~/.weaver/`:
