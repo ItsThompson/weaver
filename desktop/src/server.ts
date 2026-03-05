@@ -31,7 +31,7 @@ export function start(): void {
   if (isPacked) {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, 'client/dist');
   }
-  child = fork(serverEntry, [], { stdio: 'ignore', env });
+  child = fork(serverEntry, [], { stdio: 'inherit', env });
   child.on('exit', (code) => {
     if (code !== 0 && code !== null) {
       console.error(`Server exited with code ${code}`);
