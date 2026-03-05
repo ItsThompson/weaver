@@ -1,7 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import { broadcast, emit, sseReply } from '../services/event-bus.js';
 import { readSessions } from '../services/storage.js';
-import { handleWebhookEvent } from '../services/webhook.js';
+import { handleWebhookEvent } from '../services/webhook/index.js';
 
 export function registerEventRoutes(server: FastifyInstance): void {
   server.post<{ Body: { sessionId: string; eventName?: string } }>('/api/notify', async (request, reply) => {
