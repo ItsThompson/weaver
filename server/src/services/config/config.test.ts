@@ -1,4 +1,4 @@
-import { parseAndValidateConfig } from './config.js';
+import { parseAndValidateConfig } from './config';
 import { DEFAULT_CONFIG } from '@weaver/shared/types';
 
 describe('parseAndValidateConfig', () => {

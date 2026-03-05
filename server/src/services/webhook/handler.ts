@@ -1,11 +1,11 @@
 import { PENDING_APPROVAL_THRESHOLD_MS, type ActivityStatus, type Session, type HookEvent, type WeaverConfig } from '@weaver/shared/types';
-import type { WebhookPayload, SimpleWebhookPayload } from './types.js';
-import { readConfig } from '../config/index.js';
-import { parseLogFile, deriveActivity } from '../log-parser/index.js';
-import { log } from '../../utils/logger.js';
-import { buildWebhookPayload } from './payload-advanced.js';
-import { buildSimpleWebhookPayload } from './payload-simple.js';
-import { dispatchWebhook } from './dispatch.js';
+import type { WebhookPayload, SimpleWebhookPayload } from './types';
+import { readConfig } from '../config/index';
+import { parseLogFile, deriveActivity } from '../log-parser/index';
+import { log } from '../../utils/logger';
+import { buildWebhookPayload } from './payload-advanced';
+import { buildSimpleWebhookPayload } from './payload-simple';
+import { dispatchWebhook } from './dispatch';
 
 const pendingTimers = new Map<string, NodeJS.Timeout>();
 const enabledSessions = new Set<string>();

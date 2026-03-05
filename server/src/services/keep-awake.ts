@@ -1,8 +1,8 @@
 import { execFile } from 'node:child_process';
 import { join } from 'node:path';
-import { readSessions, isProcessRunning } from './storage/index.js';
-import { getLastEvent, deriveActivity } from './log-parser/index.js';
-import { log } from '../utils/logger.js';
+import { readSessions, isProcessRunning } from './storage/index';
+import { getLastEvent, deriveActivity } from './log-parser/index';
+import { log } from '../utils/logger';
 
 const POLL_INTERVAL_MS = 60_000;
 const SCRIPT_PATH = join(import.meta.dirname, '..', '..', '..', 'bin', 'keep-awake.sh');

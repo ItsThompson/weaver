@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
 
 export function mockServices() {
-  jest.unstable_mockModule('../../services/storage/index.js', () => ({
+  jest.unstable_mockModule('../../services/storage/index', () => ({
     readSessions: jest.fn(),
     writeSessions: jest.fn(),
     isProcessRunning: jest.fn(),
@@ -12,7 +12,7 @@ export function mockServices() {
     cleanStaleSessions: jest.fn(),
   }));
 
-  jest.unstable_mockModule('../../services/log-parser/index.js', () => ({
+  jest.unstable_mockModule('../../services/log-parser/index', () => ({
     parseLogFile: jest.fn(),
     groupEventsByTurn: jest.fn(),
     getLastEvent: jest.fn<() => Promise<{ name: string; timestamp: string } | null>>()
@@ -20,20 +20,20 @@ export function mockServices() {
     deriveActivity: jest.fn().mockReturnValue('idle'),
   }));
 
-  jest.unstable_mockModule('../../services/event-bus.js', () => ({
+  jest.unstable_mockModule('../../services/event-bus', () => ({
     broadcast: jest.fn(),
     emit: jest.fn(),
     sseReply: jest.fn(),
   }));
 
-  jest.unstable_mockModule('../../services/webhook/index.js', () => ({
+  jest.unstable_mockModule('../../services/webhook/index', () => ({
     handleWebhookEvent: jest.fn(),
     isWebhookEnabled: jest.fn().mockReturnValue(false),
     setWebhookEnabled: jest.fn(),
     stopWebhookTimers: jest.fn(),
   }));
 
-  jest.unstable_mockModule('../../utils/logger.js', () => ({
+  jest.unstable_mockModule('../../utils/logger', () => ({
     log: jest.fn(),
   }));
 }

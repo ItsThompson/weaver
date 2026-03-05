@@ -3,8 +3,8 @@ import { execFileSync } from 'node:child_process';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { Session } from '@weaver/shared/types';
-import { log } from '../../utils/logger.js';
-import { FileCache, parseJsonlFile } from '../file-cache/index.js';
+import { log } from '../../utils/logger';
+import { FileCache, parseJsonlFile } from '../file-cache/index';
 
 const DATA_DIR = () => join(homedir(), '.weaver');
 const LOGS_DIR = () => join(DATA_DIR(), 'logs');

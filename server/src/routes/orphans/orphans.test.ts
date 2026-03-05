@@ -8,7 +8,7 @@ mockServices();
 
 const fsp = await import('node:fs/promises');
 const fs = await import('node:fs');
-const storage = await import('../../services/storage/index.js');
+const storage = await import('../../services/storage/index');
 
 const mockReadFile = fsp.readFile as jest.MockedFunction<typeof fsp.readFile>;
 const mockWriteFile = fsp.writeFile as jest.MockedFunction<typeof fsp.writeFile>;
@@ -18,7 +18,7 @@ const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof stor
 const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof storage.writeSessions>;
 
 const { default: Fastify } = await import('fastify');
-const { registerOrphanRoutes } = await import('./orphans.js');
+const { registerOrphanRoutes } = await import('./orphans');
 
 let server: ReturnType<typeof Fastify>;
 

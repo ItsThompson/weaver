@@ -4,9 +4,9 @@ import { SESSION_A, SESSION_B } from '../../__tests__/fixtures/sessions';
 
 mockServices();
 
-const storage = await import('../../services/storage/index.js');
-const logParser = await import('../../services/log-parser/index.js');
-const eventBus = await import('../../services/event-bus.js');
+const storage = await import('../../services/storage/index');
+const logParser = await import('../../services/log-parser/index');
+const eventBus = await import('../../services/event-bus');
 
 const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof storage.readSessions>;
 const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof storage.writeSessions>;
@@ -16,7 +16,7 @@ const mockGroupEventsByTurn = logParser.groupEventsByTurn as jest.MockedFunction
 const mockBroadcast = eventBus.broadcast as jest.MockedFunction<typeof eventBus.broadcast>;
 
 const { default: Fastify } = await import('fastify');
-const { registerSessionRoutes } = await import('./sessions.js');
+const { registerSessionRoutes } = await import('./sessions');
 
 let server: ReturnType<typeof Fastify>;
 

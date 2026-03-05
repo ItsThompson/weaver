@@ -3,10 +3,10 @@ import type { Session, SessionWithStatus, TurnGroup, ActivityStatus, ApiError } 
 import { unlink } from 'node:fs/promises';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
-import { readSessions, writeSessions, isProcessRunning } from '../../services/storage/index.js';
-import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../../services/log-parser/index.js';
-import { broadcast } from '../../services/event-bus.js';
-import { isWebhookEnabled, setWebhookEnabled } from '../../services/webhook/index.js';
+import { readSessions, writeSessions, isProcessRunning } from '../../services/storage/index';
+import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../../services/log-parser/index';
+import { broadcast } from '../../services/event-bus';
+import { isWebhookEnabled, setWebhookEnabled } from '../../services/webhook/index';
 
 function toSessionWithStatus(session: Session, isOpen: boolean, activity?: ActivityStatus): SessionWithStatus {
   return { ...session, status: isOpen ? 'open' : 'closed', activity };

@@ -20,7 +20,7 @@ jest.unstable_mockModule('node:child_process', () => ({
 }));
 
 // Silence logger in tests
-jest.unstable_mockModule('../../utils/logger.js', () => ({
+jest.unstable_mockModule('../../utils/logger', () => ({
   log: jest.fn(),
 }));
 
@@ -28,7 +28,7 @@ jest.unstable_mockModule('../../utils/logger.js', () => ({
 const fsp = await import('node:fs/promises');
 const fs = await import('node:fs');
 const cp = await import('node:child_process');
-const storage = await import('./storage.js');
+const storage = await import('./storage');
 
 const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
 const { existsSync } = fs;

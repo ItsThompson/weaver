@@ -1,1 +1,1 @@
-export * from './log-parser.js';
+export * from './log-parser';

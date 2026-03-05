@@ -1,1 +1,1 @@
-export * from './orphans.js';
+export * from './orphans';
