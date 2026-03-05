@@ -1,6 +1,4 @@
-import type { Session } from '@weaver/shared/types';
-
-export const SESSION_A: Session = {
+export const SESSION_A = {
   id: 'aaa',
   pid: 100,
   customName: null,
@@ -10,7 +8,7 @@ export const SESSION_A: Session = {
   lastEventTime: '2026-01-02T00:01:00Z',
 };
 
-export const SESSION_B: Session = {
+export const SESSION_B = {
   id: 'bbb',
   pid: 200,
   customName: 'my session',

@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals';
-import { mockFsModules } from '../../__tests__/mocks/fs';
-import { mockServices } from '../../__tests__/mocks/services';
-import { SESSION_A } from '../../__tests__/fixtures/sessions';
+import { mockFsModules } from '../__tests__/mocks/fs';
+import { mockServices } from '../__tests__/mocks/services';
+import { SESSION_A } from '../__tests__/fixtures/sessions';
 
 mockFsModules();
 mockServices();
