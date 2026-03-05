@@ -2,12 +2,11 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
+import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
 import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
 import { log } from '../utils/logger.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
-
-const PENDING_APPROVAL_THRESHOLD_MS = 15_000;
 
 export function deriveActivity(eventName: string, eventTimestamp?: string): ActivityStatus {
   switch (eventName) {
