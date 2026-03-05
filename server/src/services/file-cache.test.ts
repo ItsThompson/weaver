@@ -1,13 +1,18 @@
 import { jest } from '@jest/globals';
+import type { Stats } from 'node:fs';
 
 jest.unstable_mockModule('node:fs/promises', () => ({
-  stat: jest.fn<() => Promise<{ mtimeMs: number; size: number }>>(),
+  stat: jest.fn<() => Promise<Stats>>(),
 }));
 
 const { stat } = await import('node:fs/promises');
-const { FileCache } = await import('./file-cache.js');
+const { FileCache } = await import('./file-cache');
 
 const mockStat = stat as jest.MockedFunction<typeof stat>;
+
+function fakeStat(mtimeMs: number, size: number) {
+  return { mtimeMs, size } as Stats;
+}
 
 let cache: InstanceType<typeof FileCache<string[]>>;
 
@@ -20,7 +25,7 @@ const parser = jest.fn<() => Promise<string[]>>();
 
 describe('FileCache', () => {
   it('calls parser on cache miss and returns result', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['a', 'b']);
 
     const result = await cache.get('/test.jsonl', parser);
@@ -29,7 +34,7 @@ describe('FileCache', () => {
   });
 
   it('returns cached data when mtime and size are unchanged', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['a']);
 
     await cache.get('/test.jsonl', parser);
@@ -40,11 +45,11 @@ describe('FileCache', () => {
   });
 
   it('re-parses when mtime changes', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['old']);
     await cache.get('/test.jsonl', parser);
 
-    mockStat.mockResolvedValue({ mtimeMs: 2000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(2000, 50));
     parser.mockResolvedValue(['new']);
     const result = await cache.get('/test.jsonl', parser);
 
@@ -53,11 +58,11 @@ describe('FileCache', () => {
   });
 
   it('re-parses when size changes even if mtime is the same', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['old']);
     await cache.get('/test.jsonl', parser);
 
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 80 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 80));
     parser.mockResolvedValue(['new']);
     const result = await cache.get('/test.jsonl', parser);
 
@@ -66,7 +71,7 @@ describe('FileCache', () => {
   });
 
   it('invalidate() forces re-parse on next call', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['first']);
     await cache.get('/test.jsonl', parser);
 
@@ -79,7 +84,7 @@ describe('FileCache', () => {
   });
 
   it('clear() removes all entries', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['a']);
     await cache.get('/a.jsonl', parser);
     await cache.get('/b.jsonl', parser);
@@ -112,11 +117,11 @@ describe('FileCache', () => {
   });
 
   it('clears cache and re-throws when parser fails', async () => {
-    mockStat.mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+    mockStat.mockResolvedValue(fakeStat(1000, 50));
     parser.mockResolvedValue(['cached']);
     await cache.get('/test.jsonl', parser);
 
-    mockStat.mockResolvedValue({ mtimeMs: 2000, size: 80 } as any);
+    mockStat.mockResolvedValue(fakeStat(2000, 80));
     parser.mockRejectedValue(new Error('read failed'));
 
     await expect(cache.get('/test.jsonl', parser)).rejects.toThrow('read failed');
