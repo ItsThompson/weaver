@@ -6,6 +6,7 @@ import Form from '@cloudscape-design/components/form';
 import FormField from '@cloudscape-design/components/form-field';
 import Toggle from '@cloudscape-design/components/toggle';
 import Slider from '@cloudscape-design/components/slider';
+import Input from '@cloudscape-design/components/input';
 import Button from '@cloudscape-design/components/button';
 import Alert from '@cloudscape-design/components/alert';
 import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
@@ -67,6 +68,14 @@ export function SettingsPage() {
                 checked={config.enable_notification_sounds}
                 onChange={({ detail }) => setConfig((c) => ({ ...c, enable_notification_sounds: detail.checked }))}
                 disabled={hasWarnings}
+              />
+            </FormField>
+            <FormField label="Webhook URL" description="POST event payloads to this URL when session events occur (leave empty to disable)">
+              <Input
+                value={config.webhook_url}
+                onChange={({ detail }) => setConfig((c) => ({ ...c, webhook_url: detail.value }))}
+                disabled={hasWarnings}
+                placeholder="https://hooks.slack.com/services/..."
               />
             </FormField>
             <FormField label="Dark mode">
