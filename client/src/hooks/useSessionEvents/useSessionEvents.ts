@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { revalidateSessions, revalidateSession } from './queries';
+import { revalidateSessions, revalidateSession } from '../queries';
 
 export function useSessionEvents(debounceMs = 1000): void {
   useEffect(() => {

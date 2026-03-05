@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useSessionsQuery } from './queries';
-import type { WindowEntry } from '../components/CommandPalette/types';
+import { useSessionsQuery } from '../queries';
+import type { WindowEntry } from '../../components/CommandPalette/types';
 
 const STATIC_WINDOWS: WindowEntry[] = [
   { label: 'Sessions', href: '/', searchableText: 'Sessions' },

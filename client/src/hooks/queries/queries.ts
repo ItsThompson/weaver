@@ -1,5 +1,5 @@
 import useSWR, { mutate } from 'swr';
-import { getSessions, getSession, getOrphans, getOrphanCount, getConfig } from '../utils/api';
+import { getSessions, getSession, getOrphans, getOrphanCount, getConfig } from '../../utils/api';
 
 export const KEYS = {
   sessions: '/sessions',
