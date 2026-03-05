@@ -7,8 +7,14 @@ export interface WebhookPayload {
   event: string;
   activity: ActivityStatus;
   timestamp: string;
-  session: { id: string; name: string; pid: number; cwd: string };
-  context: Record<string, unknown> | null;
+  session_id: string;
+  session_name: string;
+  session_pid: number;
+  session_cwd: string;
+  prompt: string | null;
+  tool_name: string | null;
+  tool_input: string | null;
+  tool_response: string | null;
   source: 'weaver';
 }
 
@@ -22,22 +28,31 @@ export function buildWebhookPayload(
   session: Session | undefined,
   events: HookEvent[],
 ): WebhookPayload {
+  const ctx = extractContext(eventName, events);
   return {
     event: eventName,
     activity,
     timestamp: new Date().toISOString(),
-    session: {
-      id: sessionId,
-      name: sessionName,
-      pid: session?.pid ?? 0,
-      cwd: session?.cwd ?? '',
-    },
-    context: extractContext(eventName, events),
+    session_id: sessionId,
+    session_name: sessionName,
+    session_pid: session?.pid ?? 0,
+    session_cwd: session?.cwd ?? '',
+    prompt: ctx?.prompt ?? null,
+    tool_name: ctx?.tool_name ?? null,
+    tool_input: ctx?.tool_input ? JSON.stringify(ctx.tool_input) : null,
+    tool_response: ctx?.tool_response ? JSON.stringify(ctx.tool_response) : null,
     source: 'weaver',
   };
 }
 
-function extractContext(eventName: string, events: HookEvent[]): Record<string, unknown> | null {
+interface EventContext {
+  prompt: string | null;
+  tool_name: string | null;
+  tool_input: Record<string, unknown> | null;
+  tool_response: { success: boolean; result: unknown[] } | null;
+}
+
+function extractContext(eventName: string, events: HookEvent[]): EventContext | null {
   if (eventName === 'agentSpawn' || eventName === 'stop') return null;
 
   // Find the most recent userPromptSubmit for the current turn's prompt
@@ -45,24 +60,17 @@ function extractContext(eventName: string, events: HookEvent[]): Record<string, 
   const prompt = lastPromptEvent?.event.prompt ?? null;
 
   if (eventName === 'userPromptSubmit') {
-    return { prompt };
+    return { prompt, tool_name: null, tool_input: null, tool_response: null };
   }
 
   // preToolUse / postToolUse — find the last matching event in the log
   const toolEvent = findLastByName(events, eventName);
-  if (!toolEvent) return { prompt };
-
-  const ctx: Record<string, unknown> = {
+  return {
     prompt,
-    tool_name: toolEvent.event.tool_name ?? null,
-    tool_input: toolEvent.event.tool_input ?? null,
+    tool_name: toolEvent?.event.tool_name ?? null,
+    tool_input: toolEvent?.event.tool_input ?? null,
+    tool_response: (eventName === 'postToolUse' && toolEvent?.event.tool_response) ? toolEvent.event.tool_response : null,
   };
-
-  if (eventName === 'postToolUse' && toolEvent.event.tool_response) {
-    ctx.tool_response = toolEvent.event.tool_response;
-  }
-
-  return ctx;
 }
 
 function findLastByName(events: HookEvent[], name: string): HookEvent | undefined {

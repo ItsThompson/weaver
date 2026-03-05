@@ -60,23 +60,28 @@ afterEach(() => {
 });
 
 describe('buildWebhookPayload', () => {
-  it('returns null context for agentSpawn', () => {
+  it('returns null fields for agentSpawn', () => {
     const payload = buildWebhookPayload('sess-1', 'agentSpawn', 'starting', 'my-project', TEST_SESSION, []);
-    expect(payload.context).toBeNull();
+    expect(payload.prompt).toBeNull();
+    expect(payload.tool_name).toBeNull();
+    expect(payload.tool_input).toBeNull();
     expect(payload.event).toBe('agentSpawn');
     expect(payload.activity).toBe('starting');
-    expect(payload.session.name).toBe('my-project');
+    expect(payload.session_name).toBe('my-project');
+    expect(payload.session_pid).toBe(111);
   });
 
-  it('returns null context for stop', () => {
+  it('returns null fields for stop', () => {
     const payload = buildWebhookPayload('sess-1', 'stop', 'idle', 'my-project', TEST_SESSION, []);
-    expect(payload.context).toBeNull();
+    expect(payload.prompt).toBeNull();
+    expect(payload.tool_name).toBeNull();
   });
 
   it('extracts prompt for userPromptSubmit', () => {
     const events = [makeEvent('userPromptSubmit', { prompt: 'fix the bug' })];
     const payload = buildWebhookPayload('sess-1', 'userPromptSubmit', 'processing', 'my-project', TEST_SESSION, events);
-    expect(payload.context).toEqual({ prompt: 'fix the bug' });
+    expect(payload.prompt).toBe('fix the bug');
+    expect(payload.tool_name).toBeNull();
   });
 
   it('extracts tool context for preToolUse with prompt from current turn', () => {
@@ -85,11 +90,9 @@ describe('buildWebhookPayload', () => {
       makeEvent('preToolUse', { tool_name: 'fs_write', tool_input: { path: '/src/a.ts' } }),
     ];
     const payload = buildWebhookPayload('sess-1', 'preToolUse', 'running_tool', 'my-project', TEST_SESSION, events);
-    expect(payload.context).toEqual({
-      prompt: 'add tests',
-      tool_name: 'fs_write',
-      tool_input: { path: '/src/a.ts' },
-    });
+    expect(payload.prompt).toBe('add tests');
+    expect(payload.tool_name).toBe('fs_write');
+    expect(payload.tool_input).toBe(JSON.stringify({ path: '/src/a.ts' }));
   });
 
   it('extracts tool_response for postToolUse', () => {
@@ -103,12 +106,9 @@ describe('buildWebhookPayload', () => {
       }),
     ];
     const payload = buildWebhookPayload('sess-1', 'postToolUse', 'processing', 'my-project', TEST_SESSION, events);
-    expect(payload.context).toEqual({
-      prompt: 'read file',
-      tool_name: 'fs_read',
-      tool_input: { path: '/a' },
-      tool_response: { success: true, result: ['content'] },
-    });
+    expect(payload.prompt).toBe('read file');
+    expect(payload.tool_name).toBe('fs_read');
+    expect(payload.tool_response).toBe(JSON.stringify({ success: true, result: ['content'] }));
   });
 
   it('uses most recent userPromptSubmit for prompt', () => {
@@ -119,7 +119,18 @@ describe('buildWebhookPayload', () => {
       makeEvent('preToolUse', { tool_name: 'grep', tool_input: { pattern: 'x' } }),
     ];
     const payload = buildWebhookPayload('sess-1', 'preToolUse', 'running_tool', 'my-project', TEST_SESSION, events);
-    expect(payload.context!.prompt).toBe('second prompt');
+    expect(payload.prompt).toBe('second prompt');
+  });
+
+  it('produces a flat payload with no nested objects', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'test' }),
+      makeEvent('preToolUse', { tool_name: 'fs_write', tool_input: { path: '/a' } }),
+    ];
+    const payload = buildWebhookPayload('sess-1', 'preToolUse', 'running_tool', 'my-project', TEST_SESSION, events);
+    for (const value of Object.values(payload)) {
+      expect(value === null || typeof value !== 'object').toBe(true);
+    }
   });
 });
 
@@ -168,10 +179,10 @@ describe('handleWebhookEvent', () => {
     mockParseLogFile.mockResolvedValue(events);
 
     await handleWebhookEvent('sess-1', 'preToolUse', 'my-project', TEST_SESSION);
-    expect(mockFetch).toHaveBeenCalledTimes(1); // initial preToolUse
+    expect(mockFetch).toHaveBeenCalledTimes(1);
 
     await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
-    expect(mockFetch).toHaveBeenCalledTimes(2); // + pending_approval
+    expect(mockFetch).toHaveBeenCalledTimes(2);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pendingCall = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
@@ -187,7 +198,6 @@ describe('handleWebhookEvent', () => {
     await handleWebhookEvent('sess-1', 'postToolUse', 'my-project', TEST_SESSION);
 
     await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
-    // 1 for preToolUse + 1 for postToolUse = 2, no pending_approval
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
@@ -199,6 +209,6 @@ describe('handleWebhookEvent', () => {
     await handleWebhookEvent('sess-1', 'stop', 'my-project', TEST_SESSION);
 
     await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
-    expect(mockFetch).toHaveBeenCalledTimes(2); // preToolUse + stop, no pending
+    expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 });
