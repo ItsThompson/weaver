@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { SavedConversation, ConversationExchange } from '@weaver/shared/types';
+import type { SavedConversation, ConversationExchange } from '../../../types/conversation';
 import { parseConversation, pruneConversation } from '../../../utils/conversation-parser';
 import type { PageState, CherrypickState, CherrypickActions } from '../types';
 

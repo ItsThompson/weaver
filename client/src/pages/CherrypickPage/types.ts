@@ -1,4 +1,4 @@
-import type { SavedConversation, ParsedConversation, ConversationExchange } from '@weaver/shared/types';
+import type { SavedConversation, ParsedConversation, ConversationExchange } from '../../types/conversation';
 
 export type PageState =
   | { phase: 'upload' }

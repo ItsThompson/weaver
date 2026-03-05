@@ -5,8 +5,20 @@
   "type": "module",
   "exports": {
     "./types": {
-      "types": "./dist/types.d.ts",
-      "default": "./dist/types.js"
+      "types": "./dist/types/index.d.ts",
+      "default": "./dist/types/index.js"
+    },
+    "./session": {
+      "types": "./dist/types/session.d.ts",
+      "default": "./dist/types/session.js"
+    },
+    "./events": {
+      "types": "./dist/types/events.d.ts",
+      "default": "./dist/types/events.js"
+    },
+    "./config": {
+      "types": "./dist/types/config.d.ts",
+      "default": "./dist/types/config.js"
     }
   },
   "scripts": {

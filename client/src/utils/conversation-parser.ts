@@ -3,7 +3,7 @@ import type {
   ConversationTurn,
   ConversationExchange,
   ParsedConversation,
-} from '@weaver/shared/types';
+} from '../types/conversation';
 
 /** Extract the user prompt string from a turn, or null if it's a ToolUseResults turn. */
 function getUserPrompt(turn: ConversationTurn): string | null {

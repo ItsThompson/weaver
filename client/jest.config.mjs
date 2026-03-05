@@ -16,7 +16,7 @@ export default {
     '^@cloudscape-design/components/(.+)$': '<rootDir>/__tests__/mocks/cloudscape-passthrough.tsx',
   },
   transform: {
-    '^.+\\.tsx?$': ['ts-jest', { useESM: true, tsconfig: 'tsconfig.json' }],
+    '^.+\\.tsx?$': ['ts-jest', { useESM: true, tsconfig: 'tsconfig.jest.json' }],
   },
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   setupFiles: ['<rootDir>/__tests__/setup.ts'],

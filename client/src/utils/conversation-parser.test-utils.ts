@@ -1,4 +1,4 @@
-import type { ConversationTurn, SavedConversation } from '@weaver/shared/types';
+import type { ConversationTurn, SavedConversation } from '../types/conversation';
 
 export function makeTurn(
   content: ConversationTurn['user']['content'],

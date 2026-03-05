@@ -1,5 +1,5 @@
 import Box from '@cloudscape-design/components/box';
-import type { ConversationExchange } from '@weaver/shared/types';
+import type { ConversationExchange } from '../../../types/conversation';
 
 export function ExchangeSummaryLine({ label, exchange: ex }: { label: string; exchange: ConversationExchange }) {
   return (
