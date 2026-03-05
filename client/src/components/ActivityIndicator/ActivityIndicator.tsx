@@ -1,5 +1,5 @@
 import type { ActivityStatus } from '@weaver/shared/types';
-import { ACTIVITY_COLORS } from '../utils/activityColors';
+import { ACTIVITY_COLORS } from '../../utils/activityColors';
 
 const ACTIVITY_LABELS: Record<ActivityStatus, string> = {
   starting: 'Starting',
