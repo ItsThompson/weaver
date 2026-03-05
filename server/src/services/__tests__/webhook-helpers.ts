@@ -18,7 +18,7 @@ jest.unstable_mockModule('../../utils/logger.js', () => ({ log: mockLog }));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 globalThis.fetch = mockFetch as any;
 
-export const webhook = await import('../webhook.js');
+export const webhook = await import('../webhook/index.js');
 
 export const TEST_SESSION: Session = {
   id: 'sess-1',

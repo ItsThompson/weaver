@@ -11,7 +11,7 @@ import { registerConfigRoutes } from './routes/config.js';
 import { ensureDataDir, stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
 import { broadcast } from './services/event-bus.js';
 import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
-import { stopWebhookTimers } from './services/webhook.js';
+import { stopWebhookTimers } from './services/webhook/index.js';
 import { log } from './utils/logger.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
