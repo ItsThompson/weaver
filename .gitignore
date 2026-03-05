@@ -3,5 +3,4 @@ dist/
 *.tsbuildinfo
 .env
 .turbo
-.kiro/
 .DS_Store
