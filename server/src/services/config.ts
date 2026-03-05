@@ -90,6 +90,18 @@ export function parseAndValidateConfig(raw: string): { config: WeaverConfig; war
     }
   }
 
+  if ('webhook_url' in obj) {
+    if (typeof obj.webhook_url === 'string') {
+      if (obj.webhook_url === '' || obj.webhook_url.startsWith('http://') || obj.webhook_url.startsWith('https://')) {
+        config.webhook_url = obj.webhook_url;
+      } else {
+        warnings.push('webhook_url must start with http:// or https://');
+      }
+    } else {
+      warnings.push('webhook_url must be a string');
+    }
+  }
+
   return { config, warnings };
 }
 
