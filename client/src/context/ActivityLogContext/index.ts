@@ -1,1 +1,1 @@
-export { ActivityLogProvider, useActivityLog, type ActivityLogEntry } from './ActivityLogContext.js';
+export { ActivityLogProvider, useActivityLog, type ActivityLogEntry } from './ActivityLogContext';

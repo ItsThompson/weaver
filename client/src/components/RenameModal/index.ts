@@ -1,1 +1,1 @@
-export { RenameModal } from './RenameModal.js';
+export { RenameModal } from './RenameModal';

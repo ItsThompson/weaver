@@ -1,1 +1,1 @@
-export { NotificationProvider, useNotifications } from './NotificationContext.js';
+export { NotificationProvider, useNotifications } from './NotificationContext';

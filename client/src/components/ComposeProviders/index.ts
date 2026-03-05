@@ -1,1 +1,1 @@
-export { ComposeProviders } from './ComposeProviders.js';
+export { ComposeProviders } from './ComposeProviders';

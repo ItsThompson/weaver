@@ -1,1 +1,1 @@
-export { ActionDropdown, type ActionItem } from './ActionDropdown.js';
+export { ActionDropdown, type ActionItem } from './ActionDropdown';

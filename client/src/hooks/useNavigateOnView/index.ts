@@ -1,1 +1,1 @@
-export { useNavigateOnView } from './useNavigateOnView.js';
+export { useNavigateOnView } from './useNavigateOnView';

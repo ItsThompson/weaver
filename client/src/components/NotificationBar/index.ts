@@ -1,1 +1,1 @@
-export { NotificationBar } from './NotificationBar.js';
+export { NotificationBar } from './NotificationBar';

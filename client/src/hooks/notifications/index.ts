@@ -1,2 +1,2 @@
-export { deriveActivity, resolveNotification } from './notificationUtils.js';
-export { playNotificationSound, type NotificationSound } from './soundUtils.js';
+export { deriveActivity, resolveNotification } from './notificationUtils';
+export { playNotificationSound, type NotificationSound } from './soundUtils';

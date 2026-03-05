@@ -9,4 +9,4 @@ export {
   revalidateOrphans,
   useConfigQuery,
   revalidateConfig,
-} from './queries.js';
+} from './queries';

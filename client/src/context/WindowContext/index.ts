@@ -1,1 +1,1 @@
-export { WindowProvider, useWindows } from './WindowContext.js';
+export { WindowProvider, useWindows } from './WindowContext';

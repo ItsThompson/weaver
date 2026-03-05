@@ -1,1 +1,1 @@
-export { useWindowList } from './useWindowList.js';
+export { useWindowList } from './useWindowList';

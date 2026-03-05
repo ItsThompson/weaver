@@ -1,1 +1,1 @@
-export { useSessionEvents } from './useSessionEvents.js';
+export { useSessionEvents } from './useSessionEvents';
