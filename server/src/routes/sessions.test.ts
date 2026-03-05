@@ -1,31 +1,8 @@
 import { jest } from '@jest/globals';
+import { mockServices } from '../__tests__/mocks/services';
+import { SESSION_A, SESSION_B } from '../__tests__/fixtures/sessions';
 
-// Mock storage and log-parser before importing routes
-jest.unstable_mockModule('../services/storage.js', () => ({
-  readSessions: jest.fn(),
-  writeSessions: jest.fn(),
-  isProcessRunning: jest.fn(),
-  ensureDataDir: jest.fn(),
-  appendSession: jest.fn(),
-  startStaleSessionCleanup: jest.fn(),
-  stopStaleSessionCleanup: jest.fn(),
-  cleanStaleSessions: jest.fn(),
-}));
-
-jest.unstable_mockModule('../services/log-parser.js', () => ({
-  parseLogFile: jest.fn(),
-  groupEventsByTurn: jest.fn(),
-  getLastEvent: jest.fn<() => Promise<{ name: string; timestamp: string } | null>>().mockResolvedValue({ name: 'stop', timestamp: new Date().toISOString() }),
-  deriveActivity: jest.fn().mockReturnValue('idle'),
-}));
-
-jest.unstable_mockModule('../utils/logger.js', () => ({
-  log: jest.fn(),
-}));
-
-jest.unstable_mockModule('../services/event-bus.js', () => ({
-  broadcast: jest.fn(),
-}));
+mockServices();
 
 const storage = await import('../services/storage.js');
 const logParser = await import('../services/log-parser.js');
@@ -36,8 +13,8 @@ const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof st
 const mockIsProcessRunning = storage.isProcessRunning as jest.MockedFunction<typeof storage.isProcessRunning>;
 const mockParseLogFile = logParser.parseLogFile as jest.MockedFunction<typeof logParser.parseLogFile>;
 const mockGroupEventsByTurn = logParser.groupEventsByTurn as jest.MockedFunction<typeof logParser.groupEventsByTurn>;
+const mockBroadcast = eventBus.broadcast as jest.MockedFunction<typeof eventBus.broadcast>;
 
-// Dynamically import Fastify and register routes after mocks
 const { default: Fastify } = await import('fastify');
 const { registerSessionRoutes } = await import('../routes/sessions.js');
 
@@ -51,9 +28,6 @@ beforeEach(async () => {
 });
 
 afterEach(() => server.close());
-
-const SESSION_A = { id: 'aaa', pid: 100, customName: null, cwd: '/tmp', agentName: null, startTime: '2026-01-02T00:00:00Z', lastEventTime: '2026-01-02T00:01:00Z' };
-const SESSION_B = { id: 'bbb', pid: 200, customName: 'my session', cwd: '/home', agentName: 'dev', startTime: '2026-01-01T00:00:00Z', lastEventTime: '2026-01-01T00:05:00Z' };
 
 describe('GET /api/sessions', () => {
   it('returns sessions sorted by startTime descending with computed status', async () => {
@@ -135,8 +109,6 @@ describe('PATCH /api/sessions/:id', () => {
   });
 });
 
-const mockBroadcast = eventBus.broadcast as jest.MockedFunction<typeof eventBus.broadcast>;
-
 describe('POST /api/rename', () => {
   it('renames session by PID and persists', async () => {
     mockReadSessions.mockResolvedValue([{ ...SESSION_A }, { ...SESSION_B }]);
@@ -167,20 +139,14 @@ describe('POST /api/rename', () => {
     expect(res.statusCode).toBe(404);
   });
 
-  it('returns 400 when pid is missing', async () => {
+  test.each([
+    ['pid missing', { customName: 'test' }],
+    ['customName missing', { pid: 100 }],
+  ])('returns 400 when %s', async (_label, payload) => {
     const res = await server.inject({
       method: 'POST',
       url: '/api/rename',
-      payload: { customName: 'test' },
-    });
-    expect(res.statusCode).toBe(400);
-  });
-
-  it('returns 400 when customName is missing', async () => {
-    const res = await server.inject({
-      method: 'POST',
-      url: '/api/rename',
-      payload: { pid: 100 },
+      payload,
     });
     expect(res.statusCode).toBe(400);
   });

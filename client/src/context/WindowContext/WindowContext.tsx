@@ -1,6 +1,6 @@
 import { createContext, useContext, type ReactNode } from 'react';
-import { useWindowList } from '../hooks/useWindowList';
-import type { WindowEntry } from '../components/CommandPalette/types';
+import { useWindowList } from '../../hooks/useWindowList';
+import type { WindowEntry } from '../../components/CommandPalette/types';
 
 const WindowContext = createContext<WindowEntry[]>([]);
 

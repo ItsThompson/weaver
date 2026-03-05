@@ -1,5 +1,5 @@
 import Flashbar from '@cloudscape-design/components/flashbar';
-import { useNotifications } from '../context/NotificationContext';
+import { useNotifications } from '../../context/NotificationContext';
 
 export function NotificationBar() {
   const { notifications, dismissNotification } = useNotifications();

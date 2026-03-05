@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
-import { useNotifications } from '../context/NotificationContext';
-import { useActivityLog, type ActivityLogEntry } from '../context/ActivityLogContext';
-import type { NotificationSound } from './soundUtils';
+import { useNotifications } from '../../context/NotificationContext';
+import { useActivityLog, type ActivityLogEntry } from '../../context/ActivityLogContext';
+import type { NotificationSound } from '../notifications/soundUtils';
 import type { ActivityStatus } from '@weaver/shared/types';
 
 const ACTIVITY_SOUND: Record<ActivityStatus, NotificationSound> = {

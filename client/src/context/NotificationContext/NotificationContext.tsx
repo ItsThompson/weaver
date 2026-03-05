@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useRef, type ReactNode } from 'react';
-import { NOTIFICATION_AUTO_DISMISS_MS, NOTIFICATION_MAX_VISIBLE } from '../constants';
-import { playNotificationSound, type NotificationSound } from '../hooks/soundUtils';
+import { NOTIFICATION_AUTO_DISMISS_MS, NOTIFICATION_MAX_VISIBLE } from '../../constants';
+import { playNotificationSound, type NotificationSound } from '../../hooks/notifications/soundUtils';
 
 interface Notification {
   id: string;
