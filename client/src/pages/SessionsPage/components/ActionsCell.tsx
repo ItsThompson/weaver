@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
 import Modal from '@cloudscape-design/components/modal';
 import Box from '@cloudscape-design/components/box';
 import SpaceBetween from '@cloudscape-design/components/space-between';
@@ -9,6 +8,7 @@ import type { SessionWithStatus } from '@weaver/shared/types';
 import { updateSessionName, deleteSession } from '../../../utils/api';
 import { revalidateSessions } from '../../../hooks/queries';
 import { RenameModal } from '../../../components/RenameModal';
+import { ActionDropdown, type ActionItem } from '../../../components/ActionDropdown';
 
 export function ActionsCell({ session }: { session: SessionWithStatus }) {
   const [renameVisible, setRenameVisible] = useState(false);
@@ -33,24 +33,16 @@ export function ActionsCell({ session }: { session: SessionWithStatus }) {
 
   const displayName = session.customName || session.id.slice(0, 8);
 
+  const actions: ActionItem[] = [
+    { id: 'rename', text: 'Rename session', action: () => setRenameVisible(true) },
+    { id: 'copy-name', text: 'Copy session name', action: () => navigator.clipboard.writeText(displayName) },
+    { id: 'copy-pid', text: 'Copy PID', action: () => navigator.clipboard.writeText(String(session.pid)) },
+    { id: 'delete', text: 'Delete session', action: () => setDeleteVisible(true) },
+  ];
+
   return (
     <span onClick={(e) => e.stopPropagation()} style={{ display: 'inline-flex', paddingRight: 8 }}>
-      <ButtonDropdown
-        variant="inline-icon"
-        items={[
-          { id: 'rename', text: 'Rename session' },
-          { id: 'copy-name', text: 'Copy session name' },
-          { id: 'copy-pid', text: 'Copy PID' },
-          { id: 'delete', text: 'Delete session' },
-        ]}
-        onItemClick={({ detail }) => {
-          if (detail.id === 'rename') setRenameVisible(true);
-          if (detail.id === 'copy-name') navigator.clipboard.writeText(displayName);
-          if (detail.id === 'copy-pid') navigator.clipboard.writeText(String(session.pid));
-          if (detail.id === 'delete') setDeleteVisible(true);
-        }}
-        expandToViewport
-      />
+      <ActionDropdown actions={actions} variant="inline-icon" />
       <RenameModal
         visible={renameVisible}
         currentName={session.customName}

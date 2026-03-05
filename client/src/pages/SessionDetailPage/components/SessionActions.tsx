@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import ButtonDropdown from '@cloudscape-design/components/button-dropdown';
+import { ActionDropdown, type ActionItem } from '../../../components/ActionDropdown';
 import { RenameModal } from '../../../components/RenameModal';
 
 interface SessionActionsProps {
@@ -15,27 +15,17 @@ interface SessionActionsProps {
 export function SessionActions({ showTools, onToggleTools, currentName, sessionPid, onRename, webhookEnabled, onToggleWebhook }: SessionActionsProps) {
   const [renameVisible, setRenameVisible] = useState(false);
 
+  const actions: ActionItem[] = [
+    { id: 'toggle-tools', text: showTools ? 'Hide tool execution' : 'View tool execution', action: onToggleTools },
+    { id: 'toggle-webhook', text: webhookEnabled ? 'Disable webhooks' : 'Enable webhooks', action: onToggleWebhook },
+    { id: 'rename', text: 'Rename session', action: () => setRenameVisible(true) },
+    { id: 'copy-name', text: 'Copy session name', action: () => navigator.clipboard.writeText(currentName || 'Unnamed') },
+    { id: 'copy-pid', text: 'Copy PID', action: () => navigator.clipboard.writeText(String(sessionPid)) },
+  ];
+
   return (
     <>
-      <ButtonDropdown
-        items={[
-          { id: 'toggle-tools', text: showTools ? 'Hide tool execution' : 'View tool execution' },
-          { id: 'toggle-webhook', text: webhookEnabled ? 'Disable webhooks' : 'Enable webhooks' },
-          { id: 'rename', text: 'Rename session' },
-          { id: 'copy-name', text: 'Copy session name' },
-          { id: 'copy-pid', text: 'Copy PID' },
-        ]}
-        onItemClick={({ detail }) => {
-          if (detail.id === 'toggle-tools') onToggleTools();
-          if (detail.id === 'toggle-webhook') onToggleWebhook();
-          if (detail.id === 'rename') setRenameVisible(true);
-          if (detail.id === 'copy-name') navigator.clipboard.writeText(currentName || 'Unnamed');
-          if (detail.id === 'copy-pid') navigator.clipboard.writeText(String(sessionPid));
-        }}
-        expandToViewport
-      >
-        Actions
-      </ButtonDropdown>
+      <ActionDropdown actions={actions}>Actions</ActionDropdown>
       <RenameModal
         visible={renameVisible}
         currentName={currentName}
