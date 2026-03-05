@@ -8,17 +8,17 @@ export const mockDeriveActivity = jest.fn<(name: string) => string>();
 export const mockLog = jest.fn();
 export const mockFetch = jest.fn<() => Promise<Response>>();
 
-jest.unstable_mockModule('../config.js', () => ({ readConfig: mockReadConfig }));
-jest.unstable_mockModule('../log-parser.js', () => ({
+jest.unstable_mockModule('../../config.js', () => ({ readConfig: mockReadConfig }));
+jest.unstable_mockModule('../../log-parser.js', () => ({
   parseLogFile: mockParseLogFile,
   deriveActivity: mockDeriveActivity,
 }));
-jest.unstable_mockModule('../../utils/logger.js', () => ({ log: mockLog }));
+jest.unstable_mockModule('../../../utils/logger.js', () => ({ log: mockLog }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 globalThis.fetch = mockFetch as any;
 
-export const webhook = await import('../webhook/index.js');
+export const webhook = await import('../index.js');
 
 export const TEST_SESSION: Session = {
   id: 'sess-1',
