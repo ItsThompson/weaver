@@ -15,6 +15,7 @@ jest.unstable_mockModule('../../utils/api', () => ({
   assignOrphans: jest.fn(),
   getConfig: jest.fn<() => Promise<{ config: object; warnings: string[] }>>().mockResolvedValue({ config: {}, warnings: [] }),
   updateConfig: jest.fn(),
+  toggleSessionWebhook: jest.fn(),
 }));
 
 jest.unstable_mockModule('react-router-dom', () => ({
@@ -83,7 +84,7 @@ describe('SessionDetailPage', () => {
   });
 
   it('renders session data after fetch', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns });
+    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
     renderComponent();
     
     await waitFor(() => {
@@ -101,7 +102,7 @@ describe('SessionDetailPage', () => {
   });
 
   it('renders agentSpawn as session start marker', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns });
+    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
     renderComponent();
     
     await waitFor(() => {
@@ -110,7 +111,7 @@ describe('SessionDetailPage', () => {
   });
 
   it('renders user prompt', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns });
+    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
     renderComponent();
     
     await waitFor(() => {

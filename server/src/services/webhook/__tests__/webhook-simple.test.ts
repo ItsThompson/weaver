@@ -89,6 +89,13 @@ describe('handleWebhookEvent (simple)', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
+  it('skips dispatch when session webhook is disabled', async () => {
+    webhook.setWebhookEnabled('sess-1', false);
+    mockParseLogFile.mockResolvedValue([makeEvent('agentSpawn')]);
+    await webhook.handleWebhookEvent('sess-1', 'agentSpawn', 'my-project', TEST_SESSION);
+    expect(mockFetch).not.toHaveBeenCalled();
+  });
+
   it('dispatches simple format by default', async () => {
     mockParseLogFile.mockResolvedValue([makeEvent('agentSpawn')]);
     await webhook.handleWebhookEvent('sess-1', 'agentSpawn', 'my-project', TEST_SESSION);
