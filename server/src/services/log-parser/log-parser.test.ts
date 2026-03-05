@@ -9,24 +9,28 @@ jest.unstable_mockModule('node:fs/promises', () => ({
   writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readdir: jest.fn<() => Promise<string[]>>(),
   unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+  stat: jest.fn<() => Promise<{ mtimeMs: number }>>().mockRejectedValue(new Error('no stat mock')),
 }));
 
 jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn<() => boolean>(),
 }));
 
-jest.unstable_mockModule('../utils/logger.js', () => ({
+jest.unstable_mockModule('../../utils/logger', () => ({
   log: jest.fn(),
 }));
 
 const fs = await import('node:fs');
 const fsp = await import('node:fs/promises');
-const { parseLogFile, groupEventsByTurn } = await import('../services/log-parser.js');
+const { parseLogFile, groupEventsByTurn, _logCache } = await import('./log-parser');
 
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadFile = fsp.readFile as jest.MockedFunction<typeof fsp.readFile>;
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  _logCache.clear();
+});
 
 function makeEvent(name: string, extra: Record<string, unknown> = {}): HookEvent {
   return {

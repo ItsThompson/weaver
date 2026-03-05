@@ -3,16 +3,16 @@ import { existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import Fastify, { FastifyError } from 'fastify';
 import fastifyStatic from '@fastify/static';
-import { registerHealthRoute } from './routes/health.js';
-import { registerSessionRoutes } from './routes/sessions.js';
-import { registerEventRoutes } from './routes/events.js';
-import { registerOrphanRoutes } from './routes/orphans.js';
-import { registerConfigRoutes } from './routes/config.js';
-import { ensureDataDir, stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage.js';
-import { broadcast } from './services/event-bus.js';
-import { startKeepAwake, stopKeepAwake } from './services/keep-awake.js';
-import { stopWebhookTimers } from './services/webhook/index.js';
-import { log } from './utils/logger.js';
+import { registerHealthRoute } from './routes/health';
+import { registerSessionRoutes } from './routes/sessions/index';
+import { registerEventRoutes } from './routes/events/index';
+import { registerOrphanRoutes } from './routes/orphans/index';
+import { registerConfigRoutes } from './routes/config';
+import { ensureDataDir, stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage/index';
+import { broadcast } from './services/event-bus';
+import { startKeepAwake, stopKeepAwake } from './services/keep-awake';
+import { stopWebhookTimers } from './services/webhook/index';
+import { log } from './utils/logger';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

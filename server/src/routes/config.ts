@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
 import type { WeaverConfig, ApiError } from '@weaver/shared/types';
-import { readConfig, parseAndValidateConfig, writeConfig } from '../services/config.js';
+import { readConfig, parseAndValidateConfig, writeConfig } from '../services/config/index';
 
 export function registerConfigRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { config: WeaverConfig; warnings: string[] } }>('/api/config', async () => {

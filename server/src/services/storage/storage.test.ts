@@ -8,6 +8,7 @@ jest.unstable_mockModule('node:fs/promises', () => ({
   appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readdir: jest.fn<() => Promise<string[]>>(),
   unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
+  stat: jest.fn<() => Promise<{ mtimeMs: number }>>().mockRejectedValue(new Error('no stat mock')),
 }));
 
 jest.unstable_mockModule('node:fs', () => ({
@@ -19,7 +20,7 @@ jest.unstable_mockModule('node:child_process', () => ({
 }));
 
 // Silence logger in tests
-jest.unstable_mockModule('../utils/logger.js', () => ({
+jest.unstable_mockModule('../../utils/logger', () => ({
   log: jest.fn(),
 }));
 
@@ -27,11 +28,11 @@ jest.unstable_mockModule('../utils/logger.js', () => ({
 const fsp = await import('node:fs/promises');
 const fs = await import('node:fs');
 const cp = await import('node:child_process');
-const storage = await import('../services/storage.js');
+const storage = await import('./storage');
 
 const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
 const { existsSync } = fs;
-const { ensureDataDir, readSessions, appendSession, cleanStaleSessions, isProcessRunning } = storage;
+const { ensureDataDir, readSessions, appendSession, cleanStaleSessions, isProcessRunning, _sessionCache } = storage;
 
 const mockMkdir = mkdir as jest.MockedFunction<typeof mkdir>;
 const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
@@ -43,6 +44,7 @@ const mockExecFileSync = cp.execFileSync as jest.MockedFunction<typeof cp.execFi
 
 beforeEach(() => {
   jest.clearAllMocks();
+  _sessionCache.clear();
 });
 
 describe('ensureDataDir', () => {
