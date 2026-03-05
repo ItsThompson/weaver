@@ -170,10 +170,13 @@ export interface WeaverConfig {
   dark_mode: boolean;
   ghost_mode: boolean;
   ghost_opacity: number;
+  webhook_url: string;
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = ['pid', 'customName', 'activity', 'cwd', 'agentName', 'startTime', 'lastEventTime', 'actions'] as const;
 export const VALID_CLOSE_DISPLAY_OPTIONS = ['customName', 'cwd', 'agentName', 'startTime', 'lastEventTime', 'actions'] as const;
+
+export const PENDING_APPROVAL_THRESHOLD_MS = 15_000;
 
 export const DEFAULT_CONFIG: WeaverConfig = {
   enable_notification_sounds: true,
@@ -183,4 +186,5 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   dark_mode: true,
   ghost_mode: false,
   ghost_opacity: 0.5,
+  webhook_url: '',
 };
