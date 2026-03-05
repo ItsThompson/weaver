@@ -1,4 +1,4 @@
-import type { TurnGroup } from './events.js';
+import type { TurnGroup } from './events';
 
 // Session stored in sessions.jsonl (one JSON line per session)
 export interface Session {
