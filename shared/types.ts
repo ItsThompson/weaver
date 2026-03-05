@@ -171,6 +171,7 @@ export interface WeaverConfig {
   ghost_mode: boolean;
   ghost_opacity: number;
   webhook_url: string;
+  webhook_format: 'simple' | 'advanced';
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = ['pid', 'customName', 'activity', 'cwd', 'agentName', 'startTime', 'lastEventTime', 'actions'] as const;
@@ -187,4 +188,5 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   ghost_mode: false,
   ghost_opacity: 0.5,
   webhook_url: '',
+  webhook_format: 'simple' as const,
 };
