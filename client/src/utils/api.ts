@@ -19,7 +19,13 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
 export const getSessions = () => apiFetch<SessionWithStatus[]>('/sessions');
 
 export const getSession = (id: string) =>
-  apiFetch<{ session: SessionWithStatus; turns: TurnGroup[] }>(`/sessions/${id}`);
+  apiFetch<{ session: SessionWithStatus; turns: TurnGroup[]; webhookEnabled: boolean }>(`/sessions/${id}`);
+
+export const toggleSessionWebhook = (id: string, enabled: boolean) =>
+  apiFetch<{ ok: true; enabled: boolean }>(`/sessions/${id}/webhook`, {
+    method: 'POST',
+    body: JSON.stringify({ enabled }),
+  });
 
 export const updateSessionName = (id: string, customName: string) =>
   apiFetch<Session>(`/sessions/${id}`, {

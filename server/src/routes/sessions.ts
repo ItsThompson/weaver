@@ -6,6 +6,7 @@ import { homedir } from 'node:os';
 import { readSessions, writeSessions, isProcessRunning } from '../services/storage.js';
 import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../services/log-parser.js';
 import { broadcast } from '../services/event-bus.js';
+import { isWebhookEnabled, setWebhookEnabled } from '../services/webhook/index.js';
 
 function toSessionWithStatus(session: Session, isOpen: boolean, activity?: ActivityStatus): SessionWithStatus {
   return { ...session, status: isOpen ? 'open' : 'closed', activity };
@@ -47,6 +48,7 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       return {
         session: toSessionWithStatus(session, isOpen, activity),
         turns: groupEventsByTurn(events),
+        webhookEnabled: isWebhookEnabled(id),
       };
     },
   );
@@ -90,6 +92,21 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       await writeSessions(sessions);
       broadcast(sessions[index].id);
       return sessions[index];
+    },
+  );
+
+  server.post<{ Params: { id: string }; Body: { enabled: boolean }; Reply: { ok: true; enabled: boolean } | ApiError }>(
+    '/api/sessions/:id/webhook',
+    async (request, reply) => {
+      const { id } = request.params;
+      const { enabled } = request.body ?? {};
+      if (typeof enabled !== 'boolean') return reply.status(400).send({ error: 'enabled must be a boolean' });
+
+      const sessions = await readSessions();
+      if (!sessions.some((s) => s.id === id)) return reply.status(404).send({ error: 'Session not found' });
+
+      setWebhookEnabled(id, enabled);
+      return { ok: true as const, enabled };
     },
   );
 

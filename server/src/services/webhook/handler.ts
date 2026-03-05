@@ -8,6 +8,16 @@ import { buildSimpleWebhookPayload } from './payload-simple.js';
 import { dispatchWebhook } from './dispatch.js';
 
 const pendingTimers = new Map<string, NodeJS.Timeout>();
+const enabledSessions = new Set<string>();
+
+export function isWebhookEnabled(sessionId: string): boolean {
+  return enabledSessions.has(sessionId);
+}
+
+export function setWebhookEnabled(sessionId: string, enabled: boolean): void {
+  if (enabled) enabledSessions.add(sessionId);
+  else enabledSessions.delete(sessionId);
+}
 
 function buildPayloadForFormat(
   format: WeaverConfig['webhook_format'],
@@ -32,6 +42,7 @@ export async function handleWebhookEvent(
 
   const { config } = await readConfig();
   if (!config.webhook_url) return;
+  if (!enabledSessions.has(sessionId)) return;
 
   const events = await parseLogFile(sessionId);
   const activity = deriveActivity(eventName);

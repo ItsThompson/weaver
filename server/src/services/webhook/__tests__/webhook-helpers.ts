@@ -52,6 +52,7 @@ export function setupMocks() {
       return 'processing';
     });
     webhook.stopWebhookTimers();
+    webhook.setWebhookEnabled('sess-1', true);
   });
 
   afterEach(() => {

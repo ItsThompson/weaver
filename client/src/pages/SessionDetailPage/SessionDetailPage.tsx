@@ -7,7 +7,7 @@ import Spinner from '@cloudscape-design/components/spinner';
 import Badge from '@cloudscape-design/components/badge';
 import Button from '@cloudscape-design/components/button';
 import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import { updateSessionName } from '../../utils/api';
+import { updateSessionName, toggleSessionWebhook } from '../../utils/api';
 import { useSessionQuery } from '../../hooks/queries';
 import { ActivityIndicator } from '../../components/ActivityIndicator';
 import { SessionActions } from './components/SessionActions';
@@ -22,10 +22,17 @@ export function SessionDetailPage() {
 
   const session = data?.session ?? null;
   const turns = data?.turns ?? [];
+  const webhookEnabled = data?.webhookEnabled ?? false;
 
   const handleRename = async (name: string) => {
     if (!id || !data) return;
     await updateSessionName(id, name);
+    mutate();
+  };
+
+  const handleToggleWebhook = async () => {
+    if (!id) return;
+    await toggleSessionWebhook(id, !webhookEnabled);
     mutate();
   };
 
@@ -76,6 +83,8 @@ export function SessionDetailPage() {
                   currentName={session.customName}
                   sessionPid={session.pid}
                   onRename={handleRename}
+                  webhookEnabled={webhookEnabled}
+                  onToggleWebhook={handleToggleWebhook}
                 />
               </div>
             }
