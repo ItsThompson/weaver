@@ -1,7 +1,7 @@
 import { PENDING_APPROVAL_THRESHOLD_MS, type ActivityStatus, type Session, type HookEvent, type WeaverConfig } from '@weaver/shared/types';
 import type { WebhookPayload, SimpleWebhookPayload } from './types.js';
-import { readConfig } from '../config.js';
-import { parseLogFile, deriveActivity } from '../log-parser.js';
+import { readConfig } from '../config/index.js';
+import { parseLogFile, deriveActivity } from '../log-parser/index.js';
 import { log } from '../../utils/logger.js';
 import { buildWebhookPayload } from './payload-advanced.js';
 import { buildSimpleWebhookPayload } from './payload-simple.js';

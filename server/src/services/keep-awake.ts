@@ -1,7 +1,7 @@
 import { execFile } from 'node:child_process';
 import { join } from 'node:path';
-import { readSessions, isProcessRunning } from './storage.js';
-import { getLastEvent, deriveActivity } from './log-parser.js';
+import { readSessions, isProcessRunning } from './storage/index.js';
+import { getLastEvent, deriveActivity } from './log-parser/index.js';
 import { log } from '../utils/logger.js';
 
 const POLL_INTERVAL_MS = 60_000;

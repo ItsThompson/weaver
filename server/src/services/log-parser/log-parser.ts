@@ -2,8 +2,8 @@ import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
 import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
-import { log } from '../utils/logger.js';
-import { FileCache, parseJsonlFile } from './file-cache.js';
+import { log } from '../../utils/logger.js';
+import { FileCache, parseJsonlFile } from '../file-cache/index.js';
 
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
 

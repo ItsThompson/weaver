@@ -4,9 +4,9 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { HookEvent, OrphanGroup, ApiError } from '@weaver/shared/types';
-import { readSessions, writeSessions } from '../services/storage.js';
-import { groupEventsByTurn } from '../services/log-parser.js';
-import { log } from '../utils/logger.js';
+import { readSessions, writeSessions } from '../../services/storage/index.js';
+import { groupEventsByTurn } from '../../services/log-parser/index.js';
+import { log } from '../../utils/logger.js';
 
 const ORPHAN_PATH = () => join(homedir(), '.weaver', 'logs', 'orphan.jsonl');
 const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');

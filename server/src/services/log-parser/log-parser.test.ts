@@ -16,13 +16,13 @@ jest.unstable_mockModule('node:fs', () => ({
   existsSync: jest.fn<() => boolean>(),
 }));
 
-jest.unstable_mockModule('../utils/logger.js', () => ({
+jest.unstable_mockModule('../../utils/logger.js', () => ({
   log: jest.fn(),
 }));
 
 const fs = await import('node:fs');
 const fsp = await import('node:fs/promises');
-const { parseLogFile, groupEventsByTurn, _logCache } = await import('../services/log-parser.js');
+const { parseLogFile, groupEventsByTurn, _logCache } = await import('./log-parser.js');
 
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadFile = fsp.readFile as jest.MockedFunction<typeof fsp.readFile>;

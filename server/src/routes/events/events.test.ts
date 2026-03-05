@@ -1,12 +1,12 @@
 import { jest } from '@jest/globals';
-import { mockServices } from '../__tests__/mocks/services';
-import { SESSION_A } from '../__tests__/fixtures/sessions';
+import { mockServices } from '../../__tests__/mocks/services';
+import { SESSION_A } from '../../__tests__/fixtures/sessions';
 
 mockServices();
 
-const storage = await import('../services/storage.js');
-const eventBus = await import('../services/event-bus.js');
-const webhook = await import('../services/webhook/index.js');
+const storage = await import('../../services/storage/index.js');
+const eventBus = await import('../../services/event-bus.js');
+const webhook = await import('../../services/webhook/index.js');
 
 const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof storage.readSessions>;
 const mockBroadcast = eventBus.broadcast as jest.MockedFunction<typeof eventBus.broadcast>;
