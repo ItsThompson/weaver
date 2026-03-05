@@ -18,7 +18,7 @@ jest.unstable_mockModule('../utils/logger.js', () => ({ log: mockLog }));
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 globalThis.fetch = mockFetch as any;
 
-const { buildWebhookPayload, dispatchWebhook, handleWebhookEvent, stopWebhookTimers } =
+const { buildWebhookPayload, buildSimpleWebhookPayload, dispatchWebhook, handleWebhookEvent, stopWebhookTimers } =
   await import('./webhook.js');
 
 const TEST_SESSION: Session = {
@@ -35,8 +35,8 @@ function makeEvent(name: string, extra: Record<string, unknown> = {}): HookEvent
   return { timestamp: '2026-01-01T00:00:00Z', event: { hook_event_name: name, cwd: '/tmp', ...extra } };
 }
 
-function configWith(url: string) {
-  return { config: { ...DEFAULT_CONFIG, webhook_url: url }, warnings: [] };
+function configWith(url: string, format: 'simple' | 'advanced' = 'simple') {
+  return { config: { ...DEFAULT_CONFIG, webhook_url: url, webhook_format: format }, warnings: [] };
 }
 
 beforeEach(() => {
@@ -59,22 +59,13 @@ afterEach(() => {
   stopWebhookTimers();
 });
 
-describe('buildWebhookPayload', () => {
+describe('buildWebhookPayload (advanced)', () => {
   it('returns null fields for agentSpawn', () => {
     const payload = buildWebhookPayload('sess-1', 'agentSpawn', 'starting', 'my-project', TEST_SESSION, []);
     expect(payload.prompt).toBeNull();
     expect(payload.tool_name).toBeNull();
-    expect(payload.tool_input).toBeNull();
-    expect(payload.event).toBe('agentSpawn');
-    expect(payload.activity).toBe('starting');
     expect(payload.session_name).toBe('my-project');
     expect(payload.session_pid).toBe(111);
-  });
-
-  it('returns null fields for stop', () => {
-    const payload = buildWebhookPayload('sess-1', 'stop', 'idle', 'my-project', TEST_SESSION, []);
-    expect(payload.prompt).toBeNull();
-    expect(payload.tool_name).toBeNull();
   });
 
   it('extracts prompt for userPromptSubmit', () => {
@@ -84,7 +75,7 @@ describe('buildWebhookPayload', () => {
     expect(payload.tool_name).toBeNull();
   });
 
-  it('extracts tool context for preToolUse with prompt from current turn', () => {
+  it('extracts tool context for preToolUse', () => {
     const events = [
       makeEvent('userPromptSubmit', { prompt: 'add tests' }),
       makeEvent('preToolUse', { tool_name: 'fs_write', tool_input: { path: '/src/a.ts' } }),
@@ -95,31 +86,13 @@ describe('buildWebhookPayload', () => {
     expect(payload.tool_input).toBe(JSON.stringify({ path: '/src/a.ts' }));
   });
 
-  it('extracts tool_response for postToolUse', () => {
+  it('stringifies tool_response for postToolUse', () => {
     const events = [
       makeEvent('userPromptSubmit', { prompt: 'read file' }),
-      makeEvent('preToolUse', { tool_name: 'fs_read', tool_input: { path: '/a' } }),
-      makeEvent('postToolUse', {
-        tool_name: 'fs_read',
-        tool_input: { path: '/a' },
-        tool_response: { success: true, result: ['content'] },
-      }),
+      makeEvent('postToolUse', { tool_name: 'fs_read', tool_input: { path: '/a' }, tool_response: { success: true, result: ['ok'] } }),
     ];
     const payload = buildWebhookPayload('sess-1', 'postToolUse', 'processing', 'my-project', TEST_SESSION, events);
-    expect(payload.prompt).toBe('read file');
-    expect(payload.tool_name).toBe('fs_read');
-    expect(payload.tool_response).toBe(JSON.stringify({ success: true, result: ['content'] }));
-  });
-
-  it('uses most recent userPromptSubmit for prompt', () => {
-    const events = [
-      makeEvent('userPromptSubmit', { prompt: 'first prompt' }),
-      makeEvent('stop'),
-      makeEvent('userPromptSubmit', { prompt: 'second prompt' }),
-      makeEvent('preToolUse', { tool_name: 'grep', tool_input: { pattern: 'x' } }),
-    ];
-    const payload = buildWebhookPayload('sess-1', 'preToolUse', 'running_tool', 'my-project', TEST_SESSION, events);
-    expect(payload.prompt).toBe('second prompt');
+    expect(payload.tool_response).toBe(JSON.stringify({ success: true, result: ['ok'] }));
   });
 
   it('produces a flat payload with no nested objects', () => {
@@ -131,6 +104,57 @@ describe('buildWebhookPayload', () => {
     for (const value of Object.values(payload)) {
       expect(value === null || typeof value !== 'object').toBe(true);
     }
+  });
+});
+
+describe('buildSimpleWebhookPayload', () => {
+  it('formats agentSpawn', () => {
+    const { text } = buildSimpleWebhookPayload('agentSpawn', 'starting', 'my-project', []);
+    expect(text).toBe('🟢 my-project started');
+  });
+
+  it('formats stop', () => {
+    const { text } = buildSimpleWebhookPayload('stop', 'idle', 'my-project', []);
+    expect(text).toBe('⚫ my-project idle');
+  });
+
+  it('formats userPromptSubmit with prompt', () => {
+    const events = [makeEvent('userPromptSubmit', { prompt: 'fix the bug' })];
+    const { text } = buildSimpleWebhookPayload('userPromptSubmit', 'processing', 'my-project', events);
+    expect(text).toBe('💬 my-project ── fix the bug');
+  });
+
+  it('formats preToolUse with tool name and input summary', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'test' }),
+      makeEvent('preToolUse', { tool_name: 'fs_write', tool_input: { path: '/src/upload.ts' } }),
+    ];
+    const { text } = buildSimpleWebhookPayload('preToolUse', 'running_tool', 'my-project', events);
+    expect(text).toBe('🔧 my-project ── fs_write ── /src/upload.ts');
+  });
+
+  it('formats postToolUse', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'test' }),
+      makeEvent('postToolUse', { tool_name: 'execute_bash', tool_input: { command: 'npm test' } }),
+    ];
+    const { text } = buildSimpleWebhookPayload('postToolUse', 'processing', 'my-project', events);
+    expect(text).toBe('✅ my-project ── execute_bash ── npm test');
+  });
+
+  it('formats pending_approval with prompt', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'add error handling' }),
+      makeEvent('preToolUse', { tool_name: 'fs_write', tool_input: { path: '/src/upload.ts' } }),
+    ];
+    const { text } = buildSimpleWebhookPayload('preToolUse', 'pending_approval', 'my-project', events);
+    expect(text).toContain('⏳ my-project ── fs_write ── /src/upload.ts waiting for approval');
+    expect(text).toContain('💬 add error handling');
+  });
+
+  it('returns only text field', () => {
+    const payload = buildSimpleWebhookPayload('stop', 'idle', 'my-project', []);
+    expect(Object.keys(payload)).toEqual(['text']);
   });
 });
 
@@ -165,10 +189,22 @@ describe('handleWebhookEvent', () => {
     expect(mockFetch).not.toHaveBeenCalled();
   });
 
-  it('dispatches webhook for normal events', async () => {
+  it('dispatches simple format by default', async () => {
     mockParseLogFile.mockResolvedValue([makeEvent('agentSpawn')]);
     await handleWebhookEvent('sess-1', 'agentSpawn', 'my-project', TEST_SESSION);
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body = JSON.parse((mockFetch.mock.calls[0] as any)[1].body);
+    expect(body).toEqual({ text: '🟢 my-project started' });
+  });
+
+  it('dispatches advanced format when configured', async () => {
+    mockReadConfig.mockResolvedValue(configWith('https://hooks.example.com', 'advanced'));
+    mockParseLogFile.mockResolvedValue([makeEvent('agentSpawn')]);
+    await handleWebhookEvent('sess-1', 'agentSpawn', 'my-project', TEST_SESSION);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body = JSON.parse((mockFetch.mock.calls[0] as any)[1].body);
+    expect(body.event).toBe('agentSpawn');
+    expect(body.source).toBe('weaver');
   });
 
   it('fires pending_approval webhook after threshold on preToolUse', async () => {
@@ -185,9 +221,9 @@ describe('handleWebhookEvent', () => {
     expect(mockFetch).toHaveBeenCalledTimes(2);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const pendingCall = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
-    expect(pendingCall.activity).toBe('pending_approval');
-    expect(pendingCall.event).toBe('preToolUse');
+    const pendingBody = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
+    expect(pendingBody.text).toContain('⏳');
+    expect(pendingBody.text).toContain('waiting for approval');
   });
 
   it('cancels pending timer on postToolUse', async () => {

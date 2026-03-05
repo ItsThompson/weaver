@@ -102,6 +102,14 @@ export function parseAndValidateConfig(raw: string): { config: WeaverConfig; war
     }
   }
 
+  if ('webhook_format' in obj) {
+    if (obj.webhook_format === 'simple' || obj.webhook_format === 'advanced') {
+      config.webhook_format = obj.webhook_format;
+    } else {
+      warnings.push('webhook_format must be "simple" or "advanced"');
+    }
+  }
+
   return { config, warnings };
 }
 

@@ -78,6 +78,15 @@ export function SettingsPage() {
                 placeholder="https://hooks.slack.com/services/..."
               />
             </FormField>
+            <FormField label="Webhook format" description="Simple sends a single text message. Advanced sends a flat JSON payload with all fields.">
+              <Toggle
+                checked={config.webhook_format === 'advanced'}
+                onChange={({ detail }) => setConfig((c) => ({ ...c, webhook_format: detail.checked ? 'advanced' : 'simple' }))}
+                disabled={hasWarnings}
+              >
+                Advanced
+              </Toggle>
+            </FormField>
             <FormField label="Dark mode">
               <Toggle
                 checked={config.dark_mode}

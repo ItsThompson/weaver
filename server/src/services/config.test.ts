@@ -83,4 +83,18 @@ describe('parseAndValidateConfig', () => {
     expect(config.webhook_url).toBe(DEFAULT_CONFIG.webhook_url);
     expect(warnings).toContain('webhook_url must start with http:// or https://');
   });
+
+  it('accepts valid webhook_format values', () => {
+    for (const format of ['simple', 'advanced']) {
+      const { config, warnings } = parseAndValidateConfig(JSON.stringify({ webhook_format: format }));
+      expect(config.webhook_format).toBe(format);
+      expect(warnings).toHaveLength(0);
+    }
+  });
+
+  it('rejects invalid webhook_format', () => {
+    const { config, warnings } = parseAndValidateConfig(JSON.stringify({ webhook_format: 'verbose' }));
+    expect(config.webhook_format).toBe(DEFAULT_CONFIG.webhook_format);
+    expect(warnings).toContain('webhook_format must be "simple" or "advanced"');
+  });
 });

@@ -1,4 +1,4 @@
-import { PENDING_APPROVAL_THRESHOLD_MS, type ActivityStatus, type Session, type HookEvent } from '@weaver/shared/types';
+import { PENDING_APPROVAL_THRESHOLD_MS, type ActivityStatus, type Session, type HookEvent, type WeaverConfig } from '@weaver/shared/types';
 import { readConfig } from './config.js';
 import { parseLogFile, deriveActivity } from './log-parser.js';
 import { log } from '../utils/logger.js';
@@ -16,6 +16,17 @@ export interface WebhookPayload {
   tool_input: string | null;
   tool_response: string | null;
   source: 'weaver';
+}
+
+export interface SimpleWebhookPayload {
+  text: string;
+}
+
+interface EventContext {
+  prompt: string | null;
+  tool_name: string | null;
+  tool_input: Record<string, unknown> | null;
+  tool_response: { success: boolean; result: unknown[] } | null;
 }
 
 const pendingTimers = new Map<string, NodeJS.Timeout>();
@@ -45,17 +56,50 @@ export function buildWebhookPayload(
   };
 }
 
-interface EventContext {
-  prompt: string | null;
-  tool_name: string | null;
-  tool_input: Record<string, unknown> | null;
-  tool_response: { success: boolean; result: unknown[] } | null;
+export function buildSimpleWebhookPayload(
+  eventName: string,
+  activity: ActivityStatus,
+  sessionName: string,
+  events: HookEvent[],
+): SimpleWebhookPayload {
+  const ctx = extractContext(eventName, events);
+  return { text: formatText(eventName, activity, sessionName, ctx) };
+}
+
+function formatText(eventName: string, activity: ActivityStatus, name: string, ctx: EventContext | null): string {
+  const toolSummary = ctx?.tool_name ? `${ctx.tool_name}${summarizeToolInput(ctx.tool_input)}` : '';
+
+  if (eventName === 'agentSpawn') return `🟢 ${name} started`;
+  if (eventName === 'stop') return `⚫ ${name} idle`;
+  if (eventName === 'userPromptSubmit') return `💬 ${name} ── ${truncate(ctx?.prompt ?? '', 200)}`;
+
+  if (activity === 'pending_approval') {
+    let text = `⏳ ${name} ── ${toolSummary} waiting for approval`;
+    if (ctx?.prompt) text += `\n💬 ${truncate(ctx.prompt, 200)}`;
+    return text;
+  }
+
+  if (eventName === 'postToolUse') return `✅ ${name} ── ${toolSummary}`;
+  if (eventName === 'preToolUse') return `🔧 ${name} ── ${toolSummary}`;
+
+  return `${name} ── ${eventName}`;
+}
+
+function summarizeToolInput(input: Record<string, unknown> | null): string {
+  if (!input) return '';
+  // Pick the most descriptive field from common tool inputs
+  const summary = input.path ?? input.command ?? input.pattern ?? input.file_path ?? input.url ?? input.query;
+  if (typeof summary === 'string') return ` ── ${truncate(summary, 120)}`;
+  return '';
+}
+
+function truncate(text: string, max: number): string {
+  return text.length > max ? text.slice(0, max) + '…' : text;
 }
 
 function extractContext(eventName: string, events: HookEvent[]): EventContext | null {
   if (eventName === 'agentSpawn' || eventName === 'stop') return null;
 
-  // Find the most recent userPromptSubmit for the current turn's prompt
   const lastPromptEvent = findLastByName(events, 'userPromptSubmit');
   const prompt = lastPromptEvent?.event.prompt ?? null;
 
@@ -63,7 +107,6 @@ function extractContext(eventName: string, events: HookEvent[]): EventContext | 
     return { prompt, tool_name: null, tool_input: null, tool_response: null };
   }
 
-  // preToolUse / postToolUse — find the last matching event in the log
   const toolEvent = findLastByName(events, eventName);
   return {
     prompt,
@@ -80,7 +123,20 @@ function findLastByName(events: HookEvent[], name: string): HookEvent | undefine
   return undefined;
 }
 
-export async function dispatchWebhook(url: string, payload: WebhookPayload): Promise<void> {
+function buildPayloadForFormat(
+  format: WeaverConfig['webhook_format'],
+  sessionId: string,
+  eventName: string,
+  activity: ActivityStatus,
+  sessionName: string,
+  session: Session | undefined,
+  events: HookEvent[],
+): WebhookPayload | SimpleWebhookPayload {
+  if (format === 'simple') return buildSimpleWebhookPayload(eventName, activity, sessionName, events);
+  return buildWebhookPayload(sessionId, eventName, activity, sessionName, session, events);
+}
+
+export async function dispatchWebhook(url: string, payload: WebhookPayload | SimpleWebhookPayload): Promise<void> {
   try {
     await fetch(url, {
       method: 'POST',
@@ -106,10 +162,9 @@ export async function handleWebhookEvent(
 
   const events = await parseLogFile(sessionId);
   const activity = deriveActivity(eventName);
-  const payload = buildWebhookPayload(sessionId, eventName, activity, sessionName, session, events);
+  const payload = buildPayloadForFormat(config.webhook_format, sessionId, eventName, activity, sessionName, session, events);
   dispatchWebhook(config.webhook_url, payload);
 
-  // Pending approval timer management
   if (eventName === 'postToolUse' || eventName === 'stop') {
     clearPendingTimer(sessionId);
   } else if (eventName === 'preToolUse') {
@@ -120,7 +175,7 @@ export async function handleWebhookEvent(
         const { config: freshConfig } = await readConfig();
         if (!freshConfig.webhook_url) return;
         const freshEvents = await parseLogFile(sessionId);
-        const pendingPayload = buildWebhookPayload(sessionId, eventName, 'pending_approval', sessionName, session, freshEvents);
+        const pendingPayload = buildPayloadForFormat(freshConfig.webhook_format, sessionId, eventName, 'pending_approval', sessionName, session, freshEvents);
         dispatchWebhook(freshConfig.webhook_url, pendingPayload);
       } catch (err) {
         log({ timestamp: new Date().toISOString(), event: 'webhook_pending_error', error: String(err) });
