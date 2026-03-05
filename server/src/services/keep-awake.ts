@@ -1,11 +1,13 @@
 import { execFile } from 'node:child_process';
-import { join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readSessions, isProcessRunning } from './storage/index';
 import { getLastEvent, deriveActivity } from './log-parser/index';
 import { log } from '../utils/logger';
 
 const POLL_INTERVAL_MS = 60_000;
-const SCRIPT_PATH = join(import.meta.dirname, '..', '..', '..', 'bin', 'keep-awake.sh');
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const SCRIPT_PATH = resolve(__dirname, '../../bin/keep-awake.sh');
 const ACTIVE_STATES = new Set(['processing', 'running_tool']);
 
 async function hasActiveSessions(): Promise<boolean> {
@@ -24,11 +26,12 @@ let interval: ReturnType<typeof setInterval> | null = null;
 export function startKeepAwake(): void {
   const poll = async () => {
     try {
-      if (await hasActiveSessions()) {
+      const active = await hasActiveSessions();
+      log({ timestamp: new Date().toISOString(), event: 'keep_awake_poll', active });
+      if (active) {
         execFile('bash', [SCRIPT_PATH], (err) => {
           if (err) log({ timestamp: new Date().toISOString(), event: 'keep_awake_error', error: String(err) });
         });
-        log({ timestamp: new Date().toISOString(), event: 'keep_awake', message: 'active session detected — pressed fn' });
       }
     } catch (err) {
       log({ timestamp: new Date().toISOString(), event: 'keep_awake_poll_error', error: String(err) });
