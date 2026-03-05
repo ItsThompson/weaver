@@ -1,7 +1,7 @@
 import SpaceBetween from '@cloudscape-design/components/space-between';
 import Header from '@cloudscape-design/components/header';
 import Checkbox from '@cloudscape-design/components/checkbox';
-import type { ConversationExchange } from '@weaver/shared/types';
+import type { ConversationExchange } from '../../../types/conversation';
 import { ExchangeCard } from '../../../components/ExchangeCard';
 
 interface ExchangeSectionProps {

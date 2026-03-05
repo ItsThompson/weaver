@@ -4,7 +4,7 @@ import Container from '@cloudscape-design/components/container';
 import Button from '@cloudscape-design/components/button';
 import Alert from '@cloudscape-design/components/alert';
 import Box from '@cloudscape-design/components/box';
-import type { ParsedConversation, SavedConversation, ConversationExchange } from '@weaver/shared/types';
+import type { ParsedConversation, SavedConversation, ConversationExchange } from '../../../types/conversation';
 import { parseConversation } from '../../../utils/conversation-parser';
 import { ExchangeSummaryLine } from './ExchangeSummaryLine';
 

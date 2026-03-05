@@ -16,10 +16,6 @@
       "types": "./dist/events.d.ts",
       "default": "./dist/events.js"
     },
-    "./conversation": {
-      "types": "./dist/conversation.d.ts",
-      "default": "./dist/conversation.js"
-    },
     "./config": {
       "types": "./dist/config.d.ts",
       "default": "./dist/config.js"

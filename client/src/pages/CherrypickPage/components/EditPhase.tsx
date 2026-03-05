@@ -2,7 +2,7 @@ import SpaceBetween from '@cloudscape-design/components/space-between';
 import Header from '@cloudscape-design/components/header';
 import Button from '@cloudscape-design/components/button';
 import Alert from '@cloudscape-design/components/alert';
-import type { ParsedConversation } from '@weaver/shared/types';
+import type { ParsedConversation } from '../../../types/conversation';
 import { ExchangeSection } from './ExchangeSection';
 
 interface EditPhaseProps {
