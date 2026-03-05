@@ -11,6 +11,7 @@ FAIL=0
 
 setup() {
   export HOME=$(mktemp -d)
+  export WEAVER_SERVER="http://localhost:0"
   mkdir -p "$HOME/.weaver/logs"
 }
 
@@ -52,6 +53,30 @@ assert_file_exists() {
   else
     FAIL=$((FAIL + 1))
     echo "  ✗ $label — file not found: $path"
+  fi
+}
+
+assert_valid_json() {
+  local label="$1" text="$2"
+  if echo "$text" | python3 -c "import sys,json; json.loads(sys.stdin.read())" 2>/dev/null; then
+    PASS=$((PASS + 1))
+    echo "  ✓ $label"
+  else
+    FAIL=$((FAIL + 1))
+    echo "  ✗ $label — invalid JSON"
+    echo "    got: $text"
+  fi
+}
+
+assert_not_contains() {
+  local label="$1" needle="$2" haystack="$3"
+  if echo "$haystack" | grep -q "$needle"; then
+    FAIL=$((FAIL + 1))
+    echo "  ✗ $label"
+    echo "    should not contain: $needle"
+  else
+    PASS=$((PASS + 1))
+    echo "  ✓ $label"
   fi
 }
 
@@ -150,6 +175,125 @@ EOF
   local last_line
   last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
   assert_contains "response is truncated" '...\[truncated\]' "$last_line"
+  assert_valid_json "truncated line is valid JSON" "$last_line"
+
+  teardown
+}
+
+test_truncation_with_escaped_quotes() {
+  echo "test: truncation handles escaped quotes in result"
+  setup
+
+  echo '{"hook_event_name":"agentSpawn","cwd":"/tmp"}' | bash "$HOOK"
+
+  local session_id
+  session_id=$(cat "$HOME/.weaver/sessions.jsonl" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+  # Result contains escaped quotes — the original bug trigger
+  local long_prefix
+  long_prefix=$(python3 -c "print('a' * 50)")
+  local input
+  input=$(printf '{"hook_event_name":"postToolUse","cwd":"/tmp","tool_name":"code","tool_input":{},"tool_response":{"success":true,"result":["%s and then \\"quoted\\" content after"]}}' "$long_prefix")
+  echo "$input" | WEAVER_MAX_RESPONSE_LENGTH=20 bash "$HOOK"
+
+  local last_line
+  last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
+  assert_contains "response is truncated" '...\[truncated\]' "$last_line"
+  assert_valid_json "escaped-quote truncation is valid JSON" "$last_line"
+
+  teardown
+}
+
+test_truncation_with_backslash_sequences() {
+  echo "test: truncation handles backslash sequences (newlines, tabs)"
+  setup
+
+  echo '{"hook_event_name":"agentSpawn","cwd":"/tmp"}' | bash "$HOOK"
+
+  local session_id
+  session_id=$(cat "$HOME/.weaver/sessions.jsonl" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+  WEAVER_MAX_RESPONSE_LENGTH=20 bash "$HOOK" <<'EOF'
+{"hook_event_name":"postToolUse","cwd":"/tmp","tool_name":"fs_read","tool_input":{},"tool_response":{"success":true,"result":["line one\nline two\tindented\nline three\\backslash\nline four keeps going and going"]}}
+EOF
+
+  local last_line
+  last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
+  assert_contains "response is truncated" '...\[truncated\]' "$last_line"
+  assert_valid_json "backslash-sequence truncation is valid JSON" "$last_line"
+
+  teardown
+}
+
+test_truncation_multiple_result_elements() {
+  echo "test: truncation applies to each result element independently"
+  setup
+
+  echo '{"hook_event_name":"agentSpawn","cwd":"/tmp"}' | bash "$HOOK"
+
+  local session_id
+  session_id=$(cat "$HOME/.weaver/sessions.jsonl" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+  local long_a long_b input
+  long_a=$(python3 -c "print('a' * 100)")
+  long_b=$(python3 -c "print('b' * 100)")
+  input=$(printf '{"hook_event_name":"postToolUse","cwd":"/tmp","tool_name":"code","tool_input":{},"tool_response":{"success":true,"result":["%s","%s"]}}' "$long_a" "$long_b")
+  echo "$input" | WEAVER_MAX_RESPONSE_LENGTH=20 bash "$HOOK"
+
+  local last_line
+  last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
+  assert_valid_json "multi-element truncation is valid JSON" "$last_line"
+
+  # Both elements should be truncated — count occurrences
+  local trunc_count
+  trunc_count=$(echo "$last_line" | grep -o '\.\.\.\[truncated\]' | wc -l | tr -d ' ')
+  assert_eq "both elements truncated" "2" "$trunc_count"
+
+  teardown
+}
+
+test_truncation_boundary_at_max_length() {
+  echo "test: result exactly at max length is not truncated"
+  setup
+
+  echo '{"hook_event_name":"agentSpawn","cwd":"/tmp"}' | bash "$HOOK"
+
+  local session_id
+  session_id=$(cat "$HOME/.weaver/sessions.jsonl" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+  # Exactly 50 chars — should NOT be truncated
+  local exact input
+  exact=$(python3 -c "print('z' * 50)")
+  input=$(printf '{"hook_event_name":"postToolUse","cwd":"/tmp","tool_name":"fs_read","tool_input":{},"tool_response":{"success":true,"result":["%s"]}}' "$exact")
+  echo "$input" | WEAVER_MAX_RESPONSE_LENGTH=50 bash "$HOOK"
+
+  local last_line
+  last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
+  assert_valid_json "boundary-length line is valid JSON" "$last_line"
+  assert_not_contains "not truncated at exact max" 'truncated' "$last_line"
+
+  teardown
+}
+
+test_truncation_preserves_non_string_elements() {
+  echo "test: non-string result elements are preserved"
+  setup
+
+  echo '{"hook_event_name":"agentSpawn","cwd":"/tmp"}' | bash "$HOOK"
+
+  local session_id
+  session_id=$(cat "$HOME/.weaver/sessions.jsonl" | grep -o '"id":"[^"]*"' | cut -d'"' -f4)
+
+  WEAVER_MAX_RESPONSE_LENGTH=10 bash "$HOOK" <<'EOF'
+{"hook_event_name":"postToolUse","cwd":"/tmp","tool_name":"code","tool_input":{},"tool_response":{"success":true,"result":[42,true,"this string is long enough to truncate"]}}
+EOF
+
+  local last_line
+  last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
+  assert_valid_json "mixed-type result is valid JSON" "$last_line"
+  assert_contains "number preserved" '42' "$last_line"
+  assert_contains "boolean preserved" 'true' "$last_line"
+  assert_contains "string truncated" '...\[truncated\]' "$last_line"
 
   teardown
 }
@@ -170,15 +314,8 @@ EOF
   local last_line
   last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
   assert_contains "response preserved" '"short"' "$last_line"
-
-  # Make sure no truncation marker
-  if echo "$last_line" | grep -q 'truncated'; then
-    FAIL=$((FAIL + 1))
-    echo "  ✗ should not contain truncated marker"
-  else
-    PASS=$((PASS + 1))
-    echo "  ✓ no truncation marker"
-  fi
+  assert_not_contains "no truncation marker" 'truncated' "$last_line"
+  assert_valid_json "short response is valid JSON" "$last_line"
 
   teardown
 }
@@ -196,6 +333,16 @@ echo ""
 test_orphan_session_when_no_spawn
 echo ""
 test_truncation_of_large_responses
+echo ""
+test_truncation_with_escaped_quotes
+echo ""
+test_truncation_with_backslash_sequences
+echo ""
+test_truncation_multiple_result_elements
+echo ""
+test_truncation_boundary_at_max_length
+echo ""
+test_truncation_preserves_non_string_elements
 echo ""
 test_short_responses_not_truncated
 
