@@ -1,6 +1,7 @@
 import { get, patch } from '../utils.js';
+import type { WeaverConfig } from '@weaver/shared/types';
 
-const TOGGLES: Record<string, string> = {
+const TOGGLES: Record<string, keyof WeaverConfig> = {
   ghost: 'ghost_mode',
   dark: 'dark_mode',
   sounds: 'enable_notification_sounds',
@@ -27,7 +28,7 @@ export function config(_pid: number, args: string[]): void {
   const modifier = args[1];
 
   if (modifier === 'on' || modifier === 'off') {
-    return applyPatch({ [field]: modifier === 'on' }, field);
+    return applyPatch({ [field]: modifier === 'on' }, field as string);
   }
 
   if (modifier) {
@@ -40,8 +41,8 @@ export function config(_pid: number, args: string[]): void {
   if (status === 0) return void console.log('Weaver server not running');
   if (!ok) return void console.log(`Weaver server error (${status})`);
 
-  const current = (data as { config: Record<string, unknown> }).config[field];
-  applyPatch({ [field]: !current }, field);
+  const current = (data as { config: WeaverConfig }).config[field];
+  applyPatch({ [field]: !current }, field as string);
 }
 
 function applyPatch(body: Record<string, unknown>, field: string): void {
@@ -50,9 +51,9 @@ function applyPatch(body: Record<string, unknown>, field: string): void {
   if (status === 422) return void console.log(`Invalid value: ${(data as { error: string }).error}`);
   if (!ok) return void console.log(`Weaver server error (${status})`);
 
-  const config = (data as { config: Record<string, unknown> }).config;
+  const config = (data as { config: WeaverConfig }).config;
   const label = field.replace(/_/g, ' ').replace(/\bmode\b/, '').trim();
-  console.log(`${label}: ${config[field] ? 'on' : 'off'}`);
+  console.log(`${label}: ${config[field as keyof WeaverConfig] ? 'on' : 'off'}`);
 }
 
 function setOpacity(raw: string | undefined): void {
