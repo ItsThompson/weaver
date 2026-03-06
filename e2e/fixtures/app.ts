@@ -43,17 +43,9 @@ export const test = base.extend<AppFixtures>({
       env: { ...process.env, HOME: tmpDir, USERPROFILE: tmpDir, WEAVER_TEST: '1' },
     });
     await use(app);
-    // Kill the forked server process first (app.exit() doesn't fire will-quit,
-    // so server.stop() never runs). Then kill the Electron process.
-    await app.evaluate(() => {
-      try {
-        require("child_process").execSync(
-          "kill -9 $(lsof -ti tcp:8143 -sTCP:LISTEN)",
-          { stdio: "ignore" },
-        );
-      } catch {}
-    });
-    app.process().kill("SIGKILL");
+    // Kill server and Electron from the test process (app.evaluate hangs during teardown)
+    killPort(SERVER_PORT);
+    try { app.process().kill("SIGKILL"); } catch {}
   },
 
   serverUrl: async ({}, use) => {
@@ -71,7 +63,7 @@ export { expect } from "@playwright/test";
 
 export function killPort(port: number): void {
   try {
-    const pids = execSync(`lsof -ti tcp:${port}`, { encoding: "utf8" }).trim();
+    const pids = execSync(`lsof -ti tcp:${port} -sTCP:LISTEN`, { encoding: "utf8" }).trim();
     if (pids) {
       for (const pid of pids.split("\n")) process.kill(Number(pid), "SIGKILL");
     }
