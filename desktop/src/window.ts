@@ -121,6 +121,10 @@ export async function navigateToMini(serverUrl: string): Promise<void> {
   });
 }
 
+export function _getTestState() {
+  return { visible, ghostEnabled, ghostOpacityValue, miniMode };
+}
+
 export async function navigateToMain(serverUrl: string): Promise<void> {
   await fetch(`${serverUrl}/api/navigate`, {
     method: "POST",

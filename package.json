@@ -8,7 +8,8 @@
     "client",
     "cli",
     "hook-handler",
-    "desktop"
+    "desktop",
+    "e2e"
   ],
   "scripts": {
     "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
@@ -16,7 +17,8 @@
     "dist": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-electron && npm run dist --prefix desktop",
     "build": "turbo build",
     "start": "turbo build && node server/dist/index.js",
-    "test": "turbo test"
+    "test": "turbo test",
+    "test:e2e": "npm test --prefix e2e"
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
