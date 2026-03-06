@@ -1,0 +1,26 @@
+{
+  "name": "@weaver/acp-client",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "weaver-chat": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest --passWithNoTests"
+  },
+  "dependencies": {
+    "@agentclientprotocol/sdk": "^0.15.0",
+    "@weaver/shared": "*"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.2.0",
+    "@types/node": "^22.15.3",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "tsx": "^4.19.4",
+    "typescript": "^5.8.3"
+  }
+}
