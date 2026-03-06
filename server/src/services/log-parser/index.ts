@@ -1,1 +1,1 @@
-export * from './log-parser';
+export { deriveActivity, getLastEvent, parseLogFile, groupEventsByTurn, buildTurnsFromSqlite } from './log-parser';

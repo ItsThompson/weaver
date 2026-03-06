@@ -1,7 +1,5 @@
 import { test, expect } from "../fixtures/app.js";
 import { seedSession, seedLogEvents, makeHookEvent } from "../fixtures/seed.js";
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
 
 test.describe("Session CRUD", () => {
   test("empty state returns empty array", async ({ page, serverUrl }) => {
@@ -63,13 +61,8 @@ test.describe("Session CRUD", () => {
     expect(fetched.customName).toBe("my-session");
   });
 
-  test("delete session removes from list and disk", async ({ page, serverUrl, tmpDir }) => {
+  test("delete session removes from list", async ({ page, serverUrl, tmpDir }) => {
     const session = await seedSession(tmpDir, {});
-    await seedLogEvents(tmpDir, session.id, [makeHookEvent()]);
-    const logPath = join(tmpDir, ".weaver", "logs", `${session.id}.jsonl`);
-
-    // Verify log file exists
-    await readFile(logPath);
 
     const delRes = await fetch(`${serverUrl}/api/sessions/${session.id}`, { method: "DELETE" });
     expect(delRes.status).toBe(200);
@@ -80,9 +73,6 @@ test.describe("Session CRUD", () => {
     const listRes = await fetch(`${serverUrl}/api/sessions`);
     const sessions = await listRes.json();
     expect(sessions.find((s: any) => s.id === session.id)).toBeUndefined();
-
-    // Log file deleted
-    await expect(readFile(logPath)).rejects.toThrow();
   });
 
   test("get non-existent session returns 404", async ({ page, serverUrl }) => {

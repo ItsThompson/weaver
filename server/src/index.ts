@@ -8,7 +8,7 @@ import { registerSessionRoutes } from './routes/sessions/index';
 import { registerEventRoutes } from './routes/events/index';
 import { registerOrphanRoutes } from './routes/orphans/index';
 import { registerConfigRoutes } from './routes/config';
-import { ensureDataDir, stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage/index';
+import { stopStaleSessionCleanup, startStaleSessionCleanup, startPidPolling } from './services/storage/index';
 import { broadcast } from './services/event-bus';
 import { startKeepAwake, stopKeepAwake } from './services/keep-awake';
 import { stopWebhookTimers } from './services/webhook/index';
@@ -41,7 +41,6 @@ if (existsSync(clientDist)) {
 }
 
 async function start(): Promise<void> {
-  await ensureDataDir();
   startStaleSessionCleanup();
   startPidPolling((sessionId) => broadcast(sessionId));
   startKeepAwake();

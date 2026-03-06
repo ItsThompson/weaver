@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { HookEvent, OrphanGroup, ApiError } from '@weaver/shared/types';
-import { readSessions, writeSessions } from '../../services/storage/index';
+import { readSessions, getDb } from '../../services/storage/index';
 import { groupEventsByTurn } from '../../services/log-parser/index';
 import { log } from '../../utils/logger';
 
@@ -107,12 +107,7 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
 
       // Update the session's PID to the orphan group's PID since it's the current process
       if (pid !== 0 && targetSession.pid !== pid) {
-        const allSessions = await readSessions();
-        const idx = allSessions.findIndex((s) => s.id === targetSessionId);
-        if (idx !== -1) {
-          allSessions[idx].pid = pid;
-          await writeSessions(allSessions);
-        }
+        getDb().updateSession(targetSessionId, { pid });
       }
 
       log({ timestamp: new Date().toISOString(), event: 'orphans_assigned', pid, targetSessionId, count: toMove.length });

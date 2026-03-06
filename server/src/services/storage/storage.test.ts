@@ -1,139 +1,89 @@
 import { jest } from '@jest/globals';
 
-// Mock fs modules before importing storage
-jest.unstable_mockModule('node:fs/promises', () => ({
-  mkdir: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readFile: jest.fn<() => Promise<string>>(),
-  writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: jest.fn<() => Promise<string[]>>(),
-  unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  stat: jest.fn<() => Promise<{ mtimeMs: number }>>().mockRejectedValue(new Error('no stat mock')),
-}));
-
-jest.unstable_mockModule('node:fs', () => ({
-  existsSync: jest.fn<() => boolean>(),
-}));
-
 jest.unstable_mockModule('node:child_process', () => ({
   execFileSync: jest.fn<() => string>(),
 }));
 
-// Silence logger in tests
+jest.unstable_mockModule('@weaver/shared/db', () => {
+  const mockDb = {
+    listSessions: jest.fn().mockReturnValue([]),
+    getSession: jest.fn(),
+    updateSession: jest.fn(),
+    close: jest.fn(),
+  };
+  return {
+    WeaverDb: jest.fn().mockImplementation(() => mockDb),
+    __mockDb: mockDb,
+  };
+});
+
 jest.unstable_mockModule('../../utils/logger', () => ({
   log: jest.fn(),
 }));
 
-// Dynamic imports must come after all jest.unstable_mockModule calls
-const fsp = await import('node:fs/promises');
-const fs = await import('node:fs');
 const cp = await import('node:child_process');
+const dbModule = await import('@weaver/shared/db') as any;
 const storage = await import('./storage');
 
-const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
-const { existsSync } = fs;
-const { ensureDataDir, readSessions, appendSession, cleanStaleSessions, isProcessRunning, _sessionCache } = storage;
-
-const mockMkdir = mkdir as jest.MockedFunction<typeof mkdir>;
-const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
-const mockAppendFile = appendFile as jest.MockedFunction<typeof appendFile>;
-const mockReaddir = readdir as jest.MockedFunction<typeof readdir>;
-const mockUnlink = unlink as jest.MockedFunction<typeof unlink>;
-const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
 const mockExecFileSync = cp.execFileSync as jest.MockedFunction<typeof cp.execFileSync>;
+const mockDb = dbModule.__mockDb;
+
+const { readSessions, isProcessRunning, cleanStaleSessions, getDb } = storage;
 
 beforeEach(() => {
   jest.clearAllMocks();
-  _sessionCache.clear();
 });
 
-describe('ensureDataDir', () => {
-  it('creates data and logs directories', async () => {
-    await ensureDataDir();
-    expect(mockMkdir).toHaveBeenCalledTimes(2);
-    expect(mockMkdir).toHaveBeenCalledWith(expect.stringContaining('.weaver'), { recursive: true });
-    expect(mockMkdir).toHaveBeenCalledWith(expect.stringContaining('logs'), { recursive: true });
-  });
-
-  it('throws when directory creation fails', async () => {
-    mockMkdir.mockRejectedValueOnce(new Error('permission denied'));
-    await expect(ensureDataDir()).rejects.toThrow('permission denied');
+describe('getDb', () => {
+  it('returns a WeaverDb instance', () => {
+    const db = getDb();
+    expect(db).toBeDefined();
   });
 });
 
 describe('readSessions', () => {
-  it('returns empty array when file does not exist', async () => {
-    mockExistsSync.mockReturnValue(false);
+  it('returns sessions mapped from SessionRow to Session', async () => {
+    mockDb.listSessions.mockReturnValue([
+      {
+        id: 'aaa',
+        agent_session_id: null,
+        pid: 100,
+        cwd: '/tmp',
+        agent_name: null,
+        custom_name: null,
+        model: null,
+        status: 'open',
+        context_usage_percent: null,
+        created_at: '2026-01-01T00:00:00Z',
+        updated_at: '2026-01-01T00:01:00Z',
+      },
+    ]);
+
+    const sessions = await readSessions();
+    expect(sessions).toHaveLength(1);
+    expect(sessions[0]).toEqual({
+      id: 'aaa',
+      pid: 100,
+      customName: null,
+      cwd: '/tmp',
+      agentName: null,
+      startTime: '2026-01-01T00:00:00Z',
+      lastEventTime: '2026-01-01T00:01:00Z',
+    });
+  });
+
+  it('returns empty array when no sessions exist', async () => {
+    mockDb.listSessions.mockReturnValue([]);
     const sessions = await readSessions();
     expect(sessions).toEqual([]);
   });
 
-  it('parses JSONL into Session array', async () => {
-    mockExistsSync.mockReturnValue(true);
-    const line1 = JSON.stringify({ id: 'a', pid: 1, customName: null, cwd: '/tmp', agentName: null, startTime: 't1', lastEventTime: 't1' });
-    const line2 = JSON.stringify({ id: 'b', pid: 2, customName: 'test', cwd: '/home', agentName: 'dev', startTime: 't2', lastEventTime: 't2' });
-    mockReadFile.mockResolvedValue(`${line1}\n${line2}\n`);
-
+  it('defaults pid to 0 when null', async () => {
+    mockDb.listSessions.mockReturnValue([
+      { id: 'x', pid: null, cwd: '/tmp', agent_name: null, custom_name: null, created_at: 't1', updated_at: 't2' },
+    ]);
     const sessions = await readSessions();
-    expect(sessions).toHaveLength(2);
-    expect(sessions[0].id).toBe('a');
-    expect(sessions[1].id).toBe('b');
-  });
-
-  it('skips malformed lines gracefully', async () => {
-    mockExistsSync.mockReturnValue(true);
-    const valid = JSON.stringify({ id: 'a', pid: 1, customName: null, cwd: '/tmp', agentName: null, startTime: 't1', lastEventTime: 't1' });
-    mockReadFile.mockResolvedValue(`${valid}\n{bad json\n`);
-
-    const sessions = await readSessions();
-    expect(sessions).toHaveLength(1);
-    expect(sessions[0].id).toBe('a');
-  });
-});
-
-describe('appendSession', () => {
-  it('appends JSON line to sessions file', async () => {
-    const session = { id: 'a', pid: 1, customName: null, cwd: '/tmp', agentName: null, startTime: 't1', lastEventTime: 't1' };
-    await appendSession(session);
-    expect(mockAppendFile).toHaveBeenCalledWith(
-      expect.stringContaining('sessions.jsonl'),
-      JSON.stringify(session) + '\n',
-      'utf-8',
-    );
-  });
-});
-
-describe('cleanStaleSessions', () => {
-  it('deletes marker files for dead PIDs', async () => {
-    // Use a PID that is almost certainly not running
-    const deadPid = 999999;
-    mockReaddir.mockResolvedValue([`.current-session-${deadPid}`] as any);
-
-    await cleanStaleSessions();
-    expect(mockUnlink).toHaveBeenCalledWith(expect.stringContaining(`.current-session-${deadPid}`));
-  });
-
-  it('leaves marker files for live PIDs', async () => {
-    // Use current process PID which is guaranteed to be running and signalable
-    const livePid = process.pid;
-    mockReaddir.mockResolvedValue([`.current-session-${livePid}`] as any);
-    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat\n`);
-
-    await cleanStaleSessions();
-    expect(mockUnlink).not.toHaveBeenCalled();
-  });
-
-  it('skips files with non-numeric PID suffixes', async () => {
-    mockReaddir.mockResolvedValue(['.current-session-abc'] as any);
-
-    await cleanStaleSessions();
-    expect(mockUnlink).not.toHaveBeenCalled();
-  });
-
-  it('handles readdir failure gracefully', async () => {
-    mockReaddir.mockRejectedValue(new Error('no such directory'));
-
-    await expect(cleanStaleSessions()).resolves.toBeUndefined();
+    expect(sessions[0].pid).toBe(0);
   });
 });
 
@@ -150,5 +100,35 @@ describe('isProcessRunning', () => {
   it('returns false when PID is alive but not kiro-cli (PID reuse)', () => {
     mockExecFileSync.mockReturnValue(`/usr/bin/some-other-process\n`);
     expect(isProcessRunning(process.pid)).toBe(false);
+  });
+});
+
+describe('cleanStaleSessions', () => {
+  it('marks open sessions with dead PIDs as closed', async () => {
+    mockDb.listSessions.mockReturnValue([
+      { id: 'dead', pid: 999999, status: 'open', cwd: '/tmp' },
+    ]);
+
+    await cleanStaleSessions();
+    expect(mockDb.updateSession).toHaveBeenCalledWith('dead', { status: 'closed' });
+  });
+
+  it('leaves open sessions with live PIDs untouched', async () => {
+    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat\n`);
+    mockDb.listSessions.mockReturnValue([
+      { id: 'live', pid: process.pid, status: 'open', cwd: '/tmp' },
+    ]);
+
+    await cleanStaleSessions();
+    expect(mockDb.updateSession).not.toHaveBeenCalled();
+  });
+
+  it('ignores already-closed sessions', async () => {
+    mockDb.listSessions.mockReturnValue([
+      { id: 'closed', pid: 999999, status: 'closed', cwd: '/tmp' },
+    ]);
+
+    await cleanStaleSessions();
+    expect(mockDb.updateSession).not.toHaveBeenCalled();
   });
 });

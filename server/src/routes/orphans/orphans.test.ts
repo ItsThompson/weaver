@@ -15,7 +15,12 @@ const mockWriteFile = fsp.writeFile as jest.MockedFunction<typeof fsp.writeFile>
 const mockAppendFile = fsp.appendFile as jest.MockedFunction<typeof fsp.appendFile>;
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadSessions = storage.readSessions as jest.MockedFunction<typeof storage.readSessions>;
-const mockWriteSessions = storage.writeSessions as jest.MockedFunction<typeof storage.writeSessions>;
+const mockGetDb = storage.getDb as jest.MockedFunction<typeof storage.getDb>;
+
+const mockDb = {
+  updateSession: jest.fn(),
+};
+mockGetDb.mockReturnValue(mockDb as any);
 
 const { default: Fastify } = await import('fastify');
 const { registerOrphanRoutes } = await import('./orphans');
@@ -24,6 +29,7 @@ let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   jest.clearAllMocks();
+  mockGetDb.mockReturnValue(mockDb as any);
   server = Fastify();
   registerOrphanRoutes(server);
   await server.ready();
@@ -81,6 +87,20 @@ describe('POST /api/orphans/assign', () => {
       expect.stringContaining('orphan.jsonl'),
       expect.stringContaining('"pid":200'),
     );
+  });
+
+  it('updates session PID via SQLite', async () => {
+    mockExistsSync.mockReturnValue(true);
+    mockReadFile.mockResolvedValue(`${orphanLine(300)}\n`);
+    mockReadSessions.mockResolvedValue([{ ...SESSION_A }]);
+
+    await server.inject({
+      method: 'POST',
+      url: '/api/orphans/assign',
+      payload: { targetSessionId: 'aaa', pid: 300 },
+    });
+
+    expect(mockDb.updateSession).toHaveBeenCalledWith('aaa', { pid: 300 });
   });
 
   it('returns 404 when target session missing', async () => {

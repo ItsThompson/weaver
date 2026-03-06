@@ -8,5 +8,6 @@ export default defineConfig({
   sourcemap: true,
   deps: {
     alwaysBundle: [/^@weaver\//],
+    alwaysExternal: ['better-sqlite3'],
   },
 });

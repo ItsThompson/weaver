@@ -1,10 +1,7 @@
 import type { FastifyInstance } from 'fastify';
 import type { Session, SessionWithStatus, TurnGroup, ActivityStatus, ApiError } from '@weaver/shared/types';
-import { unlink } from 'node:fs/promises';
-import { join } from 'node:path';
-import { homedir } from 'node:os';
-import { readSessions, writeSessions, isProcessRunning } from '../../services/storage/index';
-import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../../services/log-parser/index';
+import { readSessions, isProcessRunning, getDb } from '../../services/storage/index';
+import { buildTurnsFromSqlite, getLastEvent, deriveActivity } from '../../services/log-parser/index';
 import { broadcast } from '../../services/event-bus';
 import { isWebhookEnabled, setWebhookEnabled } from '../../services/webhook/index';
 
@@ -34,20 +31,24 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     '/api/sessions/:id',
     async (request, reply) => {
       const { id } = request.params;
-      const sessions = await readSessions();
-      const session = sessions.find((s) => s.id === id);
-      if (!session) return reply.status(404).send({ error: 'Session not found' });
+      const db = getDb();
+      const sessionRow = db.getSession(id);
+      if (!sessionRow) return reply.status(404).send({ error: 'Session not found' });
 
-      const events = await parseLogFile(id);
-      if (events.length === 0 && !session) return reply.status(404).send({ error: 'Log file not found' });
+      const sessions = await readSessions();
+      const session = sessions.find((s) => s.id === id)!;
 
       const isOpen = isProcessRunning(session.pid);
-      const lastEvent = events.length > 0 ? events[events.length - 1] : null;
-      const activity = isOpen ? deriveActivity(lastEvent?.event.hook_event_name ?? 'agentSpawn', lastEvent?.timestamp) : undefined;
+      const lastEvent = await getLastEvent(id);
+      const activity = isOpen ? deriveActivity(lastEvent?.name ?? 'agentSpawn', lastEvent?.timestamp) : undefined;
+
+      const messages = db.getMessages(id);
+      const toolCalls = db.getToolCalls(id);
+      const turns = buildTurnsFromSqlite(messages, toolCalls);
 
       return {
         session: toSessionWithStatus(session, isOpen, activity),
-        turns: groupEventsByTurn(events),
+        turns,
         webhookEnabled: isWebhookEnabled(id),
       };
     },
@@ -63,13 +64,14 @@ export function registerSessionRoutes(server: FastifyInstance): void {
         return reply.status(400).send({ error: 'customName must be a string' });
       }
 
-      const sessions = await readSessions();
-      const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1) return reply.status(404).send({ error: 'Session not found' });
+      const db = getDb();
+      const sessionRow = db.getSession(id);
+      if (!sessionRow) return reply.status(404).send({ error: 'Session not found' });
 
-      sessions[index].customName = customName;
-      await writeSessions(sessions);
-      return sessions[index];
+      db.updateSession(id, { custom_name: customName });
+
+      const sessions = await readSessions();
+      return sessions.find((s) => s.id === id)!;
     },
   );
 
@@ -82,16 +84,17 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       if (typeof customName !== 'string') return reply.status(400).send({ error: 'customName required' });
 
       const sessions = await readSessions();
-      let index = -1;
+      let session: Session | undefined;
       for (let i = sessions.length - 1; i >= 0; i--) {
-        if (sessions[i].pid === pid) { index = i; break; }
+        if (sessions[i].pid === pid) { session = sessions[i]; break; }
       }
-      if (index === -1) return reply.status(404).send({ error: 'No session found for PID' });
+      if (!session) return reply.status(404).send({ error: 'No session found for PID' });
 
-      sessions[index].customName = customName;
-      await writeSessions(sessions);
-      broadcast(sessions[index].id);
-      return sessions[index];
+      getDb().updateSession(session.id, { custom_name: customName });
+      broadcast(session.id);
+
+      const updated = await readSessions();
+      return updated.find((s) => s.id === session!.id)!;
     },
   );
 
@@ -102,8 +105,8 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       const { enabled } = request.body ?? {};
       if (typeof enabled !== 'boolean') return reply.status(400).send({ error: 'enabled must be a boolean' });
 
-      const sessions = await readSessions();
-      if (!sessions.some((s) => s.id === id)) return reply.status(404).send({ error: 'Session not found' });
+      const db = getDb();
+      if (!db.getSession(id)) return reply.status(404).send({ error: 'Session not found' });
 
       setWebhookEnabled(id, enabled);
       return { ok: true as const, enabled };
@@ -114,22 +117,10 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     '/api/sessions/:id',
     async (request, reply) => {
       const { id } = request.params;
-      const sessions = await readSessions();
-      const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1) return reply.status(404).send({ error: 'Session not found' });
+      const db = getDb();
+      if (!db.getSession(id)) return reply.status(404).send({ error: 'Session not found' });
 
-      const session = sessions[index];
-      const dataDir = join(homedir(), '.weaver');
-
-      // Remove log file
-      try { await unlink(join(dataDir, 'logs', `${id}.jsonl`)); } catch { /* may not exist */ }
-
-      // Remove session marker if present
-      try { await unlink(join(dataDir, `.current-session-${session.pid}`)); } catch { /* may not exist */ }
-
-      // Remove from sessions index
-      sessions.splice(index, 1);
-      await writeSessions(sessions);
+      db.deleteSession(id);
       broadcast(id);
 
       return { ok: true as const };

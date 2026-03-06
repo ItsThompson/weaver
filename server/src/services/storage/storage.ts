@@ -1,75 +1,35 @@
-import { mkdir, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
-import { join } from 'node:path';
-import { homedir } from 'node:os';
+import { WeaverDb } from '@weaver/shared/db';
+import type { SessionRow } from '@weaver/shared/db';
 import type { Session } from '@weaver/shared/types';
 import { log } from '../../utils/logger';
-import { FileCache, parseJsonlFile } from '../file-cache/index';
-
-const DATA_DIR = () => join(homedir(), '.weaver');
-const LOGS_DIR = () => join(DATA_DIR(), 'logs');
-const SESSIONS_FILE = () => join(DATA_DIR(), 'sessions.jsonl');
 
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const PID_POLL_INTERVAL_MS = 30 * 1000;
 
-const sessionCache = new FileCache<Session[]>();
-export const _sessionCache = sessionCache;
+let db: WeaverDb | null = null;
 
-export async function ensureDataDir(): Promise<void> {
-  try {
-    await mkdir(DATA_DIR(), { recursive: true });
-    await mkdir(LOGS_DIR(), { recursive: true });
-  } catch (err) {
-    log({ timestamp: new Date().toISOString(), event: 'ensure_data_dir_failed', error: String(err) });
-    throw err;
+export function getDb(): WeaverDb {
+  if (!db) {
+    db = new WeaverDb();
   }
+  return db;
+}
+
+function rowToSession(row: SessionRow): Session {
+  return {
+    id: row.id,
+    pid: row.pid ?? 0,
+    customName: row.custom_name,
+    cwd: row.cwd,
+    agentName: row.agent_name,
+    startTime: row.created_at,
+    lastEventTime: row.updated_at,
+  };
 }
 
 export async function readSessions(): Promise<Session[]> {
-  const filePath = SESSIONS_FILE();
-  return sessionCache.get(filePath, () =>
-    parseJsonlFile<Session>(filePath, (line) =>
-      log({ timestamp: new Date().toISOString(), event: 'malformed_session_line', line }),
-    ),
-  );
-}
-
-export async function appendSession(session: Session): Promise<void> {
-  await appendFile(SESSIONS_FILE(), JSON.stringify(session) + '\n', 'utf-8');
-  sessionCache.invalidate(SESSIONS_FILE());
-}
-
-export async function writeSessions(sessions: Session[]): Promise<void> {
-  const content = sessions.map((s) => JSON.stringify(s)).join('\n') + '\n';
-  await writeFile(SESSIONS_FILE(), content, 'utf-8');
-  sessionCache.invalidate(SESSIONS_FILE());
-}
-
-export async function cleanStaleSessions(): Promise<void> {
-  const dataDir = DATA_DIR();
-  let entries: string[];
-  try {
-    entries = await readdir(dataDir);
-  } catch {
-    return;
-  }
-
-  const sessionFiles = entries.filter((f) => f.startsWith('.current-session-'));
-
-  for (const file of sessionFiles) {
-    const pid = parseInt(file.replace('.current-session-', ''), 10);
-    if (isNaN(pid)) continue;
-
-    if (!isProcessRunning(pid)) {
-      try {
-        await unlink(join(dataDir, file));
-        log({ timestamp: new Date().toISOString(), event: 'stale_session_cleaned', pid, file });
-      } catch {
-        // File may have been removed between readdir and unlink
-      }
-    }
-  }
+  return getDb().listSessions().map(rowToSession);
 }
 
 export function isProcessRunning(pid: number): boolean {
@@ -78,12 +38,23 @@ export function isProcessRunning(pid: number): boolean {
   } catch {
     return false;
   }
-  // Guard against PID reuse: verify the process is actually kiro-cli
   try {
     const args = execFileSync('ps', ['-p', String(pid), '-o', 'args='], { encoding: 'utf-8' });
     return args.includes('kiro-cli');
   } catch {
     return false;
+  }
+}
+
+export async function cleanStaleSessions(): Promise<void> {
+  const database = getDb();
+  const sessions = database.listSessions().filter((s) => s.status === 'open' && s.pid != null);
+
+  for (const session of sessions) {
+    if (!isProcessRunning(session.pid!)) {
+      database.updateSession(session.id, { status: 'closed' });
+      log({ timestamp: new Date().toISOString(), event: 'stale_session_closed', sessionId: session.id, pid: session.pid });
+    }
   }
 }
 
@@ -102,7 +73,6 @@ export function startPidPolling(onSessionClosed: (sessionId: string) => void): v
     const currentlyOpen = sessions.filter((s) => isProcessRunning(s.pid));
     const currentPids = new Set(currentlyOpen.map((s) => s.pid));
 
-    // Detect PIDs that were open but are now dead
     for (const pid of openPids) {
       if (!currentPids.has(pid)) {
         const session = sessions.find((s) => s.pid === pid);

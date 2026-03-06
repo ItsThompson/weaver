@@ -27,6 +27,18 @@ export interface ToolCallPair {
   endTime?: string;
 }
 
+// Enriched tool call data from SQLite
+export interface ToolCallDetail {
+  id: string;
+  toolName: string;
+  kind?: string;
+  status: string;
+  input?: string;
+  output?: string;
+  startedAt: string;
+  completedAt?: string;
+}
+
 // A logical conversation turn: user prompt → tool calls → stop
 export interface TurnGroup {
   id: number;
@@ -35,6 +47,8 @@ export interface TurnGroup {
   toolCalls: ToolCallPair[];
   startTime: string;
   endTime: string;
+  assistantContent?: string;
+  toolCallDetails?: ToolCallDetail[];
 }
 
 export const PENDING_APPROVAL_THRESHOLD_MS = 15_000;

@@ -1,5 +1,5 @@
 import { test, expect } from "@playwright/test";
-import { mkdtemp, readFile, rm, mkdir } from "node:fs/promises";
+import { mkdtemp, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
@@ -9,46 +9,51 @@ import {
   seedLogEvents,
   seedConfig,
 } from "../fixtures/seed";
+import { WeaverDb } from "@weaver/shared/db";
 
 test.describe("seed helpers", () => {
   let tmpDir: string;
 
   test.beforeEach(async () => {
     tmpDir = await mkdtemp(join(tmpdir(), "weaver-seed-test-"));
-    await mkdir(join(tmpDir, ".weaver", "logs"), { recursive: true });
+    await mkdir(join(tmpDir, ".weaver"), { recursive: true });
   });
 
   test.afterEach(async () => {
     await rm(tmpDir, { recursive: true, force: true });
   });
 
-  test("seedSession writes valid JSONL", async () => {
+  test("seedSession writes to SQLite", async () => {
     const session = await seedSession(tmpDir, { customName: "test-session" });
-    const raw = await readFile(
-      join(tmpDir, ".weaver", "sessions.jsonl"),
-      "utf-8",
-    );
-    const parsed = JSON.parse(raw.trim());
-    expect(parsed.id).toBe(session.id);
-    expect(parsed.customName).toBe("test-session");
-    expect(parsed.pid).toBeGreaterThan(0);
+    const db = new WeaverDb({ dbPath: join(tmpDir, ".weaver", "weaver.sqlite3"), readonly: true });
+    try {
+      const row = db.getSession(session.id);
+      expect(row).not.toBeNull();
+      expect(row!.custom_name).toBe("test-session");
+      expect(row!.pid).toBeGreaterThan(0);
+    } finally {
+      db.close();
+    }
   });
 
-  test("seedLogEvents writes events to correct file", async () => {
-    const sessionId = "test-session-id";
+  test("seedLogEvents writes messages and events to SQLite", async () => {
+    const session = await seedSession(tmpDir, {});
     const events = [makeHookEvent(), makeHookEvent({ timestamp: "2026-01-01T00:00:00Z" })];
-    await seedLogEvents(tmpDir, sessionId, events);
-    const raw = await readFile(
-      join(tmpDir, ".weaver", "logs", `${sessionId}.jsonl`),
-      "utf-8",
-    );
-    const lines = raw.trim().split("\n").map((l) => JSON.parse(l));
-    expect(lines).toHaveLength(2);
-    expect(lines[0].event.hook_event_name).toBe("userPromptSubmit");
-    expect(lines[1].timestamp).toBe("2026-01-01T00:00:00Z");
+    await seedLogEvents(tmpDir, session.id, events);
+
+    const db = new WeaverDb({ dbPath: join(tmpDir, ".weaver", "weaver.sqlite3"), readonly: true });
+    try {
+      const messages = db.getMessages(session.id);
+      expect(messages.length).toBeGreaterThanOrEqual(1);
+      const dbEvents = db.getEvents(session.id);
+      expect(dbEvents).toHaveLength(2);
+    } finally {
+      db.close();
+    }
   });
 
   test("seedConfig writes merged config", async () => {
+    const { readFile } = await import("node:fs/promises");
     await seedConfig(tmpDir, { dark_mode: false, page_size: 50 });
     const raw = await readFile(
       join(tmpDir, ".weaver", "config.json"),
@@ -57,7 +62,6 @@ test.describe("seed helpers", () => {
     const config = JSON.parse(raw);
     expect(config.dark_mode).toBe(false);
     expect(config.page_size).toBe(50);
-    // defaults preserved
     expect(config.enable_notification_sounds).toBe(true);
     expect(config.ghost_mode).toBe(false);
   });
