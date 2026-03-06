@@ -9,6 +9,10 @@ export default {
   },
   transform: {
     '^.+\\.ts$': ['ts-jest', { useESM: true, tsconfig: 'tsconfig.json' }],
+    '^.+\\.js$': ['ts-jest', { useESM: true }],
   },
+  transformIgnorePatterns: [
+    'node_modules/(?!(@agentclientprotocol)/)',
+  ],
   extensionsToTreatAsEsm: ['.ts'],
 };
