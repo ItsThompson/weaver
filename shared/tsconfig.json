@@ -4,5 +4,6 @@
     "outDir": "dist",
     "rootDir": "."
   },
-  "include": ["types/**/*.ts"]
+  "include": ["types/**/*.ts", "db/**/*.ts"],
+  "exclude": ["**/*.test.ts"]
 }
