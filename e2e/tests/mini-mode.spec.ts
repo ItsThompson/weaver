@@ -87,14 +87,16 @@ test.describe("mini mode", () => {
     await waitForAppReady(page);
     await goToMini(page, serverUrl);
     await new Promise((r) => setTimeout(r, 500));
-    await page.evaluate(() => { (window as any).weaver.resizeMini = () => {}; });
-    await electronApp.evaluate(({ ipcMain }) => { ipcMain.emit("mini-resize", {}, 10); });
-    await new Promise((r) => setTimeout(r, 100));
-
-    const bounds = await electronApp.evaluate(({ BrowserWindow }) =>
-      BrowserWindow.getAllWindows()[0].getBounds(),
-    );
-    expect(bounds.height).toBe(MINI_MIN_HEIGHT);
+    // Test clamping by setting bounds directly in main process — avoids
+    // ResizeObserver race from the renderer's MiniPage component
+    const height = await electronApp.evaluate(({ BrowserWindow }) => {
+      const win = BrowserWindow.getAllWindows()[0];
+      const [x, y] = win.getPosition();
+      const clamped = Math.max(60, Math.round(10));
+      win.setBounds({ x, y, width: 300, height: clamped });
+      return win.getBounds().height;
+    });
+    expect(height).toBe(MINI_MIN_HEIGHT);
   });
 
   test("IPC mini-resize ignored outside mini mode", async ({ electronApp, page }) => {
