@@ -22,6 +22,8 @@ if (!command || command === '--help' || command === '-h') {
   console.log(`Usage: weaver <command>
 
 Commands:
+  chat              Start an interactive ACP chat session
+  chat --resume ID  Resume a previous session
   view              Navigate dashboard to the current kiro-cli session
   session           Navigate dashboard to the sessions list (default: list)
   session list      Navigate dashboard to the sessions list

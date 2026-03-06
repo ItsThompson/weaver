@@ -35,6 +35,13 @@ get_caller_pid() {
   echo "$pid"
 }
 
+# Delegate 'chat' directly to the acp-client package
+if [ "${1:-}" = "chat" ]; then
+  shift
+  ACP_DIR="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)/acp-client"
+  exec npx --prefix "$ACP_DIR" tsx "$ACP_DIR/src/index.ts" "$@"
+fi
+
 # Always resolve the caller PID and pass it as the first arg.
 # The TS CLI decides what to do with it.
 CALLER_PID=$(get_caller_pid)
