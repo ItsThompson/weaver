@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { revalidateSessions, revalidateSession } from '../queries';
+import { revalidateSessions, revalidateSession, revalidateConfig } from '../queries';
 
 export function useSessionEvents(debounceMs = 1000): void {
   useEffect(() => {
@@ -17,6 +17,10 @@ export function useSessionEvents(debounceMs = 1000): void {
           revalidateSession(sessionId);
         }, debounceMs));
       } catch { /* ignore malformed */ }
+    });
+
+    source.addEventListener('configChanged', () => {
+      revalidateConfig();
     });
 
     return () => {

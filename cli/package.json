@@ -11,7 +11,9 @@
     "dev": "tsx src/index.ts",
     "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest && bash ../bin/weaver.test.sh"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@weaver/shared": "*"
+  },
   "devDependencies": {
     "@jest/globals": "^30.2.0",
     "@types/jest": "^30.0.0",
