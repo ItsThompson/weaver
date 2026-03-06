@@ -1,28 +1,21 @@
 #!/bin/bash
 set -euo pipefail
 
-# Weaver logging hook for kiro-cli.
-# Captures hook events from stdin and writes them to local files in ~/.weaver/.
-# Creates session metadata and per-session event logs that the weaver dashboard reads.
-# Does not communicate with the weaver server - only writes to disk.
+# Weaver hook for kiro-cli.
+# Lightweight signal mechanism: creates PID marker files and notifies the weaver server.
+# The ACP client handles full persistence via SQLite — this hook is retained for
+# PID tracking and as a fallback for non-weaver sessions (kiro-cli chat directly).
 
 WEAVER_DIR="$HOME/.weaver"
-LOGS_DIR="$WEAVER_DIR/logs"
-SESSIONS_FILE="$WEAVER_DIR/sessions.jsonl"
-MAX_RESPONSE_LENGTH="${WEAVER_MAX_RESPONSE_LENGTH:-500}"
 WEAVER_SERVER="${WEAVER_SERVER:-http://localhost:8143}"
 
-mkdir -p "$LOGS_DIR"
+mkdir -p "$WEAVER_DIR"
 
 # Read hook event JSON from STDIN
 EVENT=$(cat)
-TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 HOOK_EVENT_NAME=$(echo "$EVENT" | grep -o '"hook_event_name":"[^"]*"' | head -1 | cut -d'"' -f4)
-CWD=$(echo "$EVENT" | grep -o '"cwd":"[^"]*"' | head -1 | cut -d'"' -f4)
 
 # Walk up the process tree, skipping shell processes, to find the kiro-cli PID.
-# In practice $PPID is already the kiro-cli PID (verified empirically), but this
-# fallback handles cases where an intermediate shell is inserted.
 get_caller_pid() {
   local pid="$PPID"
   local max_depth=5
@@ -54,70 +47,23 @@ get_caller_pid() {
 CALLER_PID=$(get_caller_pid)
 SESSION_FILE="$WEAVER_DIR/.current-session-$CALLER_PID"
 
-# Truncate tool_response.result values exceeding MAX_RESPONSE_LENGTH.
-# Uses a simple approach: if the event contains tool_response, pipe through
-# a truncation pass. This avoids pulling in jq as a dependency.
-truncate_response() {
-  local event="$1"
-  local max_len="$MAX_RESPONSE_LENGTH"
-
-  if echo "$event" | grep -q '"tool_response"'; then
-    echo "$event" | jq -c --argjson max "$max_len" '
-      if .tool_response.result then
-        .tool_response.result |= map(
-          if type == "string" and (length > $max) then .[:$max] + "...[truncated]"
-          else . end
-        )
-      else . end
-    '
-  else
-    echo "$event"
-  fi
-}
-
 if [ "$HOOK_EVENT_NAME" = "agentSpawn" ]; then
-  SESSION_ID=$(uuidgen | tr '[:upper:]' '[:lower:]')
-  echo "$SESSION_ID" > "$SESSION_FILE"
-
-  # Try to extract agent name from the kiro-cli process args (--agent <name>)
-  AGENT_NAME=$(ps -p "$CALLER_PID" -o args= 2>/dev/null | grep -o '\-\-agent [^ ]*' | awk '{print $2}' || echo "")
-  AGENT_JSON="null"
-  if [ -n "$AGENT_NAME" ]; then
-    AGENT_JSON="\"$AGENT_NAME\""
-  fi
-
-  # Append session metadata to the index
-  SESSION_META="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":$AGENT_JSON,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\"}"
-  echo "$SESSION_META" >> "$SESSIONS_FILE"
-
-  # Create the per-session log file
-  touch "$LOGS_DIR/$SESSION_ID.jsonl"
-else
-  if [ -f "$SESSION_FILE" ]; then
-    SESSION_ID=$(cat "$SESSION_FILE")
-  else
-    SESSION_ID="orphan"
-  fi
+  # Write marker file for PID tracking
+  echo "$CALLER_PID" > "$SESSION_FILE"
 fi
 
-# Truncate large tool responses before logging
-EVENT=$(truncate_response "$EVENT")
-
-# Build the log entry — include PID for orphan events so they can be grouped
-if [ "$SESSION_ID" = "orphan" ]; then
-  echo "{\"timestamp\":\"$TIMESTAMP\",\"pid\":$CALLER_PID,\"event\":$EVENT}" >> "$LOGS_DIR/orphan.jsonl"
+# Determine session identifier for notify — use marker file existence to detect orphans
+SESSION_ID=""
+if [ -f "$SESSION_FILE" ]; then
+  SESSION_ID="hook-$CALLER_PID"
 else
-  echo "{\"timestamp\":\"$TIMESTAMP\",\"event\":$EVENT}" >> "$LOGS_DIR/$SESSION_ID.jsonl"
+  echo "weaver: no session found for PID $CALLER_PID — event not tracked" >&2
+  exit 1
 fi
 
 # Notify weaver server of the update (fire-and-forget, async background)
 curl -s --max-time 1 -X POST "$WEAVER_SERVER/api/notify" \
   -H "Content-Type: application/json" \
   -d "{\"sessionId\":\"$SESSION_ID\",\"eventName\":\"$HOOK_EVENT_NAME\"}" >/dev/null 2>&1 &
-
-if [ "$SESSION_ID" = "orphan" ]; then
-  echo "weaver: no session found for PID $CALLER_PID — event logged to orphan queue" >&2
-  exit 1
-fi
 
 exit 0
