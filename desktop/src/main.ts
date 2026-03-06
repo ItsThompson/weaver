@@ -4,6 +4,7 @@ import * as server from './server';
 import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible, isMiniMode, navigateToMini, navigateToMain, _getTestState } from './window';
 import { createTray } from './tray';
 import { fetchConfig, putConfig } from './config';
+import { subscribeSSE } from './sse';
 
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
@@ -45,6 +46,14 @@ app.on('ready', async () => {
   );
   globalShortcut.register('F5', toggleWindow);
   showWindow(); // marks visible=true; actual show happens on ready-to-show
+
+  subscribeSSE(server.SERVER_URL, (event, data) => {
+    if (event === 'configChanged') {
+      const newConfig = data as unknown as WeaverConfig;
+      currentConfig = newConfig;
+      setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
+    }
+  });
 
   if (process.env.WEAVER_TEST) {
     (global as any).__weaverTest = {
