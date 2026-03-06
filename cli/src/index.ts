@@ -3,6 +3,7 @@ import { view } from './commands/view.js';
 import { session } from './commands/session.js';
 import { rename } from './commands/rename.js';
 import { toggle } from './commands/toggle.js';
+import { config } from './commands/config.js';
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -14,6 +15,7 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   session,
   rename,
   toggle,
+  config,
 };
 
 if (!command || command === '--help' || command === '-h') {
@@ -25,7 +27,11 @@ Commands:
   session list      Navigate dashboard to the sessions list
   session <PID>     Navigate dashboard to a specific session by PID
   rename <name>     Rename the current kiro-cli session
-  toggle            Toggle between main and mini mode`);
+  toggle            Toggle between main and mini mode
+  config ghost      Toggle ghost mode (or: on | off)
+  config ghost opacity <0-1>  Set ghost opacity
+  config dark       Toggle dark mode (or: on | off)
+  config sounds     Toggle notification sounds (or: on | off)`);
   process.exit(0);
 }
 
