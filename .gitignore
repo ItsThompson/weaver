@@ -5,3 +5,5 @@ dist/
 .turbo
 .DS_Store
 .kiro/settings/
+e2e/test-results/
+e2e/playwright-report/
