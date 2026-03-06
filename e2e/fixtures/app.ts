@@ -40,7 +40,7 @@ export const test = base.extend<AppFixtures>({
     const app = await _electron.launch({
       args: [MAIN_ENTRY],
       cwd: REPO_ROOT,
-      env: { ...process.env, HOME: tmpDir, USERPROFILE: tmpDir },
+      env: { ...process.env, HOME: tmpDir, USERPROFILE: tmpDir, WEAVER_TEST: '1' },
     });
     await use(app);
     // Kill the forked server process first (app.exit() doesn't fire will-quit,

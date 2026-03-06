@@ -1,7 +1,7 @@
 import { app, globalShortcut } from 'electron';
 import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
 import * as server from './server';
-import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible, isMiniMode, navigateToMini, navigateToMain } from './window';
+import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible, isMiniMode, navigateToMini, navigateToMain, _getTestState } from './window';
 import { createTray } from './tray';
 import { fetchConfig, putConfig } from './config';
 
@@ -45,6 +45,22 @@ app.on('ready', async () => {
   );
   globalShortcut.register('F5', toggleWindow);
   showWindow(); // marks visible=true; actual show happens on ready-to-show
+
+  if (process.env.WEAVER_TEST) {
+    (global as any).__weaverTest = {
+      toggleWindow,
+      showWindow,
+      setGhostMode,
+      isWindowVisible,
+      isMiniMode,
+      getState: _getTestState,
+      toggleGhost: () => {
+        currentConfig.ghost_mode = !currentConfig.ghost_mode;
+        setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
+        return currentConfig.ghost_mode;
+      },
+    };
+  }
 });
 
 app.on('will-quit', () => {
