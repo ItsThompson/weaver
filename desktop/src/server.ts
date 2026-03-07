@@ -1,4 +1,4 @@
-import { fork, execSync, ChildProcess } from 'node:child_process';
+import { spawn, execSync, ChildProcess } from 'node:child_process';
 import { resolve } from 'node:path';
 import http from 'node:http';
 import { app } from 'electron';
@@ -31,7 +31,7 @@ export function start(): void {
   if (isPacked) {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, 'client/dist');
   }
-  child = fork(serverEntry, [], { stdio: 'inherit', env });
+  child = spawn('node', [serverEntry], { stdio: 'inherit', env });
   child.on('exit', (code) => {
     if (code !== 0 && code !== null) {
       console.error(`Server exited with code ${code}`);
