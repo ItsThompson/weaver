@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { WeaverDb } from '@weaver/shared/db';
-import { createExtensionHandler, type ExtensionHandlerDeps } from './extensions.js';
+import { createExtensionHandler, type ExtensionHandlerDeps } from './extensions/index.js';
 
 describe('createExtensionHandler', () => {
   let db: WeaverDb;

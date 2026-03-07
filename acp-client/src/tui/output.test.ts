@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
 import { PassThrough } from 'node:stream';
-import { createOutputController, type OutputController } from './output.js';
+import { createOutputController, type OutputController } from './output/index.js';
 
 describe('OutputController', () => {
   let output: PassThrough;
@@ -49,27 +49,20 @@ describe('OutputController', () => {
   });
 
   describe('updateToolCall', () => {
-    it('displays status icon for completed', () => {
+    it.each([
+      { status: 'completed', icon: '✅' },
+      { status: 'failed', icon: '❌' },
+      { status: 'pending', icon: '⏳' },
+      { status: 'weird', icon: '❓' },
+    ])('displays $icon for status "$status"', ({ status, icon }) => {
+      ctrl.updateToolCall('tc1', status);
+      expect(collected()).toContain(icon);
+      expect(collected()).toContain(`[${status}]`);
+    });
+
+    it('includes content suffix when provided', () => {
       ctrl.updateToolCall('tc1', 'completed', 'done');
-      expect(collected()).toContain('✅');
-      expect(collected()).toContain('[completed]');
       expect(collected()).toContain('done');
-    });
-
-    it('displays status icon for failed', () => {
-      ctrl.updateToolCall('tc1', 'failed');
-      expect(collected()).toContain('❌');
-      expect(collected()).toContain('[failed]');
-    });
-
-    it('displays status icon for pending', () => {
-      ctrl.updateToolCall('tc1', 'pending');
-      expect(collected()).toContain('⏳');
-    });
-
-    it('uses fallback icon for unknown status', () => {
-      ctrl.updateToolCall('tc1', 'weird');
-      expect(collected()).toContain('❓');
     });
 
     it('omits content suffix when not provided', () => {

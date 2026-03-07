@@ -13,9 +13,16 @@ interface KiroMcpConfig {
   mcpServers?: Record<string, KiroMcpServerEntry>;
 }
 
+function isKiroMcpConfig(value: unknown): value is KiroMcpConfig {
+  if (typeof value !== 'object' || value === null) return false;
+  const obj = value as Record<string, unknown>;
+  return !('mcpServers' in obj) || typeof obj.mcpServers === 'object';
+}
+
 function readConfigFile(path: string): KiroMcpConfig | null {
   try {
-    return JSON.parse(readFileSync(path, 'utf-8')) as KiroMcpConfig;
+    const parsed: unknown = JSON.parse(readFileSync(path, 'utf-8'));
+    return isKiroMcpConfig(parsed) ? parsed : null;
   } catch {
     return null;
   }

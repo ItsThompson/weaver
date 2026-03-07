@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from '@jest/globals';
-import { CommandRegistry, type SlashCommand, type CommandContext } from './commands.js';
+import { CommandRegistry, type SlashCommand, type CommandContext } from './commands/index.js';
 
 function makeCommand(overrides: Partial<SlashCommand> = {}): SlashCommand {
   return {
@@ -31,10 +31,8 @@ describe('CommandRegistry', () => {
     });
 
     it('overwrites a command with the same name', () => {
-      const cmd1 = makeCommand({ name: 'quit', description: 'first' });
-      const cmd2 = makeCommand({ name: 'quit', description: 'second' });
-      registry.register(cmd1);
-      registry.register(cmd2);
+      registry.register(makeCommand({ name: 'quit', description: 'first' }));
+      registry.register(makeCommand({ name: 'quit', description: 'second' }));
       expect(registry.get('quit')?.description).toBe('second');
     });
   });
@@ -48,111 +46,76 @@ describe('CommandRegistry', () => {
       registry.register(makeCommand({ name: 'a' }));
       registry.register(makeCommand({ name: 'b' }));
       registry.register(makeCommand({ name: 'c' }));
-      const names = registry.getAll().map((c) => c.name);
-      expect(names).toEqual(['a', 'b', 'c']);
+      expect(registry.getAll().map((c) => c.name)).toEqual(['a', 'b', 'c']);
     });
   });
 
   describe('findByShortcut', () => {
-    it('finds command by ctrl shortcut', () => {
-      const cmd = makeCommand({ name: 'editor', shortcut: { key: 'e', ctrl: true } });
+    it.each([
+      { key: 'e', ctrl: true, shift: false, shortcut: { key: 'e', ctrl: true }, matches: true },
+      { key: 'x', ctrl: false, shift: true, shortcut: { key: 'x', shift: true }, matches: true },
+      { key: 'p', ctrl: false, shift: false, shortcut: { key: 'p' }, matches: true },
+      { key: 'e', ctrl: false, shift: false, shortcut: { key: 'e', ctrl: true }, matches: false },
+      { key: 'p', ctrl: true, shift: false, shortcut: { key: 'p' }, matches: false },
+      { key: 'r', ctrl: true, shift: false, shortcut: { key: 'e', ctrl: true }, matches: false },
+    ])('key=$key ctrl=$ctrl shift=$shift with shortcut $shortcut → matches=$matches', ({ key, ctrl, shift, shortcut, matches }) => {
+      const cmd = makeCommand({ name: 'test', shortcut });
       registry.register(cmd);
-      expect(registry.findByShortcut('e', true, false)).toBe(cmd);
-    });
-
-    it('finds command by shift shortcut', () => {
-      const cmd = makeCommand({ name: 'special', shortcut: { key: 'x', shift: true } });
-      registry.register(cmd);
-      expect(registry.findByShortcut('x', false, true)).toBe(cmd);
-    });
-
-    it('returns undefined when no shortcut matches', () => {
-      registry.register(makeCommand({ name: 'editor', shortcut: { key: 'e', ctrl: true } }));
-      expect(registry.findByShortcut('r', true, false)).toBeUndefined();
-    });
-
-    it('does not match when ctrl differs', () => {
-      registry.register(makeCommand({ name: 'editor', shortcut: { key: 'e', ctrl: true } }));
-      expect(registry.findByShortcut('e', false, false)).toBeUndefined();
-    });
-
-    it('treats missing ctrl/shift as false', () => {
-      const cmd = makeCommand({ name: 'plain', shortcut: { key: 'p' } });
-      registry.register(cmd);
-      expect(registry.findByShortcut('p', false, false)).toBe(cmd);
-      expect(registry.findByShortcut('p', true, false)).toBeUndefined();
+      const result = registry.findByShortcut(key, ctrl, shift);
+      if (matches) {
+        expect(result).toBe(cmd);
+      } else {
+        expect(result).toBeUndefined();
+      }
     });
   });
 
   describe('handleInput', () => {
     it('dispatches a slash command and returns true', async () => {
       const calls: string[] = [];
-      registry.register(makeCommand({
-        name: 'quit',
-        handler: async () => { calls.push('quit'); },
-      }));
-      const result = await registry.handleInput('/quit', mockContext);
-      expect(result).toBe(true);
+      registry.register(makeCommand({ name: 'quit', handler: async () => { calls.push('quit'); } }));
+      expect(await registry.handleInput('/quit', mockContext)).toBe(true);
       expect(calls).toEqual(['quit']);
     });
 
     it('passes args to the handler', async () => {
       const receivedArgs: string[] = [];
-      registry.register(makeCommand({
-        name: 'reply',
-        handler: async (args) => { receivedArgs.push(args); },
-      }));
+      registry.register(makeCommand({ name: 'reply', handler: async (args) => { receivedArgs.push(args); } }));
       await registry.handleInput('/reply 3', mockContext);
       expect(receivedArgs).toEqual(['3']);
     });
 
     it('passes empty string when no args', async () => {
       const receivedArgs: string[] = [];
-      registry.register(makeCommand({
-        name: 'help',
-        handler: async (args) => { receivedArgs.push(args); },
-      }));
+      registry.register(makeCommand({ name: 'help', handler: async (args) => { receivedArgs.push(args); } }));
       await registry.handleInput('/help', mockContext);
       expect(receivedArgs).toEqual(['']);
     });
 
-    it('returns false for non-command input', async () => {
-      const result = await registry.handleInput('hello world', mockContext);
-      expect(result).toBe(false);
-    });
-
-    it('returns false for unregistered command', async () => {
-      const result = await registry.handleInput('/unknown', mockContext);
-      expect(result).toBe(false);
+    it.each([
+      { input: 'hello world', desc: 'non-command input' },
+      { input: '/unknown', desc: 'unregistered command' },
+    ])('returns false for $desc', async ({ input }) => {
+      expect(await registry.handleInput(input, mockContext)).toBe(false);
     });
 
     it('handles leading/trailing whitespace', async () => {
       const calls: string[] = [];
-      registry.register(makeCommand({
-        name: 'quit',
-        handler: async () => { calls.push('quit'); },
-      }));
-      const result = await registry.handleInput('  /quit  ', mockContext);
-      expect(result).toBe(true);
+      registry.register(makeCommand({ name: 'quit', handler: async () => { calls.push('quit'); } }));
+      expect(await registry.handleInput('  /quit  ', mockContext)).toBe(true);
       expect(calls).toEqual(['quit']);
     });
 
     it('trims args whitespace', async () => {
       const receivedArgs: string[] = [];
-      registry.register(makeCommand({
-        name: 'model',
-        handler: async (args) => { receivedArgs.push(args); },
-      }));
+      registry.register(makeCommand({ name: 'model', handler: async (args) => { receivedArgs.push(args); } }));
       await registry.handleInput('/model   claude-opus-4-20250514  ', mockContext);
       expect(receivedArgs).toEqual(['claude-opus-4-20250514']);
     });
 
     it('passes context to handler', async () => {
       let receivedContext: CommandContext | undefined;
-      registry.register(makeCommand({
-        name: 'test',
-        handler: async (_args, ctx) => { receivedContext = ctx; },
-      }));
+      registry.register(makeCommand({ name: 'test', handler: async (_args, ctx) => { receivedContext = ctx; } }));
       await registry.handleInput('/test', mockContext);
       expect(receivedContext).toBe(mockContext);
     });

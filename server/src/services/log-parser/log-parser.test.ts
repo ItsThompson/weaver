@@ -29,25 +29,14 @@ beforeEach(() => {
 });
 
 describe('deriveActivity', () => {
-  it('returns starting for agentSpawn', () => {
-    expect(deriveActivity('agentSpawn')).toBe('starting');
-  });
-
-  it('returns idle for stop', () => {
-    expect(deriveActivity('stop')).toBe('idle');
-  });
-
-  it('returns running_tool for recent preToolUse', () => {
-    expect(deriveActivity('preToolUse', new Date().toISOString())).toBe('running_tool');
-  });
-
-  it('returns pending_approval for old preToolUse', () => {
-    const old = new Date(Date.now() - 20_000).toISOString();
-    expect(deriveActivity('preToolUse', old)).toBe('pending_approval');
-  });
-
-  it('returns processing for other events', () => {
-    expect(deriveActivity('userPromptSubmit')).toBe('processing');
+  it.each([
+    { event: 'agentSpawn', timestamp: undefined, expected: 'starting' },
+    { event: 'stop', timestamp: undefined, expected: 'idle' },
+    { event: 'preToolUse', timestamp: new Date().toISOString(), expected: 'running_tool' },
+    { event: 'preToolUse', timestamp: new Date(Date.now() - 20_000).toISOString(), expected: 'pending_approval' },
+    { event: 'userPromptSubmit', timestamp: undefined, expected: 'processing' },
+  ])('returns "$expected" for $event', ({ event, timestamp, expected }) => {
+    expect(deriveActivity(event, timestamp)).toBe(expected);
   });
 });
 
@@ -154,11 +143,11 @@ describe('groupEventsByTurn', () => {
 
 describe('buildTurnsFromSqlite', () => {
   function makeMsg(overrides: Partial<MessageRow> & { role: string; type: string; created_at: string }): MessageRow {
-    return { id: 1, session_id: 'test', content: null, metadata: null, ...overrides } as MessageRow;
+    return { id: 1, session_id: 'test', content: null, metadata: null, ...overrides };
   }
 
   function makeTc(overrides: Partial<ToolCallRow> & { id: string; tool_name: string; started_at: string }): ToolCallRow {
-    return { session_id: 'test', message_id: null, kind: null, status: 'completed', input: null, output: null, permission_response: null, completed_at: null, ...overrides } as ToolCallRow;
+    return { session_id: 'test', message_id: null, kind: null, status: 'completed', input: null, output: null, permission_response: null, completed_at: null, ...overrides };
   }
 
   it('returns empty array for no data', () => {

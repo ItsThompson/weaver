@@ -1,22 +1,4 @@
-import type { PlanEntry } from '@agentclientprotocol/sdk';
-
-export interface ToolCallDisplay {
-  toolCallId: string;
-  title: string;
-  kind: string;
-  status: string;
-}
-
-export interface OutputController {
-  writeChunk(text: string): void;
-  endMessage(): void;
-  showToolCall(toolCall: ToolCallDisplay): void;
-  updateToolCall(toolCallId: string, status: string, content?: string): void;
-  showPlan(entries: PlanEntry[]): void;
-  showSystem(message: string): void;
-  showError(message: string): void;
-  clear(): void;
-}
+import type { OutputController } from './types.js';
 
 const STATUS_ICONS: Record<string, string> = {
   pending: '⏳',
@@ -39,7 +21,7 @@ export function createOutputController(output: NodeJS.WritableStream = process.s
       output.write('\n');
     },
 
-    showToolCall(toolCall: ToolCallDisplay): void {
+    showToolCall(toolCall): void {
       output.write(`\n🔧 [${toolCall.status}] ${toolCall.title}\n`);
     },
 
@@ -49,7 +31,7 @@ export function createOutputController(output: NodeJS.WritableStream = process.s
       output.write(`${icon} [${status}]${suffix}\n`);
     },
 
-    showPlan(entries: PlanEntry[]): void {
+    showPlan(entries): void {
       output.write('\n📋 Plan:\n');
       for (let i = 0; i < entries.length; i++) {
         const entry = entries[i];

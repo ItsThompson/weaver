@@ -19,6 +19,16 @@ export interface InputControllerOptions {
   output?: NodeJS.WritableStream;
 }
 
+function hasSetRawMode(stream: NodeJS.ReadableStream): stream is NodeJS.ReadStream {
+  return 'setRawMode' in stream && typeof (stream as NodeJS.ReadStream).setRawMode === 'function';
+}
+
+// readline exposes `line` and `cursor` as internal properties not in the type defs
+interface ReadlineInternals extends ReadlineInterface {
+  line: string;
+  cursor: number;
+}
+
 export function createInputController(options: InputControllerOptions): InputController {
   let rl: ReadlineInterface | null = null;
   let buffer = '';
@@ -27,13 +37,13 @@ export function createInputController(options: InputControllerOptions): InputCon
 
   return {
     start(onSubmit) {
-      const input = (options.input ?? process.stdin) as NodeJS.ReadableStream;
-      const output = (options.output ?? process.stdout) as NodeJS.WritableStream;
+      const input = options.input ?? process.stdin;
+      const output = options.output ?? process.stdout;
 
       rl = createInterface({ input, output, prompt: options.prompt, terminal: true });
 
-      if ('setRawMode' in input && typeof (input as NodeJS.ReadStream).setRawMode === 'function') {
-        (input as NodeJS.ReadStream).setRawMode(true);
+      if (hasSetRawMode(input)) {
+        input.setRawMode(true);
       }
 
       rl.on('line', async (line) => {
@@ -43,11 +53,9 @@ export function createInputController(options: InputControllerOptions): InputCon
         await onSubmit(text);
       });
 
-      // Handle keypress for special keys
       input.on('keypress', (_ch: string | undefined, key: { name?: string; ctrl?: boolean; shift?: boolean; sequence?: string } | undefined) => {
         if (paused || !key) return;
 
-        // ctrl+c: double-tap to quit
         if (key.ctrl && key.name === 'c') {
           const now = Date.now();
           if (now - lastCtrlC < 2000) {
@@ -55,25 +63,22 @@ export function createInputController(options: InputControllerOptions): InputCon
             return;
           }
           lastCtrlC = now;
-          const out = options.output ?? process.stdout;
-          (out as NodeJS.WritableStream).write('\n(Press Ctrl+C again to quit)\n');
+          output.write('\n(Press Ctrl+C again to quit)\n');
           rl?.prompt();
           return;
         }
 
-        // ctrl+j: insert newline into buffer
         if (key.ctrl && key.name === 'j') {
-          buffer += (rl as ReadlineInterface & { line?: string })?.line + '\n';
-          if (rl) {
-            (rl as ReadlineInterface & { line: string }).line = '';
-            (rl as ReadlineInterface & { cursor: number }).cursor = 0;
+          const internals = rl as unknown as ReadlineInternals | null;
+          buffer += (internals?.line ?? '') + '\n';
+          if (internals) {
+            internals.line = '';
+            internals.cursor = 0;
           }
-          const out = options.output ?? process.stdout;
-          (out as NodeJS.WritableStream).write('\n... ');
+          output.write('\n... ');
           return;
         }
 
-        // Delegate other ctrl shortcuts
         if (key.ctrl && key.name) {
           if (options.onShortcut(key.name, true)) return;
         }
@@ -103,11 +108,7 @@ export async function openEditor(initialContent?: string): Promise<string | null
   const dir = await mkdtemp(join(tmpdir(), 'weaver-'));
   const tmpFile = join(dir, 'prompt.md');
 
-  if (initialContent) {
-    await writeFile(tmpFile, initialContent, 'utf-8');
-  } else {
-    await writeFile(tmpFile, '', 'utf-8');
-  }
+  await writeFile(tmpFile, initialContent ?? '', 'utf-8');
 
   const editor = editorCmd();
   const parts = editor.split(/\s+/);
@@ -115,9 +116,7 @@ export async function openEditor(initialContent?: string): Promise<string | null
   const args = [...parts.slice(1), tmpFile];
 
   await new Promise<void>((resolve, reject) => {
-    const child = spawn(cmd, args, {
-      stdio: 'inherit',
-    });
+    const child = spawn(cmd, args, { stdio: 'inherit' });
     child.once('exit', (code) => {
       if (code === 0) resolve();
       else reject(new Error(`Editor exited with code ${code}`));

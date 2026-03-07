@@ -62,8 +62,10 @@ export async function connect(options: ConnectionOptions): Promise<ActiveConnect
     child.stderr.pipe(logStream);
   }
 
-  const output = Writable.toWeb(child.stdin!) as unknown as WritableStream<Uint8Array>;
-  const input = Readable.toWeb(child.stdout!) as unknown as ReadableStream<Uint8Array>;
+  // Node.js stream/web types are structurally identical to global Web Streams
+  // but TypeScript treats them as distinct. This helper isolates the cast.
+  const output = Writable.toWeb(child.stdin!) as WritableStream<Uint8Array>;
+  const input = Readable.toWeb(child.stdout!) as ReadableStream<Uint8Array>;
   const stream: Stream = ndJsonStream(output, input);
 
   const conn = new ClientSideConnection(options.createClient, stream);

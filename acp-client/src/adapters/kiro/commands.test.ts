@@ -1,15 +1,16 @@
 import { describe, it, expect } from '@jest/globals';
-import { createForwardedCommands, type CommandRegistration } from './commands.js';
+import { createForwardedCommands } from './commands.js';
 import type { KiroAdapter } from './index.js';
+
+function mockAdapter(executedCommands: string[]): Pick<KiroAdapter, 'executeCommand'> {
+  return {
+    executeCommand: async (_sid: string, cmd: string) => { executedCommands.push(cmd); },
+  };
+}
 
 describe('createForwardedCommands', () => {
   it('creates registrations for all forwarded commands', () => {
-    const executedCommands: string[] = [];
-    const mockAdapter = {
-      executeCommand: async (_sid: string, cmd: string) => { executedCommands.push(cmd); },
-    } as unknown as KiroAdapter;
-
-    const commands = createForwardedCommands(mockAdapter, 'sess-1');
+    const commands = createForwardedCommands(mockAdapter([]) as KiroAdapter, 'sess-1');
 
     const names = commands.map((c) => c.name);
     expect(names).toContain('compact');
@@ -29,11 +30,7 @@ describe('createForwardedCommands', () => {
 
   it('handler calls executeCommand with correct format', async () => {
     const executedCommands: string[] = [];
-    const mockAdapter = {
-      executeCommand: async (_sid: string, cmd: string) => { executedCommands.push(cmd); },
-    } as unknown as KiroAdapter;
-
-    const commands = createForwardedCommands(mockAdapter, 'sess-1');
+    const commands = createForwardedCommands(mockAdapter(executedCommands) as KiroAdapter, 'sess-1');
     const compact = commands.find((c) => c.name === 'compact')!;
 
     await compact.handler('');
@@ -42,11 +39,7 @@ describe('createForwardedCommands', () => {
 
   it('handler passes args to executeCommand', async () => {
     const executedCommands: string[] = [];
-    const mockAdapter = {
-      executeCommand: async (_sid: string, cmd: string) => { executedCommands.push(cmd); },
-    } as unknown as KiroAdapter;
-
-    const commands = createForwardedCommands(mockAdapter, 'sess-1');
+    const commands = createForwardedCommands(mockAdapter(executedCommands) as KiroAdapter, 'sess-1');
     const model = commands.find((c) => c.name === 'model')!;
 
     await model.handler('claude-opus-4-20250514');
@@ -54,11 +47,7 @@ describe('createForwardedCommands', () => {
   });
 
   it('each command has a description', () => {
-    const mockAdapter = {
-      executeCommand: async () => {},
-    } as unknown as KiroAdapter;
-
-    const commands = createForwardedCommands(mockAdapter, 'sess-1');
+    const commands = createForwardedCommands(mockAdapter([]) as KiroAdapter, 'sess-1');
     for (const cmd of commands) {
       expect(cmd.description).toBeTruthy();
     }

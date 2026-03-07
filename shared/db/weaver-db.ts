@@ -96,6 +96,14 @@ export class WeaverDb {
     this.db.exec(SCHEMA_SQL);
   }
 
+  private queryOne<T>(sql: string, ...params: unknown[]): T | undefined {
+    return this.db.prepare(sql).get(...params) as T | undefined;
+  }
+
+  private queryAll<T>(sql: string, ...params: unknown[]): T[] {
+    return this.db.prepare(sql).all(...params) as T[];
+  }
+
   // --- Sessions ---
 
   createSession(session: Omit<SessionRow, 'updated_at'>): void {
@@ -107,11 +115,11 @@ export class WeaverDb {
   }
 
   getSession(id: string): SessionRow | null {
-    return (this.db.prepare('SELECT * FROM sessions WHERE id = ?').get(id) as SessionRow | undefined) ?? null;
+    return this.queryOne<SessionRow>('SELECT * FROM sessions WHERE id = ?', id) ?? null;
   }
 
   listSessions(): SessionRow[] {
-    return this.db.prepare('SELECT * FROM sessions ORDER BY created_at DESC').all() as SessionRow[];
+    return this.queryAll<SessionRow>('SELECT * FROM sessions ORDER BY created_at DESC');
   }
 
   updateSession(id: string, updates: Partial<Pick<SessionRow, 'agent_session_id' | 'pid' | 'custom_name' | 'model' | 'status' | 'context_usage_percent'>>): void {
@@ -141,7 +149,7 @@ export class WeaverDb {
   }
 
   getMessages(sessionId: string): MessageRow[] {
-    return this.db.prepare('SELECT * FROM messages WHERE session_id = ? ORDER BY created_at ASC').all(sessionId) as MessageRow[];
+    return this.queryAll<MessageRow>('SELECT * FROM messages WHERE session_id = ? ORDER BY created_at ASC', sessionId);
   }
 
   // --- Tool Calls ---
@@ -159,7 +167,7 @@ export class WeaverDb {
   }
 
   getToolCalls(sessionId: string): ToolCallRow[] {
-    return this.db.prepare('SELECT * FROM tool_calls WHERE session_id = ? ORDER BY started_at ASC').all(sessionId) as ToolCallRow[];
+    return this.queryAll<ToolCallRow>('SELECT * FROM tool_calls WHERE session_id = ? ORDER BY started_at ASC', sessionId);
   }
 
   // --- Events ---
@@ -172,7 +180,7 @@ export class WeaverDb {
   }
 
   getEvents(sessionId: string): EventRow[] {
-    return this.db.prepare('SELECT * FROM events WHERE session_id = ? ORDER BY created_at ASC').all(sessionId) as EventRow[];
+    return this.queryAll<EventRow>('SELECT * FROM events WHERE session_id = ? ORDER BY created_at ASC', sessionId);
   }
 
   // --- Lifecycle ---

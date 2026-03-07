@@ -4,11 +4,11 @@ import { connect } from '../core/connection.js';
 import { createSessionManager } from '../core/session.js';
 import { createClientHandler, defaultReadFile, defaultWriteFile } from '../core/client-handler.js';
 import { KiroAdapter } from '../adapters/kiro/index.js';
-import { createExtensionHandler } from '../adapters/kiro/extensions.js';
-import { createOutputController } from './output.js';
+import { createExtensionHandler } from '../adapters/kiro/extensions/index.js';
+import { createOutputController } from './output/index.js';
 import { createInputController, openEditor } from './input.js';
-import { CommandRegistry } from './commands.js';
-import type { CommandContext } from './commands.js';
+import { CommandRegistry } from './commands/index.js';
+import type { CommandContext } from './commands/index.js';
 import { promptApproval } from './approval.js';
 import { persistMessageChunk, persistToolCall, persistToolCallUpdate, persistEvent } from '../storage/index.js';
 import { notifyServer } from '../storage/event-emitter.js';
@@ -46,8 +46,9 @@ export async function startTui(options: TuiOptions): Promise<void> {
   const clientFactory = createClientHandler({
     onMessageChunk(_sid: string, chunk: ContentChunk, role: 'user' | 'assistant') {
       if (internalId) persistMessageChunk(db, internalId, chunk, role);
-      if (role === 'assistant' && chunk.content && typeof (chunk.content as { text?: string }).text === 'string') {
-        output.writeChunk((chunk.content as { text: string }).text);
+      const block = chunk.content;
+      if (role === 'assistant' && 'text' in block && typeof block.text === 'string') {
+        output.writeChunk(block.text);
       }
     },
     onToolCall(_sid: string, toolCall: ToolCall) {

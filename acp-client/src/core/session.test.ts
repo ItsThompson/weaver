@@ -1,104 +1,19 @@
 import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
-import {
-  ClientSideConnection,
-  AgentSideConnection,
-  ndJsonStream,
-  PROTOCOL_VERSION,
-} from '@agentclientprotocol/sdk';
-import type {
-  Client,
-  Agent,
-  SessionNotification,
-  PromptRequest,
-  ContentBlock,
-  SessionModeState,
-} from '@agentclientprotocol/sdk';
+import { PROTOCOL_VERSION } from '@agentclientprotocol/sdk';
+import type { ContentBlock } from '@agentclientprotocol/sdk';
 import { WeaverDb } from '@weaver/shared/db';
 import { createSessionManager } from './session.js';
 import type { SessionManager } from './types.js';
-
-// --- Helpers ---
-
-interface MockAgentOptions {
-  sessionId?: string;
-  modes?: SessionModeState;
-  onPrompt?: (params: PromptRequest) => void;
-  onCancel?: () => void;
-  onSetMode?: (modeId: string) => void;
-  onLoadSession?: () => void;
-}
-
-function setupConnection(agentOpts: MockAgentOptions = {}) {
-  const clientToAgent = new TransformStream();
-  const agentToClient = new TransformStream();
-
-  let agentConn: AgentSideConnection;
-  const sessionUpdates: SessionNotification[] = [];
-
-  const client = new ClientSideConnection(
-    (): Client => ({
-      async requestPermission() {
-        return { outcome: { outcome: 'selected' as const, optionId: 'allow' } };
-      },
-      async sessionUpdate(params: SessionNotification) {
-        sessionUpdates.push(params);
-      },
-    }),
-    ndJsonStream(clientToAgent.writable, agentToClient.readable),
-  );
-
-  agentConn = new AgentSideConnection(
-    (conn): Agent => ({
-      async initialize() {
-        return {
-          protocolVersion: PROTOCOL_VERSION,
-          agentCapabilities: { loadSession: true },
-          agentInfo: { name: 'mock-agent', version: '1.0.0' },
-        };
-      },
-      async authenticate() {},
-      async newSession() {
-        return {
-          sessionId: agentOpts.sessionId ?? 'agent-session-1',
-          modes: agentOpts.modes,
-        };
-      },
-      async loadSession() {
-        agentOpts.onLoadSession?.();
-        return {};
-      },
-      async prompt(params) {
-        agentOpts.onPrompt?.(params);
-        return { stopReason: 'end_turn' as const };
-      },
-      async cancel() {
-        agentOpts.onCancel?.();
-      },
-      async setSessionMode(params) {
-        agentOpts.onSetMode?.(params.modeId);
-      },
-    }),
-    ndJsonStream(agentToClient.writable, clientToAgent.readable),
-  );
-
-  return { client, agentConn, sessionUpdates };
-}
-
-// --- Tests ---
+import { setupInProcessConnection } from '../__tests__/setup.js';
 
 describe('SessionManager', () => {
   let db: WeaverDb;
 
-  beforeEach(() => {
-    db = new WeaverDb({ dbPath: ':memory:' });
-  });
-
-  afterEach(() => {
-    db.close();
-  });
+  beforeEach(() => { db = new WeaverDb({ dbPath: ':memory:' }); });
+  afterEach(() => { db.close(); });
 
   it('createSession returns session ID and stores in SQLite', async () => {
-    const { client } = setupConnection({ sessionId: 'acp-sess-42' });
+    const { client } = setupInProcessConnection({ sessionId: 'acp-sess-42' });
     await client.initialize({
       protocolVersion: PROTOCOL_VERSION,
       clientInfo: { name: 'weaver', version: '1.0.0' },
@@ -125,14 +40,11 @@ describe('SessionManager', () => {
   });
 
   it('createSession returns modes when agent provides them', async () => {
-    const modes: SessionModeState = {
-      availableModes: [
-        { id: 'code', name: 'Code' },
-        { id: 'ask', name: 'Ask' },
-      ],
+    const modes = {
+      availableModes: [{ id: 'code', name: 'Code' }, { id: 'ask', name: 'Ask' }],
       currentModeId: 'code',
     };
-    const { client } = setupConnection({ modes });
+    const { client } = setupInProcessConnection({ modes });
     await client.initialize({
       protocolVersion: PROTOCOL_VERSION,
       clientInfo: { name: 'weaver', version: '1.0.0' },
@@ -141,15 +53,12 @@ describe('SessionManager', () => {
 
     const sm = createSessionManager({ agent: client, db });
     const result = await sm.createSession('/tmp', []);
-
     expect(result.modes).toEqual(modes);
   });
 
   it('loadSession calls agent.loadSession', async () => {
     let loadCalled = false;
-    const { client } = setupConnection({
-      onLoadSession: () => { loadCalled = true; },
-    });
+    const { client } = setupInProcessConnection({ onLoadSession: () => { loadCalled = true; } });
     await client.initialize({
       protocolVersion: PROTOCOL_VERSION,
       clientInfo: { name: 'weaver', version: '1.0.0' },
@@ -158,13 +67,12 @@ describe('SessionManager', () => {
 
     const sm = createSessionManager({ agent: client, db });
     await sm.loadSession('existing-session', '/tmp', []);
-
     expect(loadCalled).toBe(true);
   });
 
   it('sendPrompt sends content and returns stop reason', async () => {
     let receivedPrompt: ContentBlock[] | null = null;
-    const { client } = setupConnection({
+    const { client } = setupInProcessConnection({
       sessionId: 'sess-1',
       onPrompt: (params) => { receivedPrompt = params.prompt; },
     });
@@ -175,18 +83,14 @@ describe('SessionManager', () => {
     });
 
     const sm = createSessionManager({ agent: client, db });
-    const content: ContentBlock[] = [{ type: 'text', text: 'hello' }];
-    const response = await sm.sendPrompt('sess-1', content);
-
+    const response = await sm.sendPrompt('sess-1', [{ type: 'text', text: 'hello' }]);
     expect(response.stopReason).toBe('end_turn');
     expect(receivedPrompt).toEqual([{ type: 'text', text: 'hello' }]);
   });
 
   it('cancel sends cancel notification', async () => {
     let cancelCalled = false;
-    const { client } = setupConnection({
-      onCancel: () => { cancelCalled = true; },
-    });
+    const { client } = setupInProcessConnection({ onCancel: () => { cancelCalled = true; } });
     await client.initialize({
       protocolVersion: PROTOCOL_VERSION,
       clientInfo: { name: 'weaver', version: '1.0.0' },
@@ -195,15 +99,12 @@ describe('SessionManager', () => {
 
     const sm = createSessionManager({ agent: client, db });
     await sm.cancel('sess-1');
-
     expect(cancelCalled).toBe(true);
   });
 
   it('setMode calls agent.setSessionMode', async () => {
     let receivedModeId: string | null = null;
-    const { client } = setupConnection({
-      onSetMode: (modeId) => { receivedModeId = modeId; },
-    });
+    const { client } = setupInProcessConnection({ onSetMode: (modeId) => { receivedModeId = modeId; } });
     await client.initialize({
       protocolVersion: PROTOCOL_VERSION,
       clientInfo: { name: 'weaver', version: '1.0.0' },
@@ -212,7 +113,6 @@ describe('SessionManager', () => {
 
     const sm = createSessionManager({ agent: client, db });
     await sm.setMode('sess-1', 'ask');
-
     expect(receivedModeId).toBe('ask');
   });
 });
