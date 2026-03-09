@@ -58,6 +58,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
       toolCalls: matchToolCalls(currentEvents),
       startTime: turnStart ?? currentEvents[0].timestamp,
       endTime,
+      validationResults: [],
     });
     currentEvents = [];
     currentPrompt = null;
@@ -77,6 +78,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
         toolCalls: [],
         startTime: event.timestamp,
         endTime: event.timestamp,
+        validationResults: [],
       });
       continue;
     }

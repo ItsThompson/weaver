@@ -49,6 +49,7 @@ const mockTurns: TurnGroup[] = [
     events: [{ timestamp: '2024-01-01T10:00:00Z', event: { hook_event_name: 'agentSpawn', cwd: '/test/path' } }],
     userPrompt: null,
     toolCalls: [],
+    validationResults: [],
   },
   {
     id: 2,
@@ -57,6 +58,7 @@ const mockTurns: TurnGroup[] = [
     events: [{ timestamp: '2024-01-01T10:05:00Z', event: { hook_event_name: 'userPrompt', cwd: '/test/path' } }],
     userPrompt: 'Test user prompt',
     toolCalls: [],
+    validationResults: [],
   },
 ];
 
