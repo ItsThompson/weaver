@@ -3,9 +3,17 @@ export interface WeaverProjectConfig {
 }
 
 export interface ValidationConfig {
+  test_runners?: string[];
   stop?: StopValidationHook[];
   postToolUse?: PostToolValidationHook[];
 }
+
+export const DEFAULT_TEST_RUNNERS = [
+  'jest', 'vitest', 'mocha', 'pytest', 'rspec',
+  'cargo test', 'npm test', 'npx test',
+  'bundle exec rspec', 'bundle exec rake test',
+  'go test', 'dotnet test', 'phpunit',
+];
 
 export interface StopValidationHook {
   name: string;

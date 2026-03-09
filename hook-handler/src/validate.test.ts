@@ -18,6 +18,7 @@ jest.unstable_mockModule('node:fs', () => ({
 
 jest.unstable_mockModule('./config.js', () => ({
   readProjectConfig: jest.fn<() => WeaverProjectConfig | null>(),
+  resolveTestRunners: jest.fn<() => string[]>(),
 }));
 
 jest.unstable_mockModule('./changed-files.js', () => ({
@@ -34,7 +35,7 @@ jest.unstable_mockModule('./scope.js', () => ({
 
 const cp = await import('node:child_process');
 const fs = await import('node:fs');
-const { readProjectConfig } = await import('./config.js');
+const { readProjectConfig, resolveTestRunners } = await import('./config.js');
 const { extractChangedFiles } = await import('./changed-files.js');
 const { extractAgentTestedDirs } = await import('./agent-tests.js');
 const { resolveTestDirs } = await import('./scope.js');
@@ -43,6 +44,7 @@ const mockSpawnSync = cp.spawnSync as jest.MockedFunction<typeof cp.spawnSync>;
 const mockAppendFileSync = fs.appendFileSync as jest.MockedFunction<typeof fs.appendFileSync>;
 const mockWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>;
 const mockReadProjectConfig = readProjectConfig as jest.MockedFunction<typeof readProjectConfig>;
+const mockResolveTestRunners = resolveTestRunners as jest.MockedFunction<typeof resolveTestRunners>;
 const mockExtractChangedFiles = extractChangedFiles as jest.MockedFunction<typeof extractChangedFiles>;
 const mockExtractAgentTestedDirs = extractAgentTestedDirs as jest.MockedFunction<typeof extractAgentTestedDirs>;
 const mockResolveTestDirs = resolveTestDirs as jest.MockedFunction<typeof resolveTestDirs>;
@@ -61,6 +63,7 @@ beforeEach(() => {
   jest.clearAllMocks();
   mockFetch = jest.fn<typeof globalThis.fetch>().mockResolvedValue(new Response());
   globalThis.fetch = mockFetch;
+  mockResolveTestRunners.mockReturnValue(['jest', 'vitest', 'npm test']);
 });
 
 function spawnResult(overrides: Partial<SpawnSyncReturns<string>> = {}): SpawnSyncReturns<string> {

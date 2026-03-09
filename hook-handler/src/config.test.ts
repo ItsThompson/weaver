@@ -6,7 +6,7 @@ jest.unstable_mockModule('node:fs', () => ({
 }));
 
 const fs = await import('node:fs');
-const { readProjectConfig } = await import('./config.js');
+const { readProjectConfig, resolveTestRunners } = await import('./config.js');
 
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;
@@ -93,5 +93,51 @@ describe('readProjectConfig', () => {
     mockReadFileSync.mockReturnValue(JSON.stringify({ validation: { stop: [hook] } }));
     const result = readProjectConfig('/project');
     expect(result!.validation!.stop![0]).toEqual(hook);
+  });
+
+  it('parses test_runners from project config', () => {
+    mockExistsSync.mockReturnValue(true);
+    mockReadFileSync.mockReturnValue(JSON.stringify({ validation: { test_runners: ['rspec', 'mix test'] } }));
+    const result = readProjectConfig('/project');
+    expect(result!.validation!.test_runners).toEqual(['rspec', 'mix test']);
+  });
+
+  it('filters non-string test_runners entries', () => {
+    mockExistsSync.mockReturnValue(true);
+    mockReadFileSync.mockReturnValue(JSON.stringify({ validation: { test_runners: ['jest', 42, null] } }));
+    const result = readProjectConfig('/project');
+    expect(result!.validation!.test_runners).toEqual(['jest']);
+  });
+});
+
+describe('resolveTestRunners', () => {
+  it('returns defaults when no project or global config', () => {
+    mockExistsSync.mockReturnValue(false);
+    const runners = resolveTestRunners(null);
+    expect(runners).toContain('jest');
+    expect(runners).toContain('rspec');
+  });
+
+  it('merges project runners with defaults', () => {
+    mockExistsSync.mockReturnValue(false);
+    const runners = resolveTestRunners({ validation: { test_runners: ['mix test'] } });
+    expect(runners).toContain('jest');
+    expect(runners).toContain('mix test');
+  });
+
+  it('merges global runners with project runners', () => {
+    // First call: .weaver (project config) — handled by readProjectConfig, not us
+    // existsSync calls here are for ~/.weaver/config.json
+    mockExistsSync.mockReturnValue(true);
+    mockReadFileSync.mockReturnValue(JSON.stringify({ test_runners: ['custom-global'] }));
+    const runners = resolveTestRunners({ validation: { test_runners: ['custom-project'] } });
+    expect(runners).toContain('custom-global');
+    expect(runners).toContain('custom-project');
+  });
+
+  it('deduplicates runners', () => {
+    mockExistsSync.mockReturnValue(false);
+    const runners = resolveTestRunners({ validation: { test_runners: ['jest'] } });
+    expect(runners.filter((r) => r === 'jest').length).toBe(1);
   });
 });

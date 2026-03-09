@@ -3,7 +3,7 @@ import { appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { homedir } from 'node:os';
 import type { ValidationResult, ValidationEvent, StopValidationHook } from '@weaver/shared/types';
-import { readProjectConfig } from './config.js';
+import { readProjectConfig, resolveTestRunners } from './config.js';
 import { extractChangedFiles } from './changed-files.js';
 import { extractAgentTestedDirs } from './agent-tests.js';
 import { resolveTestDirs } from './scope.js';
@@ -151,7 +151,8 @@ export function runValidation(args: ValidateArgs): ValidateResult {
     if (!config?.validation?.stop?.length) return { exitCode: 0 };
 
     const changedFiles = extractChangedFiles(sessionLogPath);
-    const agentTestedDirs = extractAgentTestedDirs(sessionLogPath, args.cwd);
+    const testRunners = resolveTestRunners(config);
+    const agentTestedDirs = extractAgentTestedDirs(sessionLogPath, args.cwd, testRunners);
     const results: ValidationResult[] = [];
 
     for (const hook of config.validation.stop) {

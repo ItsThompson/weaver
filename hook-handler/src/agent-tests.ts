@@ -1,9 +1,14 @@
 import { resolve, relative } from 'node:path';
 import { getCurrentTurnEvents } from './turn-boundary.js';
 
-const TEST_RUNNER_RE = /\b(jest|vitest|mocha|pytest|cargo\s+test|npm\s+test|npx\s+test)\b/;
+export function buildTestRunnerRegex(runners: string[]): RegExp {
+  const escaped = runners.map((r) => r.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'));
+  return new RegExp(`\\b(${escaped.join('|')})\\b`);
+}
 
-export function extractAgentTestedDirs(sessionLogPath: string, cwd: string): string[] {
+export function extractAgentTestedDirs(sessionLogPath: string, cwd: string, testRunners: string[]): string[] {
+  if (!testRunners.length) return [];
+  const re = buildTestRunnerRegex(testRunners);
   const events = getCurrentTurnEvents(sessionLogPath);
   const dirs: string[] = [];
 
@@ -13,7 +18,7 @@ export function extractAgentTestedDirs(sessionLogPath: string, cwd: string): str
     const command = e.event.tool_input?.command;
     if (typeof command !== 'string') continue;
 
-    const match = TEST_RUNNER_RE.exec(command);
+    const match = re.exec(command);
     if (!match) continue;
 
     const afterRunner = command.slice(match.index + match[0].length).trim();
