@@ -28,6 +28,7 @@ Create a `.weaver` file (JSON) in your project root:
 ```json
 {
   "validation": {
+    "test_runners": ["mix test"],
     "stop": [
       {
         "name": "typecheck",
@@ -47,9 +48,13 @@ Create a `.weaver` file (JSON) in your project root:
 }
 ```
 
-The config is read from the current working directory of the kiro-cli session. There is no global config — each project has its own `.weaver` file.
+The config is read from the current working directory of the kiro-cli session.
 
 Invalid hooks (missing required fields) are silently filtered out with a STDERR warning. Invalid JSON or a missing file means no validation runs.
+
+### `test_runners`
+
+Optional array of test runner patterns used for [agent test deduplication](#agent-test-deduplication). Per-project entries are merged with global defaults from `~/.weaver/config.json` and the built-in default list. See [Customizing test runners](#customizing-test-runners) for details.
 
 ## Schema reference
 
@@ -108,9 +113,36 @@ The `scope` field on `stop` hooks controls how test directories are derived from
 
 The validation runner scans the current turn's `execute_bash` events for known test runner invocations. If the agent already ran tests covering a directory, the validation runner skips redundant test runs for that directory.
 
-### Detected test runners
+### Default test runners
 
-`jest`, `vitest`, `mocha`, `pytest`, `cargo test`, `npm test`, `npx test`
+`jest`, `vitest`, `mocha`, `pytest`, `rspec`, `cargo test`, `npm test`, `npx test`, `bundle exec rspec`, `bundle exec rake test`, `go test`, `dotnet test`, `phpunit`
+
+### Customizing test runners
+
+The runner list is resolved by merging three sources (deduplicated):
+
+1. **Built-in defaults** — the list above
+2. **Global config** — `test_runners` array in `~/.weaver/config.json`
+3. **Project config** — `test_runners` array in `.weaver` `validation` block
+
+Global entries extend the defaults. Project entries extend the result. This means you never need to repeat the defaults — just add what's missing.
+
+```json
+// ~/.weaver/config.json — applies to all projects
+{
+  "test_runners": ["bun test"]
+}
+```
+
+```json
+// .weaver — project-specific additions
+{
+  "validation": {
+    "test_runners": ["mix test", "elixir -S mix test"],
+    "stop": [...]
+  }
+}
+```
 
 ### Deduplication logic
 
@@ -311,9 +343,9 @@ Then invoke it in a kiro-cli session with `/prompt fix-validation` after seeing 
 
 - **Extension-only glob matching (v1)**: `run_if_files_match` only supports extension-based patterns like `**/*.{ts,tsx}` or `**/*.py`. Full glob patterns with directory matching or negation are not supported. Unrecognized patterns match all files (safe default).
 - **No pre-tool blocking**: v1 only supports `stop` and `postToolUse` validation. There is no `preToolUse` validation that could block a tool call before it executes.
-- **Single config location**: Only `.weaver` in the project root (CWD) is read. There is no global config or config inheritance.
+- **Single config location for hooks**: Validation hooks (`stop`, `postToolUse`) are read from `.weaver` in the project root only. `~/.weaver/config.json` provides global `test_runners` but not hook definitions.
 - **No IPC to kiro-cli**: Validation cannot programmatically send messages to an active session. Communication is limited to exit codes, STDERR, and STDOUT as defined by kiro-cli's hook contract.
-- **Agent test deduplication is heuristic**: Only known test runner patterns are detected. Custom test scripts or unusual invocations won't be recognized. The safe default is to run the validation.
+- **Agent test deduplication is heuristic**: Detection relies on pattern-matching known test runner names in `execute_bash` commands. Custom runners can be added via `test_runners` in `~/.weaver/config.json` or the project `.weaver` file. Unusual invocations that don't match any pattern won't be recognized. The safe default is to run the validation.
 - **Symlinks outside CWD**: If a changed file's real path (after symlink resolution) is outside CWD, the derived test directory clamps to `"."` (project root).
 - **Validation runner crashes**: If the Node.js validation runner itself crashes (as opposed to a validation command failing), `weaver-log.sh` swallows the error and exits 0. This ensures logging always succeeds even if validation is broken. The crash is distinguished from a real validation failure by checking for the `⚠ weaver:` marker in STDERR.
 - **Pending file is per-session**: Only one pending file exists at a time per session (`<session-id>.pending`). If the agent fails validation on consecutive turns without a `userPromptSubmit` in between, the pending file is overwritten with the latest results.
