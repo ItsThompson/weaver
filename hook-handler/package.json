@@ -2,7 +2,19 @@
   "name": "weaver-hook-handler",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "test": "bash weaver-log.test.sh"
+    "build": "tsc",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests && bash weaver-log.test.sh"
+  },
+  "dependencies": {
+    "@weaver/shared": "*"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^22.15.3",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.4",
+    "typescript": "^5.8.3"
   }
 }
