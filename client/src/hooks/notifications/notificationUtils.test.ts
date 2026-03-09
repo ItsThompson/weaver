@@ -49,6 +49,16 @@ describe('resolveNotification', () => {
     expect(resolveNotification('abcdefgh-1234', 'agentSpawn', undefined, lastActivity)).toBe('abcdefgh → Starting');
   });
 
+  it('returns validation message for validation event', () => {
+    expect(resolveNotification('s1', 'validation', 'My Session', lastActivity)).toBe('My Session → Validation complete');
+  });
+
+  it('always shows validation even when activity is unchanged', () => {
+    resolveNotification('s1', 'userPromptSubmit', 'X', lastActivity);
+    // validation bypasses dedup — would normally be silenced as processing → processing
+    expect(resolveNotification('s1', 'validation', 'X', lastActivity)).toBe('X → Validation complete');
+  });
+
   it('simulates full session lifecycle', () => {
     const events = [
       'agentSpawn', 'userPromptSubmit', 'preToolUse', 'postToolUse',

@@ -26,6 +26,13 @@ export function resolveNotification(
   sessionName: string | undefined,
   lastActivity: Map<string, string>,
 ): string | null {
+  const name = sessionName || sessionId.slice(0, 8);
+
+  // Validation events always produce a notification, bypassing activity dedup
+  if (eventName === 'validation') {
+    return `${name} → Validation complete`;
+  }
+
   const activity = deriveActivity(eventName);
   const prev = lastActivity.get(sessionId);
   lastActivity.set(sessionId, activity);
@@ -36,7 +43,6 @@ export function resolveNotification(
     || (prev === 'running_tool' && activity === 'processing');
   if (skip) return null;
 
-  const name = sessionName || sessionId.slice(0, 8);
   const label = ACTIVITY_LABELS[activity] ?? activity;
   return `${name} → ${label}`;
 }
