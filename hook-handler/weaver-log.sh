@@ -120,4 +120,32 @@ if [ "$SESSION_ID" = "orphan" ]; then
   exit 1
 fi
 
+# -- Validation ---------------------------------------------------------------
+WEAVER_HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+VALIDATE_SCRIPT="$WEAVER_HOOK_DIR/dist/validate.js"
+INJECT_SCRIPT="$WEAVER_HOOK_DIR/dist/inject.js"
+
+if [ "$HOOK_EVENT_NAME" = "stop" ] || [ "$HOOK_EVENT_NAME" = "postToolUse" ]; then
+  if [ -f "$VALIDATE_SCRIPT" ]; then
+    TOOL_NAME=$(echo "$EVENT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")
+    VALIDATE_EXIT=0
+    VALIDATE_STDERR=$(node "$VALIDATE_SCRIPT" \
+      --session-id "$SESSION_ID" \
+      --cwd "$CWD" \
+      --trigger "$HOOK_EVENT_NAME" \
+      --tool-name "$TOOL_NAME" \
+      --tool-input "$EVENT" 2>&1 1>/dev/null) || VALIDATE_EXIT=$?
+    if [ "$VALIDATE_EXIT" -ne 0 ] && echo "$VALIDATE_STDERR" | grep -q "⚠ weaver:"; then
+      echo "$VALIDATE_STDERR" >&2
+      exit "$VALIDATE_EXIT"
+    fi
+  fi
+fi
+
+if [ "$HOOK_EVENT_NAME" = "userPromptSubmit" ]; then
+  if [ -f "$INJECT_SCRIPT" ]; then
+    node "$INJECT_SCRIPT" --session-id "$SESSION_ID" 2>/dev/null || true
+  fi
+fi
+
 exit 0
