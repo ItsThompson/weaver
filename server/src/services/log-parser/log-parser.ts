@@ -1,7 +1,7 @@
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
-import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
+import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus, ValidationResult } from '@weaver/shared/types';
 import { log } from '../../utils/logger';
 import { FileCache, parseJsonlFile } from '../file-cache/index';
 
@@ -43,6 +43,16 @@ export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {
   );
 }
 
+function extractValidationResults(evts: HookEvent[]): ValidationResult[] {
+  const results: ValidationResult[] = [];
+  for (const e of evts) {
+    if (e.event.hook_event_name === 'validation' && Array.isArray((e.event as any).results)) {
+      results.push(...(e.event as any).results);
+    }
+  }
+  return results;
+}
+
 export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   const turns: TurnGroup[] = [];
   let currentEvents: HookEvent[] = [];
@@ -58,7 +68,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
       toolCalls: matchToolCalls(currentEvents),
       startTime: turnStart ?? currentEvents[0].timestamp,
       endTime,
-      validationResults: [],
+      validationResults: extractValidationResults(currentEvents),
     });
     currentEvents = [];
     currentPrompt = null;

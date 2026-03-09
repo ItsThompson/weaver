@@ -146,4 +146,52 @@ describe('groupEventsByTurn', () => {
     expect(turns[0].toolCalls[0].toolName).toBe('execute_bash');
     expect(turns[0].toolCalls[0].response).toBeUndefined();
   });
+
+  it('extracts validationResults from a validation event', () => {
+    const results = [
+      { name: 'typecheck', passed: true, output: '', duration_ms: 1200, timed_out: false },
+      { name: 'test', passed: false, output: 'FAIL src/app.test.ts', duration_ms: 3400, timed_out: false },
+    ];
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'fix it' }),
+      makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/a.ts' } }),
+      makeEvent('validation', { trigger: 'stop', results, changed_files: ['/a.ts'], agent_tested_dirs: [] }),
+      makeEvent('stop'),
+    ];
+    const turns = groupEventsByTurn(events);
+    expect(turns[0].validationResults).toEqual(results);
+  });
+
+  it('concatenates results from multiple validation events', () => {
+    const r1 = [{ name: 'lint', passed: true, output: '', duration_ms: 500, timed_out: false }];
+    const r2 = [{ name: 'test', passed: false, output: 'err', duration_ms: 2000, timed_out: false }];
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'go' }),
+      makeEvent('validation', { trigger: 'postToolUse', results: r1, changed_files: [], agent_tested_dirs: [] }),
+      makeEvent('validation', { trigger: 'stop', results: r2, changed_files: [], agent_tested_dirs: [] }),
+      makeEvent('stop'),
+    ];
+    const turns = groupEventsByTurn(events);
+    expect(turns[0].validationResults).toEqual([...r1, ...r2]);
+  });
+
+  it('returns empty validationResults when no validation events', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'hello' }),
+      makeEvent('stop'),
+    ];
+    const turns = groupEventsByTurn(events);
+    expect(turns[0].validationResults).toEqual([]);
+  });
+
+  it('returns empty validationResults for malformed validation event', () => {
+    const events = [
+      makeEvent('userPromptSubmit', { prompt: 'hello' }),
+      makeEvent('validation', { trigger: 'stop', results: 'not-an-array' }),
+      makeEvent('validation', { trigger: 'stop' }),
+      makeEvent('stop'),
+    ];
+    const turns = groupEventsByTurn(events);
+    expect(turns[0].validationResults).toEqual([]);
+  });
 });
