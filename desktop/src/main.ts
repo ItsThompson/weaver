@@ -49,7 +49,7 @@ app.on('ready', async () => {
 
   subscribeSSE(server.SERVER_URL, (event, data) => {
     if (event === 'configChanged') {
-      const newConfig = data as unknown as WeaverConfig;
+      const newConfig = data as WeaverConfig;
       currentConfig = newConfig;
       setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
     }

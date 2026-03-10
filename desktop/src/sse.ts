@@ -1,6 +1,6 @@
 import http from 'node:http';
 
-type EventHandler = (event: string, data: Record<string, unknown>) => void;
+type EventHandler = (event: string, data: unknown) => void;
 
 export function subscribeSSE(baseUrl: string, onEvent: EventHandler): void {
   function connect() {
