@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --noEmit && tsdown",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests && bash weaver-log.test.sh"
   },
   "dependencies": {
@@ -15,6 +15,7 @@
     "@types/node": "^22.15.3",
     "jest": "^29.7.0",
     "ts-jest": "^29.3.4",
+    "tsdown": "^0.21.0",
     "typescript": "^5.8.3"
   }
 }

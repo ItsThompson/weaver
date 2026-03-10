@@ -1,39 +1,58 @@
-import { resolve, relative } from 'node:path';
-import { getCurrentTurnEvents } from './turn-boundary.js';
+import { resolve, relative } from "node:path";
+import { getCurrentTurnEvents } from "./turn-boundary.js";
 
-export function buildTestRunnerRegex(runners: string[]): RegExp {
-  const escaped = runners.map((r) => r.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+'));
-  return new RegExp(`\\b(${escaped.join('|')})\\b`);
+/** Whitespace-bounded match — stricter than \b so "pytest" won't match inside "my-pytest-wrapper". */
+function findRunner(command: string, runner: string): number {
+  const idx = command.indexOf(runner);
+  if (idx === -1) return -1; // not found at all
+  const before = idx === 0 || /\s/.test(command[idx - 1]); // start of string or whitespace before
+  const after =
+    idx + runner.length >= command.length ||
+    /\s/.test(command[idx + runner.length]); // end of string or whitespace after
+  return before && after ? idx : -1;
 }
 
-export function extractAgentTestedDirs(sessionLogPath: string, cwd: string, testRunners: string[]): string[] {
+export function extractAgentTestedDirs(
+  sessionLogPath: string,
+  cwd: string,
+  testRunners: string[],
+): string[] {
   if (!testRunners.length) return [];
-  const re = buildTestRunnerRegex(testRunners);
-  const events = getCurrentTurnEvents(sessionLogPath);
-  const dirs: string[] = [];
 
-  for (const e of events) {
-    if (e.event.hook_event_name !== 'postToolUse' || e.event.tool_name !== 'execute_bash') continue;
+  return getCurrentTurnEvents(sessionLogPath).reduce<string[]>((dirs, e) => {
+    if (
+      e.event.hook_event_name !== "postToolUse" ||
+      e.event.tool_name !== "execute_bash"
+    )
+      return dirs;
 
     const command = e.event.tool_input?.command;
-    if (typeof command !== 'string') continue;
+    if (typeof command !== "string") return dirs;
 
-    const match = re.exec(command);
-    if (!match) continue;
+    const runner = testRunners.find((r) => findRunner(command, r) !== -1);
+    if (!runner) return dirs;
 
-    const afterRunner = command.slice(match.index + match[0].length).trim();
-    const dir = extractDirArg(afterRunner);
-    const resolved = relative(cwd, resolve(cwd, dir));
-    dirs.push(resolved || '.');
-  }
-
-  return dirs;
+    const afterRunner = command
+      .slice(findRunner(command, runner) + runner.length)
+      .trim();
+    dirs.push(relative(cwd, resolve(cwd, extractDirArg(afterRunner))) || ".");
+    return dirs;
+  }, []);
 }
 
 function extractDirArg(args: string): string {
-  const tokens = args.split(/\s+/).filter((t) => t && !t.startsWith('-'));
-  for (let i = tokens.length - 1; i >= 0; i--) {
-    if (tokens[i].includes('/')) return tokens[i].replace(/\/+$/, '');
-  }
-  return '.';
+  const tokens = args.split(/\s+/);
+
+  const dir = tokens.reduceRight((found, token) => {
+    if (found) return found;
+
+    const isFlag = token.startsWith("-");
+    const hasPath = token.includes("/");
+
+    if (!token || isFlag || !hasPath) return "";
+
+    return token.replace(/\/+$/, "");
+  }, "");
+
+  return dir || ".";
 }

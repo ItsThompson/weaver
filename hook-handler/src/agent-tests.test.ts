@@ -6,7 +6,7 @@ jest.unstable_mockModule('node:fs', () => ({
 }));
 
 const fs = await import('node:fs');
-const { extractAgentTestedDirs, buildTestRunnerRegex } = await import('./agent-tests.js');
+const { extractAgentTestedDirs } = await import('./agent-tests.js');
 
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;
@@ -116,6 +116,26 @@ describe('extractAgentTestedDirs', () => {
     expect(extractAgentTestedDirs('/missing.jsonl', '/project', DEFAULT_RUNNERS)).toEqual([]);
   });
 
+  it('does not match runner embedded in another word (e.g. my-pytest-wrapper)', () => {
+    mockExistsSync.mockReturnValue(true);
+    mockReadFileSync.mockReturnValue([
+      makeEvent('userPromptSubmit', { prompt: 'go' }),
+      makeEvent('postToolUse', { tool_name: 'execute_bash', tool_input: { command: 'my-pytest-wrapper src/' } }),
+    ].join('\n'));
+
+    expect(extractAgentTestedDirs('/log.jsonl', '/project', DEFAULT_RUNNERS)).toEqual([]);
+  });
+
+  it('matches runner with special characters like c++ test', () => {
+    mockExistsSync.mockReturnValue(true);
+    mockReadFileSync.mockReturnValue([
+      makeEvent('userPromptSubmit', { prompt: 'go' }),
+      makeEvent('postToolUse', { tool_name: 'execute_bash', tool_input: { command: 'c++ test src/' } }),
+    ].join('\n'));
+
+    expect(extractAgentTestedDirs('/log.jsonl', '/project', ['c++ test'])).toEqual(['src']);
+  });
+
   it('returns [] when test runners list is empty', () => {
     mockExistsSync.mockReturnValue(true);
     mockReadFileSync.mockReturnValue([
@@ -124,19 +144,5 @@ describe('extractAgentTestedDirs', () => {
     ].join('\n'));
 
     expect(extractAgentTestedDirs('/log.jsonl', '/project', [])).toEqual([]);
-  });
-});
-
-describe('buildTestRunnerRegex', () => {
-  it('escapes special regex characters in runner names', () => {
-    const re = buildTestRunnerRegex(['c++ test']);
-    expect(re.test('c++ test src/')).toBe(true);
-    expect(re.test('c test src/')).toBe(false);
-  });
-
-  it('handles multi-word runners with flexible whitespace', () => {
-    const re = buildTestRunnerRegex(['bundle exec rspec']);
-    expect(re.test('bundle exec rspec spec/')).toBe(true);
-    expect(re.test('bundle  exec  rspec spec/')).toBe(true);
   });
 });

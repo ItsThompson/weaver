@@ -350,8 +350,8 @@ test_stop_with_failing_validation() {
   echo "test: stop event with failing validation → non-zero exit, STDERR has summary"
   setup_validation
 
-  # Mock validate.js that reports a failure
-  cat > "$HOOK_TMP/dist/validate.js" << 'MOCK'
+  # Mock validate.mjs that reports a failure
+  cat > "$HOOK_TMP/dist/validate.mjs" << 'MOCK'
 process.stderr.write("⚠ weaver: 1/1 validations failed (test)\n");
 process.exit(1);
 MOCK
@@ -380,7 +380,7 @@ test_stop_with_passing_validation() {
   echo "test: stop event with all-passing validation → exit 0"
   setup_validation
 
-  cat > "$HOOK_TMP/dist/validate.js" << 'MOCK'
+  cat > "$HOOK_TMP/dist/validate.mjs" << 'MOCK'
 process.exit(0);
 MOCK
 
@@ -395,10 +395,10 @@ MOCK
 }
 
 test_stop_without_weaver_config() {
-  echo "test: stop event without validate.js → exit 0, logging works"
+  echo "test: stop event without validate.mjs → exit 0, logging works"
   setup_validation
 
-  # No dist/validate.js — remove the mock dir
+  # No dist/validate.mjs — remove the mock dir
   rm -rf "$HOOK_TMP/dist"
 
   local session_id
@@ -421,8 +421,8 @@ test_user_prompt_with_pending_file() {
   echo "test: userPromptSubmit with pending file → STDOUT has formatted failures"
   setup_validation
 
-  # Mock inject.js that outputs validation results
-  cat > "$HOOK_TMP/dist/inject.js" << 'MOCK'
+  # Mock inject.mjs that outputs validation results
+  cat > "$HOOK_TMP/dist/inject.mjs" << 'MOCK'
 process.stdout.write("[Weaver Validation — Previous Turn]\n\n✗ test (1.0s)\n  some error\n");
 process.exit(0);
 MOCK
@@ -442,8 +442,8 @@ test_user_prompt_without_pending_file() {
   echo "test: userPromptSubmit without pending file → no STDOUT"
   setup_validation
 
-  # Mock inject.js that outputs nothing (no pending file)
-  cat > "$HOOK_TMP/dist/inject.js" << 'MOCK'
+  # Mock inject.mjs that outputs nothing (no pending file)
+  cat > "$HOOK_TMP/dist/inject.mjs" << 'MOCK'
 process.exit(0);
 MOCK
 
@@ -461,8 +461,8 @@ test_validation_runner_crash() {
   echo "test: validation runner crash → logging succeeds, exit 0 fallback"
   setup_validation
 
-  # Mock validate.js that crashes (no weaver marker in stderr)
-  cat > "$HOOK_TMP/dist/validate.js" << 'MOCK'
+  # Mock validate.mjs that crashes (no weaver marker in stderr)
+  cat > "$HOOK_TMP/dist/validate.mjs" << 'MOCK'
 throw new Error("unexpected crash");
 MOCK
 

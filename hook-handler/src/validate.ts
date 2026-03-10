@@ -3,15 +3,11 @@ import { appendFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { homedir } from 'node:os';
 import type { ValidationResult, ValidationEvent, StopValidationHook } from '@weaver/shared/types';
+import { DEFAULT_STOP_TIMEOUT_MS, DEFAULT_POST_TOOL_TIMEOUT_MS, MAX_OUTPUT_LENGTH } from '@weaver/shared/types';
 import { readProjectConfig, resolveTestRunners } from './config.js';
 import { extractChangedFiles } from './changed-files.js';
 import { extractAgentTestedDirs } from './agent-tests.js';
 import { resolveTestDirs } from './scope.js';
-
-// Inlined from @weaver/shared/types — runtime ESM re-exports don't resolve (see progress notes)
-const DEFAULT_STOP_TIMEOUT_MS = 30_000;
-const DEFAULT_POST_TOOL_TIMEOUT_MS = 10_000;
-const MAX_OUTPUT_LENGTH = 5_000;
 
 export interface ValidateArgs {
   sessionId: string;

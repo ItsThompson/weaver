@@ -122,8 +122,8 @@ fi
 
 # -- Validation ---------------------------------------------------------------
 WEAVER_HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
-VALIDATE_SCRIPT="$WEAVER_HOOK_DIR/dist/validate.js"
-INJECT_SCRIPT="$WEAVER_HOOK_DIR/dist/inject.js"
+VALIDATE_SCRIPT="$WEAVER_HOOK_DIR/dist/validate.mjs"
+INJECT_SCRIPT="$WEAVER_HOOK_DIR/dist/inject.mjs"
 
 if [ "$HOOK_EVENT_NAME" = "stop" ] || [ "$HOOK_EVENT_NAME" = "postToolUse" ]; then
   if [ -f "$VALIDATE_SCRIPT" ]; then

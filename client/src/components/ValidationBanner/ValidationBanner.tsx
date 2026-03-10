@@ -21,9 +21,7 @@ function ResultItem({ result }: { result: ValidationResult }) {
     );
   }
 
-  const duration = result.timed_out
-    ? `${(result.duration_ms / 1000).toFixed(1)}s, timed out`
-    : `${(result.duration_ms / 1000).toFixed(1)}s`;
+  const duration = `${(result.duration_ms / 1000).toFixed(1)}s${result.timed_out ? ', timed out' : ''}`;
 
   return (
     <Box padding={{ vertical: 'xxs' }}>
@@ -47,8 +45,10 @@ function ResultItem({ result }: { result: ValidationResult }) {
 export function ValidationBanner({ results }: { results: ValidationResult[] }) {
   if (!results.length) return null;
 
-  const passed = results.filter(r => r.passed && !r.skipped_reason).length;
-  const failed = results.filter(r => !r.passed && !r.skipped_reason).length;
+  const { passed, failed } = results.reduce((acc, r) => {
+    if (r.skipped_reason) return acc;
+    return r.passed ? { ...acc, passed: acc.passed + 1 } : { ...acc, failed: acc.failed + 1 };
+  }, { passed: 0, failed: 0 });
   const allPassed = failed === 0;
 
   const header = allPassed
