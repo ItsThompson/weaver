@@ -1,0 +1,37 @@
+{
+  "validation": {
+    "stop": [
+      {
+        "name": "build",
+        "command": "npx turbo build",
+        "timeout_ms": 60000
+      },
+      {
+        "name": "test:server",
+        "command": "npm test --prefix server",
+        "run_if_files_match": "**/*.ts",
+        "timeout_ms": 60000
+      },
+      {
+        "name": "test:client",
+        "command": "npm test --prefix client",
+        "run_if_files_match": "**/*.{ts,tsx}",
+        "timeout_ms": 60000
+      },
+      {
+        "name": "test:hook-handler",
+        "command": "npm test --prefix hook-handler",
+        "run_if_files_match": "**/*.ts",
+        "timeout_ms": 60000
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "fs_write",
+        "name": "prettier",
+        "command": "npx prettier --write {{file}}",
+        "timeout_ms": 10000
+      }
+    ]
+  }
+}
