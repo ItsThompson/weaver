@@ -148,8 +148,8 @@ describe('validate - stop trigger', () => {
     runValidation(stopArgs);
     expect(spawnSync).not.toHaveBeenCalled();
     const appendCall = appendFileSync.mock.calls[0];
-    const event = JSON.parse(appendCall![1] as string);
-    expect(event.results[0].skipped_reason).toBe('no test dirs after deduplication');
+    const logEntry = JSON.parse(appendCall![1] as string);
+    expect(logEntry.event.results[0].skipped_reason).toBe('no test dirs after deduplication');
   });
 
   it('timeout kills process and marks timed_out', () => {
@@ -162,9 +162,9 @@ describe('validate - stop trigger', () => {
 
     runValidation(stopArgs);
     const appendCall = appendFileSync.mock.calls[0];
-    const event = JSON.parse(appendCall![1] as string);
-    expect(event.results[0].timed_out).toBe(true);
-    expect(event.results[0].passed).toBe(false);
+    const logEntry = JSON.parse(appendCall![1] as string);
+    expect(logEntry.event.results[0].timed_out).toBe(true);
+    expect(logEntry.event.results[0].passed).toBe(false);
   });
 
   it('output truncated at MAX_OUTPUT_LENGTH', () => {
@@ -177,8 +177,8 @@ describe('validate - stop trigger', () => {
 
     runValidation(stopArgs);
     const appendCall = appendFileSync.mock.calls[0];
-    const event = JSON.parse(appendCall![1] as string);
-    expect(event.results[0].output.length).toBe(5_000);
+    const logEntry = JSON.parse(appendCall![1] as string);
+    expect(logEntry.event.results[0].output.length).toBe(5_000);
   });
 
   it('all pass → exit 0, no pending file', () => {
@@ -269,7 +269,7 @@ describe('validate - postToolUse trigger', () => {
     });
     spawnSync.mockReturnValue(spawnResult());
 
-    runValidation({ ...postToolArgs, toolInput: '{"path":"/project/src/a.ts"}' });
+    runValidation({ ...postToolArgs, toolPath: '/project/src/a.ts' });
     expect(spawnSync).toHaveBeenCalledTimes(1);
     expect(spawnSync).toHaveBeenCalledWith(
       'prettier --write /project/src/a.ts',
@@ -283,7 +283,7 @@ describe('validate - postToolUse trigger', () => {
     });
     spawnSync.mockReturnValue(spawnResult());
 
-    runValidation({ ...postToolArgs, toolInput: '{"path":"/project/x.ts"}' });
+    runValidation({ ...postToolArgs, toolPath: '/project/x.ts' });
     expect(spawnSync).toHaveBeenCalledWith('prettier /project/x.ts', expect.objectContaining({ shell: true }));
   });
 });

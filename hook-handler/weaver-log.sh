@@ -121,20 +121,27 @@ if [ "$SESSION_ID" = "orphan" ]; then
 fi
 
 # -- Validation ---------------------------------------------------------------
-WEAVER_HOOK_DIR="$(cd "$(dirname "$0")" && pwd)"
+SCRIPT_PATH="$0"
+if [ -L "$SCRIPT_PATH" ]; then
+  SCRIPT_PATH="$(readlink "$SCRIPT_PATH")"
+fi
+WEAVER_HOOK_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 VALIDATE_SCRIPT="$WEAVER_HOOK_DIR/dist/validate.mjs"
 INJECT_SCRIPT="$WEAVER_HOOK_DIR/dist/inject.mjs"
 
 if [ "$HOOK_EVENT_NAME" = "stop" ] || [ "$HOOK_EVENT_NAME" = "postToolUse" ]; then
   if [ -f "$VALIDATE_SCRIPT" ]; then
     TOOL_NAME=$(echo "$EVENT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")
+    # Extract tool_input.path via jq — passing full $EVENT as a CLI arg corrupts
+    # backslashes in code fields (new_str/old_str), breaking JSON.parse in Node.
+    TOOL_PATH=$(echo "$EVENT" | jq -r '.tool_input.path // empty' 2>/dev/null || echo "")
     VALIDATE_EXIT=0
     VALIDATE_STDERR=$(node "$VALIDATE_SCRIPT" \
       --session-id "$SESSION_ID" \
       --cwd "$CWD" \
       --trigger "$HOOK_EVENT_NAME" \
       --tool-name "$TOOL_NAME" \
-      --tool-input "$EVENT" 2>&1 1>/dev/null) || VALIDATE_EXIT=$?
+      --tool-path "$TOOL_PATH" 2>&1 1>/dev/null) || VALIDATE_EXIT=$?
     if [ "$VALIDATE_EXIT" -ne 0 ] && echo "$VALIDATE_STDERR" | grep -q "⚠ weaver:"; then
       echo "$VALIDATE_STDERR" >&2
       exit "$VALIDATE_EXIT"

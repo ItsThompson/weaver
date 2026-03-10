@@ -11,17 +11,28 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function readFile(configPath: string): string | null {
   if (!existsSync(configPath)) return null;
-  try { return readFileSync(configPath, "utf-8"); } catch { return null; }
+  try {
+    return readFileSync(configPath, "utf-8");
+  } catch {
+    return null;
+  }
 }
 
 function parseJson(raw: string): { value: unknown } | null {
-  try { return { value: JSON.parse(raw) }; } catch {
+  try {
+    return { value: JSON.parse(raw) };
+  } catch {
     console.error("weaver: invalid JSON in .weaver config");
     return null;
   }
 }
 
-function parseValidationArray<T>(v: Record<string, unknown>, key: string, schema: z.ZodType<T>, label: string): T[] | undefined {
+function parseValidationArray<T>(
+  v: Record<string, unknown>,
+  key: string,
+  schema: z.ZodType<T>,
+  label: string,
+): T[] | undefined {
   if (v[key] === undefined) return undefined;
   if (!Array.isArray(v[key])) {
     console.error(`weaver: .weaver validation.${key} must be an array`);
@@ -50,15 +61,25 @@ export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
     return {};
   }
 
-  const v = parsed.validation;
+  const validation = parsed.validation;
 
   return {
     validation: {
-      test_runners: Array.isArray(v.test_runners)
-        ? v.test_runners.filter((r: unknown) => typeof r === "string")
+      test_runners: Array.isArray(validation.test_runners)
+        ? validation.test_runners.filter((r: unknown) => typeof r === "string")
         : undefined,
-      stop: parseValidationArray(v, 'stop', stopHookSchema, "stop hook (missing name or command)"),
-      postToolUse: parseValidationArray(v, 'postToolUse', postToolHookSchema, "postToolUse hook (missing name, command, or matcher)"),
+      stop: parseValidationArray(
+        validation,
+        "stop",
+        stopHookSchema,
+        "stop hook (missing name or command)",
+      ),
+      postToolUse: parseValidationArray(
+        validation,
+        "postToolUse",
+        postToolHookSchema,
+        "postToolUse hook (missing name, command, or matcher)",
+      ),
     },
   };
 }
