@@ -1,26 +1,15 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
+import { mockFs, makeEvent } from '../__test-helpers__/index';
 
-jest.unstable_mockModule('node:fs', () => ({
-  readFileSync: jest.fn<() => string>(),
-  existsSync: jest.fn<() => boolean>(),
-}));
-
-const fs = await import('node:fs');
+const { existsSync, readFileSync } = await mockFs();
 const { extractChangedFiles } = await import('./changed-files');
-
-const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
-const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;
-
-function makeEvent(hook_event_name: string, extra: Record<string, unknown> = {}) {
-  return JSON.stringify({ timestamp: '2026-01-01T00:00:00Z', event: { hook_event_name, cwd: '/project', ...extra } });
-}
 
 beforeEach(() => { jest.clearAllMocks(); });
 
 describe('extractChangedFiles', () => {
   it('extracts file paths from fs_write postToolUse events in current turn', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'go' }),
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/src/a.ts' } }),
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/src/b.ts' } }),
@@ -30,8 +19,8 @@ describe('extractChangedFiles', () => {
   });
 
   it('deduplicates repeated writes to the same file', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'go' }),
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/src/a.ts' } }),
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/src/a.ts' } }),
@@ -41,8 +30,8 @@ describe('extractChangedFiles', () => {
   });
 
   it('ignores events from previous turns', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'first' }),
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/old.ts' } }),
       makeEvent('stop'),
@@ -54,13 +43,13 @@ describe('extractChangedFiles', () => {
   });
 
   it('returns [] for empty session log', () => {
-    mockExistsSync.mockReturnValue(false);
+    existsSync.mockReturnValue(false);
     expect(extractChangedFiles('/missing.jsonl')).toEqual([]);
   });
 
   it('returns [] when no fs_write events in turn', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'go' }),
       makeEvent('postToolUse', { tool_name: 'fs_read', tool_input: { path: '/project/x.ts' } }),
     ].join('\n'));
@@ -69,8 +58,8 @@ describe('extractChangedFiles', () => {
   });
 
   it('handles malformed log lines gracefully', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'go' }),
       'broken json line',
       makeEvent('postToolUse', { tool_name: 'fs_write', tool_input: { path: '/project/ok.ts' } }),

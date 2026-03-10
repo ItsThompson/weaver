@@ -1,26 +1,15 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
+import { mockFs, makeEvent } from '../__test-helpers__/index';
 
-jest.unstable_mockModule('node:fs', () => ({
-  readFileSync: jest.fn<() => string>(),
-  existsSync: jest.fn<() => boolean>(),
-}));
-
-const fs = await import('node:fs');
+const { existsSync, readFileSync } = await mockFs();
 const { getCurrentTurnEvents } = await import('./turn-boundary');
-
-const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
-const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;
-
-function makeEvent(hook_event_name: string, extra: Record<string, unknown> = {}) {
-  return JSON.stringify({ timestamp: '2026-01-01T00:00:00Z', event: { hook_event_name, cwd: '/project', ...extra } });
-}
 
 beforeEach(() => { jest.clearAllMocks(); });
 
 describe('getCurrentTurnEvents', () => {
   it('returns events after last userPromptSubmit', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('agentSpawn'),
       makeEvent('userPromptSubmit', { prompt: 'first' }),
       makeEvent('postToolUse', { tool_name: 'fs_write' }),
@@ -36,8 +25,8 @@ describe('getCurrentTurnEvents', () => {
   });
 
   it('returns events after last agentSpawn when no userPromptSubmit follows', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('agentSpawn'),
       makeEvent('postToolUse', { tool_name: 'fs_write' }),
     ].join('\n'));
@@ -48,8 +37,8 @@ describe('getCurrentTurnEvents', () => {
   });
 
   it('returns all events when no boundary event exists', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('postToolUse', { tool_name: 'fs_write' }),
       makeEvent('stop'),
     ].join('\n'));
@@ -59,19 +48,19 @@ describe('getCurrentTurnEvents', () => {
   });
 
   it('returns [] for missing log file', () => {
-    mockExistsSync.mockReturnValue(false);
+    existsSync.mockReturnValue(false);
     expect(getCurrentTurnEvents('/missing.jsonl')).toEqual([]);
   });
 
   it('returns [] for empty log file', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue('');
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue('');
     expect(getCurrentTurnEvents('/empty.jsonl')).toEqual([]);
   });
 
   it('skips malformed lines gracefully', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue([
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue([
       makeEvent('userPromptSubmit', { prompt: 'hi' }),
       'not valid json',
       makeEvent('postToolUse', { tool_name: 'fs_write' }),

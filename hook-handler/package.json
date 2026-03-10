@@ -5,10 +5,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc --noEmit && tsdown",
-    "test": "node --experimental-vm-modules node_modules/.bin/jest --passWithNoTests && bash weaver-log.test.sh"
+    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest --passWithNoTests && bash weaver-log.test.sh"
   },
   "dependencies": {
-    "@weaver/shared": "*"
+    "@weaver/shared": "*",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

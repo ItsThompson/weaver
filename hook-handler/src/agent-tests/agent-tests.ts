@@ -1,5 +1,5 @@
 import { resolve, relative } from "node:path";
-import { getCurrentTurnEvents } from "./turn-boundary.js";
+import { getCurrentTurnEvents } from "../turn-boundary/index.js";
 
 /** Whitespace-bounded match — stricter than \b so "pytest" won't match inside "my-pytest-wrapper". */
 function findRunner(command: string, runner: string): number {

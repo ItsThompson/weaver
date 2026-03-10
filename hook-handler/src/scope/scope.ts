@@ -8,25 +8,20 @@ export function resolveTestDirs(
   cwd: string,
   agentTestedDirs: string[],
 ): string[] {
-  const dirs = new Set<string>();
-
-  for (const file of changedFiles) {
-    let abs: string;
-    try {
-      abs = realpathSync(resolve(cwd, file));
-      if (!abs.startsWith(cwd)) { dirs.add('.'); continue; }
-    } catch {
-      dirs.add('.'); continue;
-    }
-
-    const rel = relative(cwd, abs);
-    let dir = applyScope(rel, scope);
-    if (dir.startsWith('..')) dir = '.';
-    dirs.add(dir || '.');
-  }
-
+  const dirs = new Set(changedFiles.map((f) => resolveDir(f, scope, cwd)));
   const deduped = collapseSubdirs([...dirs]);
   return deduped.filter((d) => !agentTestedDirs.some((a) => d === a || d.startsWith(a + '/')));
+}
+
+function resolveDir(file: string, scope: StopValidationHook['scope'], cwd: string): string {
+  try {
+    const abs = realpathSync(resolve(cwd, file));
+    if (!abs.startsWith(cwd)) return '.';
+    const dir = applyScope(relative(cwd, abs), scope);
+    return dir.startsWith('..') ? '.' : dir || '.';
+  } catch {
+    return '.';
+  }
 }
 
 function applyScope(rel: string, scope: StopValidationHook['scope']): string {
@@ -44,9 +39,7 @@ function applyScope(rel: string, scope: StopValidationHook['scope']): string {
 
 function collapseSubdirs(dirs: string[]): string[] {
   dirs.sort((a, b) => (a === '.' ? -1 : b === '.' ? 1 : a.split('/').length - b.split('/').length));
-  const kept: string[] = [];
-  for (const d of dirs) {
-    if (!kept.some((k) => d === k || d.startsWith(k + '/'))) kept.push(d);
-  }
-  return kept;
+  return dirs.reduce<string[]>((kept, d) =>
+    kept.some((k) => d === k || d.startsWith(k + '/')) ? kept : [...kept, d],
+  []);
 }

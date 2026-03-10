@@ -2,20 +2,16 @@ import { readFileSync, unlinkSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { homedir } from 'node:os';
 import type { ValidationResult } from '@weaver/shared/types';
+import { formatDuration } from '@weaver/shared/utils';
 
 interface PendingFile {
   results: ValidationResult[];
 }
 
 function parseArgs(argv: string[]): string {
-  for (let i = 2; i < argv.length; i += 2) {
-    if (argv[i] === '--session-id' && argv[i + 1]) return argv[i + 1];
-  }
+  const index = argv.indexOf('--session-id', 2);
+  if (index !== -1 && argv[index + 1]) return argv[index + 1];
   return '';
-}
-
-function formatDuration(ms: number): string {
-  return (ms / 1000).toFixed(1) + 's';
 }
 
 function formatResult(r: ValidationResult): string {
@@ -28,8 +24,10 @@ function formatResult(r: ValidationResult): string {
   }
   const header = `✗ ${r.name} (${dur}${r.timed_out ? ', timed out' : ''})`;
   if (!r.output) return header;
-  const indented = r.output.trimEnd().split('\n').map((l) => '  ' + l).join('\n');
-  return header + '\n' + indented;
+  
+  const lines = r.output.trimEnd().split('\n');
+  const indented = lines.map(line => `  ${line}`).join('\n');
+  return `${header}\n${indented}`;
 }
 
 export function runInject(sessionId: string): { stdout: string; exitCode: number } {

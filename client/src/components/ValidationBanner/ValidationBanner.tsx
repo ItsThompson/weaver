@@ -4,6 +4,7 @@ import StatusIndicator from '@cloudscape-design/components/status-indicator';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import type { ValidationResult } from '@weaver/shared/types';
+import { formatDuration } from '@weaver/shared/utils';
 
 const OUTPUT_LINE_LIMIT = 20;
 
@@ -21,7 +22,7 @@ function ResultItem({ result }: { result: ValidationResult }) {
     );
   }
 
-  const duration = `${(result.duration_ms / 1000).toFixed(1)}s${result.timed_out ? ', timed out' : ''}`;
+  const duration = `${formatDuration(result.duration_ms)}${result.timed_out ? ', timed out' : ''}`;
 
   return (
     <Box padding={{ vertical: 'xxs' }}>

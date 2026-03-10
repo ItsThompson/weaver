@@ -4,10 +4,10 @@ import { join, dirname, extname } from 'node:path';
 import { homedir } from 'node:os';
 import type { ValidationResult, ValidationEvent, StopValidationHook } from '@weaver/shared/types';
 import { DEFAULT_STOP_TIMEOUT_MS, DEFAULT_POST_TOOL_TIMEOUT_MS, MAX_OUTPUT_LENGTH } from '@weaver/shared/types';
-import { readProjectConfig, resolveTestRunners } from './config.js';
-import { extractChangedFiles } from './changed-files.js';
-import { extractAgentTestedDirs } from './agent-tests.js';
-import { resolveTestDirs } from './scope.js';
+import { readProjectConfig, resolveTestRunners } from '../config/index';
+import { extractChangedFiles } from '../changed-files/index';
+import { extractAgentTestedDirs } from '../agent-tests/index';
+import { resolveTestDirs } from '../scope/index';
 
 export interface ValidateArgs {
   sessionId: string;

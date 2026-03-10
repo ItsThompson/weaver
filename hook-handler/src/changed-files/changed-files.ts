@@ -1,4 +1,4 @@
-import { getCurrentTurnEvents } from './turn-boundary.js';
+import { getCurrentTurnEvents } from '../turn-boundary/index';
 
 export function extractChangedFiles(sessionLogPath: string): string[] {
   const events = getCurrentTurnEvents(sessionLogPath);

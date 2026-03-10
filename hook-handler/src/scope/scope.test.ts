@@ -1,21 +1,14 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
+import { mockFs } from '../__test-helpers__/index';
 
-jest.unstable_mockModule('node:fs', () => ({
-  realpathSync: jest.fn<(p: string) => string>(),
-  readFileSync: jest.fn<() => string>(),
-  existsSync: jest.fn<() => boolean>(),
-}));
-
-const fs = await import('node:fs');
+const { realpathSync } = await mockFs();
 const { resolveTestDirs } = await import('./scope');
-
-const mockRealpathSync = fs.realpathSync as unknown as jest.MockedFunction<(p: string) => string>;
 
 const CWD = '/project';
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockRealpathSync.mockImplementation((p: string) => String(p));
+  realpathSync.mockImplementation((p: string) => String(p));
 });
 
 describe('resolveTestDirs', () => {
@@ -60,7 +53,7 @@ describe('resolveTestDirs', () => {
   });
 
   it('resolves symlink inside CWD normally', () => {
-    mockRealpathSync.mockImplementation((p: string) =>
+    realpathSync.mockImplementation((p: string) =>
       String(p).replace('linked', 'real'),
     );
     const result = resolveTestDirs(['/project/src/linked/file.ts'], 'file', CWD, []);
@@ -68,7 +61,7 @@ describe('resolveTestDirs', () => {
   });
 
   it('clamps to "." when symlink resolves outside CWD', () => {
-    mockRealpathSync.mockImplementation(() => '/outside/project/file.ts');
+    realpathSync.mockImplementation(() => '/outside/project/file.ts');
     const result = resolveTestDirs(['/project/src/link.ts'], 'file', CWD, []);
     expect(result).toEqual(['.']);
   });

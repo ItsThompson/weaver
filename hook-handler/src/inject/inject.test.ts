@@ -1,16 +1,7 @@
 import { jest, describe, it, expect, beforeEach } from '@jest/globals';
+import { mockFs } from '../__test-helpers__/index';
 
-jest.unstable_mockModule('node:fs', () => ({
-  readFileSync: jest.fn<() => string>(),
-  existsSync: jest.fn<() => boolean>(),
-  unlinkSync: jest.fn(),
-}));
-
-const fs = await import('node:fs');
-
-const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
-const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;
-const mockUnlinkSync = fs.unlinkSync as jest.MockedFunction<typeof fs.unlinkSync>;
+const { existsSync, readFileSync, unlinkSync } = await mockFs();
 
 // Mock process.exit before importing the module (it has top-level CLI code)
 const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {}) as never);
@@ -23,15 +14,15 @@ beforeEach(() => {
 
 describe('runInject', () => {
   it('exits 0 with no output when pending file does not exist', () => {
-    mockExistsSync.mockReturnValue(false);
+    existsSync.mockReturnValue(false);
     const result = runInject('sess-1');
     expect(result).toEqual({ stdout: '', exitCode: 0 });
-    expect(mockUnlinkSync).not.toHaveBeenCalled();
+    expect(unlinkSync).not.toHaveBeenCalled();
   });
 
   it('reads pending file, formats output, deletes file, exits 0', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(JSON.stringify({
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({
       results: [
         { name: 'typecheck', passed: false, output: 'error TS2345: bad type', duration_ms: 2300, timed_out: false },
         { name: 'lint', passed: true, output: '', duration_ms: 1100, timed_out: false },
@@ -44,21 +35,21 @@ describe('runInject', () => {
     expect(result.stdout).toContain('✗ typecheck (2.3s)');
     expect(result.stdout).toContain('  error TS2345: bad type');
     expect(result.stdout).toContain('✓ lint (1.1s)');
-    expect(mockUnlinkSync).toHaveBeenCalled();
+    expect(unlinkSync).toHaveBeenCalled();
   });
 
   it('deletes malformed pending file and exits 0 with no output', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue('not valid json{{{');
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue('not valid json{{{');
 
     const result = runInject('sess-1');
     expect(result).toEqual({ stdout: '', exitCode: 0 });
-    expect(mockUnlinkSync).toHaveBeenCalled();
+    expect(unlinkSync).toHaveBeenCalled();
   });
 
   it('shows skipped results with ⊘ marker', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(JSON.stringify({
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({
       results: [
         { name: 'test:server', passed: true, output: '', duration_ms: 0, timed_out: false, skipped_reason: 'already tested by agent' },
       ],
@@ -69,8 +60,8 @@ describe('runInject', () => {
   });
 
   it('shows passed results with ✓ marker', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(JSON.stringify({
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({
       results: [
         { name: 'lint', passed: true, output: '', duration_ms: 500, timed_out: false },
       ],
@@ -81,8 +72,8 @@ describe('runInject', () => {
   });
 
   it('shows failed results with ✗ marker and includes output', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(JSON.stringify({
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({
       results: [
         { name: 'typecheck', passed: false, output: 'line1\nline2', duration_ms: 3000, timed_out: false },
       ],
@@ -94,8 +85,8 @@ describe('runInject', () => {
   });
 
   it('shows timed_out indicator on failed results', () => {
-    mockExistsSync.mockReturnValue(true);
-    mockReadFileSync.mockReturnValue(JSON.stringify({
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({
       results: [
         { name: 'slow', passed: false, output: '', duration_ms: 30000, timed_out: true },
       ],

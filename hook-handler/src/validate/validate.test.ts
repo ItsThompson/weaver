@@ -2,47 +2,33 @@ import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals
 import type { SpawnSyncReturns } from 'node:child_process';
 import type { WeaverProjectConfig } from '@weaver/shared/types';
 import type { ValidateArgs } from './validate';
+import { mockFs, mockChildProcess } from '../__test-helpers__/index';
 
-jest.unstable_mockModule('node:child_process', () => ({
-  spawnSync: jest.fn<() => Partial<SpawnSyncReturns<string>>>(),
-}));
+const { appendFileSync, writeFileSync } = await mockFs();
+const { spawnSync } = await mockChildProcess();
 
-jest.unstable_mockModule('node:fs', () => ({
-  appendFileSync: jest.fn(),
-  writeFileSync: jest.fn(),
-  mkdirSync: jest.fn(),
-  readFileSync: jest.fn<() => string>(),
-  existsSync: jest.fn<() => boolean>(),
-  realpathSync: jest.fn<(p: string) => string>(),
-}));
-
-jest.unstable_mockModule('./config', () => ({
+jest.unstable_mockModule('../config/index.js', () => ({
   readProjectConfig: jest.fn<() => WeaverProjectConfig | null>(),
   resolveTestRunners: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./changed-files', () => ({
+jest.unstable_mockModule('../changed-files/index.js', () => ({
   extractChangedFiles: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./agent-tests', () => ({
+jest.unstable_mockModule('../agent-tests/index.js', () => ({
   extractAgentTestedDirs: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./scope', () => ({
+jest.unstable_mockModule('../scope/index.js', () => ({
   resolveTestDirs: jest.fn<() => string[]>(),
 }));
 
-const cp = await import('node:child_process');
-const fs = await import('node:fs');
-const { readProjectConfig, resolveTestRunners } = await import('./config');
-const { extractChangedFiles } = await import('./changed-files');
-const { extractAgentTestedDirs } = await import('./agent-tests');
-const { resolveTestDirs } = await import('./scope');
+const { readProjectConfig, resolveTestRunners } = await import('../config/index.js');
+const { extractChangedFiles } = await import('../changed-files/index.js');
+const { extractAgentTestedDirs } = await import('../agent-tests/index.js');
+const { resolveTestDirs } = await import('../scope/index.js');
 
-const mockSpawnSync = cp.spawnSync as jest.MockedFunction<typeof cp.spawnSync>;
-const mockAppendFileSync = fs.appendFileSync as jest.MockedFunction<typeof fs.appendFileSync>;
-const mockWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>;
 const mockReadProjectConfig = readProjectConfig as jest.MockedFunction<typeof readProjectConfig>;
 const mockResolveTestRunners = resolveTestRunners as jest.MockedFunction<typeof resolveTestRunners>;
 const mockExtractChangedFiles = extractChangedFiles as jest.MockedFunction<typeof extractChangedFiles>;
@@ -67,7 +53,7 @@ beforeEach(() => {
 });
 
 function spawnResult(overrides: Partial<SpawnSyncReturns<string>> = {}): SpawnSyncReturns<string> {
-  return { pid: 1, output: [], stdout: '', stderr: '', status: 0, signal: null, error: undefined as unknown as Error, ...overrides } as SpawnSyncReturns<string>;
+  return { pid: 1, output: [], stdout: '', stderr: '', status: 0, signal: null, error: undefined, ...overrides } as SpawnSyncReturns<string>;
 }
 
 const stopArgs: ValidateArgs = { sessionId: 'sess-1', cwd: '/project', trigger: 'stop' };
@@ -93,10 +79,10 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/src/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
-    expect(mockSpawnSync).toHaveBeenCalledTimes(2);
+    expect(spawnSync).toHaveBeenCalledTimes(2);
     expect(result.exitCode).toBe(0);
   });
 
@@ -106,10 +92,10 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts', '/project/b.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
-    expect(mockSpawnSync).toHaveBeenCalledWith(
+    expect(spawnSync).toHaveBeenCalledWith(
       'eslint /project/a.ts /project/b.ts',
       expect.objectContaining({ shell: true }),
     );
@@ -122,11 +108,11 @@ describe('validate - stop trigger', () => {
     mockExtractChangedFiles.mockReturnValue(['/project/src/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
     mockResolveTestDirs.mockReturnValue(['src']);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
     expect(mockResolveTestDirs).toHaveBeenCalledWith(['/project/src/a.ts'], 'parent', '/project', []);
-    expect(mockSpawnSync).toHaveBeenCalledWith('jest src', expect.objectContaining({ shell: true }));
+    expect(spawnSync).toHaveBeenCalledWith('jest src', expect.objectContaining({ shell: true }));
   });
 
   it('run_if_files_match filters correctly', () => {
@@ -137,7 +123,7 @@ describe('validate - stop trigger', () => {
     mockExtractAgentTestedDirs.mockReturnValue([]);
 
     runValidation(stopArgs);
-    expect(mockSpawnSync).not.toHaveBeenCalled();
+    expect(spawnSync).not.toHaveBeenCalled();
   });
 
   it('skips command when {{files}} is empty', () => {
@@ -148,7 +134,7 @@ describe('validate - stop trigger', () => {
     mockExtractAgentTestedDirs.mockReturnValue([]);
 
     runValidation(stopArgs);
-    expect(mockSpawnSync).not.toHaveBeenCalled();
+    expect(spawnSync).not.toHaveBeenCalled();
   });
 
   it('skips command when {{test_dirs}} empty after agent dedup (with skipped_reason)', () => {
@@ -160,8 +146,8 @@ describe('validate - stop trigger', () => {
     mockResolveTestDirs.mockReturnValue([]);
 
     runValidation(stopArgs);
-    expect(mockSpawnSync).not.toHaveBeenCalled();
-    const appendCall = mockAppendFileSync.mock.calls[0];
+    expect(spawnSync).not.toHaveBeenCalled();
+    const appendCall = appendFileSync.mock.calls[0];
     const event = JSON.parse(appendCall![1] as string);
     expect(event.results[0].skipped_reason).toBe('no test dirs after deduplication');
   });
@@ -172,10 +158,10 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult({ status: null, signal: 'SIGTERM', stdout: '', stderr: 'killed' }));
+    spawnSync.mockReturnValue(spawnResult({ status: null, signal: 'SIGTERM', stdout: '', stderr: 'killed' }));
 
     runValidation(stopArgs);
-    const appendCall = mockAppendFileSync.mock.calls[0];
+    const appendCall = appendFileSync.mock.calls[0];
     const event = JSON.parse(appendCall![1] as string);
     expect(event.results[0].timed_out).toBe(true);
     expect(event.results[0].passed).toBe(false);
@@ -187,10 +173,10 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult({ stdout: 'x'.repeat(10_000) }));
+    spawnSync.mockReturnValue(spawnResult({ stdout: 'x'.repeat(10_000) }));
 
     runValidation(stopArgs);
-    const appendCall = mockAppendFileSync.mock.calls[0];
+    const appendCall = appendFileSync.mock.calls[0];
     const event = JSON.parse(appendCall![1] as string);
     expect(event.results[0].output.length).toBe(5_000);
   });
@@ -201,11 +187,11 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
     expect(result.exitCode).toBe(0);
-    expect(mockWriteFileSync).not.toHaveBeenCalled();
+    expect(writeFileSync).not.toHaveBeenCalled();
   });
 
   it('some fail → exit 1, pending file written, STDERR summary', () => {
@@ -218,7 +204,7 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync
+    spawnSync
       .mockReturnValueOnce(spawnResult({ status: 1, stderr: 'type error' }))
       .mockReturnValueOnce(spawnResult())
       .mockReturnValueOnce(spawnResult({ status: 1, stderr: 'test fail' }));
@@ -226,7 +212,7 @@ describe('validate - stop trigger', () => {
     const result = runValidation(stopArgs);
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain('2/3 validations failed (typecheck, test)');
-    expect(mockWriteFileSync).toHaveBeenCalledWith(
+    expect(writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining('sess-1.pending'),
       expect.any(String),
     );
@@ -238,10 +224,10 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
-    expect(mockAppendFileSync).toHaveBeenCalledWith(
+    expect(appendFileSync).toHaveBeenCalledWith(
       expect.stringContaining('sess-1.jsonl'),
       expect.stringContaining('"hook_event_name":"validation"'),
     );
@@ -253,7 +239,7 @@ describe('validate - stop trigger', () => {
     });
     mockExtractChangedFiles.mockReturnValue(['/project/a.ts']);
     mockExtractAgentTestedDirs.mockReturnValue([]);
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
     expect(mockFetch).toHaveBeenCalledWith(
@@ -281,11 +267,11 @@ describe('validate - postToolUse trigger', () => {
         { matcher: 'execute_bash', name: 'other', command: 'echo' },
       ] },
     });
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation({ ...postToolArgs, toolInput: '{"path":"/project/src/a.ts"}' });
-    expect(mockSpawnSync).toHaveBeenCalledTimes(1);
-    expect(mockSpawnSync).toHaveBeenCalledWith(
+    expect(spawnSync).toHaveBeenCalledTimes(1);
+    expect(spawnSync).toHaveBeenCalledWith(
       'prettier --write /project/src/a.ts',
       expect.objectContaining({ shell: true }),
     );
@@ -295,10 +281,10 @@ describe('validate - postToolUse trigger', () => {
     mockReadProjectConfig.mockReturnValue({
       validation: { postToolUse: [{ matcher: 'fs_write', name: 'fmt', command: 'prettier {{file}}' }] },
     });
-    mockSpawnSync.mockReturnValue(spawnResult());
+    spawnSync.mockReturnValue(spawnResult());
 
     runValidation({ ...postToolArgs, toolInput: '{"path":"/project/x.ts"}' });
-    expect(mockSpawnSync).toHaveBeenCalledWith('prettier /project/x.ts', expect.objectContaining({ shell: true }));
+    expect(spawnSync).toHaveBeenCalledWith('prettier /project/x.ts', expect.objectContaining({ shell: true }));
   });
 });
 
