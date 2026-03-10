@@ -28,13 +28,10 @@ function applyScope(rel: string, scope: StopValidationHook['scope']): string {
   if (scope === undefined || scope === 'cwd') return '.';
   const dir = dirname(rel);
   const depth = scope === 'file' ? 0 : scope === 'parent' ? 1 : scope;
-  let result = dir;
-  for (let i = 0; i < depth; i++) {
-    const parent = dirname(result);
-    if (parent === result) break;
-    result = parent;
-  }
-  return result;
+  return Array.from({ length: depth }).reduce<string>((cur) => {
+    const parent = dirname(cur);
+    return parent === cur ? cur : parent;
+  }, dir);
 }
 
 function collapseSubdirs(dirs: string[]): string[] {
