@@ -7,7 +7,7 @@ jest.unstable_mockModule('node:fs', () => ({
 }));
 
 const fs = await import('node:fs');
-const { resolveTestDirs } = await import('./scope.js');
+const { resolveTestDirs } = await import('./scope');
 
 const mockRealpathSync = fs.realpathSync as unknown as jest.MockedFunction<(p: string) => string>;
 

@@ -1,7 +1,7 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import type { SpawnSyncReturns } from 'node:child_process';
 import type { WeaverProjectConfig } from '@weaver/shared/types';
-import type { ValidateArgs } from './validate.js';
+import type { ValidateArgs } from './validate';
 
 jest.unstable_mockModule('node:child_process', () => ({
   spawnSync: jest.fn<() => Partial<SpawnSyncReturns<string>>>(),
@@ -16,29 +16,29 @@ jest.unstable_mockModule('node:fs', () => ({
   realpathSync: jest.fn<(p: string) => string>(),
 }));
 
-jest.unstable_mockModule('./config.js', () => ({
+jest.unstable_mockModule('./config', () => ({
   readProjectConfig: jest.fn<() => WeaverProjectConfig | null>(),
   resolveTestRunners: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./changed-files.js', () => ({
+jest.unstable_mockModule('./changed-files', () => ({
   extractChangedFiles: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./agent-tests.js', () => ({
+jest.unstable_mockModule('./agent-tests', () => ({
   extractAgentTestedDirs: jest.fn<() => string[]>(),
 }));
 
-jest.unstable_mockModule('./scope.js', () => ({
+jest.unstable_mockModule('./scope', () => ({
   resolveTestDirs: jest.fn<() => string[]>(),
 }));
 
 const cp = await import('node:child_process');
 const fs = await import('node:fs');
-const { readProjectConfig, resolveTestRunners } = await import('./config.js');
-const { extractChangedFiles } = await import('./changed-files.js');
-const { extractAgentTestedDirs } = await import('./agent-tests.js');
-const { resolveTestDirs } = await import('./scope.js');
+const { readProjectConfig, resolveTestRunners } = await import('./config');
+const { extractChangedFiles } = await import('./changed-files');
+const { extractAgentTestedDirs } = await import('./agent-tests');
+const { resolveTestDirs } = await import('./scope');
 
 const mockSpawnSync = cp.spawnSync as jest.MockedFunction<typeof cp.spawnSync>;
 const mockAppendFileSync = fs.appendFileSync as jest.MockedFunction<typeof fs.appendFileSync>;
@@ -56,7 +56,7 @@ let mockFetch: jest.MockedFunction<typeof globalThis.fetch>;
 
 // Import with process.exit mocked to prevent the module from actually exiting
 mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {}) as never);
-const { runValidation, matchesExtensionGlob, runStopHook } = await import('./validate.js');
+const { runValidation, matchesExtensionGlob, runStopHook } = await import('./validate');
 mockExit.mockRestore();
 
 beforeEach(() => {

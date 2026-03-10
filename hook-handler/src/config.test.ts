@@ -6,7 +6,7 @@ jest.unstable_mockModule('node:fs', () => ({
 }));
 
 const fs = await import('node:fs');
-const { readProjectConfig, resolveTestRunners } = await import('./config.js');
+const { readProjectConfig, resolveTestRunners } = await import('./config');
 
 const mockExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const mockReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>;

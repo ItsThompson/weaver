@@ -14,7 +14,7 @@ const mockUnlinkSync = fs.unlinkSync as jest.MockedFunction<typeof fs.unlinkSync
 
 // Mock process.exit before importing the module (it has top-level CLI code)
 const mockExit = jest.spyOn(process, 'exit').mockImplementation((() => {}) as never);
-const { runInject } = await import('./inject.js');
+const { runInject } = await import('./inject');
 mockExit.mockRestore();
 
 beforeEach(() => {
