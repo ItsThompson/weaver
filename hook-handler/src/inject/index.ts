@@ -1,1 +1,1 @@
-export { runInject } from './inject';
+export { runInject } from "./run-inject";
