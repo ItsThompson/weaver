@@ -12,3 +12,17 @@ export function filterValid<T>(
     return acc;
   }, []);
 }
+
+export function parseValidationArray<T>(
+  v: Record<string, unknown>,
+  key: string,
+  schema: z.ZodType<T>,
+  label: string,
+): T[] | undefined {
+  if (v[key] === undefined) return undefined;
+  if (!Array.isArray(v[key])) {
+    console.error(`weaver: .weaver validation.${key} must be an array`);
+    return undefined;
+  }
+  return filterValid(v[key], schema, label);
+}

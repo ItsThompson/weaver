@@ -13,11 +13,9 @@ export function resolveTestRunners(
   if (!globalRunners.length && !projectRunners?.length)
     return DEFAULT_TEST_RUNNERS;
 
-  const merged = new Set<string>(
-    globalRunners.length ? globalRunners : DEFAULT_TEST_RUNNERS,
-  );
-  if (projectRunners) for (const r of projectRunners) merged.add(r);
-  return [...merged];
+  const base = globalRunners.length ? globalRunners : DEFAULT_TEST_RUNNERS;
+  const combined = base.concat(projectRunners ?? []);
+  return [...new Set(combined)];
 }
 
 function readGlobalTestRunners(): string[] {

@@ -1,45 +1,8 @@
-import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
-import type { z } from "zod";
-import { stopHookSchema, postToolHookSchema } from "./schemas";
-import { filterValid } from "./validation";
-
-function isPlainObject(value: unknown): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
-
-function readFile(configPath: string): string | null {
-  if (!existsSync(configPath)) return null;
-  try {
-    return readFileSync(configPath, "utf-8");
-  } catch {
-    return null;
-  }
-}
-
-function parseJson(raw: string): { value: unknown } | null {
-  try {
-    return { value: JSON.parse(raw) };
-  } catch {
-    console.error("weaver: invalid JSON in .weaver config");
-    return null;
-  }
-}
-
-function parseValidationArray<T>(
-  v: Record<string, unknown>,
-  key: string,
-  schema: z.ZodType<T>,
-  label: string,
-): T[] | undefined {
-  if (v[key] === undefined) return undefined;
-  if (!Array.isArray(v[key])) {
-    console.error(`weaver: .weaver validation.${key} must be an array`);
-    return undefined;
-  }
-  return filterValid(v[key], schema, label);
-}
+import { stopHookSchema, postToolHookSchema } from "../schemas";
+import { parseValidationArray } from "../validation";
+import { readFile, parseJson, isPlainObject } from "../parsing";
 
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   const raw = readFile(join(cwd, ".weaver"));

@@ -23,8 +23,9 @@ export function extractAgentTestedDirs(
     if (
       e.event.hook_event_name !== "postToolUse" ||
       e.event.tool_name !== "execute_bash"
-    )
+    ) {
       return dirs;
+    }
 
     const command = e.event.tool_input?.command;
     if (typeof command !== "string") return dirs;
