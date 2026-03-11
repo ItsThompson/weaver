@@ -1,9 +1,9 @@
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Header from '@cloudscape-design/components/header';
-import Button from '@cloudscape-design/components/button';
-import Alert from '@cloudscape-design/components/alert';
-import type { ParsedConversation } from '../../../types/conversation';
-import { ExchangeSection } from './ExchangeSection';
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Header from "@cloudscape-design/components/header";
+import Button from "@cloudscape-design/components/button";
+import Alert from "@cloudscape-design/components/alert";
+import type { ParsedConversation } from "../../../types/conversation";
+import { ExchangeSection } from "./ExchangeSection";
 
 interface EditPhaseProps {
   parsed: ParsedConversation;
@@ -41,7 +41,11 @@ export function EditPhase({
         actions={
           <SpaceBetween direction="horizontal" size="xs">
             <Button onClick={onReset}>Reset</Button>
-            <Button variant="primary" onClick={onPreview} disabled={totalSelected === 0}>
+            <Button
+              variant="primary"
+              onClick={onPreview}
+              disabled={totalSelected === 0}
+            >
               Preview ({totalSelected} selected)
             </Button>
           </SpaceBetween>

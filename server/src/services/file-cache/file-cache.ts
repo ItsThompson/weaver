@@ -1,5 +1,5 @@
-import { stat, readFile } from 'node:fs/promises';
-import { existsSync } from 'node:fs';
+import { stat, readFile } from "node:fs/promises";
+import { existsSync } from "node:fs";
 
 interface CacheEntry<T> {
   data: T;
@@ -47,11 +47,16 @@ export class FileCache<T> {
   }
 }
 
-export async function parseJsonlFile<T>(filePath: string, onError: (line: string) => void): Promise<T[]> {
-  if (!existsSync(filePath)) return [];
-  const content = await readFile(filePath, 'utf-8');
+export async function parseJsonlFile<T>(
+  filePath: string,
+  onError: (line: string) => void,
+): Promise<T[]> {
+  if (!existsSync(filePath)) {
+    return [];
+  }
+  const content = await readFile(filePath, "utf-8");
   return content
-    .split('\n')
+    .split("\n")
     .filter((line) => line.trim().length > 0)
     .reduce<T[]>((items, line) => {
       try {

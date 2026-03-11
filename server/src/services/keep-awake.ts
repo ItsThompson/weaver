@@ -1,22 +1,29 @@
-import { execFile } from 'node:child_process';
-import { dirname, join, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { readSessions, isProcessRunning } from './storage/index';
-import { getLastEvent, deriveActivity } from './log-parser/index';
-import { log } from '../utils/logger';
+import { execFile } from "node:child_process";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { readSessions, isProcessRunning } from "./storage/index";
+import { getLastEvent, deriveActivity } from "./log-parser/index";
+import { log } from "../utils/logger";
 
 const POLL_INTERVAL_MS = 60_000;
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SCRIPT_PATH = resolve(__dirname, '../../bin/keep-awake.sh');
-const ACTIVE_STATES = new Set(['processing', 'running_tool']);
+const SCRIPT_PATH = resolve(__dirname, "../../bin/keep-awake.sh");
+const ACTIVE_STATES = new Set(["processing", "running_tool"]);
 
 async function hasActiveSessions(): Promise<boolean> {
   const sessions = await readSessions();
   for (const s of sessions) {
-    if (!isProcessRunning(s.pid)) continue;
+    if (!isProcessRunning(s.pid)) {
+      continue;
+    }
     const last = await getLastEvent(s.id);
-    const activity = deriveActivity(last?.name ?? 'agentSpawn', last?.timestamp);
-    if (ACTIVE_STATES.has(activity)) return true;
+    const activity = deriveActivity(
+      last?.name ?? "agentSpawn",
+      last?.timestamp,
+    );
+    if (ACTIVE_STATES.has(activity)) {
+      return true;
+    }
   }
   return false;
 }
@@ -27,14 +34,28 @@ export function startKeepAwake(): void {
   const poll = async () => {
     try {
       const active = await hasActiveSessions();
-      log({ timestamp: new Date().toISOString(), event: 'keep_awake_poll', active });
+      log({
+        timestamp: new Date().toISOString(),
+        event: "keep_awake_poll",
+        active,
+      });
       if (active) {
-        execFile('bash', [SCRIPT_PATH], (err) => {
-          if (err) log({ timestamp: new Date().toISOString(), event: 'keep_awake_error', error: String(err) });
+        execFile("bash", [SCRIPT_PATH], (err) => {
+          if (err) {
+            log({
+              timestamp: new Date().toISOString(),
+              event: "keep_awake_error",
+              error: String(err),
+            });
+          }
         });
       }
     } catch (err) {
-      log({ timestamp: new Date().toISOString(), event: 'keep_awake_poll_error', error: String(err) });
+      log({
+        timestamp: new Date().toISOString(),
+        event: "keep_awake_poll_error",
+        error: String(err),
+      });
     }
   };
 
@@ -43,5 +64,8 @@ export function startKeepAwake(): void {
 }
 
 export function stopKeepAwake(): void {
-  if (interval) { clearInterval(interval); interval = null; }
+  if (interval) {
+    clearInterval(interval);
+    interval = null;
+  }
 }

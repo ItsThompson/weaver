@@ -14,7 +14,9 @@ const MINI_MIN_HEIGHT = 60;
 
 /** Apply opacity + mouse-event passthrough based on visible and ghost state. */
 function applyVisualState(): void {
-  if (!win) return;
+  if (!win) {
+    return;
+  }
   if (!visible) {
     win.setOpacity(0);
     win.setIgnoreMouseEvents(true);
@@ -62,9 +64,13 @@ export function createWindow(url: string, config: WeaverConfig): void {
 
   win.webContents.on("did-navigate-in-page", (_event, url) => {
     const isMini = new URL(url).pathname === "/mini";
-    if (isMini === miniMode) return;
+    if (isMini === miniMode) {
+      return;
+    }
     miniMode = isMini;
-    if (!win) return;
+    if (!win) {
+      return;
+    }
     const [x, y] = win.getPosition();
     if (isMini) {
       win.setBounds({ x, y, width: MINI_WIDTH, height: MINI_MIN_HEIGHT });
@@ -74,7 +80,9 @@ export function createWindow(url: string, config: WeaverConfig): void {
   });
 
   ipcMain.on("mini-resize", (_event, height: number) => {
-    if (!win || !miniMode) return;
+    if (!win || !miniMode) {
+      return;
+    }
     const clamped = Math.max(MINI_MIN_HEIGHT, Math.round(height));
     const [x, y] = win.getPosition();
     win.setBounds({ x, y, width: MINI_WIDTH, height: clamped });
@@ -94,7 +102,9 @@ export function setGhostMode(enabled: boolean, opacity: number): void {
 }
 
 export function toggleWindow(): boolean {
-  if (!win) return false;
+  if (!win) {
+    return false;
+  }
   visible = !visible;
   applyVisualState();
   return visible;

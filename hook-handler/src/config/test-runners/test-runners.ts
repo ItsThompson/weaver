@@ -10,8 +10,9 @@ export function resolveTestRunners(
   const globalRunners = readGlobalTestRunners();
   const projectRunners = projectConfig?.validation?.test_runners;
 
-  if (!globalRunners.length && !projectRunners?.length)
+  if (!globalRunners.length && !projectRunners?.length) {
     return DEFAULT_TEST_RUNNERS;
+  }
 
   const base = globalRunners.length ? globalRunners : DEFAULT_TEST_RUNNERS;
   const combined = base.concat(projectRunners ?? []);
@@ -20,7 +21,9 @@ export function resolveTestRunners(
 
 function readGlobalTestRunners(): string[] {
   const configPath = join(homedir(), ".weaver", "config.json");
-  if (!existsSync(configPath)) return [];
+  if (!existsSync(configPath)) {
+    return [];
+  }
   try {
     const parsed = JSON.parse(readFileSync(configPath, "utf-8"));
     if (Array.isArray(parsed?.test_runners)) {

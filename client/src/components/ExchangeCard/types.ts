@@ -1,4 +1,4 @@
-import type { ConversationExchange } from '../../types/conversation';
+import type { ConversationExchange } from "../../types/conversation";
 
 export interface ExchangeCardProps {
   exchange: ConversationExchange;

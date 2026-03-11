@@ -14,7 +14,9 @@ export function useSessionEvents(debounceMs = 1000): void {
       try {
         const { sessionId } = JSON.parse(event.data) as { sessionId: string };
         const existing = pending.get(sessionId);
-        if (existing) clearTimeout(existing);
+        if (existing) {
+          clearTimeout(existing);
+        }
         pending.set(
           sessionId,
           setTimeout(() => {
@@ -34,7 +36,9 @@ export function useSessionEvents(debounceMs = 1000): void {
 
     return () => {
       source.close();
-      for (const timer of pending.values()) clearTimeout(timer);
+      for (const timer of pending.values()) {
+        clearTimeout(timer);
+      }
     };
   }, [debounceMs]);
 }

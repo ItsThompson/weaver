@@ -9,16 +9,25 @@ export interface ValidationConfig {
 }
 
 export const DEFAULT_TEST_RUNNERS = [
-  'jest', 'vitest', 'mocha', 'pytest', 'rspec',
-  'cargo test', 'npm test', 'npx test',
-  'bundle exec rspec', 'bundle exec rake test',
-  'go test', 'dotnet test', 'phpunit',
+  "jest",
+  "vitest",
+  "mocha",
+  "pytest",
+  "rspec",
+  "cargo test",
+  "npm test",
+  "npx test",
+  "bundle exec rspec",
+  "bundle exec rake test",
+  "go test",
+  "dotnet test",
+  "phpunit",
 ];
 
 export interface StopValidationHook {
   name: string;
   command: string;
-  scope?: 'file' | 'parent' | 'cwd' | number;
+  scope?: "file" | "parent" | "cwd" | number;
   run_if_files_match?: string;
   working_dir?: string;
   timeout_ms?: number;
@@ -41,8 +50,8 @@ export interface ValidationResult {
 }
 
 export interface ValidationEvent {
-  hook_event_name: 'validation';
-  trigger: 'stop' | 'postToolUse';
+  hook_event_name: "validation";
+  trigger: "stop" | "postToolUse";
   results: ValidationResult[];
   changed_files: string[];
   agent_tested_dirs: string[];

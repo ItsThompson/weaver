@@ -1,13 +1,23 @@
-import Flashbar from '@cloudscape-design/components/flashbar';
-import { useNotifications } from '../../context/NotificationContext';
+import Flashbar from "@cloudscape-design/components/flashbar";
+import { useNotifications } from "../../context/NotificationContext";
 
 export function NotificationBar() {
   const { notifications, dismissNotification } = useNotifications();
 
-  if (notifications.length === 0) return null;
+  if (notifications.length === 0) {
+    return null;
+  }
 
   return (
-    <div style={{ position: 'fixed', bottom: 16, right: 16, zIndex: 9999, maxWidth: 400 }}>
+    <div
+      style={{
+        position: "fixed",
+        bottom: 16,
+        right: 16,
+        zIndex: 9999,
+        maxWidth: 400,
+      }}
+    >
       <Flashbar
         items={notifications.map((n) => ({
           id: n.id,

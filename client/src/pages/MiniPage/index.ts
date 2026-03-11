@@ -1,1 +1,1 @@
-export { MiniPage } from './MiniPage';
+export { MiniPage } from "./MiniPage";

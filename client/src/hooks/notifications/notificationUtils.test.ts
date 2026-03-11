@@ -1,80 +1,105 @@
-import { deriveActivity, resolveNotification } from './notificationUtils';
+import { deriveActivity, resolveNotification } from "./notificationUtils";
 
-describe('deriveActivity', () => {
+describe("deriveActivity", () => {
   it.each([
-    ['agentSpawn', 'starting'],
-    ['stop', 'idle'],
-    ['preToolUse', 'running_tool'],
-    ['userPromptSubmit', 'processing'],
-    ['postToolUse', 'processing'],
-  ])('maps %s to %s', (eventName, expected) => {
+    ["agentSpawn", "starting"],
+    ["stop", "idle"],
+    ["preToolUse", "running_tool"],
+    ["userPromptSubmit", "processing"],
+    ["postToolUse", "processing"],
+  ])("maps %s to %s", (eventName, expected) => {
     expect(deriveActivity(eventName)).toBe(expected);
   });
 });
 
-describe('resolveNotification', () => {
+describe("resolveNotification", () => {
   let lastActivity: Map<string, string>;
 
-  beforeEach(() => { lastActivity = new Map(); });
-
-  it.each([
-    ['agentSpawn', 'My Session → Starting'],
-    ['stop', 'My Session → Idle'],
-    ['userPromptSubmit', 'My Session → Processing'],
-    ['preToolUse', 'My Session → Running tool'],
-    ['postToolUse', 'My Session → Processing'],
-  ])('notifies on first %s event', (eventName, expected) => {
-    expect(resolveNotification('s1', eventName, 'My Session', lastActivity)).toBe(expected);
+  beforeEach(() => {
+    lastActivity = new Map();
   });
 
   it.each([
-    ['processing → running_tool', 'userPromptSubmit', 'preToolUse'],
-    ['running_tool → processing', 'preToolUse', 'postToolUse'],
-  ])('silences %s', (_label, setup, event) => {
-    resolveNotification('s1', setup, 'X', lastActivity);
-    expect(resolveNotification('s1', event, 'X', lastActivity)).toBeNull();
+    ["agentSpawn", "My Session → Starting"],
+    ["stop", "My Session → Idle"],
+    ["userPromptSubmit", "My Session → Processing"],
+    ["preToolUse", "My Session → Running tool"],
+    ["postToolUse", "My Session → Processing"],
+  ])("notifies on first %s event", (eventName, expected) => {
+    expect(
+      resolveNotification("s1", eventName, "My Session", lastActivity),
+    ).toBe(expected);
   });
 
-  it('deduplicates same state', () => {
-    resolveNotification('s1', 'stop', 'X', lastActivity);
-    expect(resolveNotification('s1', 'stop', 'X', lastActivity)).toBeNull();
+  it.each([
+    ["processing → running_tool", "userPromptSubmit", "preToolUse"],
+    ["running_tool → processing", "preToolUse", "postToolUse"],
+  ])("silences %s", (_label, setup, event) => {
+    resolveNotification("s1", setup, "X", lastActivity);
+    expect(resolveNotification("s1", event, "X", lastActivity)).toBeNull();
   });
 
-  it('tracks sessions independently', () => {
-    resolveNotification('s1', 'stop', 'A', lastActivity);
-    expect(resolveNotification('s2', 'stop', 'B', lastActivity)).toBe('B → Idle');
+  it("deduplicates same state", () => {
+    resolveNotification("s1", "stop", "X", lastActivity);
+    expect(resolveNotification("s1", "stop", "X", lastActivity)).toBeNull();
   });
 
-  it('falls back to truncated session ID when no name', () => {
-    expect(resolveNotification('abcdefgh-1234', 'agentSpawn', undefined, lastActivity)).toBe('abcdefgh → Starting');
+  it("tracks sessions independently", () => {
+    resolveNotification("s1", "stop", "A", lastActivity);
+    expect(resolveNotification("s2", "stop", "B", lastActivity)).toBe(
+      "B → Idle",
+    );
   });
 
-  it('returns validation message for validation event', () => {
-    expect(resolveNotification('s1', 'validation', 'My Session', lastActivity)).toBe('My Session → Validation complete');
+  it("falls back to truncated session ID when no name", () => {
+    expect(
+      resolveNotification(
+        "abcdefgh-1234",
+        "agentSpawn",
+        undefined,
+        lastActivity,
+      ),
+    ).toBe("abcdefgh → Starting");
   });
 
-  it('always shows validation even when activity is unchanged', () => {
-    resolveNotification('s1', 'userPromptSubmit', 'X', lastActivity);
+  it("returns validation message for validation event", () => {
+    expect(
+      resolveNotification("s1", "validation", "My Session", lastActivity),
+    ).toBe("My Session → Validation complete");
+  });
+
+  it("always shows validation even when activity is unchanged", () => {
+    resolveNotification("s1", "userPromptSubmit", "X", lastActivity);
     // validation bypasses dedup — would normally be silenced as processing → processing
-    expect(resolveNotification('s1', 'validation', 'X', lastActivity)).toBe('X → Validation complete');
+    expect(resolveNotification("s1", "validation", "X", lastActivity)).toBe(
+      "X → Validation complete",
+    );
   });
 
-  it('simulates full session lifecycle', () => {
+  it("simulates full session lifecycle", () => {
     const events = [
-      'agentSpawn', 'userPromptSubmit', 'preToolUse', 'postToolUse',
-      'preToolUse', 'postToolUse', 'stop', 'userPromptSubmit',
-      'preToolUse', 'postToolUse', 'stop',
+      "agentSpawn",
+      "userPromptSubmit",
+      "preToolUse",
+      "postToolUse",
+      "preToolUse",
+      "postToolUse",
+      "stop",
+      "userPromptSubmit",
+      "preToolUse",
+      "postToolUse",
+      "stop",
     ];
     const notifications = events
-      .map((e) => resolveNotification('s1', e, 'Test', lastActivity))
+      .map((e) => resolveNotification("s1", e, "Test", lastActivity))
       .filter(Boolean);
 
     expect(notifications).toEqual([
-      'Test → Starting',
-      'Test → Processing',
-      'Test → Idle',
-      'Test → Processing',
-      'Test → Idle',
+      "Test → Starting",
+      "Test → Processing",
+      "Test → Idle",
+      "Test → Processing",
+      "Test → Idle",
     ]);
   });
 });

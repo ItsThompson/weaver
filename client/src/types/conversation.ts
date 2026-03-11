@@ -32,7 +32,13 @@ export interface ConversationTurn {
   };
   assistant:
     | { Response: { message_id: string; content: string } }
-    | { ToolUse: { message_id: string; content: string; tool_uses: ToolUseCall[] } };
+    | {
+        ToolUse: {
+          message_id: string;
+          content: string;
+          tool_uses: ToolUseCall[];
+        };
+      };
   request_metadata: {
     request_id: string;
     context_usage_percentage: number;
@@ -41,7 +47,7 @@ export interface ConversationTurn {
     stream_end_timestamp_ms: number;
     user_prompt_length: number;
     response_size: number;
-    chat_conversation_type: 'NotToolUse' | 'ToolUse';
+    chat_conversation_type: "NotToolUse" | "ToolUse";
     tool_use_ids_and_names: [string, string][];
     model_id: string;
   };

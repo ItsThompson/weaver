@@ -7,7 +7,9 @@ export function isPlainObject(
 }
 
 export function readFile(configPath: string): string | null {
-  if (!existsSync(configPath)) return null;
+  if (!existsSync(configPath)) {
+    return null;
+  }
   try {
     return readFileSync(configPath, "utf-8");
   } catch {

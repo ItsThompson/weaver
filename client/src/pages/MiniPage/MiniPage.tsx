@@ -22,7 +22,9 @@ export function MiniPage() {
   useEffect(() => {
     const el = contentRef.current;
     const weaver = (window as any).weaver;
-    if (!el || !weaver?.resizeMini) return;
+    if (!el || !weaver?.resizeMini) {
+      return;
+    }
 
     const observer = new ResizeObserver(() => {
       weaver.resizeMini(el.offsetHeight);
@@ -50,56 +52,58 @@ export function MiniPage() {
       }}
     >
       <div ref={contentRef}>
-      <div
-        style={
-          {
-            height: 28,
-            WebkitAppRegion: "drag",
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 9999,
-          } as React.CSSProperties
-        }
-      />
-      <div style={{ padding: "28px 0" }}>
-        {openSessions.length === 0 && (
-          <div style={{ padding: "16px 12px", fontSize: 13, color: "#6b7280" }}>
-            No open sessions
-          </div>
-        )}
-        {openSessions.map((session) => (
-          <div
-            key={session.id}
-            onClick={() => navigate(`/sessions/${session.id}`)}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: 8,
-              padding: "8px 12px",
-              cursor: "pointer",
-              fontSize: 13,
-            }}
-          >
-            <span
-              style={{ color: ACTIVITY_COLORS[session.activity ?? "idle"] }}
+        <div
+          style={
+            {
+              height: 28,
+              WebkitAppRegion: "drag",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 9999,
+            } as React.CSSProperties
+          }
+        />
+        <div style={{ padding: "28px 0" }}>
+          {openSessions.length === 0 && (
+            <div
+              style={{ padding: "16px 12px", fontSize: 13, color: "#6b7280" }}
             >
-              ●
-            </span>
-            <span
+              No open sessions
+            </div>
+          )}
+          {openSessions.map((session) => (
+            <div
+              key={session.id}
+              onClick={() => navigate(`/sessions/${session.id}`)}
               style={{
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "8px 12px",
+                cursor: "pointer",
+                fontSize: 13,
               }}
             >
-              {displayName(session)}
-            </span>
-          </div>
-        ))}
-      </div>
-      <MiniActivityLog />
+              <span
+                style={{ color: ACTIVITY_COLORS[session.activity ?? "idle"] }}
+              >
+                ●
+              </span>
+              <span
+                style={{
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {displayName(session)}
+              </span>
+            </div>
+          ))}
+        </div>
+        <MiniActivityLog />
       </div>
     </div>
   );

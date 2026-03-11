@@ -1,15 +1,18 @@
-import { useEffect, useRef } from 'react';
-import { useNotifications } from '../../context/NotificationContext';
-import { useActivityLog, type ActivityLogEntry } from '../../context/ActivityLogContext';
-import type { NotificationSound } from '../notifications/soundUtils';
-import type { ActivityStatus } from '@weaver/shared/types';
+import { useEffect, useRef } from "react";
+import { useNotifications } from "../../context/NotificationContext";
+import {
+  useActivityLog,
+  type ActivityLogEntry,
+} from "../../context/ActivityLogContext";
+import type { NotificationSound } from "../notifications/soundUtils";
+import type { ActivityStatus } from "@weaver/shared/types";
 
 const ACTIVITY_SOUND: Record<ActivityStatus, NotificationSound> = {
-  idle: 'chime',
-  starting: 'beep',
-  processing: 'beep',
-  running_tool: 'beep',
-  pending_approval: 'beep',
+  idle: "chime",
+  starting: "beep",
+  processing: "beep",
+  running_tool: "beep",
+  pending_approval: "beep",
 };
 
 export function useSessionNotifications(): void {
@@ -19,11 +22,13 @@ export function useSessionNotifications(): void {
 
   useEffect(() => {
     const unseen = entries.filter((e) => e.id > seenRef.current);
-    if (unseen.length === 0) return;
+    if (unseen.length === 0) {
+      return;
+    }
     seenRef.current = entries[0].id;
 
     for (const entry of unseen) {
-      addNotification(entry.message, 'info', ACTIVITY_SOUND[entry.activity]);
+      addNotification(entry.message, "info", ACTIVITY_SOUND[entry.activity]);
     }
   }, [entries, addNotification]);
 }

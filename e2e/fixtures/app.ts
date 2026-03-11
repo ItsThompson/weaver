@@ -1,4 +1,8 @@
-import { test as base, type ElectronApplication, type Page } from "@playwright/test";
+import {
+  test as base,
+  type ElectronApplication,
+  type Page,
+} from "@playwright/test";
 import { _electron } from "playwright";
 import { mkdtemp, mkdir, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -21,7 +25,9 @@ async function waitForServer(url: string, retries = 30): Promise<void> {
   for (let i = 0; i < retries; i++) {
     try {
       const res = await fetch(`${url}/api/health`);
-      if (res.ok) return;
+      if (res.ok) {
+        return;
+      }
     } catch {}
     await new Promise((r) => setTimeout(r, 200));
   }
@@ -40,12 +46,19 @@ export const test = base.extend<AppFixtures>({
     const app = await _electron.launch({
       args: [MAIN_ENTRY],
       cwd: REPO_ROOT,
-      env: { ...process.env, HOME: tmpDir, USERPROFILE: tmpDir, WEAVER_TEST: '1' },
+      env: {
+        ...process.env,
+        HOME: tmpDir,
+        USERPROFILE: tmpDir,
+        WEAVER_TEST: "1",
+      },
     });
     await use(app);
     // Kill server and Electron from the test process (app.evaluate hangs during teardown)
     killPort(SERVER_PORT);
-    try { app.process().kill("SIGKILL"); } catch {}
+    try {
+      app.process().kill("SIGKILL");
+    } catch {}
   },
 
   serverUrl: async ({}, use) => {
@@ -63,9 +76,13 @@ export { expect } from "@playwright/test";
 
 export function killPort(port: number): void {
   try {
-    const pids = execSync(`lsof -ti tcp:${port} -sTCP:LISTEN`, { encoding: "utf8" }).trim();
+    const pids = execSync(`lsof -ti tcp:${port} -sTCP:LISTEN`, {
+      encoding: "utf8",
+    }).trim();
     if (pids) {
-      for (const pid of pids.split("\n")) process.kill(Number(pid), "SIGKILL");
+      for (const pid of pids.split("\n")) {
+        process.kill(Number(pid), "SIGKILL");
+      }
     }
   } catch {}
 }

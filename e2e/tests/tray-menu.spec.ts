@@ -1,12 +1,17 @@
 import { test, expect } from "../fixtures/app.js";
 
 /** Wait for React to mount and SSE EventSource to connect. */
-async function waitForAppReady(page: import("@playwright/test").Page): Promise<void> {
+async function waitForAppReady(
+  page: import("@playwright/test").Page,
+): Promise<void> {
   await page.waitForSelector("#root > *", { timeout: 10_000 });
   await new Promise((r) => setTimeout(r, 500));
 }
 
-async function goToMini(page: import("@playwright/test").Page, serverUrl: string): Promise<void> {
+async function goToMini(
+  page: import("@playwright/test").Page,
+  serverUrl: string,
+): Promise<void> {
   for (let attempt = 0; attempt < 5; attempt++) {
     await fetch(`${serverUrl}/api/navigate`, {
       method: "POST",
@@ -14,16 +19,19 @@ async function goToMini(page: import("@playwright/test").Page, serverUrl: string
       body: JSON.stringify({ page: "mini" }),
     });
     await new Promise((r) => setTimeout(r, 1_000));
-    if (page.url().includes("/mini")) return;
+    if (page.url().includes("/mini")) {
+      return;
+    }
   }
   throw new Error("Failed to navigate to mini after retries");
 }
 
 test.describe("tray menu", () => {
   test("tray exists", async ({ electronApp, page }) => {
-    const trayCount = await electronApp.evaluate(({ Tray }) =>
-      // @ts-expect-error — getAllTrays exists at runtime
-      Tray.getAllTrays?.()?.length ?? null,
+    const trayCount = await electronApp.evaluate(
+      ({ Tray }) =>
+        // @ts-expect-error — getAllTrays exists at runtime
+        Tray.getAllTrays?.()?.length ?? null,
     );
     // If getAllTrays isn't available, fall back to checking via BrowserWindow (tray was created if app launched)
     if (trayCount !== null) {
@@ -36,12 +44,18 @@ test.describe("tray menu", () => {
 
   test("show/hide behavior", async ({ electronApp, page }) => {
     // Starts visible
-    let state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    let state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.visible).toBe(true);
 
     // Toggle hides
-    await electronApp.evaluate(() => (global as any).__weaverTest.toggleWindow());
-    state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    await electronApp.evaluate(() =>
+      (global as any).__weaverTest.toggleWindow(),
+    );
+    state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.visible).toBe(false);
     let opacity = await electronApp.evaluate(({ BrowserWindow }) =>
       BrowserWindow.getAllWindows()[0].getOpacity(),
@@ -49,8 +63,12 @@ test.describe("tray menu", () => {
     expect(opacity).toBe(0);
 
     // Toggle shows
-    await electronApp.evaluate(() => (global as any).__weaverTest.toggleWindow());
-    state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    await electronApp.evaluate(() =>
+      (global as any).__weaverTest.toggleWindow(),
+    );
+    state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.visible).toBe(true);
     opacity = await electronApp.evaluate(({ BrowserWindow }) =>
       BrowserWindow.getAllWindows()[0].getOpacity(),
@@ -60,10 +78,14 @@ test.describe("tray menu", () => {
 
   test("ghost mode behavior", async ({ electronApp, page }) => {
     // Enable ghost
-    const enabled = await electronApp.evaluate(() => (global as any).__weaverTest.toggleGhost());
+    const enabled = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.toggleGhost(),
+    );
     expect(enabled).toBe(true);
 
-    let state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    let state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.ghostEnabled).toBe(true);
 
     let opacity = await electronApp.evaluate(({ BrowserWindow }) =>
@@ -72,10 +94,14 @@ test.describe("tray menu", () => {
     expect(opacity).toBeLessThan(1);
 
     // Disable ghost
-    const disabled = await electronApp.evaluate(() => (global as any).__weaverTest.toggleGhost());
+    const disabled = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.toggleGhost(),
+    );
     expect(disabled).toBe(false);
 
-    state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.ghostEnabled).toBe(false);
 
     opacity = await electronApp.evaluate(({ BrowserWindow }) =>
@@ -93,7 +119,9 @@ test.describe("tray menu", () => {
     );
     expect(bounds.width).toBe(300);
 
-    const state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    const state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.miniMode).toBe(true);
   });
 

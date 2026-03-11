@@ -75,11 +75,16 @@ export function SessionTable({
     });
 
   useEffect(() => {
-    if (!configData?.config) return;
+    if (!configData?.config) {
+      return;
+    }
     const stored = configData.config[configKey];
-    if (stored?.length)
+    if (stored?.length) {
       setContentDisplay(toContentDisplay(stored, defaultContentDisplay));
-    if (configData.config.page_size) setPageSize(configData.config.page_size);
+    }
+    if (configData.config.page_size) {
+      setPageSize(configData.config.page_size);
+    }
   }, [configData, configKey, defaultContentDisplay]);
 
   const handleConfirm = async ({

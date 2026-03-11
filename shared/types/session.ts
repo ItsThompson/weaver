@@ -1,4 +1,4 @@
-import type { TurnGroup } from './events';
+import type { TurnGroup } from "./events";
 
 // Session stored in sessions.jsonl (one JSON line per session)
 export interface Session {
@@ -12,10 +12,15 @@ export interface Session {
 }
 
 // Computed at runtime by checking if pid is still running
-export type ActivityStatus = 'starting' | 'idle' | 'processing' | 'running_tool' | 'pending_approval';
+export type ActivityStatus =
+  | "starting"
+  | "idle"
+  | "processing"
+  | "running_tool"
+  | "pending_approval";
 
 export interface SessionWithStatus extends Session {
-  status: 'open' | 'closed';
+  status: "open" | "closed";
   activity?: ActivityStatus;
 }
 

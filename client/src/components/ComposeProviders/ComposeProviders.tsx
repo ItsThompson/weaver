@@ -1,4 +1,4 @@
-import type { ComponentType, ReactNode } from 'react';
+import type { ComponentType, ReactNode } from "react";
 
 export function ComposeProviders({
   providers,
@@ -7,5 +7,8 @@ export function ComposeProviders({
   providers: ComponentType<{ children: ReactNode }>[];
   children: ReactNode;
 }) {
-  return providers.reduceRight<ReactNode>((acc, Provider) => <Provider>{acc}</Provider>, children);
+  return providers.reduceRight<ReactNode>(
+    (acc, Provider) => <Provider>{acc}</Provider>,
+    children,
+  );
 }

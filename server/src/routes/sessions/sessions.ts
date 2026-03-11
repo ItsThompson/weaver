@@ -60,11 +60,14 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     const { id } = request.params;
     const sessions = await readSessions();
     const session = sessions.find((s) => s.id === id);
-    if (!session) return reply.status(404).send({ error: "Session not found" });
+    if (!session) {
+      return reply.status(404).send({ error: "Session not found" });
+    }
 
     const events = await parseLogFile(id);
-    if (events.length === 0 && !session)
+    if (events.length === 0 && !session) {
       return reply.status(404).send({ error: "Log file not found" });
+    }
 
     const isOpen = isProcessRunning(session.pid);
     const lastEvent = events.length > 0 ? events[events.length - 1] : null;
@@ -96,8 +99,9 @@ export function registerSessionRoutes(server: FastifyInstance): void {
 
     const sessions = await readSessions();
     const index = sessions.findIndex((s) => s.id === id);
-    if (index === -1)
+    if (index === -1) {
       return reply.status(404).send({ error: "Session not found" });
+    }
 
     sessions[index].customName = customName;
     await writeSessions(sessions);
@@ -110,10 +114,12 @@ export function registerSessionRoutes(server: FastifyInstance): void {
   }>("/api/rename", async (request, reply) => {
     const { pid, customName } = request.body ?? {};
 
-    if (typeof pid !== "number")
+    if (typeof pid !== "number") {
       return reply.status(400).send({ error: "pid required" });
-    if (typeof customName !== "string")
+    }
+    if (typeof customName !== "string") {
       return reply.status(400).send({ error: "customName required" });
+    }
 
     const sessions = await readSessions();
     let index = -1;
@@ -123,8 +129,9 @@ export function registerSessionRoutes(server: FastifyInstance): void {
         break;
       }
     }
-    if (index === -1)
+    if (index === -1) {
       return reply.status(404).send({ error: "No session found for PID" });
+    }
 
     sessions[index].customName = customName;
     await writeSessions(sessions);
@@ -139,12 +146,14 @@ export function registerSessionRoutes(server: FastifyInstance): void {
   }>("/api/sessions/:id/webhook", async (request, reply) => {
     const { id } = request.params;
     const { enabled } = request.body ?? {};
-    if (typeof enabled !== "boolean")
+    if (typeof enabled !== "boolean") {
       return reply.status(400).send({ error: "enabled must be a boolean" });
+    }
 
     const sessions = await readSessions();
-    if (!sessions.some((s) => s.id === id))
+    if (!sessions.some((s) => s.id === id)) {
       return reply.status(404).send({ error: "Session not found" });
+    }
 
     setWebhookEnabled(id, enabled);
     return { ok: true as const, enabled };
@@ -156,8 +165,9 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       const { id } = request.params;
       const sessions = await readSessions();
       const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1)
+      if (index === -1) {
         return reply.status(404).send({ error: "Session not found" });
+      }
 
       const session = sessions[index];
       const dataDir = join(homedir(), ".weaver");

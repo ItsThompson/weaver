@@ -1,27 +1,40 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Header from '@cloudscape-design/components/header';
-import Box from '@cloudscape-design/components/box';
-import Spinner from '@cloudscape-design/components/spinner';
-import Badge from '@cloudscape-design/components/badge';
-import Button from '@cloudscape-design/components/button';
-import Container from '@cloudscape-design/components/container';
-import Select, { type SelectProps } from '@cloudscape-design/components/select';
-import BreadcrumbGroup from '@cloudscape-design/components/breadcrumb-group';
-import Modal from '@cloudscape-design/components/modal';
-import Alert from '@cloudscape-design/components/alert';
-import { assignOrphans, deleteOrphans } from '../../utils/api';
-import { useOrphansQuery, useSessionsQuery, revalidateOrphans } from '../../hooks/queries';
-import { TurnContainer } from '../SessionDetailPage/components/TurnContainer';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Header from "@cloudscape-design/components/header";
+import Box from "@cloudscape-design/components/box";
+import Spinner from "@cloudscape-design/components/spinner";
+import Badge from "@cloudscape-design/components/badge";
+import Button from "@cloudscape-design/components/button";
+import Container from "@cloudscape-design/components/container";
+import Select, { type SelectProps } from "@cloudscape-design/components/select";
+import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
+import Modal from "@cloudscape-design/components/modal";
+import Alert from "@cloudscape-design/components/alert";
+import { assignOrphans, deleteOrphans } from "../../utils/api";
+import {
+  useOrphansQuery,
+  useSessionsQuery,
+  revalidateOrphans,
+} from "../../hooks/queries";
+import { TurnContainer } from "../SessionDetailPage/components/TurnContainer";
 
 export function OrphansPage() {
   const navigate = useNavigate();
-  const { data: orphanData, error: orphanError, isLoading: orphansLoading } = useOrphansQuery();
+  const {
+    data: orphanData,
+    error: orphanError,
+    isLoading: orphansLoading,
+  } = useOrphansQuery();
   const { data: sessions = [] } = useSessionsQuery();
-  const [selectedSessions, setSelectedSessions] = useState<Record<number, SelectProps.Option | null>>({});
+  const [selectedSessions, setSelectedSessions] = useState<
+    Record<number, SelectProps.Option | null>
+  >({});
   const [assigning, setAssigning] = useState<number | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<{ pid: number; eventCount: number } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    pid: number;
+    eventCount: number;
+  } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
   const groups = orphanData?.groups ?? [];
@@ -39,12 +52,18 @@ export function OrphansPage() {
 
   const handleAssign = async (pid: number) => {
     const selected = selectedSessions[pid];
-    if (!selected?.value) return;
+    if (!selected?.value) {
+      return;
+    }
     setAssigning(pid);
     try {
       await assignOrphans(selected.value, pid);
       revalidateOrphans();
-      setSelectedSessions((prev) => { const next = { ...prev }; delete next[pid]; return next; });
+      setSelectedSessions((prev) => {
+        const next = { ...prev };
+        delete next[pid];
+        return next;
+      });
     } catch (err) {
       // Error will surface on next revalidation
     } finally {
@@ -53,7 +72,9 @@ export function OrphansPage() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget) {
+      return;
+    }
     setDeleting(true);
     try {
       await deleteOrphans(deleteTarget.pid);
@@ -68,10 +89,13 @@ export function OrphansPage() {
     <SpaceBetween size="l">
       <BreadcrumbGroup
         items={[
-          { text: 'Sessions', href: '/' },
-          { text: 'Orphaned Events', href: '#' },
+          { text: "Sessions", href: "/" },
+          { text: "Orphaned Events", href: "#" },
         ]}
-        onFollow={(e) => { e.preventDefault(); navigate(e.detail.href); }}
+        onFollow={(e) => {
+          e.preventDefault();
+          navigate(e.detail.href);
+        }}
       />
       <Header
         variant="h1"
@@ -84,7 +108,9 @@ export function OrphansPage() {
       {error && <Box color="text-status-error">{error.message}</Box>}
 
       {!loading && groups.length === 0 && (
-        <Box color="text-status-inactive" textAlign="center" padding="l">No orphaned events</Box>
+        <Box color="text-status-inactive" textAlign="center" padding="l">
+          No orphaned events
+        </Box>
       )}
 
       {groups.map((group) => (
@@ -99,15 +125,38 @@ export function OrphansPage() {
                 <SpaceBetween direction="horizontal" size="xs">
                   <Select
                     selectedOption={selectedSessions[group.pid] ?? null}
-                    onChange={({ detail }) => setSelectedSessions((prev) => ({ ...prev, [group.pid]: detail.selectedOption }))}
+                    onChange={({ detail }) =>
+                      setSelectedSessions((prev) => ({
+                        ...prev,
+                        [group.pid]: detail.selectedOption,
+                      }))
+                    }
                     options={sessionOptions}
                     placeholder="Select target session"
                     filteringType="auto"
                   />
                   <Button
                     variant="normal"
-                    onClick={() => setDeleteTarget({ pid: group.pid, eventCount: group.eventCount })}
-                    style={{ root: { color: { default: '#d91515', hover: '#b80000', active: '#a10000' }, borderColor: { default: '#d91515', hover: '#b80000', active: '#a10000' } } }}
+                    onClick={() =>
+                      setDeleteTarget({
+                        pid: group.pid,
+                        eventCount: group.eventCount,
+                      })
+                    }
+                    style={{
+                      root: {
+                        color: {
+                          default: "#d91515",
+                          hover: "#b80000",
+                          active: "#a10000",
+                        },
+                        borderColor: {
+                          default: "#d91515",
+                          hover: "#b80000",
+                          active: "#a10000",
+                        },
+                      },
+                    }}
                   >
                     Delete
                   </Button>
@@ -144,14 +193,24 @@ export function OrphansPage() {
         footer={
           <Box float="right">
             <SpaceBetween direction="horizontal" size="xs">
-              <Button variant="link" onClick={() => setDeleteTarget(null)}>Cancel</Button>
-              <Button variant="primary" loading={deleting} onClick={handleDelete}>Delete</Button>
+              <Button variant="link" onClick={() => setDeleteTarget(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="primary"
+                loading={deleting}
+                onClick={handleDelete}
+              >
+                Delete
+              </Button>
             </SpaceBetween>
           </Box>
         }
       >
         <Alert type="warning">
-          This will permanently delete {deleteTarget?.eventCount} orphaned events for <strong>PID {deleteTarget?.pid}</strong>. This action cannot be undone.
+          This will permanently delete {deleteTarget?.eventCount} orphaned
+          events for <strong>PID {deleteTarget?.pid}</strong>. This action
+          cannot be undone.
         </Alert>
       </Modal>
     </SpaceBetween>

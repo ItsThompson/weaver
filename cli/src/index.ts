@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-import { view } from './commands/view.js';
-import { session } from './commands/session.js';
-import { rename } from './commands/rename.js';
-import { toggle } from './commands/toggle.js';
-import { config } from './commands/config.js';
+import { view } from "./commands/view.js";
+import { session } from "./commands/session.js";
+import { rename } from "./commands/rename.js";
+import { toggle } from "./commands/toggle.js";
+import { config } from "./commands/config.js";
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -18,7 +18,7 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   config,
 };
 
-if (!command || command === '--help' || command === '-h') {
+if (!command || command === "--help" || command === "-h") {
   console.log(`Usage: weaver <command>
 
 Commands:

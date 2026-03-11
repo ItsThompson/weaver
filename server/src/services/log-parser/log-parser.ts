@@ -28,7 +28,9 @@ export function deriveActivity(
     case "preToolUse": {
       if (eventTimestamp) {
         const age = Date.now() - new Date(eventTimestamp).getTime();
-        if (age > PENDING_APPROVAL_THRESHOLD_MS) return "pending_approval";
+        if (age > PENDING_APPROVAL_THRESHOLD_MS) {
+          return "pending_approval";
+        }
       }
       return "running_tool";
     }
@@ -43,8 +45,9 @@ export async function getLastEvent(
   const events = await parseLogFile(sessionId);
   for (let i = events.length - 1; i >= 0; i--) {
     const e = events[i];
-    if (e.event.hook_event_name)
+    if (e.event.hook_event_name) {
       return { name: e.event.hook_event_name, timestamp: e.timestamp };
+    }
   }
   return null;
 }
@@ -80,7 +83,9 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   let turnStart: string | null = null;
 
   const flushTurn = (endTime: string) => {
-    if (currentEvents.length === 0) return;
+    if (currentEvents.length === 0) {
+      return;
+    }
     turns.push({
       id: turns.length,
       userPrompt: currentPrompt,
@@ -146,7 +151,9 @@ function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
   for (const event of events) {
     const name = event.event.hook_event_name;
     const toolName = event.event.tool_name;
-    if (!toolName) continue;
+    if (!toolName) {
+      continue;
+    }
 
     if (name === "preToolUse") {
       const queue = pending.get(toolName) ?? [];

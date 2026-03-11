@@ -7,7 +7,9 @@ export function MiniActivityLog() {
   const { entries } = useActivityLog();
   const visible = entries.slice(0, MAX_VISIBLE);
 
-  if (visible.length === 0) return null;
+  if (visible.length === 0) {
+    return null;
+  }
 
   return (
     <div style={{ borderTop: "1px solid #2a2f38", padding: "6px 12px" }}>

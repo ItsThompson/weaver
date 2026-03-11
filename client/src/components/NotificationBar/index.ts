@@ -1,1 +1,1 @@
-export { NotificationBar } from './NotificationBar';
+export { NotificationBar } from "./NotificationBar";

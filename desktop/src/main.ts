@@ -1,15 +1,27 @@
-import { app, globalShortcut } from 'electron';
-import { DEFAULT_CONFIG, type WeaverConfig } from '@weaver/shared/types';
-import * as server from './server';
-import { createWindow, toggleWindow, showWindow, setGhostMode, isWindowVisible, isMiniMode, navigateToMini, navigateToMain, _getTestState } from './window';
-import { createTray } from './tray';
-import { fetchConfig, putConfig } from './config';
-import { subscribeSSE } from './sse';
+import { app, globalShortcut } from "electron";
+import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
+import * as server from "./server";
+import {
+  createWindow,
+  toggleWindow,
+  showWindow,
+  setGhostMode,
+  isWindowVisible,
+  isMiniMode,
+  navigateToMini,
+  navigateToMain,
+  _getTestState,
+} from "./window";
+import { createTray } from "./tray";
+import { fetchConfig, putConfig } from "./config";
+import { subscribeSSE } from "./sse";
 
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
-app.on('ready', async () => {
-  if (app.dock) app.dock.hide();
+app.on("ready", async () => {
+  if (app.dock) {
+    app.dock.hide();
+  }
 
   server.killPortOccupant();
   server.start();
@@ -17,7 +29,7 @@ app.on('ready', async () => {
   try {
     await server.waitForReady();
   } catch {
-    console.error('Could not connect to server');
+    console.error("Could not connect to server");
     app.exit(1);
     return;
   }
@@ -44,11 +56,11 @@ app.on('ready', async () => {
     },
     isMiniMode,
   );
-  globalShortcut.register('F5', toggleWindow);
+  globalShortcut.register("F5", toggleWindow);
   showWindow(); // marks visible=true; actual show happens on ready-to-show
 
   subscribeSSE(server.SERVER_URL, (event, data) => {
-    if (event === 'configChanged') {
+    if (event === "configChanged") {
       const newConfig = data as WeaverConfig;
       currentConfig = newConfig;
       setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);
@@ -72,11 +84,11 @@ app.on('ready', async () => {
   }
 });
 
-app.on('will-quit', () => {
+app.on("will-quit", () => {
   globalShortcut.unregisterAll();
   server.stop();
 });
 
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // No-op: keep app alive via tray
 });

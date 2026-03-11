@@ -1,12 +1,16 @@
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Header from '@cloudscape-design/components/header';
-import Container from '@cloudscape-design/components/container';
-import Button from '@cloudscape-design/components/button';
-import Alert from '@cloudscape-design/components/alert';
-import Box from '@cloudscape-design/components/box';
-import type { ParsedConversation, SavedConversation, ConversationExchange } from '../../../types/conversation';
-import { parseConversation } from '../../../utils/conversation-parser';
-import { ExchangeSummaryLine } from './ExchangeSummaryLine';
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Header from "@cloudscape-design/components/header";
+import Container from "@cloudscape-design/components/container";
+import Button from "@cloudscape-design/components/button";
+import Alert from "@cloudscape-design/components/alert";
+import Box from "@cloudscape-design/components/box";
+import type {
+  ParsedConversation,
+  SavedConversation,
+  ConversationExchange,
+} from "../../../types/conversation";
+import { parseConversation } from "../../../utils/conversation-parser";
+import { ExchangeSummaryLine } from "./ExchangeSummaryLine";
 
 interface PreviewPhaseProps {
   parsed: ParsedConversation;
@@ -18,15 +22,27 @@ interface PreviewPhaseProps {
   onDownload: () => void;
 }
 
-function countTurns(exchanges: ConversationExchange[], selectedIds: Set<number>): number {
+function countTurns(
+  exchanges: ConversationExchange[],
+  selectedIds: Set<number>,
+): number {
   return exchanges
     .filter((ex) => selectedIds.has(ex.id))
     .reduce((sum, ex) => sum + ex.turns.length, 0);
 }
 
-export function PreviewPhase({ parsed, pruned, deleteMainIds, deleteTangentIds, totalSelected, onBack, onDownload }: PreviewPhaseProps) {
-  const removedTurnCount = countTurns(parsed.mainExchanges, deleteMainIds)
-    + countTurns(parsed.tangentExchanges ?? [], deleteTangentIds);
+export function PreviewPhase({
+  parsed,
+  pruned,
+  deleteMainIds,
+  deleteTangentIds,
+  totalSelected,
+  onBack,
+  onDownload,
+}: PreviewPhaseProps) {
+  const removedTurnCount =
+    countTurns(parsed.mainExchanges, deleteMainIds) +
+    countTurns(parsed.tangentExchanges ?? [], deleteTangentIds);
 
   const prunedParsed = parseConversation(pruned);
 
@@ -37,7 +53,9 @@ export function PreviewPhase({ parsed, pruned, deleteMainIds, deleteTangentIds, 
         actions={
           <SpaceBetween direction="horizontal" size="xs">
             <Button onClick={onBack}>Back</Button>
-            <Button variant="primary" onClick={onDownload}>Download pruned JSON</Button>
+            <Button variant="primary" onClick={onDownload}>
+              Download pruned JSON
+            </Button>
           </SpaceBetween>
         }
       >
@@ -51,14 +69,24 @@ export function PreviewPhase({ parsed, pruned, deleteMainIds, deleteTangentIds, 
 
       <Container header={<Header variant="h2">Remaining exchanges</Header>}>
         {pruned.history.length === 0 ? (
-          <Box color="text-body-secondary">All exchanges removed — conversation will be empty.</Box>
+          <Box color="text-body-secondary">
+            All exchanges removed — conversation will be empty.
+          </Box>
         ) : (
           <SpaceBetween size="s">
             {prunedParsed.mainExchanges.map((ex) => (
-              <ExchangeSummaryLine key={`main-${ex.id}`} label="Main" exchange={ex} />
+              <ExchangeSummaryLine
+                key={`main-${ex.id}`}
+                label="Main"
+                exchange={ex}
+              />
             ))}
             {prunedParsed.tangentExchanges?.map((ex) => (
-              <ExchangeSummaryLine key={`tangent-${ex.id}`} label="Tangent" exchange={ex} />
+              <ExchangeSummaryLine
+                key={`tangent-${ex.id}`}
+                label="Tangent"
+                exchange={ex}
+              />
             ))}
           </SpaceBetween>
         )}
@@ -66,7 +94,7 @@ export function PreviewPhase({ parsed, pruned, deleteMainIds, deleteTangentIds, 
 
       <Container header={<Header variant="h2">Updated transcript</Header>}>
         <Box variant="pre" fontSize="body-s">
-          {pruned.transcript.map((line, i) => `[${i}] ${line}`).join('\n')}
+          {pruned.transcript.map((line, i) => `[${i}] ${line}`).join("\n")}
         </Box>
       </Container>
     </SpaceBetween>

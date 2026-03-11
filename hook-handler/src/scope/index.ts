@@ -1,1 +1,1 @@
-export { resolveTestDirs } from './scope';
+export { resolveTestDirs } from "./scope";

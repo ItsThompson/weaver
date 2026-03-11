@@ -1,1 +1,1 @@
-export { SessionDetailPage } from './SessionDetailPage';
+export { SessionDetailPage } from "./SessionDetailPage";

@@ -1,4 +1,6 @@
-import ButtonDropdown, { type ButtonDropdownProps } from '@cloudscape-design/components/button-dropdown';
+import ButtonDropdown, {
+  type ButtonDropdownProps,
+} from "@cloudscape-design/components/button-dropdown";
 
 export interface ActionItem {
   id: string;
@@ -9,10 +11,14 @@ export interface ActionItem {
 interface ActionDropdownProps {
   actions: ActionItem[];
   children?: React.ReactNode;
-  variant?: ButtonDropdownProps['variant'];
+  variant?: ButtonDropdownProps["variant"];
 }
 
-export function ActionDropdown({ actions, children, variant }: ActionDropdownProps) {
+export function ActionDropdown({
+  actions,
+  children,
+  variant,
+}: ActionDropdownProps) {
   const handlers = Object.fromEntries(actions.map((a) => [a.id, a.action]));
 
   return (

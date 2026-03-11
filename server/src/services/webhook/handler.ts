@@ -1,11 +1,17 @@
-import { PENDING_APPROVAL_THRESHOLD_MS, type ActivityStatus, type Session, type HookEvent, type WeaverConfig } from '@weaver/shared/types';
-import type { WebhookPayload, SimpleWebhookPayload } from './types';
-import { readConfig } from '../config/index';
-import { parseLogFile, deriveActivity } from '../log-parser/index';
-import { log } from '../../utils/logger';
-import { buildWebhookPayload } from './payload-advanced';
-import { buildSimpleWebhookPayload } from './payload-simple';
-import { dispatchWebhook } from './dispatch';
+import {
+  PENDING_APPROVAL_THRESHOLD_MS,
+  type ActivityStatus,
+  type Session,
+  type HookEvent,
+  type WeaverConfig,
+} from "@weaver/shared/types";
+import type { WebhookPayload, SimpleWebhookPayload } from "./types";
+import { readConfig } from "../config/index";
+import { parseLogFile, deriveActivity } from "../log-parser/index";
+import { log } from "../../utils/logger";
+import { buildWebhookPayload } from "./payload-advanced";
+import { buildSimpleWebhookPayload } from "./payload-simple";
+import { dispatchWebhook } from "./dispatch";
 
 const pendingTimers = new Map<string, NodeJS.Timeout>();
 const enabledSessions = new Set<string>();
@@ -15,12 +21,15 @@ export function isWebhookEnabled(sessionId: string): boolean {
 }
 
 export function setWebhookEnabled(sessionId: string, enabled: boolean): void {
-  if (enabled) enabledSessions.add(sessionId);
-  else enabledSessions.delete(sessionId);
+  if (enabled) {
+    enabledSessions.add(sessionId);
+  } else {
+    enabledSessions.delete(sessionId);
+  }
 }
 
 function buildPayloadForFormat(
-  format: WeaverConfig['webhook_format'],
+  format: WeaverConfig["webhook_format"],
   sessionId: string,
   eventName: string,
   activity: ActivityStatus,
@@ -28,8 +37,17 @@ function buildPayloadForFormat(
   session: Session | undefined,
   events: HookEvent[],
 ): WebhookPayload | SimpleWebhookPayload {
-  if (format === 'simple') return buildSimpleWebhookPayload(eventName, activity, sessionName, events);
-  return buildWebhookPayload(sessionId, eventName, activity, sessionName, session, events);
+  if (format === "simple") {
+    return buildSimpleWebhookPayload(eventName, activity, sessionName, events);
+  }
+  return buildWebhookPayload(
+    sessionId,
+    eventName,
+    activity,
+    sessionName,
+    session,
+    events,
+  );
 }
 
 export async function handleWebhookEvent(
@@ -38,33 +56,64 @@ export async function handleWebhookEvent(
   sessionName: string,
   session: Session | undefined,
 ): Promise<void> {
-  if (!eventName) return;
+  if (!eventName) {
+    return;
+  }
 
   const { config } = await readConfig();
-  if (!config.webhook_url) return;
-  if (!enabledSessions.has(sessionId)) return;
+  if (!config.webhook_url) {
+    return;
+  }
+  if (!enabledSessions.has(sessionId)) {
+    return;
+  }
 
   const events = await parseLogFile(sessionId);
   const activity = deriveActivity(eventName);
-  const payload = buildPayloadForFormat(config.webhook_format, sessionId, eventName, activity, sessionName, session, events);
+  const payload = buildPayloadForFormat(
+    config.webhook_format,
+    sessionId,
+    eventName,
+    activity,
+    sessionName,
+    session,
+    events,
+  );
   dispatchWebhook(config.webhook_url, payload);
 
-  if (eventName === 'postToolUse' || eventName === 'stop') {
+  if (eventName === "postToolUse" || eventName === "stop") {
     clearPendingTimer(sessionId);
-  } else if (eventName === 'preToolUse') {
+  } else if (eventName === "preToolUse") {
     clearPendingTimer(sessionId);
-    pendingTimers.set(sessionId, setTimeout(async () => {
-      pendingTimers.delete(sessionId);
-      try {
-        const { config: freshConfig } = await readConfig();
-        if (!freshConfig.webhook_url) return;
-        const freshEvents = await parseLogFile(sessionId);
-        const pendingPayload = buildPayloadForFormat(freshConfig.webhook_format, sessionId, eventName, 'pending_approval', sessionName, session, freshEvents);
-        dispatchWebhook(freshConfig.webhook_url, pendingPayload);
-      } catch (err) {
-        log({ timestamp: new Date().toISOString(), event: 'webhook_pending_error', error: String(err) });
-      }
-    }, PENDING_APPROVAL_THRESHOLD_MS));
+    pendingTimers.set(
+      sessionId,
+      setTimeout(async () => {
+        pendingTimers.delete(sessionId);
+        try {
+          const { config: freshConfig } = await readConfig();
+          if (!freshConfig.webhook_url) {
+            return;
+          }
+          const freshEvents = await parseLogFile(sessionId);
+          const pendingPayload = buildPayloadForFormat(
+            freshConfig.webhook_format,
+            sessionId,
+            eventName,
+            "pending_approval",
+            sessionName,
+            session,
+            freshEvents,
+          );
+          dispatchWebhook(freshConfig.webhook_url, pendingPayload);
+        } catch (err) {
+          log({
+            timestamp: new Date().toISOString(),
+            event: "webhook_pending_error",
+            error: String(err),
+          });
+        }
+      }, PENDING_APPROVAL_THRESHOLD_MS),
+    );
   }
 }
 
@@ -77,6 +126,8 @@ function clearPendingTimer(sessionId: string): void {
 }
 
 export function stopWebhookTimers(): void {
-  for (const timer of pendingTimers.values()) clearTimeout(timer);
+  for (const timer of pendingTimers.values()) {
+    clearTimeout(timer);
+  }
   pendingTimers.clear();
 }
