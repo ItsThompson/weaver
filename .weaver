@@ -1,0 +1,37 @@
+{
+  "validation": {
+    "stop": [
+      {
+        "name": "build",
+        "command": "npx turbo build",
+        "timeout_ms": 60000
+      },
+      {
+        "name": "test",
+        "command": "npx turbo test --filter='...[HEAD]'",
+        "run_if_files_match": "**/*.{ts,tsx}",
+        "timeout_ms": 60000
+      },
+      {
+        "name": "test:bash",
+        "command": "find . -name '*.test.sh' -exec bash {} \\;",
+        "run_if_files_match": "**/*.sh",
+        "timeout_ms": 30000
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "fs_write",
+        "name": "eslint",
+        "command": "npx eslint --fix {{file}}",
+        "timeout_ms": 10000
+      },
+      {
+        "matcher": "fs_write",
+        "name": "prettier",
+        "command": "npx prettier --write {{file}} --ignore-unknown",
+        "timeout_ms": 10000
+      }
+    ]
+  }
+}

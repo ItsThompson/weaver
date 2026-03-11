@@ -1,35 +1,50 @@
-import { join } from 'node:path';
-import { homedir } from 'node:os';
-import { PENDING_APPROVAL_THRESHOLD_MS } from '@weaver/shared/types';
-import type { HookEvent, TurnGroup, ToolCallPair, ActivityStatus } from '@weaver/shared/types';
-import { log } from '../../utils/logger';
-import { FileCache, parseJsonlFile } from '../file-cache/index';
+import { join } from "node:path";
+import { homedir } from "node:os";
+import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
+import type {
+  HookEvent,
+  TurnGroup,
+  ToolCallPair,
+  ActivityStatus,
+  ValidationResult,
+} from "@weaver/shared/types";
+import { log } from "../../utils/logger";
+import { FileCache, parseJsonlFile } from "../file-cache/index";
 
-const LOGS_DIR = () => join(homedir(), '.weaver', 'logs');
+const LOGS_DIR = () => join(homedir(), ".weaver", "logs");
 
 const logCache = new FileCache<HookEvent[]>();
 export const _logCache = logCache;
 
-export function deriveActivity(eventName: string, eventTimestamp?: string): ActivityStatus {
+export function deriveActivity(
+  eventName: string,
+  eventTimestamp?: string,
+): ActivityStatus {
   switch (eventName) {
-    case 'agentSpawn': return 'starting';
-    case 'stop': return 'idle';
-    case 'preToolUse': {
+    case "agentSpawn":
+      return "starting";
+    case "stop":
+      return "idle";
+    case "preToolUse": {
       if (eventTimestamp) {
         const age = Date.now() - new Date(eventTimestamp).getTime();
-        if (age > PENDING_APPROVAL_THRESHOLD_MS) return 'pending_approval';
+        if (age > PENDING_APPROVAL_THRESHOLD_MS) return "pending_approval";
       }
-      return 'running_tool';
+      return "running_tool";
     }
-    default: return 'processing';
+    default:
+      return "processing";
   }
 }
 
-export async function getLastEvent(sessionId: string): Promise<{ name: string; timestamp: string } | null> {
+export async function getLastEvent(
+  sessionId: string,
+): Promise<{ name: string; timestamp: string } | null> {
   const events = await parseLogFile(sessionId);
   for (let i = events.length - 1; i >= 0; i--) {
     const e = events[i];
-    if (e.event.hook_event_name) return { name: e.event.hook_event_name, timestamp: e.timestamp };
+    if (e.event.hook_event_name)
+      return { name: e.event.hook_event_name, timestamp: e.timestamp };
   }
   return null;
 }
@@ -38,9 +53,24 @@ export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {
   const filePath = join(LOGS_DIR(), `${sessionId}.jsonl`);
   return logCache.get(filePath, () =>
     parseJsonlFile<HookEvent>(filePath, (line) =>
-      log({ timestamp: new Date().toISOString(), event: 'malformed_log_line', sessionId, line }),
+      log({
+        timestamp: new Date().toISOString(),
+        event: "malformed_log_line",
+        sessionId,
+        line,
+      }),
     ),
   );
+}
+
+function extractValidationResults(evts: HookEvent[]): ValidationResult[] {
+  return evts
+    .filter(
+      (e): e is HookEvent & { event: { results: ValidationResult[] } } =>
+        e.event.hook_event_name === "validation" &&
+        Array.isArray((e.event as any).results),
+    )
+    .flatMap((e) => e.event.results);
 }
 
 export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
@@ -58,6 +88,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
       toolCalls: matchToolCalls(currentEvents),
       startTime: turnStart ?? currentEvents[0].timestamp,
       endTime,
+      validationResults: extractValidationResults(currentEvents),
     });
     currentEvents = [];
     currentPrompt = null;
@@ -67,7 +98,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   for (const event of events) {
     const name = event.event.hook_event_name;
 
-    if (name === 'agentSpawn') {
+    if (name === "agentSpawn") {
       // agentSpawn is its own "turn" (session start marker)
       flushTurn(event.timestamp);
       turns.push({
@@ -77,11 +108,12 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
         toolCalls: [],
         startTime: event.timestamp,
         endTime: event.timestamp,
+        validationResults: [],
       });
       continue;
     }
 
-    if (name === 'userPromptSubmit') {
+    if (name === "userPromptSubmit") {
       // New user turn — flush any prior incomplete turn
       flushTurn(event.timestamp);
       currentPrompt = event.event.prompt ?? null;
@@ -90,7 +122,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
       continue;
     }
 
-    if (name === 'stop') {
+    if (name === "stop") {
       currentEvents.push(event);
       flushTurn(event.timestamp);
       continue;
@@ -116,11 +148,11 @@ function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
     const toolName = event.event.tool_name;
     if (!toolName) continue;
 
-    if (name === 'preToolUse') {
+    if (name === "preToolUse") {
       const queue = pending.get(toolName) ?? [];
       queue.push(event);
       pending.set(toolName, queue);
-    } else if (name === 'postToolUse') {
+    } else if (name === "postToolUse") {
       const queue = pending.get(toolName);
       const pre = queue?.shift();
       if (pre) {

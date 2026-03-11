@@ -49,6 +49,7 @@ const mockTurns: TurnGroup[] = [
     events: [{ timestamp: '2024-01-01T10:00:00Z', event: { hook_event_name: 'agentSpawn', cwd: '/test/path' } }],
     userPrompt: null,
     toolCalls: [],
+    validationResults: [],
   },
   {
     id: 2,
@@ -57,6 +58,7 @@ const mockTurns: TurnGroup[] = [
     events: [{ timestamp: '2024-01-01T10:05:00Z', event: { hook_event_name: 'userPrompt', cwd: '/test/path' } }],
     userPrompt: 'Test user prompt',
     toolCalls: [],
+    validationResults: [],
   },
 ];
 
@@ -117,5 +119,33 @@ describe('SessionDetailPage', () => {
     await waitFor(() => {
       expect(screen.getByText('Test user prompt')).toBeInTheDocument();
     });
+  });
+
+  it('renders ValidationBanner when turn has validation results', async () => {
+    const turnsWithValidation: TurnGroup[] = [
+      {
+        ...mockTurns[1],
+        validationResults: [
+          { name: 'typecheck', passed: true, output: '', duration_ms: 1200, timed_out: false },
+          { name: 'test', passed: false, output: 'FAIL src/index.test.ts', duration_ms: 3400, timed_out: false },
+        ],
+      },
+    ];
+    mockGetSession.mockResolvedValue({ session: mockSession, turns: turnsWithValidation, webhookEnabled: false });
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText(/Validation: 1\/2 failed/)).toBeInTheDocument();
+    });
+  });
+
+  it('does not render ValidationBanner when turn has no validation results', async () => {
+    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
+    renderComponent();
+
+    await waitFor(() => {
+      expect(screen.getByText('Test user prompt')).toBeInTheDocument();
+    });
+    expect(screen.queryByText(/Validation/)).not.toBeInTheDocument();
   });
 });

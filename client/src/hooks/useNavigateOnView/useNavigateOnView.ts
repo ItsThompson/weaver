@@ -1,9 +1,9 @@
-import { useEffect, useRef } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const PAGE_ROUTES: Record<string, string> = {
-  sessions: '/',
-  mini: '/mini',
+  sessions: "/",
+  mini: "/mini",
 };
 
 export function useNavigateOnView(): void {
@@ -13,19 +13,24 @@ export function useNavigateOnView(): void {
   locationRef.current = location.pathname;
 
   useEffect(() => {
-    const source = new EventSource('/api/events');
+    const source = new EventSource("/api/events");
 
-    source.addEventListener('navigate', (event: MessageEvent) => {
+    source.addEventListener("navigate", (event: MessageEvent) => {
       try {
-        const data = JSON.parse(event.data) as { sessionId?: string; page?: string };
+        const data = JSON.parse(event.data) as {
+          sessionId?: string;
+          page?: string;
+        };
         if (data.sessionId) {
           navigate(`/sessions/${data.sessionId}`);
-        } else if (data.page === 'toggle') {
-          navigate(locationRef.current === '/mini' ? '/' : '/mini');
+        } else if (data.page === "toggle") {
+          navigate(locationRef.current === "/mini" ? "/" : "/mini");
         } else if (data.page && PAGE_ROUTES[data.page]) {
           navigate(PAGE_ROUTES[data.page]);
         }
-      } catch { /* ignore */ }
+      } catch (e) {
+        console.warn("Failed to parse navigate event:", e);
+      }
     });
 
     return () => source.close();

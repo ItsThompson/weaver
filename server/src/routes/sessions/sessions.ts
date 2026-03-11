@@ -1,28 +1,51 @@
-import type { FastifyInstance } from 'fastify';
-import type { Session, SessionWithStatus, TurnGroup, ActivityStatus, ApiError } from '@weaver/shared/types';
-import { unlink } from 'node:fs/promises';
-import { join } from 'node:path';
-import { homedir } from 'node:os';
-import { readSessions, writeSessions, isProcessRunning } from '../../services/storage/index';
-import { parseLogFile, groupEventsByTurn, getLastEvent, deriveActivity } from '../../services/log-parser/index';
-import { broadcast } from '../../services/event-bus';
-import { isWebhookEnabled, setWebhookEnabled } from '../../services/webhook/index';
+import type { FastifyInstance } from "fastify";
+import type {
+  Session,
+  SessionWithStatus,
+  TurnGroup,
+  ActivityStatus,
+  ApiError,
+} from "@weaver/shared/types";
+import { unlink } from "node:fs/promises";
+import { join } from "node:path";
+import { homedir } from "node:os";
+import {
+  readSessions,
+  writeSessions,
+  isProcessRunning,
+} from "../../services/storage/index";
+import {
+  parseLogFile,
+  groupEventsByTurn,
+  getLastEvent,
+  deriveActivity,
+} from "../../services/log-parser/index";
+import { broadcast } from "../../services/event-bus";
+import { log } from "../../utils/logger";
+import {
+  isWebhookEnabled,
+  setWebhookEnabled,
+} from "../../services/webhook/index";
 
-function toSessionWithStatus(session: Session, isOpen: boolean, activity?: ActivityStatus): SessionWithStatus {
-  return { ...session, status: isOpen ? 'open' : 'closed', activity };
+function toSessionWithStatus(
+  session: Session,
+  isOpen: boolean,
+  activity?: ActivityStatus,
+): SessionWithStatus {
+  return { ...session, status: isOpen ? "open" : "closed", activity };
 }
 
 export function registerSessionRoutes(server: FastifyInstance): void {
-  server.get<{ Reply: SessionWithStatus[] }>('/api/sessions', async () => {
+  server.get<{ Reply: SessionWithStatus[] }>("/api/sessions", async () => {
     const sessions = await readSessions();
     const results: SessionWithStatus[] = [];
 
     for (const s of sessions) {
       const isOpen = isProcessRunning(s.pid);
-      let activity: SessionWithStatus['activity'];
+      let activity: SessionWithStatus["activity"];
       if (isOpen) {
         const last = await getLastEvent(s.id);
-        activity = deriveActivity(last?.name ?? 'agentSpawn', last?.timestamp);
+        activity = deriveActivity(last?.name ?? "agentSpawn", last?.timestamp);
       }
       results.push(toSessionWithStatus(s, isOpen, activity));
     }
@@ -30,102 +53,138 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     return results.sort((a, b) => b.startTime.localeCompare(a.startTime));
   });
 
-  server.get<{ Params: { id: string }; Reply: { session: SessionWithStatus; turns: TurnGroup[] } | ApiError }>(
-    '/api/sessions/:id',
-    async (request, reply) => {
-      const { id } = request.params;
-      const sessions = await readSessions();
-      const session = sessions.find((s) => s.id === id);
-      if (!session) return reply.status(404).send({ error: 'Session not found' });
+  server.get<{
+    Params: { id: string };
+    Reply: { session: SessionWithStatus; turns: TurnGroup[] } | ApiError;
+  }>("/api/sessions/:id", async (request, reply) => {
+    const { id } = request.params;
+    const sessions = await readSessions();
+    const session = sessions.find((s) => s.id === id);
+    if (!session) return reply.status(404).send({ error: "Session not found" });
 
-      const events = await parseLogFile(id);
-      if (events.length === 0 && !session) return reply.status(404).send({ error: 'Log file not found' });
+    const events = await parseLogFile(id);
+    if (events.length === 0 && !session)
+      return reply.status(404).send({ error: "Log file not found" });
 
-      const isOpen = isProcessRunning(session.pid);
-      const lastEvent = events.length > 0 ? events[events.length - 1] : null;
-      const activity = isOpen ? deriveActivity(lastEvent?.event.hook_event_name ?? 'agentSpawn', lastEvent?.timestamp) : undefined;
+    const isOpen = isProcessRunning(session.pid);
+    const lastEvent = events.length > 0 ? events[events.length - 1] : null;
+    const activity = isOpen
+      ? deriveActivity(
+          lastEvent?.event.hook_event_name ?? "agentSpawn",
+          lastEvent?.timestamp,
+        )
+      : undefined;
 
-      return {
-        session: toSessionWithStatus(session, isOpen, activity),
-        turns: groupEventsByTurn(events),
-        webhookEnabled: isWebhookEnabled(id),
-      };
-    },
-  );
+    return {
+      session: toSessionWithStatus(session, isOpen, activity),
+      turns: groupEventsByTurn(events),
+      webhookEnabled: isWebhookEnabled(id),
+    };
+  });
 
-  server.patch<{ Params: { id: string }; Body: { customName: string }; Reply: Session | ApiError }>(
-    '/api/sessions/:id',
-    async (request, reply) => {
-      const { id } = request.params;
-      const { customName } = request.body ?? {};
+  server.patch<{
+    Params: { id: string };
+    Body: { customName: string };
+    Reply: Session | ApiError;
+  }>("/api/sessions/:id", async (request, reply) => {
+    const { id } = request.params;
+    const { customName } = request.body ?? {};
 
-      if (typeof customName !== 'string') {
-        return reply.status(400).send({ error: 'customName must be a string' });
+    if (typeof customName !== "string") {
+      return reply.status(400).send({ error: "customName must be a string" });
+    }
+
+    const sessions = await readSessions();
+    const index = sessions.findIndex((s) => s.id === id);
+    if (index === -1)
+      return reply.status(404).send({ error: "Session not found" });
+
+    sessions[index].customName = customName;
+    await writeSessions(sessions);
+    return sessions[index];
+  });
+
+  server.post<{
+    Body: { pid: number; customName: string };
+    Reply: Session | ApiError;
+  }>("/api/rename", async (request, reply) => {
+    const { pid, customName } = request.body ?? {};
+
+    if (typeof pid !== "number")
+      return reply.status(400).send({ error: "pid required" });
+    if (typeof customName !== "string")
+      return reply.status(400).send({ error: "customName required" });
+
+    const sessions = await readSessions();
+    let index = -1;
+    for (let i = sessions.length - 1; i >= 0; i--) {
+      if (sessions[i].pid === pid) {
+        index = i;
+        break;
       }
+    }
+    if (index === -1)
+      return reply.status(404).send({ error: "No session found for PID" });
 
-      const sessions = await readSessions();
-      const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1) return reply.status(404).send({ error: 'Session not found' });
+    sessions[index].customName = customName;
+    await writeSessions(sessions);
+    broadcast(sessions[index].id);
+    return sessions[index];
+  });
 
-      sessions[index].customName = customName;
-      await writeSessions(sessions);
-      return sessions[index];
-    },
-  );
+  server.post<{
+    Params: { id: string };
+    Body: { enabled: boolean };
+    Reply: { ok: true; enabled: boolean } | ApiError;
+  }>("/api/sessions/:id/webhook", async (request, reply) => {
+    const { id } = request.params;
+    const { enabled } = request.body ?? {};
+    if (typeof enabled !== "boolean")
+      return reply.status(400).send({ error: "enabled must be a boolean" });
 
-  server.post<{ Body: { pid: number; customName: string }; Reply: Session | ApiError }>(
-    '/api/rename',
-    async (request, reply) => {
-      const { pid, customName } = request.body ?? {};
+    const sessions = await readSessions();
+    if (!sessions.some((s) => s.id === id))
+      return reply.status(404).send({ error: "Session not found" });
 
-      if (typeof pid !== 'number') return reply.status(400).send({ error: 'pid required' });
-      if (typeof customName !== 'string') return reply.status(400).send({ error: 'customName required' });
-
-      const sessions = await readSessions();
-      let index = -1;
-      for (let i = sessions.length - 1; i >= 0; i--) {
-        if (sessions[i].pid === pid) { index = i; break; }
-      }
-      if (index === -1) return reply.status(404).send({ error: 'No session found for PID' });
-
-      sessions[index].customName = customName;
-      await writeSessions(sessions);
-      broadcast(sessions[index].id);
-      return sessions[index];
-    },
-  );
-
-  server.post<{ Params: { id: string }; Body: { enabled: boolean }; Reply: { ok: true; enabled: boolean } | ApiError }>(
-    '/api/sessions/:id/webhook',
-    async (request, reply) => {
-      const { id } = request.params;
-      const { enabled } = request.body ?? {};
-      if (typeof enabled !== 'boolean') return reply.status(400).send({ error: 'enabled must be a boolean' });
-
-      const sessions = await readSessions();
-      if (!sessions.some((s) => s.id === id)) return reply.status(404).send({ error: 'Session not found' });
-
-      setWebhookEnabled(id, enabled);
-      return { ok: true as const, enabled };
-    },
-  );
+    setWebhookEnabled(id, enabled);
+    return { ok: true as const, enabled };
+  });
 
   server.delete<{ Params: { id: string }; Reply: { ok: true } | ApiError }>(
-    '/api/sessions/:id',
+    "/api/sessions/:id",
     async (request, reply) => {
       const { id } = request.params;
       const sessions = await readSessions();
       const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1) return reply.status(404).send({ error: 'Session not found' });
+      if (index === -1)
+        return reply.status(404).send({ error: "Session not found" });
 
       const session = sessions[index];
-      const dataDir = join(homedir(), '.weaver');
+      const dataDir = join(homedir(), ".weaver");
 
       // Remove log file
-      try { await unlink(join(dataDir, 'logs', `${id}.jsonl`)); } catch { /* may not exist */ }
+      try {
+        await unlink(join(dataDir, "logs", `${id}.jsonl`));
+      } catch (e) {
+        log({
+          timestamp: new Date().toISOString(),
+          event: "session_delete_log_error",
+          sessionId: id,
+          error: String(e),
+        });
+      }
 
       // Remove session marker if present
-      try { await unlink(join(dataDir, `.current-session-${session.pid}`)); } catch { /* may not exist */ }
+      try {
+        await unlink(join(dataDir, `.current-session-${session.pid}`));
+      } catch (e) {
+        log({
+          timestamp: new Date().toISOString(),
+          event: "session_delete_marker_error",
+          sessionId: id,
+          error: String(e),
+        });
+      }
 
       // Remove from sessions index
       sessions.splice(index, 1);

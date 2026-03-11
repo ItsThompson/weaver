@@ -6,6 +6,7 @@ import Button from '@cloudscape-design/components/button';
 import Box from '@cloudscape-design/components/box';
 import type { TurnGroup } from '@weaver/shared/types';
 import { ToolCallCard } from '../../../components/ToolCallCard';
+import { ValidationBanner } from '../../../components/ValidationBanner';
 
 interface TurnContainerProps {
   turn: TurnGroup;
@@ -50,6 +51,9 @@ export function TurnContainer({ turn, showTools, onToggleTools }: TurnContainerP
         {hasTools && showTools && turn.toolCalls.map((tc, i) => (
           <ToolCallCard key={`${tc.toolName}-${i}`} toolCall={tc} />
         ))}
+        {turn.validationResults.length > 0 && (
+          <ValidationBanner results={turn.validationResults} />
+        )}
         {hasTools && onToggleTools && (
           <Button variant="inline-link" onClick={onToggleTools}>
             {showTools ? 'Hide tool calls' : `Show ${turn.toolCalls.length} tool call${turn.toolCalls.length > 1 ? 's' : ''}`}

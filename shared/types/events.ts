@@ -1,3 +1,5 @@
+import type { ValidationResult } from './validation';
+
 // Raw hook event as received from kiro-cli via STDIN
 export interface HookEventData {
   hook_event_name: string;
@@ -35,6 +37,7 @@ export interface TurnGroup {
   toolCalls: ToolCallPair[];
   startTime: string;
   endTime: string;
+  validationResults: ValidationResult[];
 }
 
 export const PENDING_APPROVAL_THRESHOLD_MS = 15_000;

@@ -19,6 +19,10 @@
     "./config": {
       "types": "./dist/types/config.d.ts",
       "default": "./dist/types/config.js"
+    },
+    "./utils": {
+      "types": "./dist/utils/index.d.ts",
+      "default": "./dist/utils/index.js"
     }
   },
   "scripts": {

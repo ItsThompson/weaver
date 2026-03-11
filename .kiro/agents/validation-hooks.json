@@ -1,0 +1,106 @@
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "validation-hooks",
+  "description": "validation-hooks implementation agent for the Ralph Wiggum Loop. Executes one step per session.",
+  "prompt": "file://./validation-hooks-prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_fetch"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_fetch"
+  ],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": [
+        "./**",
+        "~/Desktop/**"
+      ]
+    },
+    "fs_write": {
+      "allowedPaths": [
+        "./shared/types/**",
+        "./hook-handler/**",
+        "./server/src/services/log-parser/**",
+        "./server/src/__tests__/**",
+        "./client/src/components/ValidationBanner/**",
+        "./client/src/pages/SessionDetailPage/**",
+        "./client/src/hooks/notifications/**",
+        "./package.json",
+        "./package-lock.json",
+        "~/Desktop/progress.md"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "npm install *",
+        "npm test *",
+        "npm run *",
+        "npx jest *",
+        "npx tsx *",
+        "node *",
+        "turbo *",
+        "git add *",
+        "git commit *",
+        "git status *",
+        "git diff *",
+        "mkdir *",
+        "rm *",
+        "cat *",
+        "ls *"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file:///Users/thompsnt/Desktop/current-step.md",
+    "file:///Users/thompsnt/Desktop/progress.md",
+    "file://README.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log agent spawn event"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log user prompt submission"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log pre-tool-use for all tools"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log post-tool-use for all tools"
+      }
+    ],
+    "stop": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log turn completion"
+      }
+    ]
+  },
+  "useLegacyMcpJson": false
+}
