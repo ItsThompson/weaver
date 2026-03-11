@@ -21,8 +21,8 @@ export function writeValidationEvent(
   try {
     mkdirSync(dirname(sessionLogPath), { recursive: true });
     appendFileSync(sessionLogPath, JSON.stringify(logEntry) + "\n");
-  } catch {
-    /* best effort */
+  } catch (e) {
+    console.error("Failed to write validation event:", sessionLogPath, e);
   }
 
   // Fire-and-forget server notification

@@ -24,8 +24,8 @@ export function handleExitLogic(
     );
     try {
       writeFileSync(pendingPath, JSON.stringify({ results }));
-    } catch {
-      /* best effort */
+    } catch (e) {
+      console.error("Failed to write pending file:", pendingPath, e);
     }
     const names = failed.map((r) => r.name).join(", ");
     return {
