@@ -21,7 +21,7 @@ run_validation() {
     return
   fi
 
-  [ -f "$validate_script" ] || return
+  [ -f "$validate_script" ] || return 0
 
   local tool_name
   tool_name=$(echo "$EVENT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")
