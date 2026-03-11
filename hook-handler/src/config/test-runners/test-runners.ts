@@ -23,10 +23,11 @@ function readGlobalTestRunners(): string[] {
   if (!existsSync(configPath)) return [];
   try {
     const parsed = JSON.parse(readFileSync(configPath, "utf-8"));
-    if (Array.isArray(parsed?.test_runners))
+    if (Array.isArray(parsed?.test_runners)) {
       return parsed.test_runners.filter((r: unknown) => typeof r === "string");
-  } catch {
-    /* ignore */
+    }
+  } catch (e) {
+    console.error("Failed to parse ~/.weaver/config.json:", e);
   }
   return [];
 }

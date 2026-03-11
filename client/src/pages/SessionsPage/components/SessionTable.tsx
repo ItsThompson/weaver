@@ -27,10 +27,13 @@ interface SessionTableProps {
   columnDefinitions: TableProps.ColumnDefinition<SessionWithStatus>[];
   contentDisplayOptions: CollectionPreferencesProps.ContentDisplayOption[];
   defaultContentDisplay: ContentDisplayItem[];
-  configKey: 'open_display_options' | 'close_display_options';
+  configKey: "open_display_options" | "close_display_options";
 }
 
-function filteringFunction(item: SessionWithStatus, filterText: string): boolean {
+function filteringFunction(
+  item: SessionWithStatus,
+  filterText: string,
+): boolean {
   const lower = filterText.toLowerCase();
   return (
     (item.customName?.toLowerCase().includes(lower) ?? false) ||
@@ -48,26 +51,42 @@ export function SessionTable({
 }: SessionTableProps) {
   const navigate = useNavigate();
   const { data: configData } = useConfigQuery();
-  const [contentDisplay, setContentDisplay] = useState<ContentDisplayItem[]>(defaultContentDisplay);
+  const [contentDisplay, setContentDisplay] = useState<ContentDisplayItem[]>(
+    defaultContentDisplay,
+  );
   const [pageSize, setPageSize] = useState(DEFAULT_CONFIG.page_size);
 
-  const { items, filterProps, paginationProps, collectionProps } = useCollection(sessions, {
-    filtering: {
-      filteringFunction,
-      empty: <Box textAlign="center" color="inherit">No sessions</Box>,
-      noMatch: <Box textAlign="center" color="inherit">No matching sessions</Box>,
-    },
-    pagination: { pageSize },
-  });
+  const { items, filterProps, paginationProps, collectionProps } =
+    useCollection(sessions, {
+      filtering: {
+        filteringFunction,
+        empty: (
+          <Box textAlign="center" color="inherit">
+            No sessions
+          </Box>
+        ),
+        noMatch: (
+          <Box textAlign="center" color="inherit">
+            No matching sessions
+          </Box>
+        ),
+      },
+      pagination: { pageSize },
+    });
 
   useEffect(() => {
     if (!configData?.config) return;
     const stored = configData.config[configKey];
-    if (stored?.length) setContentDisplay(toContentDisplay(stored, defaultContentDisplay));
+    if (stored?.length)
+      setContentDisplay(toContentDisplay(stored, defaultContentDisplay));
     if (configData.config.page_size) setPageSize(configData.config.page_size);
   }, [configData, configKey, defaultContentDisplay]);
 
-  const handleConfirm = async ({ detail }: { detail: CollectionPreferencesProps.Preferences }) => {
+  const handleConfirm = async ({
+    detail,
+  }: {
+    detail: CollectionPreferencesProps.Preferences;
+  }) => {
     const next = [...(detail.contentDisplay ?? defaultContentDisplay)];
     const nextPageSize = detail.pageSize ?? pageSize;
     setContentDisplay(next);
@@ -75,9 +94,15 @@ export function SessionTable({
 
     if (configData?.config) {
       try {
-        await updateConfig({ ...configData.config, [configKey]: toVisibleIds(next), page_size: nextPageSize });
+        await updateConfig({
+          ...configData.config,
+          [configKey]: toVisibleIds(next),
+          page_size: nextPageSize,
+        });
         await revalidateConfig();
-      } catch { /* preference save is best-effort */ }
+      } catch (e) {
+        console.warn("Failed to save preferences:", e);
+      }
     }
   };
 
