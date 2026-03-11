@@ -1,6 +1,6 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import type { SpawnSyncReturns } from "node:child_process";
-import type { ValidateArgs } from "./run-validation";
+import type { ValidateArgs } from "./parse-args";
 import {
   mockFs,
   mockChildProcess,
