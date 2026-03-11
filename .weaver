@@ -11,6 +11,12 @@
         "command": "npx turbo test --filter='...[HEAD]'",
         "run_if_files_match": "**/*.{ts,tsx}",
         "timeout_ms": 60000
+      },
+      {
+        "name": "test:bash",
+        "command": "find . -name '*.test.sh' -exec bash {} \\;",
+        "run_if_files_match": "**/*.sh",
+        "timeout_ms": 30000
       }
     ],
     "postToolUse": [
