@@ -13,7 +13,7 @@ export function subscribeSSE(baseUrl: string, onEvent: EventHandler): void {
           const parts = buffer.split("\n\n");
           buffer = parts.pop()!;
 
-          for (const part of parts) {
+          parts.forEach((part) => {
             const eventMatch = part.match(/^event: (.+)$/m);
             const dataMatch = part.match(/^data: (.+)$/m);
             if (eventMatch && dataMatch) {
@@ -23,7 +23,7 @@ export function subscribeSSE(baseUrl: string, onEvent: EventHandler): void {
                 console.error("Failed to parse SSE data:", e);
               }
             }
-          }
+          });
         });
 
         res.on("end", () => setTimeout(connect, 1000));
