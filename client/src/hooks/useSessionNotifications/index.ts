@@ -1,1 +1,1 @@
-export { useSessionNotifications } from './useSessionNotifications';
+export { useSessionNotifications } from "./useSessionNotifications";

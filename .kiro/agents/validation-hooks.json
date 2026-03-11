@@ -13,20 +13,10 @@
     "thinking",
     "web_fetch"
   ],
-  "allowedTools": [
-    "fs_read",
-    "grep",
-    "glob",
-    "code",
-    "thinking",
-    "web_fetch"
-  ],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "web_fetch"],
   "toolsSettings": {
     "fs_read": {
-      "allowedPaths": [
-        "./**",
-        "~/Desktop/**"
-      ]
+      "allowedPaths": ["./**", "~/Desktop/**"]
     },
     "fs_write": {
       "allowedPaths": [
@@ -98,7 +88,8 @@
     "stop": [
       {
         "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-        "description": "Weaver: log turn completion"
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 180000
       }
     ]
   },

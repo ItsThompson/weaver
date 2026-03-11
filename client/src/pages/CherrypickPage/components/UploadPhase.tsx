@@ -1,9 +1,9 @@
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Header from '@cloudscape-design/components/header';
-import Container from '@cloudscape-design/components/container';
-import Alert from '@cloudscape-design/components/alert';
-import Box from '@cloudscape-design/components/box';
-import FileUpload from '@cloudscape-design/components/file-upload';
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Header from "@cloudscape-design/components/header";
+import Container from "@cloudscape-design/components/container";
+import Alert from "@cloudscape-design/components/alert";
+import Box from "@cloudscape-design/components/box";
+import FileUpload from "@cloudscape-design/components/file-upload";
 
 interface UploadPhaseProps {
   error: string | null;
@@ -20,11 +20,13 @@ export function UploadPhase({ error, onFile }: UploadPhaseProps) {
           <FileUpload
             accept=".json"
             value={[]}
-            onChange={({ detail }) => detail.value[0] && onFile(detail.value[0])}
+            onChange={({ detail }) =>
+              detail.value[0] && onFile(detail.value[0])
+            }
             constraintText="Upload a /chat save JSON file"
             i18nStrings={{
-              uploadButtonText: () => 'Choose file',
-              dropzoneText: () => 'Drop file to upload',
+              uploadButtonText: () => "Choose file",
+              dropzoneText: () => "Drop file to upload",
               removeFileAriaLabel: (_i, name) => `Remove file ${name}`,
             }}
           />

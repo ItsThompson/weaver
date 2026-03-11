@@ -1,17 +1,18 @@
-import { useCherrypick } from './hooks/useCherrypick';
-import { UploadPhase } from './components/UploadPhase';
-import { EditPhase } from './components/EditPhase';
-import { PreviewPhase } from './components/PreviewPhase';
+import { useCherrypick } from "./hooks/useCherrypick";
+import { UploadPhase } from "./components/UploadPhase";
+import { EditPhase } from "./components/EditPhase";
+import { PreviewPhase } from "./components/PreviewPhase";
 
 export function CherrypickPage() {
   const { state, actions } = useCherrypick();
-  const { pageState, error, deleteMainIds, deleteTangentIds, totalSelected } = state;
+  const { pageState, error, deleteMainIds, deleteTangentIds, totalSelected } =
+    state;
 
-  if (pageState.phase === 'upload') {
+  if (pageState.phase === "upload") {
     return <UploadPhase error={error} onFile={actions.handleFile} />;
   }
 
-  if (pageState.phase === 'edit') {
+  if (pageState.phase === "edit") {
     return (
       <EditPhase
         parsed={pageState.parsed}
@@ -22,8 +23,12 @@ export function CherrypickPage() {
         totalSelected={totalSelected}
         onToggleMainId={actions.toggleMainId}
         onToggleTangentId={actions.toggleTangentId}
-        onToggleAllMain={() => actions.toggleAllMain(pageState.parsed.mainExchanges)}
-        onToggleAllTangent={() => actions.toggleAllTangent(pageState.parsed.tangentExchanges!)}
+        onToggleAllMain={() =>
+          actions.toggleAllMain(pageState.parsed.mainExchanges)
+        }
+        onToggleAllTangent={() =>
+          actions.toggleAllTangent(pageState.parsed.tangentExchanges!)
+        }
         onReset={actions.handleReset}
         onPreview={actions.handlePreview}
       />

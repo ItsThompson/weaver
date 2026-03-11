@@ -43,7 +43,10 @@ test.describe("app lifecycle", () => {
 });
 
 test.describe("clean shutdown", () => {
-  test("quit unregisters shortcuts and exits", async ({ electronApp, page }) => {
+  test("quit unregisters shortcuts and exits", async ({
+    electronApp,
+    page,
+  }) => {
     const registered = await electronApp.evaluate(({ globalShortcut }) =>
       globalShortcut.isRegistered("F5"),
     );
@@ -66,7 +69,11 @@ test.describe("clean shutdown", () => {
     });
   });
 
-  test("server process terminates after quit", async ({ electronApp, serverUrl, page }) => {
+  test("server process terminates after quit", async ({
+    electronApp,
+    serverUrl,
+    page,
+  }) => {
     const pid = electronApp.process().pid!;
 
     // Destroy windows first to bypass the close handler's preventDefault,
@@ -93,20 +100,25 @@ test.describe("clean shutdown", () => {
     await expect(fetch(`${serverUrl}/api/health`)).rejects.toThrow();
   });
 
-  test("window close hides but does not quit", async ({ electronApp, page }) => {
+  test("window close hides but does not quit", async ({
+    electronApp,
+    page,
+  }) => {
     // Close the window (triggers the close handler which calls preventDefault)
     await electronApp.evaluate(({ BrowserWindow }) => {
       BrowserWindow.getAllWindows()[0].close();
     });
 
     // App process is still running (evaluate still works)
-    const windowCount = await electronApp.evaluate(({ BrowserWindow }) =>
-      BrowserWindow.getAllWindows().length,
+    const windowCount = await electronApp.evaluate(
+      ({ BrowserWindow }) => BrowserWindow.getAllWindows().length,
     );
     expect(windowCount).toBe(1);
 
     // Window still exists but is hidden
-    const state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    const state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.visible).toBe(false);
   });
 });

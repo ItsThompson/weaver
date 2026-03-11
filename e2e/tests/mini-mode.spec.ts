@@ -21,25 +21,37 @@ async function navigateToMain(serverUrl: string): Promise<void> {
 }
 
 /** Wait for React to mount and SSE EventSource to connect. */
-async function waitForAppReady(page: import("@playwright/test").Page): Promise<void> {
+async function waitForAppReady(
+  page: import("@playwright/test").Page,
+): Promise<void> {
   await page.waitForSelector("#root > *", { timeout: 10_000 });
   await new Promise((r) => setTimeout(r, 500));
 }
 
-async function goToMini(page: import("@playwright/test").Page, serverUrl: string): Promise<void> {
+async function goToMini(
+  page: import("@playwright/test").Page,
+  serverUrl: string,
+): Promise<void> {
   for (let attempt = 0; attempt < 5; attempt++) {
     await navigateToMini(serverUrl);
     await new Promise((r) => setTimeout(r, 1_000));
-    if (page.url().includes("/mini")) return;
+    if (page.url().includes("/mini")) {
+      return;
+    }
   }
   throw new Error("Failed to navigate to mini after retries");
 }
 
-async function goToMain(page: import("@playwright/test").Page, serverUrl: string): Promise<void> {
+async function goToMain(
+  page: import("@playwright/test").Page,
+  serverUrl: string,
+): Promise<void> {
   for (let attempt = 0; attempt < 5; attempt++) {
     await navigateToMain(serverUrl);
     await new Promise((r) => setTimeout(r, 1_000));
-    if (!page.url().includes("/mini")) return;
+    if (!page.url().includes("/mini")) {
+      return;
+    }
   }
   throw new Error("Failed to navigate to main after retries");
 }
@@ -67,13 +79,21 @@ test.describe("mini mode", () => {
     expect(bounds.height).toBe(MAIN_SIZE.height);
   });
 
-  test("IPC mini-resize changes height", async ({ electronApp, page, serverUrl }) => {
+  test("IPC mini-resize changes height", async ({
+    electronApp,
+    page,
+    serverUrl,
+  }) => {
     await waitForAppReady(page);
     await goToMini(page, serverUrl);
     // Wait for ResizeObserver auto-resize to settle, then disable it
     await new Promise((r) => setTimeout(r, 500));
-    await page.evaluate(() => { (window as any).weaver.resizeMini = () => {}; });
-    await electronApp.evaluate(({ ipcMain }) => { ipcMain.emit("mini-resize", {}, 200); });
+    await page.evaluate(() => {
+      (window as any).weaver.resizeMini = () => {};
+    });
+    await electronApp.evaluate(({ ipcMain }) => {
+      ipcMain.emit("mini-resize", {}, 200);
+    });
     await new Promise((r) => setTimeout(r, 100));
 
     const bounds = await electronApp.evaluate(({ BrowserWindow }) =>
@@ -83,7 +103,11 @@ test.describe("mini mode", () => {
     expect(bounds.height).toBe(200);
   });
 
-  test("IPC mini-resize clamped to minimum", async ({ electronApp, page, serverUrl }) => {
+  test("IPC mini-resize clamped to minimum", async ({
+    electronApp,
+    page,
+    serverUrl,
+  }) => {
     await waitForAppReady(page);
     await goToMini(page, serverUrl);
     await new Promise((r) => setTimeout(r, 500));
@@ -99,12 +123,17 @@ test.describe("mini mode", () => {
     expect(height).toBe(MINI_MIN_HEIGHT);
   });
 
-  test("IPC mini-resize ignored outside mini mode", async ({ electronApp, page }) => {
+  test("IPC mini-resize ignored outside mini mode", async ({
+    electronApp,
+    page,
+  }) => {
     const boundsBefore = await electronApp.evaluate(({ BrowserWindow }) =>
       BrowserWindow.getAllWindows()[0].getBounds(),
     );
 
-    await electronApp.evaluate(({ ipcMain }) => { ipcMain.emit("mini-resize", {}, 200); });
+    await electronApp.evaluate(({ ipcMain }) => {
+      ipcMain.emit("mini-resize", {}, 200);
+    });
     await new Promise((r) => setTimeout(r, 100));
 
     const boundsAfter = await electronApp.evaluate(({ BrowserWindow }) =>
@@ -114,7 +143,11 @@ test.describe("mini mode", () => {
     expect(boundsAfter.height).toBe(boundsBefore.height);
   });
 
-  test("rapid mini/main toggles end in correct state", async ({ electronApp, page, serverUrl }) => {
+  test("rapid mini/main toggles end in correct state", async ({
+    electronApp,
+    page,
+    serverUrl,
+  }) => {
     await waitForAppReady(page);
     // 5 toggles: mini, main, mini, main, mini → ends in mini
     for (let i = 0; i < 5; i++) {
@@ -125,7 +158,9 @@ test.describe("mini mode", () => {
       }
     }
 
-    const state = await electronApp.evaluate(() => (global as any).__weaverTest.getState());
+    const state = await electronApp.evaluate(() =>
+      (global as any).__weaverTest.getState(),
+    );
     expect(state.miniMode).toBe(true);
 
     const bounds = await electronApp.evaluate(({ BrowserWindow }) =>

@@ -6,10 +6,14 @@ import { readFile, parseJson, isPlainObject } from "../parsing";
 
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   const raw = readFile(join(cwd, ".weaver"));
-  if (raw === null) return null;
+  if (raw === null) {
+    return null;
+  }
 
   const result = parseJson(raw);
-  if (result === null) return null;
+  if (result === null) {
+    return null;
+  }
 
   const parsed = result.value;
   if (!isPlainObject(parsed)) {
@@ -17,7 +21,9 @@ export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
     return null;
   }
 
-  if (parsed.validation === undefined) return {};
+  if (parsed.validation === undefined) {
+    return {};
+  }
 
   if (!isPlainObject(parsed.validation)) {
     console.error("weaver: .weaver validation must be an object");

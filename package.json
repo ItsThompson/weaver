@@ -17,11 +17,15 @@
     "dist": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-electron && npm run dist --prefix desktop",
     "build": "turbo build",
     "start": "turbo build && node server/dist/index.js",
+    "lint": "eslint '**/*.{ts,tsx}' --ignore-pattern '**/dist/**'",
     "test": "turbo test",
     "test:e2e": "npm test --prefix e2e"
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
-    "turbo": "^2.4.0"
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.0.3",
+    "turbo": "^2.4.0",
+    "typescript-eslint": "^8.57.0"
   }
 }

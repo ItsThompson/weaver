@@ -1,1 +1,1 @@
-export const isElectron = () => navigator.userAgent.includes('Electron');
+export const isElectron = () => navigator.userAgent.includes("Electron");

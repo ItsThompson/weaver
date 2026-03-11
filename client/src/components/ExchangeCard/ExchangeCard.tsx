@@ -1,18 +1,27 @@
-import Container from '@cloudscape-design/components/container';
-import Checkbox from '@cloudscape-design/components/checkbox';
-import Header from '@cloudscape-design/components/header';
-import Badge from '@cloudscape-design/components/badge';
-import Box from '@cloudscape-design/components/box';
-import ExpandableSection from '@cloudscape-design/components/expandable-section';
-import { PROMPT_PREVIEW_LEN, RESPONSE_PREVIEW_LEN } from './constants';
-import type { ExchangeCardProps } from './types';
+import Container from "@cloudscape-design/components/container";
+import Checkbox from "@cloudscape-design/components/checkbox";
+import Header from "@cloudscape-design/components/header";
+import Badge from "@cloudscape-design/components/badge";
+import Box from "@cloudscape-design/components/box";
+import ExpandableSection from "@cloudscape-design/components/expandable-section";
+import { PROMPT_PREVIEW_LEN, RESPONSE_PREVIEW_LEN } from "./constants";
+import type { ExchangeCardProps } from "./types";
 
-function truncate(text: string, max: number): { text: string; truncated: boolean } {
-  if (text.length <= max) return { text, truncated: false };
-  return { text: text.slice(0, max) + '…', truncated: true };
+function truncate(
+  text: string,
+  max: number,
+): { text: string; truncated: boolean } {
+  if (text.length <= max) {
+    return { text, truncated: false };
+  }
+  return { text: text.slice(0, max) + "…", truncated: true };
 }
 
-export function ExchangeCard({ exchange, selected, onToggle }: ExchangeCardProps) {
+export function ExchangeCard({
+  exchange,
+  selected,
+  onToggle,
+}: ExchangeCardProps) {
   const prompt = truncate(exchange.userPrompt, PROMPT_PREVIEW_LEN);
   const response = truncate(exchange.assistantResponse, RESPONSE_PREVIEW_LEN);
 
@@ -29,7 +38,12 @@ export function ExchangeCard({ exchange, selected, onToggle }: ExchangeCardProps
         >
           Exchange {exchange.id}
           {exchange.timestamp && (
-            <Box variant="span" fontSize="body-s" color="text-body-secondary" padding={{ left: 's' }}>
+            <Box
+              variant="span"
+              fontSize="body-s"
+              color="text-body-secondary"
+              padding={{ left: "s" }}
+            >
               {new Date(exchange.timestamp).toLocaleTimeString()}
             </Box>
           )}
@@ -47,14 +61,16 @@ export function ExchangeCard({ exchange, selected, onToggle }: ExchangeCardProps
       </Box>
 
       {exchange.toolsUsed.length > 0 && (
-        <Box padding={{ top: 'xs' }}>
+        <Box padding={{ top: "xs" }}>
           {exchange.toolsUsed.map((tool, i) => (
-            <Badge key={i} color="blue">{tool}</Badge>
+            <Badge key={i} color="blue">
+              {tool}
+            </Badge>
           ))}
         </Box>
       )}
 
-      <Box padding={{ top: 'xs' }} variant="p">
+      <Box padding={{ top: "xs" }} variant="p">
         <Box variant="strong">Response: </Box>
         {response.text}
         {response.truncated && (

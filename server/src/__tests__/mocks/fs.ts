@@ -1,7 +1,7 @@
-import { jest } from '@jest/globals';
+import { jest } from "@jest/globals";
 
 export function mockFsModules() {
-  jest.unstable_mockModule('node:fs/promises', () => ({
+  jest.unstable_mockModule("node:fs/promises", () => ({
     readFile: jest.fn<() => Promise<string>>(),
     writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
     appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
@@ -10,7 +10,7 @@ export function mockFsModules() {
     unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
   }));
 
-  jest.unstable_mockModule('node:fs', () => ({
+  jest.unstable_mockModule("node:fs", () => ({
     existsSync: jest.fn<() => boolean>(),
   }));
 }

@@ -1,1 +1,1 @@
-export { useNavigateOnView } from './useNavigateOnView';
+export { useNavigateOnView } from "./useNavigateOnView";

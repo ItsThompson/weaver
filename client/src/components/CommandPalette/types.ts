@@ -1,4 +1,4 @@
-import type { AutosuggestProps } from '@cloudscape-design/components/autosuggest';
+import type { AutosuggestProps } from "@cloudscape-design/components/autosuggest";
 
 export interface WindowEntry {
   label: string;

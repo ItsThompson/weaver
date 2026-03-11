@@ -1,9 +1,18 @@
-import type { SavedConversation, ParsedConversation, ConversationExchange } from '../../types/conversation';
+import type {
+  SavedConversation,
+  ParsedConversation,
+  ConversationExchange,
+} from "../../types/conversation";
 
 export type PageState =
-  | { phase: 'upload' }
-  | { phase: 'edit'; parsed: ParsedConversation; fileName: string }
-  | { phase: 'preview'; parsed: ParsedConversation; fileName: string; pruned: SavedConversation };
+  | { phase: "upload" }
+  | { phase: "edit"; parsed: ParsedConversation; fileName: string }
+  | {
+      phase: "preview";
+      parsed: ParsedConversation;
+      fileName: string;
+      pruned: SavedConversation;
+    };
 
 export interface CherrypickActions {
   handleFile: (file: File) => void;

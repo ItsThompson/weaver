@@ -1,4 +1,4 @@
-import type { ActivityStatus } from '@weaver/shared/types';
+import type { ActivityStatus } from "@weaver/shared/types";
 
 export interface WebhookPayload {
   event: string;
@@ -12,7 +12,7 @@ export interface WebhookPayload {
   tool_name: string | null;
   tool_input: string | null;
   tool_response: string | null;
-  source: 'weaver';
+  source: "weaver";
 }
 
 export interface SimpleWebhookPayload {

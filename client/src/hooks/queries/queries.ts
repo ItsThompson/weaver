@@ -1,12 +1,18 @@
-import useSWR, { mutate } from 'swr';
-import { getSessions, getSession, getOrphans, getOrphanCount, getConfig } from '../../utils/api';
+import useSWR, { mutate } from "swr";
+import {
+  getSessions,
+  getSession,
+  getOrphans,
+  getOrphanCount,
+  getConfig,
+} from "../../utils/api";
 
 export const KEYS = {
-  sessions: '/sessions',
+  sessions: "/sessions",
   session: (id: string) => `/sessions/${id}`,
-  orphans: '/orphans',
-  orphanCount: '/orphans/count',
-  config: '/config',
+  orphans: "/orphans",
+  orphanCount: "/orphans/count",
+  config: "/config",
 } as const;
 
 export const useSessionsQuery = () => useSWR(KEYS.sessions, getSessions);
@@ -16,7 +22,8 @@ export const useSessionQuery = (id: string | undefined) =>
 
 export const useOrphansQuery = () => useSWR(KEYS.orphans, getOrphans);
 
-export const useOrphanCountQuery = () => useSWR(KEYS.orphanCount, getOrphanCount);
+export const useOrphanCountQuery = () =>
+  useSWR(KEYS.orphanCount, getOrphanCount);
 
 export const revalidateSessions = () => mutate(KEYS.sessions);
 

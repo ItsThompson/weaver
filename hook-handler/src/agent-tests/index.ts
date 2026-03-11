@@ -1,1 +1,1 @@
-export { extractAgentTestedDirs } from './agent-tests';
+export { extractAgentTestedDirs } from "./agent-tests";

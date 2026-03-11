@@ -1,116 +1,154 @@
-import { jest, describe, it, expect, beforeEach } from '@jest/globals';
-import { mockFs } from '../__test-helpers__/index';
+import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import { mockFs } from "../__test-helpers__/index";
 
 const { realpathSync } = await mockFs();
-const { resolveTestDirs } = await import('./scope');
+const { resolveTestDirs } = await import("./scope");
 
-const CWD = '/project';
+const CWD = "/project";
 
 beforeEach(() => {
   jest.clearAllMocks();
   realpathSync.mockImplementation((p: string) => String(p));
 });
 
-describe('resolveTestDirs', () => {
+describe("resolveTestDirs", () => {
   it('scope "file" / 0 returns file parent directory', () => {
-    const result = resolveTestDirs(['/project/src/features/auth/login/LoginForm.tsx'], 'file', CWD, []);
-    expect(result).toEqual(['src/features/auth/login']);
+    const result = resolveTestDirs(
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      "file",
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["src/features/auth/login"]);
   });
 
-  it('scope 0 returns file parent directory', () => {
-    const result = resolveTestDirs(['/project/src/a/b.ts'], 0, CWD, []);
-    expect(result).toEqual(['src/a']);
+  it("scope 0 returns file parent directory", () => {
+    const result = resolveTestDirs(["/project/src/a/b.ts"], 0, CWD, []);
+    expect(result).toEqual(["src/a"]);
   });
 
   it('scope "parent" / 1 returns one level up', () => {
-    const result = resolveTestDirs(['/project/src/features/auth/login/LoginForm.tsx'], 'parent', CWD, []);
-    expect(result).toEqual(['src/features/auth']);
+    const result = resolveTestDirs(
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      "parent",
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["src/features/auth"]);
   });
 
-  it('scope 2 returns two levels up', () => {
-    const result = resolveTestDirs(['/project/src/features/auth/login/LoginForm.tsx'], 2, CWD, []);
-    expect(result).toEqual(['src/features']);
+  it("scope 2 returns two levels up", () => {
+    const result = resolveTestDirs(
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      2,
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["src/features"]);
   });
 
   it('scope "cwd" always returns ["."]', () => {
-    const result = resolveTestDirs(['/project/src/deep/file.ts'], 'cwd', CWD, []);
-    expect(result).toEqual(['.']);
+    const result = resolveTestDirs(
+      ["/project/src/deep/file.ts"],
+      "cwd",
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["."]);
   });
 
   it('no scope defaults to ["."]', () => {
-    const result = resolveTestDirs(['/project/src/file.ts'], undefined, CWD, []);
-    expect(result).toEqual(['.']);
+    const result = resolveTestDirs(
+      ["/project/src/file.ts"],
+      undefined,
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["."]);
   });
 
   it('clamps to "." when scope depth exceeds CWD', () => {
-    const result = resolveTestDirs(['/project/src/file.ts'], 5, CWD, []);
-    expect(result).toEqual(['.']);
+    const result = resolveTestDirs(["/project/src/file.ts"], 5, CWD, []);
+    expect(result).toEqual(["."]);
   });
 
   it('clamps to "." when file at CWD root with scope "parent"', () => {
-    const result = resolveTestDirs(['/project/file.ts'], 'parent', CWD, []);
-    expect(result).toEqual(['.']);
+    const result = resolveTestDirs(["/project/file.ts"], "parent", CWD, []);
+    expect(result).toEqual(["."]);
   });
 
-  it('resolves symlink inside CWD normally', () => {
+  it("resolves symlink inside CWD normally", () => {
     realpathSync.mockImplementation((p: string) =>
-      String(p).replace('linked', 'real'),
+      String(p).replace("linked", "real"),
     );
-    const result = resolveTestDirs(['/project/src/linked/file.ts'], 'file', CWD, []);
-    expect(result).toEqual(['src/real']);
+    const result = resolveTestDirs(
+      ["/project/src/linked/file.ts"],
+      "file",
+      CWD,
+      [],
+    );
+    expect(result).toEqual(["src/real"]);
   });
 
   it('clamps to "." when symlink resolves outside CWD', () => {
-    realpathSync.mockImplementation(() => '/outside/project/file.ts');
-    const result = resolveTestDirs(['/project/src/link.ts'], 'file', CWD, []);
-    expect(result).toEqual(['.']);
+    realpathSync.mockImplementation(() => "/outside/project/file.ts");
+    const result = resolveTestDirs(["/project/src/link.ts"], "file", CWD, []);
+    expect(result).toEqual(["."]);
   });
 
-  it('deduplicates two files in same directory', () => {
+  it("deduplicates two files in same directory", () => {
     const result = resolveTestDirs(
-      ['/project/src/a/one.ts', '/project/src/a/two.ts'],
-      'file', CWD, [],
+      ["/project/src/a/one.ts", "/project/src/a/two.ts"],
+      "file",
+      CWD,
+      [],
     );
-    expect(result).toEqual(['src/a']);
+    expect(result).toEqual(["src/a"]);
   });
 
-  it('collapses child when parent already present', () => {
+  it("collapses child when parent already present", () => {
     const result = resolveTestDirs(
-      ['/project/src/a/b/deep.ts', '/project/src/a/shallow.ts'],
-      'file', CWD, [],
+      ["/project/src/a/b/deep.ts", "/project/src/a/shallow.ts"],
+      "file",
+      CWD,
+      [],
     );
-    expect(result).toEqual(['src/a']);
+    expect(result).toEqual(["src/a"]);
   });
 
-  it('skips dir when agent tested parent', () => {
+  it("skips dir when agent tested parent", () => {
     const result = resolveTestDirs(
-      ['/project/src/features/auth/login/LoginForm.tsx'],
-      'file', CWD, ['src/features/auth'],
-    );
-    expect(result).toEqual([]);
-  });
-
-  it('keeps dir when agent only tested child', () => {
-    const result = resolveTestDirs(
-      ['/project/src/features/auth/login/LoginForm.tsx'],
-      'parent', CWD, ['src/features/auth/login/sub'],
-    );
-    expect(result).toEqual(['src/features/auth']);
-  });
-
-  it('skips dir on exact agent-test match', () => {
-    const result = resolveTestDirs(
-      ['/project/src/features/auth/login/LoginForm.tsx'],
-      'file', CWD, ['src/features/auth/login'],
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      "file",
+      CWD,
+      ["src/features/auth"],
     );
     expect(result).toEqual([]);
   });
 
-  it('returns paths relative to CWD', () => {
+  it("keeps dir when agent only tested child", () => {
     const result = resolveTestDirs(
-      ['/project/src/a/b/c.ts'], 1, CWD, [],
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      "parent",
+      CWD,
+      ["src/features/auth/login/sub"],
     );
-    expect(result).toEqual(['src/a']);
-    expect(result.every((p) => !p.startsWith('/'))).toBe(true);
+    expect(result).toEqual(["src/features/auth"]);
+  });
+
+  it("skips dir on exact agent-test match", () => {
+    const result = resolveTestDirs(
+      ["/project/src/features/auth/login/LoginForm.tsx"],
+      "file",
+      CWD,
+      ["src/features/auth/login"],
+    );
+    expect(result).toEqual([]);
+  });
+
+  it("returns paths relative to CWD", () => {
+    const result = resolveTestDirs(["/project/src/a/b/c.ts"], 1, CWD, []);
+    expect(result).toEqual(["src/a"]);
+    expect(result.every((p) => !p.startsWith("/"))).toBe(true);
   });
 });

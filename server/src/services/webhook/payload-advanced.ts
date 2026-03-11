@@ -1,6 +1,6 @@
-import type { ActivityStatus, Session, HookEvent } from '@weaver/shared/types';
-import type { WebhookPayload } from './types.js';
-import { extractContext } from './context.js';
+import type { ActivityStatus, Session, HookEvent } from "@weaver/shared/types";
+import type { WebhookPayload } from "./types.js";
+import { extractContext } from "./context.js";
 
 export function buildWebhookPayload(
   sessionId: string,
@@ -18,11 +18,13 @@ export function buildWebhookPayload(
     session_id: sessionId,
     session_name: sessionName,
     session_pid: session?.pid ?? 0,
-    session_cwd: session?.cwd ?? '',
+    session_cwd: session?.cwd ?? "",
     prompt: ctx?.prompt ?? null,
     tool_name: ctx?.tool_name ?? null,
     tool_input: ctx?.tool_input ? JSON.stringify(ctx.tool_input) : null,
-    tool_response: ctx?.tool_response ? JSON.stringify(ctx.tool_response) : null,
-    source: 'weaver',
+    tool_response: ctx?.tool_response
+      ? JSON.stringify(ctx.tool_response)
+      : null,
+    source: "weaver",
   };
 }

@@ -13,7 +13,9 @@ const LOGS_DIR = () => join(homedir(), ".weaver", "logs");
 
 async function readOrphanEvents(): Promise<HookEvent[]> {
   const filePath = ORPHAN_PATH();
-  if (!existsSync(filePath)) return [];
+  if (!existsSync(filePath)) {
+    return [];
+  }
   const content = await readFile(filePath, "utf-8");
   return content
     .split("\n")

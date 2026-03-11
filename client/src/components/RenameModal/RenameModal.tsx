@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import Button from '@cloudscape-design/components/button';
-import Input from '@cloudscape-design/components/input';
-import Modal from '@cloudscape-design/components/modal';
-import FormField from '@cloudscape-design/components/form-field';
-import SpaceBetween from '@cloudscape-design/components/space-between';
-import Box from '@cloudscape-design/components/box';
+import { useState } from "react";
+import Button from "@cloudscape-design/components/button";
+import Input from "@cloudscape-design/components/input";
+import Modal from "@cloudscape-design/components/modal";
+import FormField from "@cloudscape-design/components/form-field";
+import SpaceBetween from "@cloudscape-design/components/space-between";
+import Box from "@cloudscape-design/components/box";
 
 interface RenameModalProps {
   visible: boolean;
@@ -13,15 +13,20 @@ interface RenameModalProps {
   onSave: (name: string) => Promise<void>;
 }
 
-export function RenameModal({ visible, currentName, onDismiss, onSave }: RenameModalProps) {
-  const [value, setValue] = useState(currentName ?? '');
+export function RenameModal({
+  visible,
+  currentName,
+  onDismiss,
+  onSave,
+}: RenameModalProps) {
+  const [value, setValue] = useState(currentName ?? "");
 
   // Sync value when modal opens with a new name
-  const handleOpen = () => setValue(currentName ?? '');
+  const handleOpen = () => setValue(currentName ?? "");
 
   const save = async () => {
     onDismiss();
-    if (value !== (currentName ?? '')) {
+    if (value !== (currentName ?? "")) {
       await onSave(value);
     }
   };
@@ -34,8 +39,12 @@ export function RenameModal({ visible, currentName, onDismiss, onSave }: RenameM
       footer={
         <Box float="right">
           <SpaceBetween direction="horizontal" size="xs">
-            <Button variant="link" onClick={onDismiss}>Cancel</Button>
-            <Button variant="primary" onClick={save}>Save</Button>
+            <Button variant="link" onClick={onDismiss}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={save}>
+              Save
+            </Button>
           </SpaceBetween>
         </Box>
       }
@@ -44,7 +53,11 @@ export function RenameModal({ visible, currentName, onDismiss, onSave }: RenameM
         <Input
           value={value}
           onChange={({ detail }) => setValue(detail.value)}
-          onKeyDown={({ detail }) => { if (detail.key === 'Enter') save(); }}
+          onKeyDown={({ detail }) => {
+            if (detail.key === "Enter") {
+              save();
+            }
+          }}
           autoFocus
         />
       </FormField>

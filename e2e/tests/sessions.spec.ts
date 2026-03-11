@@ -11,9 +11,17 @@ test.describe("Session CRUD", () => {
     expect(sessions).toEqual([]);
   });
 
-  test("seeded sessions appear sorted by startTime desc", async ({ page, serverUrl, tmpDir }) => {
-    const older = await seedSession(tmpDir, { startTime: "2026-01-01T00:00:00.000Z" });
-    const newer = await seedSession(tmpDir, { startTime: "2026-02-01T00:00:00.000Z" });
+  test("seeded sessions appear sorted by startTime desc", async ({
+    page,
+    serverUrl,
+    tmpDir,
+  }) => {
+    const older = await seedSession(tmpDir, {
+      startTime: "2026-01-01T00:00:00.000Z",
+    });
+    const newer = await seedSession(tmpDir, {
+      startTime: "2026-02-01T00:00:00.000Z",
+    });
 
     const res = await fetch(`${serverUrl}/api/sessions`);
     expect(res.status).toBe(200);
@@ -28,7 +36,11 @@ test.describe("Session CRUD", () => {
     const events = [
       makeHookEvent({
         timestamp: "2026-01-01T00:00:00.000Z",
-        event: { hook_event_name: "userPromptSubmit", cwd: "/tmp", prompt: "hello" },
+        event: {
+          hook_event_name: "userPromptSubmit",
+          cwd: "/tmp",
+          prompt: "hello",
+        },
       }),
       makeHookEvent({
         timestamp: "2026-01-01T00:00:01.000Z",
@@ -63,7 +75,11 @@ test.describe("Session CRUD", () => {
     expect(fetched.customName).toBe("my-session");
   });
 
-  test("delete session removes from list and disk", async ({ page, serverUrl, tmpDir }) => {
+  test("delete session removes from list and disk", async ({
+    page,
+    serverUrl,
+    tmpDir,
+  }) => {
     const session = await seedSession(tmpDir, {});
     await seedLogEvents(tmpDir, session.id, [makeHookEvent()]);
     const logPath = join(tmpDir, ".weaver", "logs", `${session.id}.jsonl`);
@@ -71,7 +87,9 @@ test.describe("Session CRUD", () => {
     // Verify log file exists
     await readFile(logPath);
 
-    const delRes = await fetch(`${serverUrl}/api/sessions/${session.id}`, { method: "DELETE" });
+    const delRes = await fetch(`${serverUrl}/api/sessions/${session.id}`, {
+      method: "DELETE",
+    });
     expect(delRes.status).toBe(200);
     const body = await delRes.json();
     expect(body.ok).toBe(true);
@@ -90,8 +108,13 @@ test.describe("Session CRUD", () => {
     expect(res.status).toBe(404);
   });
 
-  test("delete non-existent session returns 404", async ({ page, serverUrl }) => {
-    const res = await fetch(`${serverUrl}/api/sessions/fake-id`, { method: "DELETE" });
+  test("delete non-existent session returns 404", async ({
+    page,
+    serverUrl,
+  }) => {
+    const res = await fetch(`${serverUrl}/api/sessions/fake-id`, {
+      method: "DELETE",
+    });
     expect(res.status).toBe(404);
   });
 });

@@ -52,7 +52,9 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
           eventName?: string;
           sessionName?: string;
         };
-        if (!eventName) return;
+        if (!eventName) {
+          return;
+        }
 
         const message = resolveNotification(
           sessionId,
@@ -60,7 +62,9 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
           sessionName,
           lastActivity.current,
         );
-        if (!message) return;
+        if (!message) {
+          return;
+        }
 
         const id = ++counterRef.current;
         const entry: ActivityLogEntry = {

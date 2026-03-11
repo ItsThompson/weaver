@@ -9,4 +9,4 @@ export {
   revalidateOrphans,
   useConfigQuery,
   revalidateConfig,
-} from './queries';
+} from "./queries";

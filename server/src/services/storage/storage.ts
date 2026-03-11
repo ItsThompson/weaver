@@ -1,14 +1,20 @@
-import { mkdir, writeFile, appendFile, readdir, unlink } from 'node:fs/promises';
-import { execFileSync } from 'node:child_process';
-import { join } from 'node:path';
-import { homedir } from 'node:os';
-import type { Session } from '@weaver/shared/types';
-import { log } from '../../utils/logger';
-import { FileCache, parseJsonlFile } from '../file-cache/index';
+import {
+  mkdir,
+  writeFile,
+  appendFile,
+  readdir,
+  unlink,
+} from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+import { join } from "node:path";
+import { homedir } from "node:os";
+import type { Session } from "@weaver/shared/types";
+import { log } from "../../utils/logger";
+import { FileCache, parseJsonlFile } from "../file-cache/index";
 
-const DATA_DIR = () => join(homedir(), '.weaver');
-const LOGS_DIR = () => join(DATA_DIR(), 'logs');
-const SESSIONS_FILE = () => join(DATA_DIR(), 'sessions.jsonl');
+const DATA_DIR = () => join(homedir(), ".weaver");
+const LOGS_DIR = () => join(DATA_DIR(), "logs");
+const SESSIONS_FILE = () => join(DATA_DIR(), "sessions.jsonl");
 
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const PID_POLL_INTERVAL_MS = 30 * 1000;
@@ -21,7 +27,11 @@ export async function ensureDataDir(): Promise<void> {
     await mkdir(DATA_DIR(), { recursive: true });
     await mkdir(LOGS_DIR(), { recursive: true });
   } catch (err) {
-    log({ timestamp: new Date().toISOString(), event: 'ensure_data_dir_failed', error: String(err) });
+    log({
+      timestamp: new Date().toISOString(),
+      event: "ensure_data_dir_failed",
+      error: String(err),
+    });
     throw err;
   }
 }
@@ -30,19 +40,23 @@ export async function readSessions(): Promise<Session[]> {
   const filePath = SESSIONS_FILE();
   return sessionCache.get(filePath, () =>
     parseJsonlFile<Session>(filePath, (line) =>
-      log({ timestamp: new Date().toISOString(), event: 'malformed_session_line', line }),
+      log({
+        timestamp: new Date().toISOString(),
+        event: "malformed_session_line",
+        line,
+      }),
     ),
   );
 }
 
 export async function appendSession(session: Session): Promise<void> {
-  await appendFile(SESSIONS_FILE(), JSON.stringify(session) + '\n', 'utf-8');
+  await appendFile(SESSIONS_FILE(), JSON.stringify(session) + "\n", "utf-8");
   sessionCache.invalidate(SESSIONS_FILE());
 }
 
 export async function writeSessions(sessions: Session[]): Promise<void> {
-  const content = sessions.map((s) => JSON.stringify(s)).join('\n') + '\n';
-  await writeFile(SESSIONS_FILE(), content, 'utf-8');
+  const content = sessions.map((s) => JSON.stringify(s)).join("\n") + "\n";
+  await writeFile(SESSIONS_FILE(), content, "utf-8");
   sessionCache.invalidate(SESSIONS_FILE());
 }
 
@@ -55,16 +69,23 @@ export async function cleanStaleSessions(): Promise<void> {
     return;
   }
 
-  const sessionFiles = entries.filter((f) => f.startsWith('.current-session-'));
+  const sessionFiles = entries.filter((f) => f.startsWith(".current-session-"));
 
   for (const file of sessionFiles) {
-    const pid = parseInt(file.replace('.current-session-', ''), 10);
-    if (isNaN(pid)) continue;
+    const pid = parseInt(file.replace(".current-session-", ""), 10);
+    if (isNaN(pid)) {
+      continue;
+    }
 
     if (!isProcessRunning(pid)) {
       try {
         await unlink(join(dataDir, file));
-        log({ timestamp: new Date().toISOString(), event: 'stale_session_cleaned', pid, file });
+        log({
+          timestamp: new Date().toISOString(),
+          event: "stale_session_cleaned",
+          pid,
+          file,
+        });
       } catch {
         // File may have been removed between readdir and unlink
       }
@@ -80,8 +101,10 @@ export function isProcessRunning(pid: number): boolean {
   }
   // Guard against PID reuse: verify the process is actually kiro-cli
   try {
-    const args = execFileSync('ps', ['-p', String(pid), '-o', 'args='], { encoding: 'utf-8' });
-    return args.includes('kiro-cli');
+    const args = execFileSync("ps", ["-p", String(pid), "-o", "args="], {
+      encoding: "utf-8",
+    });
+    return args.includes("kiro-cli");
   } catch {
     return false;
   }
@@ -96,7 +119,9 @@ export function startStaleSessionCleanup(): void {
   cleanupInterval = setInterval(cleanStaleSessions, CLEANUP_INTERVAL_MS);
 }
 
-export function startPidPolling(onSessionClosed: (sessionId: string) => void): void {
+export function startPidPolling(
+  onSessionClosed: (sessionId: string) => void,
+): void {
   const poll = async () => {
     const sessions = await readSessions();
     const currentlyOpen = sessions.filter((s) => isProcessRunning(s.pid));
@@ -106,12 +131,16 @@ export function startPidPolling(onSessionClosed: (sessionId: string) => void): v
     for (const pid of openPids) {
       if (!currentPids.has(pid)) {
         const session = sessions.find((s) => s.pid === pid);
-        if (session) onSessionClosed(session.id);
+        if (session) {
+          onSessionClosed(session.id);
+        }
       }
     }
 
     openPids.clear();
-    for (const pid of currentPids) openPids.add(pid);
+    for (const pid of currentPids) {
+      openPids.add(pid);
+    }
   };
 
   poll();
@@ -119,6 +148,12 @@ export function startPidPolling(onSessionClosed: (sessionId: string) => void): v
 }
 
 export function stopStaleSessionCleanup(): void {
-  if (cleanupInterval) { clearInterval(cleanupInterval); cleanupInterval = null; }
-  if (pidPollInterval) { clearInterval(pidPollInterval); pidPollInterval = null; }
+  if (cleanupInterval) {
+    clearInterval(cleanupInterval);
+    cleanupInterval = null;
+  }
+  if (pidPollInterval) {
+    clearInterval(pidPollInterval);
+    pidPollInterval = null;
+  }
 }

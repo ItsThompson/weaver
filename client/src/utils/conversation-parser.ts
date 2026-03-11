@@ -3,24 +3,30 @@ import type {
   ConversationTurn,
   ConversationExchange,
   ParsedConversation,
-} from '../types/conversation';
+} from "../types/conversation";
 
 /** Extract the user prompt string from a turn, or null if it's a ToolUseResults turn. */
 function getUserPrompt(turn: ConversationTurn): string | null {
-  if ('Prompt' in turn.user.content) return turn.user.content.Prompt.prompt;
+  if ("Prompt" in turn.user.content) {
+    return turn.user.content.Prompt.prompt;
+  }
   return null;
 }
 
 /** Extract the assistant's final text content from a turn. */
 function getAssistantContent(turn: ConversationTurn): string {
-  if ('Response' in turn.assistant) return turn.assistant.Response.content;
-  if ('ToolUse' in turn.assistant) return turn.assistant.ToolUse.content;
-  return '';
+  if ("Response" in turn.assistant) {
+    return turn.assistant.Response.content;
+  }
+  if ("ToolUse" in turn.assistant) {
+    return turn.assistant.ToolUse.content;
+  }
+  return "";
 }
 
 /** Extract tool names from a ToolUse assistant response. */
 function getToolNames(turn: ConversationTurn): string[] {
-  if ('ToolUse' in turn.assistant) {
+  if ("ToolUse" in turn.assistant) {
     return turn.assistant.ToolUse.tool_uses.map((t) => t.name);
   }
   return [];
@@ -28,7 +34,7 @@ function getToolNames(turn: ConversationTurn): string[] {
 
 /** Check if the assistant response is a final Response (not a ToolUse). */
 function isFinalResponse(turn: ConversationTurn): boolean {
-  return 'Response' in turn.assistant;
+  return "Response" in turn.assistant;
 }
 
 /**
@@ -37,7 +43,9 @@ function isFinalResponse(turn: ConversationTurn): boolean {
  * A new exchange starts at each Prompt turn and continues through
  * ToolUseResults turns until the assistant produces a Response.
  */
-export function groupIntoExchanges(history: ConversationTurn[]): ConversationExchange[] {
+export function groupIntoExchanges(
+  history: ConversationTurn[],
+): ConversationExchange[] {
   const exchanges: ConversationExchange[] = [];
   let current: { startIndex: number; turns: ConversationTurn[] } | null = null;
 
@@ -59,7 +67,7 @@ export function groupIntoExchanges(history: ConversationTurn[]): ConversationExc
         turns: current.turns,
         toolsUsed: allTools,
         assistantResponse: getAssistantContent(turn),
-        timestamp: firstTurn.user.timestamp ?? '',
+        timestamp: firstTurn.user.timestamp ?? "",
         turnIndices: [current.startIndex, i],
       });
       current = null;
@@ -72,7 +80,9 @@ export function groupIntoExchanges(history: ConversationTurn[]): ConversationExc
 /**
  * Parse a SavedConversation into main and tangent exchanges.
  */
-export function parseConversation(saved: SavedConversation): ParsedConversation {
+export function parseConversation(
+  saved: SavedConversation,
+): ParsedConversation {
   const isInTangent = !!saved.tangent_state;
 
   if (isInTangent) {
@@ -110,7 +120,10 @@ export function regenerateTranscript(history: ConversationTurn[]): string[] {
     }
 
     const tools = getToolNames(turn);
-    const toolSuffix = tools.length > 0 ? `[Tool uses: ${tools.join(', ')}]` : '[Tool uses: none]';
+    const toolSuffix =
+      tools.length > 0
+        ? `[Tool uses: ${tools.join(", ")}]`
+        : "[Tool uses: none]";
     const content = getAssistantContent(turn);
     transcript.push(`${content}\n${toolSuffix}`);
   }

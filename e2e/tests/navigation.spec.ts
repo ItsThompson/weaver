@@ -1,7 +1,9 @@
 import { test, expect } from "../fixtures/app.js";
 import { seedSession } from "../fixtures/seed.js";
 
-async function waitForAppReady(page: import("@playwright/test").Page): Promise<void> {
+async function waitForAppReady(
+  page: import("@playwright/test").Page,
+): Promise<void> {
   await page.waitForSelector("#root > *", { timeout: 10_000 });
   await new Promise((r) => setTimeout(r, 500));
 }
@@ -12,7 +14,9 @@ async function pollUrl(
   retries = 10,
 ): Promise<void> {
   for (let i = 0; i < retries; i++) {
-    if (predicate(page.url())) return;
+    if (predicate(page.url())) {
+      return;
+    }
     await new Promise((r) => setTimeout(r, 500));
   }
   throw new Error(`URL never matched. Current: ${page.url()}`);
@@ -78,7 +82,10 @@ test.describe("SSE navigation", () => {
     expect(page.url()).toBe(urlBefore);
   });
 
-  test("navigate invalid page — no crash, URL unchanged", async ({ page, serverUrl }) => {
+  test("navigate invalid page — no crash, URL unchanged", async ({
+    page,
+    serverUrl,
+  }) => {
     await waitForAppReady(page);
     const urlBefore = page.url();
 

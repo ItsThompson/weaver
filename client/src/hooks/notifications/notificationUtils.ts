@@ -1,19 +1,23 @@
-import type { ActivityStatus } from '@weaver/shared/types';
+import type { ActivityStatus } from "@weaver/shared/types";
 
 const ACTIVITY_LABELS: Record<string, string> = {
-  starting: 'Starting',
-  idle: 'Idle',
-  processing: 'Processing',
-  running_tool: 'Running tool',
-  pending_approval: 'Pending approval',
+  starting: "Starting",
+  idle: "Idle",
+  processing: "Processing",
+  running_tool: "Running tool",
+  pending_approval: "Pending approval",
 };
 
 export function deriveActivity(eventName: string): ActivityStatus {
   switch (eventName) {
-    case 'agentSpawn': return 'starting';
-    case 'stop': return 'idle';
-    case 'preToolUse': return 'running_tool';
-    default: return 'processing';
+    case "agentSpawn":
+      return "starting";
+    case "stop":
+      return "idle";
+    case "preToolUse":
+      return "running_tool";
+    default:
+      return "processing";
   }
 }
 
@@ -29,7 +33,7 @@ export function resolveNotification(
   const name = sessionName || sessionId.slice(0, 8);
 
   // Validation events always produce a notification, bypassing activity dedup
-  if (eventName === 'validation') {
+  if (eventName === "validation") {
     return `${name} → Validation complete`;
   }
 
@@ -37,11 +41,16 @@ export function resolveNotification(
   const prev = lastActivity.get(sessionId);
   lastActivity.set(sessionId, activity);
 
-  if (activity === prev) return null;
+  if (activity === prev) {
+    return null;
+  }
 
-  const skip = (prev === 'processing' && activity === 'running_tool')
-    || (prev === 'running_tool' && activity === 'processing');
-  if (skip) return null;
+  const skip =
+    (prev === "processing" && activity === "running_tool") ||
+    (prev === "running_tool" && activity === "processing");
+  if (skip) {
+    return null;
+  }
 
   const label = ACTIVITY_LABELS[activity] ?? activity;
   return `${name} → ${label}`;

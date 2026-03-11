@@ -1,62 +1,79 @@
-import { jest } from '@jest/globals';
-import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { SWRConfig } from 'swr';
-import type { SessionWithStatus, TurnGroup } from '@weaver/shared/types';
+import { jest } from "@jest/globals";
+import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { SWRConfig } from "swr";
+import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
 
-jest.unstable_mockModule('../../utils/api', () => ({
+jest.unstable_mockModule("../../utils/api", () => ({
   apiFetch: jest.fn(),
   getSessions: jest.fn(),
   getSession: jest.fn(),
   updateSessionName: jest.fn(),
-  getOrphanCount: jest.fn<() => Promise<{ count: number }>>().mockResolvedValue({ count: 0 }),
+  getOrphanCount: jest
+    .fn<() => Promise<{ count: number }>>()
+    .mockResolvedValue({ count: 0 }),
   getOrphans: jest.fn(),
   assignOrphans: jest.fn(),
-  getConfig: jest.fn<() => Promise<{ config: object; warnings: string[] }>>().mockResolvedValue({ config: {}, warnings: [] }),
+  getConfig: jest
+    .fn<() => Promise<{ config: object; warnings: string[] }>>()
+    .mockResolvedValue({ config: {}, warnings: [] }),
   updateConfig: jest.fn(),
   toggleSessionWebhook: jest.fn(),
 }));
 
-jest.unstable_mockModule('react-router-dom', () => ({
-  useParams: () => ({ id: 'test-session-id' }),
+jest.unstable_mockModule("react-router-dom", () => ({
+  useParams: () => ({ id: "test-session-id" }),
   useNavigate: () => jest.fn(),
-  MemoryRouter: ({ children }: any) => React.createElement('div', {}, children),
-  BreadcrumbGroup: ({ children }: any) => React.createElement('div', {}, children),
+  MemoryRouter: ({ children }: any) => React.createElement("div", {}, children),
+  BreadcrumbGroup: ({ children }: any) =>
+    React.createElement("div", {}, children),
 }));
 
-const { SessionDetailPage } = await import('.');
-const api = await import('../../utils/api');
+const { SessionDetailPage } = await import(".");
+const api = await import("../../utils/api");
 
-const mockGetSession = api.getSession as jest.MockedFunction<typeof api.getSession>;
+const mockGetSession = api.getSession as jest.MockedFunction<
+  typeof api.getSession
+>;
 
 const mockSession: SessionWithStatus = {
-  id: 'test-session-id',
+  id: "test-session-id",
   pid: 12345,
-  cwd: '/test/path',
-  status: 'open',
+  cwd: "/test/path",
+  status: "open",
   customName: null,
-  agentName: 'dev',
-  startTime: '2024-01-01T10:00:00Z',
-  lastEventTime: '2024-01-01T10:05:00Z',
+  agentName: "dev",
+  startTime: "2024-01-01T10:00:00Z",
+  lastEventTime: "2024-01-01T10:05:00Z",
 };
 
 const mockTurns: TurnGroup[] = [
   {
     id: 1,
-    startTime: '2024-01-01T10:00:00Z',
-    endTime: '2024-01-01T10:01:00Z',
-    events: [{ timestamp: '2024-01-01T10:00:00Z', event: { hook_event_name: 'agentSpawn', cwd: '/test/path' } }],
+    startTime: "2024-01-01T10:00:00Z",
+    endTime: "2024-01-01T10:01:00Z",
+    events: [
+      {
+        timestamp: "2024-01-01T10:00:00Z",
+        event: { hook_event_name: "agentSpawn", cwd: "/test/path" },
+      },
+    ],
     userPrompt: null,
     toolCalls: [],
     validationResults: [],
   },
   {
     id: 2,
-    startTime: '2024-01-01T10:05:00Z',
-    endTime: '2024-01-01T10:06:00Z',
-    events: [{ timestamp: '2024-01-01T10:05:00Z', event: { hook_event_name: 'userPrompt', cwd: '/test/path' } }],
-    userPrompt: 'Test user prompt',
+    startTime: "2024-01-01T10:05:00Z",
+    endTime: "2024-01-01T10:06:00Z",
+    events: [
+      {
+        timestamp: "2024-01-01T10:05:00Z",
+        event: { hook_event_name: "userPrompt", cwd: "/test/path" },
+      },
+    ],
+    userPrompt: "Test user prompt",
     toolCalls: [],
     validationResults: [],
   },
@@ -66,72 +83,100 @@ function renderComponent() {
   return render(
     <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
       <SessionDetailPage />
-    </SWRConfig>
+    </SWRConfig>,
   );
 }
 
 // Mock useParams to return our test session ID
-jest.mock('react-router-dom', () => ({
-  useParams: () => ({ id: 'test-session-id' }),
+jest.mock("react-router-dom", () => ({
+  useParams: () => ({ id: "test-session-id" }),
   useNavigate: () => jest.fn(),
 }));
 
 beforeEach(() => jest.clearAllMocks());
 
-describe('SessionDetailPage', () => {
-  it('shows loading state initially', () => {
+describe("SessionDetailPage", () => {
+  it("shows loading state initially", () => {
     mockGetSession.mockImplementation(() => new Promise(() => {}));
     renderComponent();
     expect(document.body).toBeInTheDocument();
   });
 
-  it('renders session data after fetch', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
+  it("renders session data after fetch", async () => {
+    mockGetSession.mockResolvedValue({
+      session: mockSession,
+      turns: mockTurns,
+      webhookEnabled: false,
+    });
     renderComponent();
-    
+
     await waitFor(() => {
       expect(screen.getByText(/test-ses/)).toBeInTheDocument();
     });
   });
 
-  it('shows error state', async () => {
-    mockGetSession.mockRejectedValue(new Error('Failed to fetch'));
+  it("shows error state", async () => {
+    mockGetSession.mockRejectedValue(new Error("Failed to fetch"));
     renderComponent();
-    
+
     await waitFor(() => {
-      expect(screen.getByText('Failed to fetch')).toBeInTheDocument();
+      expect(screen.getByText("Failed to fetch")).toBeInTheDocument();
     });
   });
 
-  it('renders agentSpawn as session start marker', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
+  it("renders agentSpawn as session start marker", async () => {
+    mockGetSession.mockResolvedValue({
+      session: mockSession,
+      turns: mockTurns,
+      webhookEnabled: false,
+    });
     renderComponent();
-    
+
     await waitFor(() => {
-      expect(screen.getByText('Session started')).toBeInTheDocument();
+      expect(screen.getByText("Session started")).toBeInTheDocument();
     });
   });
 
-  it('renders user prompt', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
+  it("renders user prompt", async () => {
+    mockGetSession.mockResolvedValue({
+      session: mockSession,
+      turns: mockTurns,
+      webhookEnabled: false,
+    });
     renderComponent();
-    
+
     await waitFor(() => {
-      expect(screen.getByText('Test user prompt')).toBeInTheDocument();
+      expect(screen.getByText("Test user prompt")).toBeInTheDocument();
     });
   });
 
-  it('renders ValidationBanner when turn has validation results', async () => {
+  it("renders ValidationBanner when turn has validation results", async () => {
     const turnsWithValidation: TurnGroup[] = [
       {
         ...mockTurns[1],
         validationResults: [
-          { name: 'typecheck', passed: true, output: '', duration_ms: 1200, timed_out: false },
-          { name: 'test', passed: false, output: 'FAIL src/index.test.ts', duration_ms: 3400, timed_out: false },
+          {
+            name: "typecheck",
+            passed: true,
+            output: "",
+            duration_ms: 1200,
+            timed_out: false,
+          },
+          {
+            name: "test",
+            passed: false,
+            output: "FAIL src/index.test.ts",
+            duration_ms: 3400,
+            timed_out: false,
+          },
         ],
       },
     ];
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: turnsWithValidation, webhookEnabled: false });
+    mockGetSession.mockResolvedValue({
+      session: mockSession,
+      turns: turnsWithValidation,
+      webhookEnabled: false,
+    });
     renderComponent();
 
     await waitFor(() => {
@@ -139,12 +184,16 @@ describe('SessionDetailPage', () => {
     });
   });
 
-  it('does not render ValidationBanner when turn has no validation results', async () => {
-    mockGetSession.mockResolvedValue({ session: mockSession, turns: mockTurns, webhookEnabled: false });
+  it("does not render ValidationBanner when turn has no validation results", async () => {
+    mockGetSession.mockResolvedValue({
+      session: mockSession,
+      turns: mockTurns,
+      webhookEnabled: false,
+    });
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText('Test user prompt')).toBeInTheDocument();
+      expect(screen.getByText("Test user prompt")).toBeInTheDocument();
     });
     expect(screen.queryByText(/Validation/)).not.toBeInTheDocument();
   });

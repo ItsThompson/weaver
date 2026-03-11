@@ -7,7 +7,10 @@ export function toContentDisplay(
   defaults: ContentDisplayItem[],
 ): ContentDisplayItem[] {
   const visibleSet = new Set(visibleIds);
-  return defaults.map((item) => ({ ...item, visible: visibleSet.has(item.id) }));
+  return defaults.map((item) => ({
+    ...item,
+    visible: visibleSet.has(item.id),
+  }));
 }
 
 export function toVisibleIds(display: ContentDisplayItem[]): string[] {

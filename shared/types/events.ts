@@ -1,4 +1,4 @@
-import type { ValidationResult } from './validation';
+import type { ValidationResult } from "./validation";
 
 // Raw hook event as received from kiro-cli via STDIN
 export interface HookEventData {
@@ -24,7 +24,7 @@ export interface HookEvent {
 export interface ToolCallPair {
   toolName: string;
   input: Record<string, unknown>;
-  response?: HookEventData['tool_response'];
+  response?: HookEventData["tool_response"];
   startTime: string;
   endTime?: string;
 }

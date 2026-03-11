@@ -36,13 +36,19 @@ test.describe("seed helpers", () => {
 
   test("seedLogEvents writes events to correct file", async () => {
     const sessionId = "test-session-id";
-    const events = [makeHookEvent(), makeHookEvent({ timestamp: "2026-01-01T00:00:00Z" })];
+    const events = [
+      makeHookEvent(),
+      makeHookEvent({ timestamp: "2026-01-01T00:00:00Z" }),
+    ];
     await seedLogEvents(tmpDir, sessionId, events);
     const raw = await readFile(
       join(tmpDir, ".weaver", "logs", `${sessionId}.jsonl`),
       "utf-8",
     );
-    const lines = raw.trim().split("\n").map((l) => JSON.parse(l));
+    const lines = raw
+      .trim()
+      .split("\n")
+      .map((l) => JSON.parse(l));
     expect(lines).toHaveLength(2);
     expect(lines[0].event.hook_event_name).toBe("userPromptSubmit");
     expect(lines[1].timestamp).toBe("2026-01-01T00:00:00Z");
@@ -50,10 +56,7 @@ test.describe("seed helpers", () => {
 
   test("seedConfig writes merged config", async () => {
     await seedConfig(tmpDir, { dark_mode: false, page_size: 50 });
-    const raw = await readFile(
-      join(tmpDir, ".weaver", "config.json"),
-      "utf-8",
-    );
+    const raw = await readFile(join(tmpDir, ".weaver", "config.json"), "utf-8");
     const config = JSON.parse(raw);
     expect(config.dark_mode).toBe(false);
     expect(config.page_size).toBe(50);

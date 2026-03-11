@@ -1,4 +1,4 @@
-import type { FastifyReply } from 'fastify';
+import type { FastifyReply } from "fastify";
 
 interface SSEMessage {
   event: string;
@@ -14,8 +14,12 @@ export function subscribe(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-export function broadcast(sessionId: string, eventName?: string, sessionName?: string): void {
-  emit({ event: 'update', data: { sessionId, eventName, sessionName } });
+export function broadcast(
+  sessionId: string,
+  eventName?: string,
+  sessionName?: string,
+): void {
+  emit({ event: "update", data: { sessionId, eventName, sessionName } });
 }
 
 export function emit(msg: SSEMessage): void {
@@ -26,15 +30,17 @@ export function emit(msg: SSEMessage): void {
 
 export function sseReply(reply: FastifyReply): () => void {
   reply.raw.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    Connection: 'keep-alive',
+    "Content-Type": "text/event-stream",
+    "Cache-Control": "no-cache",
+    Connection: "keep-alive",
   });
 
   const unsubscribe = subscribe((msg) => {
-    reply.raw.write(`event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`);
+    reply.raw.write(
+      `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`,
+    );
   });
 
-  reply.raw.on('close', unsubscribe);
+  reply.raw.on("close", unsubscribe);
   return unsubscribe;
 }

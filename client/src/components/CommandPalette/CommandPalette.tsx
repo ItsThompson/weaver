@@ -6,7 +6,10 @@ import Autosuggest, {
 } from "@cloudscape-design/components/autosuggest";
 import { useWindows } from "../../context/WindowContext";
 import { useConfigQuery } from "../../hooks/queries";
-import { COMMAND_PALETTE_KEY, COMMAND_PALETTE_OPEN_EVENT } from "../../constants";
+import {
+  COMMAND_PALETTE_KEY,
+  COMMAND_PALETTE_OPEN_EVENT,
+} from "../../constants";
 import type { WindowEntry, AutosuggestOption } from "./types";
 
 function toOption(entry: WindowEntry): AutosuggestOption {
@@ -33,7 +36,9 @@ export function CommandPalette() {
         e.preventDefault();
         setVisible((prev) => !prev);
       }
-      if (e.key === "Escape") setVisible(false);
+      if (e.key === "Escape") {
+        setVisible(false);
+      }
     };
     const openHandler = () => setVisible(true);
     document.addEventListener("keydown", handler);
@@ -63,12 +68,16 @@ export function CommandPalette() {
   const handleSelect = ({ detail }: { detail: { value: string } }) => {
     const match = options.find((o) => o.value === detail.value);
     const href = match ? match.value : options[0]?.value;
-    if (!href) return;
+    if (!href) {
+      return;
+    }
     setVisible(false);
     navigate(href);
   };
 
-  if (!visible) return null;
+  if (!visible) {
+    return null;
+  }
 
   return (
     <>

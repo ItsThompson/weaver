@@ -1,1 +1,5 @@
-export { ActivityLogProvider, useActivityLog, type ActivityLogEntry } from './ActivityLogContext';
+export {
+  ActivityLogProvider,
+  useActivityLog,
+  type ActivityLogEntry,
+} from "./ActivityLogContext";
