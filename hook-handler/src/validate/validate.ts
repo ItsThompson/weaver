@@ -113,21 +113,18 @@ export function runStopHook(
   agentTestedDirs: string[],
   cwd: string,
 ): ValidationResult {
-  if (hook.run_if_files_match) {
-    const matching = matchesExtensionGlob(
-      changedFiles,
-      hook.run_if_files_match,
-    );
-    if (matching.length === 0) {
-      return {
-        name: hook.name,
-        passed: true,
-        output: "",
-        duration_ms: 0,
-        timed_out: false,
-        skipped_reason: "no files matched run_if_files_match",
-      };
-    }
+  if (
+    hook.run_if_files_match &&
+    matchesExtensionGlob(changedFiles, hook.run_if_files_match).length === 0
+  ) {
+    return {
+      name: hook.name,
+      passed: true,
+      output: "",
+      duration_ms: 0,
+      timed_out: false,
+      skipped_reason: "no files matched run_if_files_match",
+    };
   }
 
   const files = changedFiles.join(" ");
@@ -267,11 +264,9 @@ export function runValidation(args: ValidateArgs): ValidateResult {
       args.cwd,
       testRunners,
     );
-    const results: ValidationResult[] = [];
-
-    for (const hook of config.validation.stop) {
-      results.push(runStopHook(hook, changedFiles, agentTestedDirs, args.cwd));
-    }
+    const results = config.validation.stop.map((hook) =>
+      runStopHook(hook, changedFiles, agentTestedDirs, args.cwd),
+    );
 
     writeValidationEvent(
       sessionLogPath,
@@ -292,9 +287,7 @@ export function runValidation(args: ValidateArgs): ValidateResult {
     if (!hooks?.length) return { exitCode: 0 };
 
     const filePath = args.toolPath || "";
-
-    const results: ValidationResult[] = [];
-    for (const hook of hooks) {
+    const results = hooks.map((hook) => {
       const command = substituteVars(hook.command, { file: filePath });
       const timeout = hook.timeout_ms ?? DEFAULT_POST_TOOL_TIMEOUT_MS;
       const { output, exitCode, timedOut, durationMs } = runCommand(
@@ -302,14 +295,14 @@ export function runValidation(args: ValidateArgs): ValidateResult {
         args.cwd,
         timeout,
       );
-      results.push({
+      return {
         name: hook.name,
         passed: exitCode === 0,
         output,
         duration_ms: durationMs,
         timed_out: timedOut,
-      });
-    }
+      };
+    });
 
     writeValidationEvent(
       sessionLogPath,
