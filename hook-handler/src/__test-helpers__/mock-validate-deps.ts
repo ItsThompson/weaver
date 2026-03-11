@@ -1,24 +1,26 @@
 import { jest } from "@jest/globals";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
 
-export async function mockValidateDeps() {
-  jest.unstable_mockModule("../config/index", () => ({
+export async function mockValidateDeps(prefix = "..") {
+  // Mock registrations resolve relative to the calling test file
+  jest.unstable_mockModule(`${prefix}/config/index`, () => ({
     readProjectConfig: jest.fn<() => WeaverProjectConfig | null>(),
     resolveTestRunners: jest.fn<() => string[]>(),
   }));
 
-  jest.unstable_mockModule("../changed-files/index", () => ({
+  jest.unstable_mockModule(`${prefix}/changed-files/index`, () => ({
     extractChangedFiles: jest.fn<() => string[]>(),
   }));
 
-  jest.unstable_mockModule("../agent-tests/index", () => ({
+  jest.unstable_mockModule(`${prefix}/agent-tests/index`, () => ({
     extractAgentTestedDirs: jest.fn<() => string[]>(),
   }));
 
-  jest.unstable_mockModule("../scope/index", () => ({
+  jest.unstable_mockModule(`${prefix}/scope/index`, () => ({
     resolveTestDirs: jest.fn<() => string[]>(),
   }));
 
+  // Dynamic imports resolve relative to this helper file
   const config = await import("../config/index");
   const changedFiles = await import("../changed-files/index");
   const agentTests = await import("../agent-tests/index");

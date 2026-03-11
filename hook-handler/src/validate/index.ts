@@ -1,2 +1,5 @@
-export { runValidation, parseArgs, matchesExtensionGlob, runStopHook } from './validate';
-export type { ValidateArgs, ValidateResult } from './validate';
+export { runValidation, parseArgs } from "./run-validation";
+export type { ValidateArgs } from "./run-validation";
+export type { ValidateResult } from "./exit";
+export { matchesExtensionGlob } from "./glob";
+export { runStopHook } from "./stop-hook";
