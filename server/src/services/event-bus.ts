@@ -23,9 +23,7 @@ export function broadcast(
 }
 
 export function emit(msg: SSEMessage): void {
-  for (const listener of listeners) {
-    listener(msg);
-  }
+  listeners.forEach((listener) => listener(msg));
 }
 
 export function sseReply(reply: FastifyReply): () => void {

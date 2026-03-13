@@ -126,8 +126,6 @@ function clearPendingTimer(sessionId: string): void {
 }
 
 export function stopWebhookTimers(): void {
-  for (const timer of pendingTimers.values()) {
-    clearTimeout(timer);
-  }
+  pendingTimers.forEach((timer) => clearTimeout(timer));
   pendingTimers.clear();
 }

@@ -35,13 +35,13 @@ async function readOrphanEvents(): Promise<HookEvent[]> {
 }
 
 function groupByPid(events: HookEvent[]): OrphanGroup[] {
-  const byPid = new Map<number, HookEvent[]>();
-  for (const event of events) {
+  const byPid = events.reduce((map, event) => {
     const pid = event.pid ?? 0;
-    const group = byPid.get(pid) ?? [];
+    const group = map.get(pid) ?? [];
     group.push(event);
-    byPid.set(pid, group);
-  }
+    map.set(pid, group);
+    return map;
+  }, new Map<number, HookEvent[]>());
 
   return Array.from(byPid.entries()).map(([pid, pidEvents]) => ({
     pid,
@@ -94,27 +94,32 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
 
     const content = await readFile(filePath, "utf-8");
     const lines = content.split("\n").filter((l) => l.trim().length > 0);
-    const toMove: string[] = [];
-    const toKeep: string[] = [];
 
-    for (const line of lines) {
-      try {
-        const event = JSON.parse(line) as HookEvent;
-        if ((event.pid ?? 0) === pid) {
-          const { pid: _, ...clean } = event;
-          toMove.push(JSON.stringify(clean));
-        } else {
-          toKeep.push(line);
+    const { toMove, toKeep } = lines.reduce<{
+      toMove: string[];
+      toKeep: string[];
+    }>(
+      (acc, line) => {
+        try {
+          const event = JSON.parse(line) as HookEvent;
+          if ((event.pid ?? 0) === pid) {
+            const { pid: _, ...clean } = event;
+            acc.toMove.push(JSON.stringify(clean));
+          } else {
+            acc.toKeep.push(line);
+          }
+        } catch (e) {
+          log({
+            timestamp: new Date().toISOString(),
+            event: "orphan_assign_parse_error",
+            error: String(e),
+          });
+          acc.toKeep.push(line);
         }
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "orphan_assign_parse_error",
-          error: String(e),
-        });
-        toKeep.push(line);
-      }
-    }
+        return acc;
+      },
+      { toMove: [], toKeep: [] },
+    );
 
     if (toMove.length === 0) {
       return reply
@@ -163,26 +168,31 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
 
       const content = await readFile(filePath, "utf-8");
       const lines = content.split("\n").filter((l) => l.trim().length > 0);
-      const toKeep: string[] = [];
-      let deleted = 0;
 
-      for (const line of lines) {
-        try {
-          const event = JSON.parse(line) as HookEvent;
-          if ((event.pid ?? 0) === pid) {
-            deleted++;
-          } else {
-            toKeep.push(line);
+      const { deleted, toKeep } = lines.reduce<{
+        deleted: number;
+        toKeep: string[];
+      }>(
+        (acc, line) => {
+          try {
+            const event = JSON.parse(line) as HookEvent;
+            if ((event.pid ?? 0) === pid) {
+              acc.deleted++;
+            } else {
+              acc.toKeep.push(line);
+            }
+          } catch (e) {
+            log({
+              timestamp: new Date().toISOString(),
+              event: "orphan_delete_parse_error",
+              error: String(e),
+            });
+            acc.toKeep.push(line);
           }
-        } catch (e) {
-          log({
-            timestamp: new Date().toISOString(),
-            event: "orphan_delete_parse_error",
-            error: String(e),
-          });
-          toKeep.push(line);
-        }
-      }
+          return acc;
+        },
+        { deleted: 0, toKeep: [] },
+      );
 
       if (deleted === 0) {
         return reply

@@ -43,13 +43,10 @@ export async function getLastEvent(
   sessionId: string,
 ): Promise<{ name: string; timestamp: string } | null> {
   const events = await parseLogFile(sessionId);
-  for (let i = events.length - 1; i >= 0; i--) {
-    const e = events[i];
-    if (e.event.hook_event_name) {
-      return { name: e.event.hook_event_name, timestamp: e.timestamp };
-    }
-  }
-  return null;
+  const last = events.findLast((e) => e.event.hook_event_name);
+  return last
+    ? { name: last.event.hook_event_name!, timestamp: last.timestamp }
+    : null;
 }
 
 export async function parseLogFile(sessionId: string): Promise<HookEvent[]> {

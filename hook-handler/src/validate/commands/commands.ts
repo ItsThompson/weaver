@@ -5,11 +5,10 @@ export function substituteVars(
   command: string,
   vars: Record<string, string>,
 ): string {
-  let result = command;
-  for (const [key, val] of Object.entries(vars)) {
-    result = result.replaceAll(`{{${key}}}`, val);
-  }
-  return result;
+  return Object.entries(vars).reduce(
+    (result, [key, val]) => result.replaceAll(`{{${key}}}`, val),
+    command,
+  );
 }
 
 export function commandUsesVar(command: string, varName: string): boolean {

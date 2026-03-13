@@ -36,9 +36,7 @@ export function useSessionEvents(debounceMs = 1000): void {
 
     return () => {
       source.close();
-      for (const timer of pending.values()) {
-        clearTimeout(timer);
-      }
+      pending.forEach((timer) => clearTimeout(timer));
     };
   }, [debounceMs]);
 }
