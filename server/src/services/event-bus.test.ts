@@ -1,5 +1,6 @@
 import { jest } from "@jest/globals";
-import { subscribe, broadcast, emit } from "./event-bus";
+import { subscribe, broadcast, emit, sseReply } from "./event-bus";
+import type { SSETarget } from "./event-bus";
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -81,8 +82,57 @@ describe("broadcast", () => {
 });
 
 describe("sseReply", () => {
-  // sseReply depends on FastifyReply internals (raw.writeHead, raw.write, raw.on)
-  // which are tightly coupled to the HTTP layer. Testing it here would require
-  // a full mock of the Node HTTP response. The route-level tests in events.test.ts
-  // already cover SSE delivery end-to-end, so we skip duplicating that here.
+  function mockReply(): SSETarget {
+    return {
+      raw: {
+        writeHead: jest.fn(),
+        write: jest.fn<() => boolean>(),
+        on: jest.fn(),
+      },
+    };
+  }
+
+  it("sets SSE headers", () => {
+    const reply = mockReply();
+    sseReply(reply);
+    expect(reply.raw.writeHead).toHaveBeenCalledWith(200, {
+      "Content-Type": "text/event-stream",
+      "Cache-Control": "no-cache",
+      Connection: "keep-alive",
+    });
+  });
+
+  it("writes SSE-formatted data on broadcast", () => {
+    const reply = mockReply();
+    const unsub = sseReply(reply);
+    emit({ event: "update", data: { sessionId: "s1" } });
+    expect(reply.raw.write).toHaveBeenCalledWith(
+      'event: update\ndata: {"sessionId":"s1"}\n\n',
+    );
+    unsub();
+  });
+
+  it("stops writing after unsubscribe", () => {
+    const reply = mockReply();
+    const unsub = sseReply(reply);
+    unsub();
+    emit({ event: "update", data: { sessionId: "s1" } });
+    expect(reply.raw.write).not.toHaveBeenCalled();
+  });
+
+  it("unsubscribes when the connection closes", () => {
+    const reply = mockReply();
+    sseReply(reply);
+    const onClose = (reply.raw.on as jest.Mock).mock.calls.find(
+      (call) => call[0] === "close",
+    );
+    expect(onClose).toBeDefined();
+
+    // Simulate connection close
+    const closeHandler = onClose![1] as () => void;
+    closeHandler();
+
+    emit({ event: "update", data: { sessionId: "s1" } });
+    expect(reply.raw.write).not.toHaveBeenCalled();
+  });
 });

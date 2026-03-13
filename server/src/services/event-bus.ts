@@ -1,4 +1,10 @@
-import type { FastifyReply } from "fastify";
+export interface SSETarget {
+  raw: {
+    writeHead(statusCode: number, headers: Record<string, string>): void;
+    write(chunk: string): boolean;
+    on(event: string, listener: () => void): void;
+  };
+}
 
 interface SSEMessage {
   event: string;
@@ -26,7 +32,7 @@ export function emit(msg: SSEMessage): void {
   listeners.forEach((listener) => listener(msg));
 }
 
-export function sseReply(reply: FastifyReply): () => void {
+export function sseReply(reply: SSETarget): () => void {
   reply.raw.writeHead(200, {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",

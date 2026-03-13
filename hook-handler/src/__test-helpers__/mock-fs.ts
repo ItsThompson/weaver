@@ -1,6 +1,8 @@
 import { jest } from "@jest/globals";
 
 export async function mockFs() {
+  const realpathSyncMock = jest.fn<(p: string) => string>();
+
   jest.unstable_mockModule("node:fs", () => ({
     existsSync: jest.fn<() => boolean>(),
     readFileSync: jest.fn<() => string>(),
@@ -8,7 +10,7 @@ export async function mockFs() {
     appendFileSync: jest.fn(),
     mkdirSync: jest.fn(),
     unlinkSync: jest.fn(),
-    realpathSync: jest.fn<(p: string) => string>(),
+    realpathSync: realpathSyncMock,
   }));
 
   const fs = await import("node:fs");
@@ -25,8 +27,6 @@ export async function mockFs() {
     >,
     mkdirSync: fs.mkdirSync as jest.MockedFunction<typeof fs.mkdirSync>,
     unlinkSync: fs.unlinkSync as jest.MockedFunction<typeof fs.unlinkSync>,
-    realpathSync: fs.realpathSync as unknown as jest.MockedFunction<
-      (p: string) => string
-    >,
+    realpathSync: realpathSyncMock,
   };
 }
