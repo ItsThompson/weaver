@@ -27,8 +27,8 @@ export function useSessionNotifications(): void {
     }
     seenRef.current = entries[0].id;
 
-    for (const entry of unseen) {
+    unseen.forEach((entry) => {
       addNotification(entry.message, "info", ACTIVITY_SOUND[entry.activity]);
-    }
+    });
   }, [entries, addNotification]);
 }

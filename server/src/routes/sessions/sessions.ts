@@ -38,17 +38,20 @@ function toSessionWithStatus(
 export function registerSessionRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SessionWithStatus[] }>("/api/sessions", async () => {
     const sessions = await readSessions();
-    const results: SessionWithStatus[] = [];
-
-    for (const s of sessions) {
-      const isOpen = isProcessRunning(s.pid);
-      let activity: SessionWithStatus["activity"];
-      if (isOpen) {
-        const last = await getLastEvent(s.id);
-        activity = deriveActivity(last?.name ?? "agentSpawn", last?.timestamp);
-      }
-      results.push(toSessionWithStatus(s, isOpen, activity));
-    }
+    const results = await Promise.all(
+      sessions.map(async (s) => {
+        const isOpen = isProcessRunning(s.pid);
+        let activity: SessionWithStatus["activity"];
+        if (isOpen) {
+          const last = await getLastEvent(s.id);
+          activity = deriveActivity(
+            last?.name ?? "agentSpawn",
+            last?.timestamp,
+          );
+        }
+        return toSessionWithStatus(s, isOpen, activity);
+      }),
+    );
 
     return results.sort((a, b) => b.startTime.localeCompare(a.startTime));
   });
@@ -122,13 +125,7 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     }
 
     const sessions = await readSessions();
-    let index = -1;
-    for (let i = sessions.length - 1; i >= 0; i--) {
-      if (sessions[i].pid === pid) {
-        index = i;
-        break;
-      }
-    }
+    const index = sessions.findLastIndex((s) => s.pid === pid);
     if (index === -1) {
       return reply.status(404).send({ error: "No session found for PID" });
     }

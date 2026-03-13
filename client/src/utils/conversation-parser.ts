@@ -111,12 +111,11 @@ export function parseConversation(
  * Every turn produces an assistant entry with "[Tool uses: ...]" suffix.
  */
 export function regenerateTranscript(history: ConversationTurn[]): string[] {
-  const transcript: string[] = [];
-
-  for (const turn of history) {
+  return history.flatMap((turn) => {
+    const lines: string[] = [];
     const prompt = getUserPrompt(turn);
     if (prompt !== null) {
-      transcript.push(`> ${prompt}`);
+      lines.push(`> ${prompt}`);
     }
 
     const tools = getToolNames(turn);
@@ -125,10 +124,9 @@ export function regenerateTranscript(history: ConversationTurn[]): string[] {
         ? `[Tool uses: ${tools.join(", ")}]`
         : "[Tool uses: none]";
     const content = getAssistantContent(turn);
-    transcript.push(`${content}\n${toolSuffix}`);
-  }
-
-  return transcript;
+    lines.push(`${content}\n${toolSuffix}`);
+    return lines;
+  });
 }
 
 /**

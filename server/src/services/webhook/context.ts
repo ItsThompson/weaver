@@ -32,10 +32,5 @@ function findLastByName(
   events: HookEvent[],
   name: string,
 ): HookEvent | undefined {
-  for (let i = events.length - 1; i >= 0; i--) {
-    if (events[i].event.hook_event_name === name) {
-      return events[i];
-    }
-  }
-  return undefined;
+  return events.findLast((e) => e.event.hook_event_name === name);
 }

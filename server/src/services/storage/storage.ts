@@ -71,13 +71,15 @@ export async function cleanStaleSessions(): Promise<void> {
 
   const sessionFiles = entries.filter((f) => f.startsWith(".current-session-"));
 
-  for (const file of sessionFiles) {
-    const pid = parseInt(file.replace(".current-session-", ""), 10);
-    if (isNaN(pid)) {
-      continue;
-    }
+  const staleFiles = sessionFiles
+    .map((file) => ({
+      file,
+      pid: parseInt(file.replace(".current-session-", ""), 10),
+    }))
+    .filter(({ pid }) => !isNaN(pid) && !isProcessRunning(pid));
 
-    if (!isProcessRunning(pid)) {
+  await Promise.all(
+    staleFiles.map(async ({ file, pid }) => {
       try {
         await unlink(join(dataDir, file));
         log({
@@ -89,8 +91,8 @@ export async function cleanStaleSessions(): Promise<void> {
       } catch {
         // File may have been removed between readdir and unlink
       }
-    }
-  }
+    }),
+  );
 }
 
 export function isProcessRunning(pid: number): boolean {
@@ -128,19 +130,17 @@ export function startPidPolling(
     const currentPids = new Set(currentlyOpen.map((s) => s.pid));
 
     // Detect PIDs that were open but are now dead
-    for (const pid of openPids) {
-      if (!currentPids.has(pid)) {
+    [...openPids]
+      .filter((pid) => !currentPids.has(pid))
+      .forEach((pid) => {
         const session = sessions.find((s) => s.pid === pid);
         if (session) {
           onSessionClosed(session.id);
         }
-      }
-    }
+      });
 
     openPids.clear();
-    for (const pid of currentPids) {
-      openPids.add(pid);
-    }
+    currentPids.forEach((pid) => openPids.add(pid));
   };
 
   poll();
