@@ -17,7 +17,7 @@ describe("runInject", () => {
     expect(unlinkSync).not.toHaveBeenCalled();
   });
 
-  it("reads pending file, formats output, deletes file, exits 0", () => {
+  it("formats output with summary and failed details only", () => {
     existsSync.mockReturnValue(true);
     readFileSync.mockReturnValue(
       JSON.stringify({
@@ -43,9 +43,11 @@ describe("runInject", () => {
     const result = runInject("sess-1");
     expect(result.exitCode).toBe(0);
     expect(result.stdout).toContain("[Weaver Validation — Previous Turn]");
+    expect(result.stdout).toContain("1 passed · 1 failed");
     expect(result.stdout).toContain("✗ typecheck (2.3s)");
     expect(result.stdout).toContain("  error TS2345: bad type");
-    expect(result.stdout).toContain("✓ lint (1.1s)");
+    expect(result.stdout).not.toContain("✓ lint");
+    expect(result.stdout).toContain("Re-run failing commands for full output.");
     expect(unlinkSync).toHaveBeenCalled();
   });
 
@@ -58,7 +60,7 @@ describe("runInject", () => {
     expect(unlinkSync).toHaveBeenCalled();
   });
 
-  it("shows skipped results with ⊘ marker", () => {
+  it("counts skipped results in summary instead of showing ⊘ marker", () => {
     existsSync.mockReturnValue(true);
     readFileSync.mockReturnValue(
       JSON.stringify({
@@ -76,12 +78,11 @@ describe("runInject", () => {
     );
 
     const result = runInject("sess-1");
-    expect(result.stdout).toContain(
-      "⊘ test:server — skipped (already tested by agent)",
-    );
+    expect(result.stdout).toContain("1 skipped");
+    expect(result.stdout).not.toContain("⊘");
   });
 
-  it("shows passed results with ✓ marker", () => {
+  it("shows only summary for all-passed results", () => {
     existsSync.mockReturnValue(true);
     readFileSync.mockReturnValue(
       JSON.stringify({
@@ -98,10 +99,12 @@ describe("runInject", () => {
     );
 
     const result = runInject("sess-1");
-    expect(result.stdout).toContain("✓ lint (0.5s)");
+    expect(result.stdout).toContain("1 passed");
+    expect(result.stdout).not.toContain("✓ lint");
+    expect(result.stdout).not.toContain("Re-run");
   });
 
-  it("shows failed results with ✗ marker and includes output", () => {
+  it("shows failed results with ✗ marker and indented output", () => {
     existsSync.mockReturnValue(true);
     readFileSync.mockReturnValue(
       JSON.stringify({

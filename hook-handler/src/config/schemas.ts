@@ -3,6 +3,7 @@ import { z } from "zod";
 export const stopHookSchema = z.object({
   name: z.string(),
   command: z.string(),
+  type: z.enum(["test", "check"]).optional(),
   scope: z.union([z.enum(["file", "parent", "cwd"]), z.number()]).optional(),
   run_if_files_match: z.string().optional(),
   working_dir: z.string().optional(),

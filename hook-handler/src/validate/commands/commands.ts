@@ -19,6 +19,7 @@ export function runCommand(
   command: string,
   cwd: string,
   timeoutMs: number,
+  tailBiased = false,
 ): {
   output: string;
   exitCode: number | null;
@@ -33,10 +34,13 @@ export function runCommand(
     encoding: "utf-8",
   });
   const durationMs = Date.now() - start;
-  const output = ((result.stdout || "") + (result.stderr || "")).slice(
-    0,
-    MAX_OUTPUT_LENGTH,
-  );
+  const raw = (result.stdout || "") + (result.stderr || "");
+  let output = raw;
+  if (raw.length > MAX_OUTPUT_LENGTH) {
+    output = tailBiased
+      ? "[... truncated ...]\n" + raw.slice(-MAX_OUTPUT_LENGTH)
+      : raw.slice(0, MAX_OUTPUT_LENGTH);
+  }
   const timedOut =
     result.signal === "SIGTERM" ||
     result.error?.message?.includes("ETIMEDOUT") === true;

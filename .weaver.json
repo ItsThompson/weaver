@@ -8,6 +8,7 @@
       },
       {
         "name": "test",
+        "type": "test",
         "command": "npx turbo test --filter='...[HEAD]'",
         "run_if_files_match": "**/*.{ts,tsx}",
         "timeout_ms": 60000
