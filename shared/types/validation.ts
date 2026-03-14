@@ -27,6 +27,7 @@ export const DEFAULT_TEST_RUNNERS = [
 export interface StopValidationHook {
   name: string;
   command: string;
+  type?: "test" | "check";
   scope?: "file" | "parent" | "cwd" | number;
   run_if_files_match?: string;
   working_dir?: string;
@@ -47,6 +48,7 @@ export interface ValidationResult {
   duration_ms: number;
   timed_out: boolean;
   skipped_reason?: string;
+  hook_type?: "test" | "check";
 }
 
 export interface ValidationEvent {
