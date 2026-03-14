@@ -213,6 +213,7 @@ In a monorepo where each package has its own tooling, place a `.weaver` file in 
 
 ```
 monorepo/
+├── .weaver                   ← fallback for files not in a package
 ├── packages/
 │   ├── api/
 │   │   ├── .weaver          ← api-specific hooks
@@ -222,7 +223,15 @@ monorepo/
 │       └── src/
 ```
 
-Each package's hooks run independently against only the files within that package. Files outside any `.weaver` ancestor are silently skipped. The `working_dir` for each hook resolves relative to the package's `.weaver` location.
+**Nearest config wins**: discovery walks upward and stops at the first `.weaver` found. There is no merging between levels:
+
+- `packages/api/src/handler.ts` → uses `packages/api/.weaver` (root config is not consulted)
+- `packages/web/src/App.tsx` → uses `packages/web/.weaver`
+- `scripts/deploy.sh` → walks up past `scripts/`, finds root `monorepo/.weaver`
+
+The root `.weaver` acts as a fallback for files that aren't inside a package with its own config. If you want root-level hooks to apply everywhere, don't place `.weaver` files in the packages.
+
+Each package's hooks run independently against only the files within that package. The `working_dir` for each hook resolves relative to the package's `.weaver` location.
 
 ### Formatter on write
 
