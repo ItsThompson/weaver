@@ -1,5 +1,6 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import type { SpawnSyncReturns } from "node:child_process";
+import type { WeaverProjectConfig } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
 import {
   mockFs,
@@ -10,7 +11,8 @@ import {
 const { appendFileSync, writeFileSync } = await mockFs();
 const { spawnSync } = await mockChildProcess();
 const {
-  readProjectConfig: mockReadProjectConfig,
+  findNearestConfig: mockFindNearestConfig,
+  groupFilesByConfig: mockGroupFilesByConfig,
   resolveTestRunners: mockResolveTestRunners,
   extractChangedFiles: mockExtractChangedFiles,
   extractAgentTestedDirs: mockExtractAgentTestedDirs,
@@ -27,6 +29,7 @@ beforeEach(() => {
     .mockResolvedValue(new Response());
   globalThis.fetch = mockFetch;
   mockResolveTestRunners.mockReturnValue(["jest", "vitest", "npm test"]);
+  mockExtractAgentTestedDirs.mockReturnValue([]);
 });
 
 function spawnResult(
@@ -44,6 +47,12 @@ function spawnResult(
   } as SpawnSyncReturns<string>;
 }
 
+function makeGroups(
+  entries: [string, { config: WeaverProjectConfig; files: string[] }][],
+): Map<string, { config: WeaverProjectConfig; files: string[] }> {
+  return new Map(entries);
+}
+
 const stopArgs: ValidateArgs = {
   sessionId: "sess-1",
   cwd: "/project",
@@ -57,27 +66,37 @@ const postToolArgs: ValidateArgs = {
 };
 
 describe("runValidation - stop trigger", () => {
-  it("exits 0 when no .weaver config", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+  it("exits 0 when no changed files", () => {
+    mockExtractChangedFiles.mockReturnValue([]);
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
-  it("exits 0 when no validation.stop hooks", () => {
-    mockReadProjectConfig.mockReturnValue({ validation: {} });
+  it("exits 0 when no config groups found", () => {
+    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
+    mockGroupFilesByConfig.mockReturnValue(new Map());
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
   it("runs all hooks and collects results", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        stop: [
-          { name: "typecheck", command: "npx tsc --noEmit" },
-          { name: "lint", command: "npx eslint ." },
-        ],
-      },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/src/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: {
+                stop: [
+                  { name: "typecheck", command: "npx tsc --noEmit" },
+                  { name: "lint", command: "npx eslint ." },
+                ],
+              },
+            },
+            files: ["/project/src/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
@@ -86,11 +105,20 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("all pass → exit 0, no pending file", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: { stop: [{ name: "ok", command: "echo ok" }] },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: { stop: [{ name: "ok", command: "echo ok" }] },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
@@ -99,17 +127,26 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("some fail → exit 1, pending file written, STDERR summary", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        stop: [
-          { name: "typecheck", command: "tsc" },
-          { name: "lint", command: "eslint ." },
-          { name: "test", command: "jest" },
-        ],
-      },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: {
+                stop: [
+                  { name: "typecheck", command: "tsc" },
+                  { name: "lint", command: "eslint ." },
+                  { name: "test", command: "jest" },
+                ],
+              },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync
       .mockReturnValueOnce(spawnResult({ status: 1, stderr: "type error" }))
       .mockReturnValueOnce(spawnResult())
@@ -125,11 +162,20 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("appends validation event to session log", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: { stop: [{ name: "check", command: "echo ok" }] },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: { stop: [{ name: "check", command: "echo ok" }] },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
@@ -140,11 +186,20 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("notifies server after appending validation event", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: { stop: [{ name: "check", command: "echo ok" }] },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: { stop: [{ name: "check", command: "echo ok" }] },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
@@ -159,29 +214,40 @@ describe("runValidation - stop trigger", () => {
 });
 
 describe("runValidation - postToolUse trigger", () => {
+  it("exits 0 when no config found", () => {
+    mockFindNearestConfig.mockReturnValue(null);
+    expect(runValidation(postToolArgs).exitCode).toBe(0);
+  });
+
   it("exits 0 when no matching hooks", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          { matcher: "execute_bash", name: "fmt", command: "echo" },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "execute_bash", name: "fmt", command: "echo" },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     expect(runValidation(postToolArgs).exitCode).toBe(0);
   });
 
   it("matcher filters correctly", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          {
-            matcher: "fs_write",
-            name: "format",
-            command: "prettier --write {{file}}",
-          },
-          { matcher: "execute_bash", name: "other", command: "echo" },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            {
+              matcher: "fs_write",
+              name: "format",
+              command: "prettier --write {{file}}",
+            },
+            { matcher: "execute_bash", name: "other", command: "echo" },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     spawnSync.mockReturnValue(spawnResult());
 
@@ -194,12 +260,15 @@ describe("runValidation - postToolUse trigger", () => {
   });
 
   it("substitutes {{file}} from toolPath", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          { matcher: "fs_write", name: "fmt", command: "prettier {{file}}" },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "fs_write", name: "fmt", command: "prettier {{file}}" },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     spawnSync.mockReturnValue(spawnResult());
 
@@ -212,13 +281,13 @@ describe("runValidation - postToolUse trigger", () => {
 });
 
 describe("runValidation - no config", () => {
-  it("exits 0 when no .weaver config for stop", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+  it("exits 0 when no changed files for stop", () => {
+    mockExtractChangedFiles.mockReturnValue([]);
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
-  it("exits 0 when no .weaver config for postToolUse", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+  it("exits 0 when no config found for postToolUse", () => {
+    mockFindNearestConfig.mockReturnValue(null);
     expect(runValidation(postToolArgs).exitCode).toBe(0);
   });
 });
