@@ -147,6 +147,25 @@ export function parseAndValidateConfig(raw: string): {
     }
   }
 
+  if ("test_runners" in obj) {
+    if (!Array.isArray(obj.test_runners)) {
+      warnings.push("test_runners must be an array of strings");
+    } else if (!obj.test_runners.every((r: unknown) => typeof r === "string")) {
+      warnings.push("test_runners must contain only strings");
+    } else {
+      const trimmed = (obj.test_runners as string[])
+        .map((r) => r.trim())
+        .filter((r) => r.length > 0);
+      const removed = (obj.test_runners as string[]).length - trimmed.length;
+      if (removed > 0) {
+        warnings.push(
+          `test_runners: removed ${removed} empty or whitespace-only entries`,
+        );
+      }
+      config.test_runners = trimmed;
+    }
+  }
+
   return { config, warnings };
 }
 
