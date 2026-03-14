@@ -2,12 +2,8 @@ import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
-import {
-  DEFAULT_CONFIG,
-  VALID_OPEN_DISPLAY_OPTIONS,
-  VALID_CLOSE_DISPLAY_OPTIONS,
-  type WeaverConfig,
-} from "@weaver/shared/types";
+import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
+import { FIELD_VALIDATORS } from "./validators";
 
 const CONFIG_PATH = () => join(homedir(), ".weaver", "config.json");
 
@@ -48,147 +44,25 @@ export function parseAndValidateConfig(raw: string): {
 
   const obj = parsed as Record<string, unknown>;
   const warnings: string[] = [];
-  const config = { ...DEFAULT_CONFIG };
+  const config = { ...DEFAULT_CONFIG } as Record<string, unknown> &
+    WeaverConfig;
 
-  if ("enable_notification_sounds" in obj) {
-    if (typeof obj.enable_notification_sounds === "boolean") {
-      config.enable_notification_sounds = obj.enable_notification_sounds;
-    } else {
-      warnings.push("enable_notification_sounds must be a boolean");
+  Object.keys(obj).forEach((key) => {
+    const validator = FIELD_VALIDATORS[key];
+    if (!validator) {
+      return;
     }
-  }
 
-  if ("dark_mode" in obj) {
-    if (typeof obj.dark_mode === "boolean") {
-      config.dark_mode = obj.dark_mode;
-    } else {
-      warnings.push("dark_mode must be a boolean");
+    const result = validator(obj[key]);
+    if (result.warning) {
+      warnings.push(result.warning);
     }
-  }
-
-  if ("open_display_options" in obj) {
-    const result = validateDisplayOptions(
-      obj.open_display_options,
-      "open_display_options",
-      VALID_OPEN_DISPLAY_OPTIONS,
-    );
-    if (result.error) {
-      warnings.push(result.error);
-    } else {
-      config.open_display_options = result.value!;
+    if (result.value !== undefined) {
+      config[key] = result.value;
     }
-  }
-
-  if ("close_display_options" in obj) {
-    const result = validateDisplayOptions(
-      obj.close_display_options,
-      "close_display_options",
-      VALID_CLOSE_DISPLAY_OPTIONS,
-    );
-    if (result.error) {
-      warnings.push(result.error);
-    } else {
-      config.close_display_options = result.value!;
-    }
-  }
-
-  if ("page_size" in obj) {
-    if (
-      typeof obj.page_size === "number" &&
-      [10, 25, 50].includes(obj.page_size)
-    ) {
-      config.page_size = obj.page_size;
-    } else {
-      warnings.push("page_size must be 10, 25, or 50");
-    }
-  }
-
-  if ("ghost_mode" in obj) {
-    if (typeof obj.ghost_mode === "boolean") {
-      config.ghost_mode = obj.ghost_mode;
-    } else {
-      warnings.push("ghost_mode must be a boolean");
-    }
-  }
-
-  if ("ghost_opacity" in obj) {
-    if (
-      typeof obj.ghost_opacity === "number" &&
-      obj.ghost_opacity >= 0 &&
-      obj.ghost_opacity <= 1
-    ) {
-      config.ghost_opacity = obj.ghost_opacity;
-    } else {
-      warnings.push("ghost_opacity must be a number between 0 and 1");
-    }
-  }
-
-  if ("webhook_url" in obj) {
-    if (typeof obj.webhook_url === "string") {
-      if (
-        obj.webhook_url === "" ||
-        obj.webhook_url.startsWith("http://") ||
-        obj.webhook_url.startsWith("https://")
-      ) {
-        config.webhook_url = obj.webhook_url;
-      } else {
-        warnings.push("webhook_url must start with http:// or https://");
-      }
-    } else {
-      warnings.push("webhook_url must be a string");
-    }
-  }
-
-  if ("webhook_format" in obj) {
-    if (obj.webhook_format === "simple" || obj.webhook_format === "advanced") {
-      config.webhook_format = obj.webhook_format;
-    } else {
-      warnings.push('webhook_format must be "simple" or "advanced"');
-    }
-  }
-
-  if ("test_runners" in obj) {
-    if (!Array.isArray(obj.test_runners)) {
-      warnings.push("test_runners must be an array of strings");
-    } else if (!obj.test_runners.every((r: unknown) => typeof r === "string")) {
-      warnings.push("test_runners must contain only strings");
-    } else {
-      const trimmed = (obj.test_runners as string[])
-        .map((r) => r.trim())
-        .filter((r) => r.length > 0);
-      const removed = (obj.test_runners as string[]).length - trimmed.length;
-      if (removed > 0) {
-        warnings.push(
-          `test_runners: removed ${removed} empty or whitespace-only entries`,
-        );
-      }
-      config.test_runners = trimmed;
-    }
-  }
+  });
 
   return { config, warnings };
-}
-
-function validateDisplayOptions(
-  value: unknown,
-  field: string,
-  valid: readonly string[],
-): { value?: string[]; error?: string } {
-  if (!Array.isArray(value)) {
-    return { error: `${field} must be an array of strings` };
-  }
-  if (!value.every((v) => typeof v === "string")) {
-    return { error: `${field} must contain only strings` };
-  }
-
-  const invalid = value.filter((v: string) => !valid.includes(v));
-  if (invalid.length > 0) {
-    return {
-      error: `${field} contains invalid options: ${invalid.join(", ")}`,
-    };
-  }
-
-  return { value: value as string[] };
 }
 
 export async function writeConfig(config: WeaverConfig): Promise<void> {
