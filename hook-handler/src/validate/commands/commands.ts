@@ -35,12 +35,12 @@ export function runCommand(
   });
   const durationMs = Date.now() - start;
   const raw = (result.stdout || "") + (result.stderr || "");
-  const output =
-    raw.length <= MAX_OUTPUT_LENGTH
-      ? raw
-      : tailBiased
-        ? "[... truncated ...]\n" + raw.slice(-MAX_OUTPUT_LENGTH)
-        : raw.slice(0, MAX_OUTPUT_LENGTH);
+  let output = raw;
+  if (raw.length > MAX_OUTPUT_LENGTH) {
+    output = tailBiased
+      ? "[... truncated ...]\n" + raw.slice(-MAX_OUTPUT_LENGTH)
+      : raw.slice(0, MAX_OUTPUT_LENGTH);
+  }
   const timedOut =
     result.signal === "SIGTERM" ||
     result.error?.message?.includes("ETIMEDOUT") === true;
