@@ -1,5 +1,6 @@
+import { dirname } from "node:path";
 import { DEFAULT_POST_TOOL_TIMEOUT_MS } from "@weaver/shared/types";
-import { readProjectConfig } from "../../config/index";
+import { findNearestConfig } from "../../config/index";
 import { substituteVars, runCommand } from "../commands";
 import { writeValidationEvent } from "../logging";
 import { handleExitLogic } from "../exit";
@@ -10,21 +11,25 @@ export function runPostToolUseTrigger(
   args: ValidateArgs,
   sessionLogPath: string,
 ): ValidateResult {
-  const config = readProjectConfig(args.cwd);
-  const hooks = config?.validation?.postToolUse?.filter(
+  const filePath = args.toolPath || "";
+  const match = findNearestConfig(filePath ? dirname(filePath) : args.cwd);
+  if (!match) {
+    return { exitCode: 0 };
+  }
+
+  const hooks = match.config.validation?.postToolUse?.filter(
     (h) => h.matcher === args.toolName,
   );
   if (!hooks?.length) {
     return { exitCode: 0 };
   }
 
-  const filePath = args.toolPath || "";
   const results = hooks.map((hook) => {
     const command = substituteVars(hook.command, { file: filePath });
     const timeout = hook.timeout_ms ?? DEFAULT_POST_TOOL_TIMEOUT_MS;
     const { output, exitCode, timedOut, durationMs } = runCommand(
       command,
-      args.cwd,
+      match.configRoot,
       timeout,
     );
     return {

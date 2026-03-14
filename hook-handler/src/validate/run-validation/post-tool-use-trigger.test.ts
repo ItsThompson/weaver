@@ -9,7 +9,7 @@ import {
 
 const { appendFileSync } = await mockFs();
 const { spawnSync } = await mockChildProcess();
-const { readProjectConfig: mockReadProjectConfig } =
+const { findNearestConfig: mockFindNearestConfig } =
   await mockValidateDeps("../..");
 
 const { runPostToolUseTrigger } = await import("./post-tool-use-trigger");
@@ -48,33 +48,39 @@ const args: ValidateArgs = {
 };
 
 describe("runPostToolUseTrigger", () => {
-  it("exits 0 when no config", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+  it("exits 0 when no config found", () => {
+    mockFindNearestConfig.mockReturnValue(null);
     expect(runPostToolUseTrigger(args, "/logs/sess-1.jsonl").exitCode).toBe(0);
   });
 
   it("exits 0 when no matching hooks", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          { matcher: "execute_bash", name: "fmt", command: "echo" },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "execute_bash", name: "fmt", command: "echo" },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     expect(runPostToolUseTrigger(args, "/logs/sess-1.jsonl").exitCode).toBe(0);
   });
 
   it("runs matching hooks with file substitution", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          {
-            matcher: "fs_write",
-            name: "format",
-            command: "prettier --write {{file}}",
-          },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            {
+              matcher: "fs_write",
+              name: "format",
+              command: "prettier --write {{file}}",
+            },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     spawnSync.mockReturnValue(spawnResult());
 
@@ -82,17 +88,20 @@ describe("runPostToolUseTrigger", () => {
     expect(result.exitCode).toBe(0);
     expect(spawnSync).toHaveBeenCalledWith(
       "prettier --write /project/a.ts",
-      expect.objectContaining({ shell: true }),
+      expect.objectContaining({ shell: true, cwd: "/project" }),
     );
   });
 
   it("writes validation event after running hooks", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: {
-        postToolUse: [
-          { matcher: "fs_write", name: "fmt", command: "echo {{file}}" },
-        ],
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "fs_write", name: "fmt", command: "echo {{file}}" },
+          ],
+        },
       },
+      configRoot: "/project",
     });
     spawnSync.mockReturnValue(spawnResult());
 
@@ -101,5 +110,55 @@ describe("runPostToolUseTrigger", () => {
       "/logs/sess-1.jsonl",
       expect.stringContaining('"trigger":"postToolUse"'),
     );
+  });
+
+  it("uses configRoot as cwd for hook execution", () => {
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "fs_write", name: "fmt", command: "echo {{file}}" },
+          ],
+        },
+      },
+      configRoot: "/mono/pkg-a",
+    });
+    spawnSync.mockReturnValue(spawnResult());
+
+    runPostToolUseTrigger(
+      { ...args, toolPath: "/mono/pkg-a/src/x.ts" },
+      "/logs/sess-1.jsonl",
+    );
+    expect(spawnSync).toHaveBeenCalledWith(
+      "echo /mono/pkg-a/src/x.ts",
+      expect.objectContaining({ cwd: "/mono/pkg-a" }),
+    );
+  });
+
+  it("falls back to args.cwd when toolPath is empty", () => {
+    mockFindNearestConfig.mockReturnValue({
+      config: {
+        validation: {
+          postToolUse: [
+            { matcher: "fs_write", name: "fmt", command: "echo hi" },
+          ],
+        },
+      },
+      configRoot: "/project",
+    });
+    spawnSync.mockReturnValue(spawnResult());
+
+    runPostToolUseTrigger({ ...args, toolPath: "" }, "/logs/sess-1.jsonl");
+    expect(mockFindNearestConfig).toHaveBeenCalledWith("/project");
+  });
+
+  it("exits 0 when no config at cwd for non-file event", () => {
+    mockFindNearestConfig.mockReturnValue(null);
+    const result = runPostToolUseTrigger(
+      { ...args, toolPath: "" },
+      "/logs/sess-1.jsonl",
+    );
+    expect(result.exitCode).toBe(0);
+    expect(spawnSync).not.toHaveBeenCalled();
   });
 });
