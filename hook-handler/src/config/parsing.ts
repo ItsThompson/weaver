@@ -21,7 +21,7 @@ export function parseJson(raw: string): { value: unknown } | null {
   try {
     return { value: JSON.parse(raw) };
   } catch {
-    console.error("weaver: invalid JSON in .weaver config");
+    console.error("weaver: invalid JSON in .weaver.json config");
     return null;
   }
 }
