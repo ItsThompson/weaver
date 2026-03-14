@@ -16,7 +16,6 @@
         "name": "test:bash",
         "command": "find . -name '*.test.sh' -exec bash {} \\;",
         "run_if_files_match": "**/*.sh",
-        "working_dir": "hook-handler",
         "timeout_ms": 30000
       }
     ],
