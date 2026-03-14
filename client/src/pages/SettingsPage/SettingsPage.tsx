@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -9,46 +8,15 @@ import Slider from "@cloudscape-design/components/slider";
 import Input from "@cloudscape-design/components/input";
 import Button from "@cloudscape-design/components/button";
 import Alert from "@cloudscape-design/components/alert";
-import AttributeEditor from "@cloudscape-design/components/attribute-editor";
-import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
-import { useConfigQuery, revalidateConfig } from "../../hooks/queries";
-import { updateConfig } from "../../utils/api";
 import { isElectron } from "../../utils/isElectron";
+import { useSettings } from "./hooks/useSettings";
+import { TestRunnersField } from "./components/TestRunnersField";
 
 export function SettingsPage() {
-  const { data, isLoading } = useConfigQuery();
-  const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
-  const [saving, setSaving] = useState(false);
-  const [saveResult, setSaveResult] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
-  const warnings = data?.warnings ?? [];
-  const hasWarnings = warnings.length > 0;
-
-  useEffect(() => {
-    if (data?.config) {
-      setConfig(data.config);
-    }
-  }, [data]);
-
-  const handleSave = async () => {
-    setSaving(true);
-    setSaveResult(null);
-    try {
-      await updateConfig(config);
-      await revalidateConfig();
-      setSaveResult({ type: "success", message: "Settings saved" });
-    } catch (err) {
-      setSaveResult({
-        type: "error",
-        message: err instanceof Error ? err.message : "Failed to save",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
+  const { state, actions } = useSettings();
+  const { config, saving, isLoading, warnings, hasWarnings, saveResult } =
+    state;
+  const { setConfig, handleSave, dismissSaveResult } = actions;
 
   return (
     <SpaceBetween size="l">
@@ -61,11 +29,7 @@ export function SettingsPage() {
         </Alert>
       )}
       {saveResult && (
-        <Alert
-          type={saveResult.type}
-          dismissible
-          onDismiss={() => setSaveResult(null)}
-        >
+        <Alert type={saveResult.type} dismissible onDismiss={dismissSaveResult}>
           {saveResult.message}
         </Alert>
       )}
@@ -164,52 +128,11 @@ export function SettingsPage() {
                 />
               </FormField>
             )}
-            <FormField
-              label="Test runners"
-              description="Patterns used to detect agent-run tests for validation deduplication. Entries are matched against execute_bash commands."
-            >
-              <AttributeEditor
-                onAddButtonClick={() =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    test_runners: [...prev.test_runners, ""],
-                  }))
-                }
-                onRemoveButtonClick={({ detail: { itemIndex } }) =>
-                  setConfig((prev) => ({
-                    ...prev,
-                    test_runners: prev.test_runners.filter(
-                      (_, i) => i !== itemIndex,
-                    ),
-                  }))
-                }
-                items={config.test_runners.map((runner) => ({ value: runner }))}
-                addButtonText="Add test runner"
-                removeButtonText="Remove"
-                empty="No test runners configured."
-                definition={[
-                  {
-                    label: "Command pattern",
-                    control: (item: { value: string }, itemIndex: number) => (
-                      <Input
-                        value={item.value}
-                        onChange={({ detail }) =>
-                          setConfig((prev) => ({
-                            ...prev,
-                            test_runners: prev.test_runners.map((runner, i) =>
-                              i === itemIndex ? detail.value : runner,
-                            ),
-                          }))
-                        }
-                        placeholder="e.g. jest, pytest, cargo test"
-                        disabled={hasWarnings}
-                      />
-                    ),
-                  },
-                ]}
-                disableAddButton={hasWarnings}
-              />
-            </FormField>
+            <TestRunnersField
+              config={config}
+              setConfig={setConfig}
+              disabled={hasWarnings}
+            />
           </SpaceBetween>
         </Container>
       </Form>
