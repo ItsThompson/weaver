@@ -2,7 +2,7 @@ import { readFileSync, unlinkSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 import type { PendingFile } from "../formatting";
-import { formatResult } from "../formatting";
+import { formatPendingOutput } from "../formatting";
 
 export function runInject(sessionId: string): {
   stdout: string;
@@ -44,7 +44,6 @@ export function runInject(sessionId: string): {
     console.warn("Failed to clean up pending file:", pendingPath, e);
   }
 
-  const lines = data.results.map(formatResult);
-  const stdout = `[Weaver Validation — Previous Turn]\n\n${lines.join("\n\n")}\n`;
+  const stdout = formatPendingOutput(data.results);
   return { stdout, exitCode: 0 };
 }
