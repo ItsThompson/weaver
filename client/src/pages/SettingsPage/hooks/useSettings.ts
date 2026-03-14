@@ -9,24 +9,25 @@ export interface SettingsState {
   isLoading: boolean;
   warnings: string[];
   hasWarnings: boolean;
-  saveResult: { type: "success" | "error"; message: string } | null;
 }
 
 export interface SettingsActions {
   setConfig: React.Dispatch<React.SetStateAction<WeaverConfig>>;
   handleSave: () => void;
-  dismissSaveResult: () => void;
 }
 
-export function useSettings(): {
+export function useSettings(
+  addNotification: (
+    content: string,
+    type?: "info" | "success" | "warning" | "error",
+  ) => void,
+): {
   state: SettingsState;
   actions: SettingsActions;
 } {
   const { data, isLoading } = useConfigQuery();
   const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
   const [saving, setSaving] = useState(false);
-  const [saveResult, setSaveResult] =
-    useState<SettingsState["saveResult"]>(null);
 
   const warnings = data?.warnings ?? [];
   const hasWarnings = warnings.length > 0;
@@ -39,27 +40,22 @@ export function useSettings(): {
 
   const handleSave = async () => {
     setSaving(true);
-    setSaveResult(null);
     try {
       await updateConfig(config);
       await revalidateConfig();
-      setSaveResult({ type: "success", message: "Settings saved" });
+      addNotification("Settings saved", "success");
     } catch (err) {
-      setSaveResult({
-        type: "error",
-        message: err instanceof Error ? err.message : "Failed to save",
-      });
+      addNotification(
+        err instanceof Error ? err.message : "Failed to save",
+        "error",
+      );
     } finally {
       setSaving(false);
     }
   };
 
   return {
-    state: { config, saving, isLoading, warnings, hasWarnings, saveResult },
-    actions: {
-      setConfig,
-      handleSave,
-      dismissSaveResult: () => setSaveResult(null),
-    },
+    state: { config, saving, isLoading, warnings, hasWarnings },
+    actions: { setConfig, handleSave },
   };
 }
