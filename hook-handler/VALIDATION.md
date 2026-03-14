@@ -1,6 +1,6 @@
 # Weaver Validation Hooks
 
-Validation hooks let you run formatting, linting, type-checking, and test commands automatically during kiro-cli sessions. Define them in a `.weaver` config file at your project root and Weaver handles the rest — running commands at the right time, surfacing failures as warnings, and injecting error context into the LLM's next prompt so it can self-correct.
+Validation hooks let you run formatting, linting, type-checking, and test commands automatically during kiro-cli sessions. Define them in a `.weaver.json` config file at your project root and Weaver handles the rest — running commands at the right time, surfacing failures as warnings, and injecting error context into the LLM's next prompt so it can self-correct.
 
 ## How it works
 
@@ -15,15 +15,15 @@ User submits next prompt → userPromptSubmit hook fires
                                                      Pending file deleted
 ```
 
-1. **On `stop`**: After the agent finishes a turn, changed files are grouped by their nearest `.weaver` config. Each group's `stop` hooks run independently against its own files. If any command fails, a warning is printed to STDERR (shown to the user) and a `.pending` file is written.
-2. **On `postToolUse`**: After each `fs_write` tool call, the nearest `.weaver` config is discovered by walking up from the written file. Matching `postToolUse` hooks run (e.g. auto-formatting the written file). Files with no `.weaver` ancestor are silently skipped.
+1. **On `stop`**: After the agent finishes a turn, changed files are grouped by their nearest `.weaver.json` config. Each group's `stop` hooks run independently against its own files. If any command fails, a warning is printed to STDERR (shown to the user) and a `.pending` file is written.
+2. **On `postToolUse`**: After each `fs_write` tool call, the nearest `.weaver.json` config is discovered by walking up from the written file. Matching `postToolUse` hooks run (e.g. auto-formatting the written file). Files with no `.weaver.json` ancestor are silently skipped.
 3. **On `userPromptSubmit`**: If a `.pending` file exists from a previous turn's failures, its contents are formatted and printed to STDOUT, which kiro-cli injects into the LLM's context. The pending file is then deleted.
 
 This creates a feedback loop: the agent sees its own validation failures and can fix them without the user having to copy-paste error output.
 
 ## Config file
 
-Create a `.weaver` file (JSON) in your project root:
+Create a `.weaver.json` file in your project root:
 
 ```json
 {
@@ -48,9 +48,9 @@ Create a `.weaver` file (JSON) in your project root:
 }
 ```
 
-Config is discovered by walking up the directory tree from the file being operated on until a `.weaver` file is found. For `postToolUse` hooks, the walk starts from the written file's parent directory (or the session CWD for non-file tool events). For `stop` hooks, each changed file is grouped by its nearest `.weaver` ancestor, and each group's hooks run independently. Files with no `.weaver` ancestor are silently skipped.
+Config is discovered by walking up the directory tree from the file being operated on until a `.weaver.json` file is found. For `postToolUse` hooks, the walk starts from the written file's parent directory (or the session CWD for non-file tool events). For `stop` hooks, each changed file is grouped by its nearest `.weaver.json` ancestor, and each group's hooks run independently. Files with no `.weaver.json` ancestor are silently skipped.
 
-This means you can place a `.weaver` file at any level: a single project root, or per-package in a monorepo. The directory containing the `.weaver` file becomes the working directory for hook execution (the "config root").
+This means you can place a `.weaver.json` file at any level: a single project root, or per-package in a monorepo. The directory containing the `.weaver.json` file becomes the working directory for hook execution (the "config root").
 
 Invalid hooks (missing required fields) are silently filtered out with a STDERR warning. Invalid JSON or a missing file means no validation runs.
 
@@ -64,14 +64,14 @@ Optional array of test runner patterns used for [agent test deduplication](#agen
 
 Run after the agent completes a turn.
 
-| Field                | Type                                          | Required | Default     | Description                                                                                  |
-| -------------------- | --------------------------------------------- | -------- | ----------- | -------------------------------------------------------------------------------------------- |
-| `name`               | `string`                                      | Yes      | —           | Human-readable identifier shown in output                                                    |
-| `command`            | `string`                                      | Yes      | —           | Shell command to execute. Supports [template variables](#template-variables).                |
-| `scope`              | `"file"` \| `"parent"` \| `"cwd"` \| `number` | No       | `"cwd"`     | How to derive test directories from changed files. See [Scope](#scope).                      |
-| `run_if_files_match` | `string`                                      | No       | —           | Extension glob — command only runs if at least one changed file matches. Omit to always run. |
-| `working_dir`        | `string`                                      | No       | Config root | Directory to run from, relative to the config root (the directory containing `.weaver`).     |
-| `timeout_ms`         | `number`                                      | No       | `30000`     | Per-command timeout in milliseconds.                                                         |
+| Field                | Type                                          | Required | Default     | Description                                                                                   |
+| -------------------- | --------------------------------------------- | -------- | ----------- | --------------------------------------------------------------------------------------------- |
+| `name`               | `string`                                      | Yes      | —           | Human-readable identifier shown in output                                                     |
+| `command`            | `string`                                      | Yes      | —           | Shell command to execute. Supports [template variables](#template-variables).                 |
+| `scope`              | `"file"` \| `"parent"` \| `"cwd"` \| `number` | No       | `"cwd"`     | How to derive test directories from changed files. See [Scope](#scope).                       |
+| `run_if_files_match` | `string`                                      | No       | —           | Extension glob — command only runs if at least one changed file matches. Omit to always run.  |
+| `working_dir`        | `string`                                      | No       | Config root | Directory to run from, relative to the config root (the directory containing `.weaver.json`). |
+| `timeout_ms`         | `number`                                      | No       | `30000`     | Per-command timeout in milliseconds.                                                          |
 
 ### `postToolUse` hooks
 
@@ -125,7 +125,7 @@ The runner list is resolved by merging three sources (deduplicated):
 
 1. **Built-in defaults** — the list above
 2. **Global config** — `test_runners` array in `~/.weaver/config.json`
-3. **Project config** — `test_runners` array in `.weaver` `validation` block
+3. **Project config** — `test_runners` array in `.weaver.json` `validation` block
 
 Global entries extend the defaults. Project entries extend the result. This means you never need to repeat the defaults — just add what's missing.
 
@@ -137,7 +137,7 @@ Global entries extend the defaults. Project entries extend the result. This mean
 ```
 
 ```json
-// .weaver — project-specific additions
+// .weaver.json — project-specific additions
 {
   "validation": {
     "test_runners": ["mix test", "elixir -S mix test"],
@@ -209,29 +209,29 @@ With `scope: "parent"`, a change to `packages/auth/src/login.ts` derives test di
 
 ### Monorepo with per-package configs
 
-In a monorepo where each package has its own tooling, place a `.weaver` file in each package directory instead of (or in addition to) the root:
+In a monorepo where each package has its own tooling, place a `.weaver.json` file in each package directory instead of (or in addition to) the root:
 
 ```
 monorepo/
-├── .weaver                   ← fallback for files not in a package
+├── .weaver.json                   ← fallback for files not in a package
 ├── packages/
 │   ├── api/
-│   │   ├── .weaver          ← api-specific hooks
+│   │   ├── .weaver.json          ← api-specific hooks
 │   │   └── src/
 │   └── web/
-│       ├── .weaver          ← web-specific hooks
+│       ├── .weaver.json          ← web-specific hooks
 │       └── src/
 ```
 
-**Nearest config wins**: discovery walks upward and stops at the first `.weaver` found. There is no merging between levels:
+**Nearest config wins**: discovery walks upward and stops at the first `.weaver.json` found. There is no merging between levels:
 
-- `packages/api/src/handler.ts` → uses `packages/api/.weaver` (root config is not consulted)
-- `packages/web/src/App.tsx` → uses `packages/web/.weaver`
-- `scripts/deploy.sh` → walks up past `scripts/`, finds root `monorepo/.weaver`
+- `packages/api/src/handler.ts` → uses `packages/api/.weaver.json` (root config is not consulted)
+- `packages/web/src/App.tsx` → uses `packages/web/.weaver.json`
+- `scripts/deploy.sh` → walks up past `scripts/`, finds root `monorepo/.weaver.json`
 
-The root `.weaver` acts as a fallback for files that aren't inside a package with its own config. If you want root-level hooks to apply everywhere, don't place `.weaver` files in the packages.
+The root `.weaver.json` acts as a fallback for files that aren't inside a package with its own config. If you want root-level hooks to apply everywhere, don't place `.weaver.json` files in the packages.
 
-Each package's hooks run independently against only the files within that package. The `working_dir` for each hook resolves relative to the package's `.weaver` location.
+Each package's hooks run independently against only the files within that package. The `working_dir` for each hook resolves relative to the package's `.weaver.json` location.
 
 ### Formatter on write
 
@@ -332,8 +332,8 @@ Then invoke it in a kiro-cli session with `/prompt fix-validation` after seeing 
 2. Each `fs_write` triggers matching `postToolUse` hooks (e.g. auto-format)
 3. Agent finishes → `stop` event fires
 4. Validation runner:
-   - Discovers `.weaver` config by walking up from each changed file
-   - Groups changed files by their nearest `.weaver` config root
+   - Discovers `.weaver.json` config by walking up from each changed file
+   - Groups changed files by their nearest `.weaver.json` config root
    - For each config group:
      - Extracts agent-tested directories from `execute_bash` events
      - Resolves test directories based on `scope`, deduplicates against agent-tested dirs
@@ -372,9 +372,9 @@ Then invoke it in a kiro-cli session with `/prompt fix-validation` after seeing 
 
 - **Extension-only glob matching (v1)**: `run_if_files_match` only supports extension-based patterns like `**/*.{ts,tsx}` or `**/*.py`. Full glob patterns with directory matching or negation are not supported. Unrecognized patterns match all files (safe default).
 - **No pre-tool blocking**: v1 only supports `stop` and `postToolUse` validation. There is no `preToolUse` validation that could block a tool call before it executes.
-- **Config discovery**: Validation hooks are discovered by walking up the directory tree from each file. A `.weaver` file can live at any level (project root, package root in a monorepo, etc.). Files with no `.weaver` ancestor are silently skipped. `~/.weaver/config.json` provides global `test_runners` but not hook definitions.
+- **Config discovery**: Validation hooks are discovered by walking up the directory tree from each file. A `.weaver.json` file can live at any level (project root, package root in a monorepo, etc.). Files with no `.weaver.json` ancestor are silently skipped. `~/.weaver/config.json` provides global `test_runners` but not hook definitions.
 - **No IPC to kiro-cli**: Validation cannot programmatically send messages to an active session. Communication is limited to exit codes, STDERR, and STDOUT as defined by kiro-cli's hook contract.
-- **Agent test deduplication is heuristic**: Detection relies on pattern-matching known test runner names in `execute_bash` commands. Custom runners can be added via `test_runners` in `~/.weaver/config.json` or the project `.weaver` file. Unusual invocations that don't match any pattern won't be recognized. The safe default is to run the validation.
+- **Agent test deduplication is heuristic**: Detection relies on pattern-matching known test runner names in `execute_bash` commands. Custom runners can be added via `test_runners` in `~/.weaver/config.json` or the project `.weaver.json` file. Unusual invocations that don't match any pattern won't be recognized. The safe default is to run the validation.
 - **Symlinks outside config root**: If a changed file's real path (after symlink resolution) is outside the config root, the derived test directory clamps to `"."` (config root).
 - **Validation runner crashes**: If the Node.js validation runner itself crashes (as opposed to a validation command failing), `weaver-log.sh` swallows the error and exits 0. This ensures logging always succeeds even if validation is broken. The crash is distinguished from a real validation failure by checking for the `⚠ weaver:` marker in STDERR.
 - **Pending file is per-session**: Only one pending file exists at a time per session (`<session-id>.pending`). If the agent fails validation on consecutive turns without a `userPromptSubmit` in between, the pending file is overwritten with the latest results.
