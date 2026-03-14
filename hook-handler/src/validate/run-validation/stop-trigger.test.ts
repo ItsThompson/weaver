@@ -1,5 +1,6 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
 import type { SpawnSyncReturns } from "node:child_process";
+import type { WeaverProjectConfig } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
 import {
   mockFs,
@@ -10,7 +11,7 @@ import {
 const { appendFileSync, writeFileSync } = await mockFs();
 const { spawnSync } = await mockChildProcess();
 const {
-  readProjectConfig: mockReadProjectConfig,
+  groupFilesByConfig: mockGroupFilesByConfig,
   resolveTestRunners: mockResolveTestRunners,
   extractChangedFiles: mockExtractChangedFiles,
   extractAgentTestedDirs: mockExtractAgentTestedDirs,
@@ -27,6 +28,7 @@ beforeEach(() => {
     .mockResolvedValue(new Response());
   globalThis.fetch = mockFetch;
   mockResolveTestRunners.mockReturnValue(["jest"]);
+  mockExtractAgentTestedDirs.mockReturnValue([]);
 });
 
 function spawnResult(
@@ -44,6 +46,12 @@ function spawnResult(
   } as SpawnSyncReturns<string>;
 }
 
+function makeGroups(
+  entries: [string, { config: WeaverProjectConfig; files: string[] }][],
+): Map<string, { config: WeaverProjectConfig; files: string[] }> {
+  return new Map(entries);
+}
+
 const args: ValidateArgs = {
   sessionId: "sess-1",
   cwd: "/project",
@@ -51,22 +59,32 @@ const args: ValidateArgs = {
 };
 
 describe("runStopTrigger", () => {
-  it("exits 0 when no config", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+  it("exits 0 when no changed files", () => {
+    mockExtractChangedFiles.mockReturnValue([]);
     expect(runStopTrigger(args, "/logs/sess-1.jsonl").exitCode).toBe(0);
   });
 
-  it("exits 0 when no stop hooks", () => {
-    mockReadProjectConfig.mockReturnValue({ validation: {} });
+  it("exits 0 when no config groups found", () => {
+    mockExtractChangedFiles.mockReturnValue(["/outside/a.ts"]);
+    mockGroupFilesByConfig.mockReturnValue(new Map());
     expect(runStopTrigger(args, "/logs/sess-1.jsonl").exitCode).toBe(0);
   });
 
   it("runs hooks and writes validation event", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: { stop: [{ name: "lint", command: "eslint ." }] },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: { stop: [{ name: "lint", command: "eslint ." }] },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult());
 
     const result = runStopTrigger(args, "/logs/sess-1.jsonl");
@@ -78,15 +96,71 @@ describe("runStopTrigger", () => {
   });
 
   it("returns exit 1 when hooks fail", () => {
-    mockReadProjectConfig.mockReturnValue({
-      validation: { stop: [{ name: "tsc", command: "tsc" }] },
-    });
     mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockExtractAgentTestedDirs.mockReturnValue([]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/project",
+          {
+            config: {
+              validation: { stop: [{ name: "tsc", command: "tsc" }] },
+            },
+            files: ["/project/a.ts"],
+          },
+        ],
+      ]),
+    );
     spawnSync.mockReturnValue(spawnResult({ status: 1, stderr: "error" }));
 
     const result = runStopTrigger(args, "/logs/sess-1.jsonl");
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain("1/1 validations failed (tsc)");
+  });
+
+  it("runs each config group independently", () => {
+    mockExtractChangedFiles.mockReturnValue([
+      "/mono/pkg-a/x.ts",
+      "/mono/pkg-b/y.ts",
+    ]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        [
+          "/mono/pkg-a",
+          {
+            config: {
+              validation: { stop: [{ name: "lint-a", command: "eslint ." }] },
+            },
+            files: ["/mono/pkg-a/x.ts"],
+          },
+        ],
+        [
+          "/mono/pkg-b",
+          {
+            config: {
+              validation: { stop: [{ name: "lint-b", command: "eslint ." }] },
+            },
+            files: ["/mono/pkg-b/y.ts"],
+          },
+        ],
+      ]),
+    );
+    spawnSync.mockReturnValue(spawnResult());
+
+    runStopTrigger({ ...args, cwd: "/mono" }, "/logs/sess-1.jsonl");
+    expect(spawnSync).toHaveBeenCalledTimes(2);
+    expect(appendFileSync).toHaveBeenCalledTimes(2);
+  });
+
+  it("skips groups with no stop hooks", () => {
+    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
+    mockGroupFilesByConfig.mockReturnValue(
+      makeGroups([
+        ["/project", { config: { validation: {} }, files: ["/project/a.ts"] }],
+      ]),
+    );
+
+    const result = runStopTrigger(args, "/logs/sess-1.jsonl");
+    expect(result.exitCode).toBe(0);
+    expect(spawnSync).not.toHaveBeenCalled();
   });
 });

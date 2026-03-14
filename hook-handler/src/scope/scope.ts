@@ -1,6 +1,7 @@
 import { realpathSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import type { StopValidationHook } from "@weaver/shared/types";
+import { isWithinDir } from "../path-utils";
 
 export function resolveTestDirs(
   changedFiles: string[],
@@ -22,7 +23,7 @@ function resolveDir(
 ): string {
   try {
     const abs = realpathSync(resolve(cwd, file));
-    if (!abs.startsWith(cwd)) {
+    if (!isWithinDir(abs, cwd)) {
       return ".";
     }
     const dir = applyScope(relative(cwd, abs), scope);
