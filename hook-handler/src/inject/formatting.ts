@@ -24,7 +24,7 @@ export function formatResult(r: ValidationResult): string {
 }
 
 export function formatPendingOutput(results: ValidationResult[]): string {
-  const counts = results.reduce(
+  const { passed, failed, skipped, failedDetails } = results.reduce(
     (acc, result) => {
       if (result.skipped_reason) {
         acc.skipped++;
@@ -32,36 +32,26 @@ export function formatPendingOutput(results: ValidationResult[]): string {
         acc.passed++;
       } else {
         acc.failed++;
+        acc.failedDetails.push(formatResult(result));
       }
       return acc;
     },
-    { passed: 0, failed: 0, skipped: 0 },
+    { passed: 0, failed: 0, skipped: 0, failedDetails: [] as string[] },
   );
 
-  const parts: string[] = [];
-  if (counts.passed) {
-    parts.push(`${counts.passed} passed`);
-  }
-  if (counts.failed) {
-    parts.push(`${counts.failed} failed`);
-  }
-  if (counts.skipped) {
-    parts.push(`${counts.skipped} skipped`);
-  }
-  const summary = parts.join(" · ");
-
-  const failedDetails = results.reduce<string[]>((acc, result) => {
-    if (!result.passed && !result.skipped_reason) {
-      acc.push(formatResult(result));
-    }
-    return acc;
-  }, []);
+  const summary = [
+    passed && `${passed} passed`,
+    failed && `${failed} failed`,
+    skipped && `${skipped} skipped`,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   const sections = [
     "[Weaver Validation — Previous Turn]",
     summary,
     ...failedDetails,
-    ...(counts.failed > 0 ? ["Re-run failing commands for full output."] : []),
+    ...(failed > 0 ? ["Re-run failing commands for full output."] : []),
   ];
 
   return sections.join("\n\n") + "\n";
