@@ -25,6 +25,7 @@ export function runStopHook(
       duration_ms: 0,
       timed_out: false,
       skipped_reason: "no files matched run_if_files_match",
+      hook_type: hook.type ?? "check",
     };
   }
 
@@ -42,6 +43,7 @@ export function runStopHook(
       duration_ms: 0,
       timed_out: false,
       skipped_reason: "no changed files",
+      hook_type: hook.type ?? "check",
     };
   }
   if (commandUsesVar(hook.command, "test_dirs") && !testDirs) {
@@ -52,6 +54,7 @@ export function runStopHook(
       duration_ms: 0,
       timed_out: false,
       skipped_reason: "no test dirs after deduplication",
+      hook_type: hook.type ?? "check",
     };
   }
 
@@ -66,6 +69,7 @@ export function runStopHook(
     command,
     workingDir,
     timeout,
+    hook.type === "test",
   );
 
   return {
@@ -74,5 +78,6 @@ export function runStopHook(
     output,
     duration_ms: durationMs,
     timed_out: timedOut,
+    hook_type: hook.type ?? "check",
   };
 }

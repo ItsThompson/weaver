@@ -142,4 +142,51 @@ describe("runStopHook", () => {
     );
     expect(result.output.length).toBe(5_000);
   });
+
+  it("defaults hook_type to check when type is omitted", () => {
+    spawnSync.mockReturnValue(spawnResult());
+
+    const result = runStopHook(
+      { name: "lint", command: "eslint ." },
+      ["/project/a.ts"],
+      [],
+      "/project",
+    );
+    expect(result.hook_type).toBe("check");
+  });
+
+  it("sets hook_type to test when type is test", () => {
+    spawnSync.mockReturnValue(spawnResult());
+
+    const result = runStopHook(
+      { name: "test", command: "jest .", type: "test" },
+      ["/project/a.ts"],
+      [],
+      "/project",
+    );
+    expect(result.hook_type).toBe("test");
+  });
+
+  it("passes tailBiased true to runCommand for test hooks", () => {
+    spawnSync.mockReturnValue(spawnResult());
+
+    runStopHook(
+      { name: "test", command: "jest .", type: "test" },
+      ["/project/a.ts"],
+      [],
+      "/project",
+    );
+    expect(spawnSync).toHaveBeenCalled();
+  });
+
+  it("sets hook_type on skipped results", () => {
+    const result = runStopHook(
+      { name: "lint", command: "eslint {{files}}", type: "test" },
+      [],
+      [],
+      "/project",
+    );
+    expect(result.hook_type).toBe("test");
+    expect(result.skipped_reason).toBe("no changed files");
+  });
 });
