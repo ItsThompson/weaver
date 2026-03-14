@@ -77,4 +77,19 @@ describe("runCommand", () => {
     const result = runCommand("echo lots", "/project", 5000);
     expect(result.output.length).toBe(5_000);
   });
+
+  it("keeps tail when tailBiased is true", () => {
+    const tail = "y".repeat(5_000);
+    spawnSync.mockReturnValue(
+      spawnResult({ stdout: "x".repeat(5_000) + tail }),
+    );
+    const result = runCommand("echo lots", "/project", 5000, true);
+    expect(result.output).toBe("[... truncated ...]\n" + tail);
+  });
+
+  it("does not truncate when output fits within limit (tailBiased)", () => {
+    spawnSync.mockReturnValue(spawnResult({ stdout: "short" }));
+    const result = runCommand("echo short", "/project", 5000, true);
+    expect(result.output).toBe("short");
+  });
 });
