@@ -55,8 +55,8 @@ export function SettingsPage() {
       <Header variant="h1">Settings</Header>
       {hasWarnings && (
         <Alert type="warning" header="Configuration warnings">
-          {warnings.map((w, i) => (
-            <div key={i}>{w}</div>
+          {warnings.map((warning, i) => (
+            <div key={i}>{warning}</div>
           ))}
         </Alert>
       )}
@@ -90,8 +90,8 @@ export function SettingsPage() {
               <Toggle
                 checked={config.enable_notification_sounds}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({
-                    ...c,
+                  setConfig((prev) => ({
+                    ...prev,
                     enable_notification_sounds: detail.checked,
                   }))
                 }
@@ -105,7 +105,10 @@ export function SettingsPage() {
               <Input
                 value={config.webhook_url}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({ ...c, webhook_url: detail.value }))
+                  setConfig((prev) => ({
+                    ...prev,
+                    webhook_url: detail.value,
+                  }))
                 }
                 disabled={hasWarnings}
                 placeholder="https://hooks.slack.com/services/..."
@@ -118,8 +121,8 @@ export function SettingsPage() {
               <Toggle
                 checked={config.webhook_format === "advanced"}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({
-                    ...c,
+                  setConfig((prev) => ({
+                    ...prev,
                     webhook_format: detail.checked ? "advanced" : "simple",
                   }))
                 }
@@ -132,7 +135,10 @@ export function SettingsPage() {
               <Toggle
                 checked={config.dark_mode}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({ ...c, dark_mode: detail.checked }))
+                  setConfig((prev) => ({
+                    ...prev,
+                    dark_mode: detail.checked,
+                  }))
                 }
                 disabled={hasWarnings}
               />
@@ -148,7 +154,10 @@ export function SettingsPage() {
                   max={1}
                   step={0.05}
                   onChange={({ detail }) =>
-                    setConfig((c) => ({ ...c, ghost_opacity: detail.value }))
+                    setConfig((prev) => ({
+                      ...prev,
+                      ghost_opacity: detail.value,
+                    }))
                   }
                   disabled={hasWarnings}
                   valueFormatter={(value) => `${Math.round(value * 100)}%`}
@@ -161,20 +170,20 @@ export function SettingsPage() {
             >
               <AttributeEditor
                 onAddButtonClick={() =>
-                  setConfig((c) => ({
-                    ...c,
-                    test_runners: [...c.test_runners, ""],
+                  setConfig((prev) => ({
+                    ...prev,
+                    test_runners: [...prev.test_runners, ""],
                   }))
                 }
                 onRemoveButtonClick={({ detail: { itemIndex } }) =>
-                  setConfig((c) => ({
-                    ...c,
-                    test_runners: c.test_runners.filter(
+                  setConfig((prev) => ({
+                    ...prev,
+                    test_runners: prev.test_runners.filter(
                       (_, i) => i !== itemIndex,
                     ),
                   }))
                 }
-                items={config.test_runners.map((r) => ({ value: r }))}
+                items={config.test_runners.map((runner) => ({ value: runner }))}
                 addButtonText="Add test runner"
                 removeButtonText="Remove"
                 empty="No test runners configured."
@@ -185,10 +194,10 @@ export function SettingsPage() {
                       <Input
                         value={item.value}
                         onChange={({ detail }) =>
-                          setConfig((c) => ({
-                            ...c,
-                            test_runners: c.test_runners.map((r, i) =>
-                              i === itemIndex ? detail.value : r,
+                          setConfig((prev) => ({
+                            ...prev,
+                            test_runners: prev.test_runners.map((runner, i) =>
+                              i === itemIndex ? detail.value : runner,
                             ),
                           }))
                         }
