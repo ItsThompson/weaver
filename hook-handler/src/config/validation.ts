@@ -26,7 +26,7 @@ export function parseValidationArray<T>(
     return undefined;
   }
   if (!Array.isArray(v[key])) {
-    console.error(`weaver: .weaver validation.${key} must be an array`);
+    console.error(`weaver: .weaver.json validation.${key} must be an array`);
     return undefined;
   }
   return filterValid(v[key], schema, label);

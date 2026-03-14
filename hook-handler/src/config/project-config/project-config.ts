@@ -5,7 +5,7 @@ import { parseValidationArray } from "../validation";
 import { readFile, parseJson, isPlainObject } from "../parsing";
 
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
-  const raw = readFile(join(cwd, ".weaver"));
+  const raw = readFile(join(cwd, ".weaver.json"));
   if (raw === null) {
     return null;
   }
@@ -17,7 +17,7 @@ export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
 
   const parsed = result.value;
   if (!isPlainObject(parsed)) {
-    console.error("weaver: .weaver config must be a JSON object");
+    console.error("weaver: .weaver.json config must be a JSON object");
     return null;
   }
 
@@ -26,7 +26,7 @@ export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   }
 
   if (!isPlainObject(parsed.validation)) {
-    console.error("weaver: .weaver validation must be an object");
+    console.error("weaver: .weaver.json validation must be an object");
     return {};
   }
 
