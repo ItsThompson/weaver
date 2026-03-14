@@ -23,7 +23,7 @@ afterEach(() => {
 });
 
 describe("readProjectConfig", () => {
-  it("returns null when .weaver file does not exist", () => {
+  it("returns null when .weaver.json file does not exist", () => {
     existsSync.mockReturnValue(false);
     expect(readProjectConfig("/project")).toBeNull();
   });
