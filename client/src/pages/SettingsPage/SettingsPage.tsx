@@ -9,14 +9,15 @@ import Input from "@cloudscape-design/components/input";
 import Button from "@cloudscape-design/components/button";
 import Alert from "@cloudscape-design/components/alert";
 import { isElectron } from "../../utils/isElectron";
+import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
 import { TestRunnersField } from "./components/TestRunnersField";
 
 export function SettingsPage() {
-  const { state, actions } = useSettings();
-  const { config, saving, isLoading, warnings, hasWarnings, saveResult } =
-    state;
-  const { setConfig, handleSave, dismissSaveResult } = actions;
+  const { addNotification } = useNotifications();
+  const { state, actions } = useSettings(addNotification);
+  const { config, saving, isLoading, warnings, hasWarnings } = state;
+  const { setConfig, handleSave } = actions;
 
   return (
     <SpaceBetween size="l">
@@ -26,11 +27,6 @@ export function SettingsPage() {
           {warnings.map((warning, i) => (
             <div key={i}>{warning}</div>
           ))}
-        </Alert>
-      )}
-      {saveResult && (
-        <Alert type={saveResult.type} dismissible onDismiss={dismissSaveResult}>
-          {saveResult.message}
         </Alert>
       )}
       <Form

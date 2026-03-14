@@ -18,7 +18,7 @@ import {
 interface Notification {
   id: string;
   content: string;
-  type: "info" | "success" | "warning";
+  type: "info" | "success" | "warning" | "error";
   timestamp: number;
 }
 
