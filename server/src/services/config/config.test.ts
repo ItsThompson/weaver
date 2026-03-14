@@ -109,4 +109,44 @@ describe("parseAndValidateConfig", () => {
     expect(config.webhook_format).toBe(DEFAULT_CONFIG.webhook_format);
     expect(warnings).toContain('webhook_format must be "simple" or "advanced"');
   });
+
+  it("accepts valid test_runners array", () => {
+    const { config, warnings } = parseAndValidateConfig(
+      JSON.stringify({ test_runners: ["jest", "pytest"] }),
+    );
+    expect(config.test_runners).toEqual(["jest", "pytest"]);
+    expect(warnings).toHaveLength(0);
+  });
+
+  it("rejects non-array test_runners", () => {
+    const { config, warnings } = parseAndValidateConfig(
+      JSON.stringify({ test_runners: "jest" }),
+    );
+    expect(config.test_runners).toEqual(DEFAULT_CONFIG.test_runners);
+    expect(warnings).toContain("test_runners must be an array of strings");
+  });
+
+  it("rejects test_runners with non-string elements", () => {
+    const { config, warnings } = parseAndValidateConfig(
+      JSON.stringify({ test_runners: ["jest", 123] }),
+    );
+    expect(config.test_runners).toEqual(DEFAULT_CONFIG.test_runners);
+    expect(warnings).toContain("test_runners must contain only strings");
+  });
+
+  it("trims and filters empty test_runners entries", () => {
+    const { config, warnings } = parseAndValidateConfig(
+      JSON.stringify({ test_runners: ["jest", "  ", "", "pytest"] }),
+    );
+    expect(config.test_runners).toEqual(["jest", "pytest"]);
+    expect(warnings[0]).toMatch(/removed 2 empty/);
+  });
+
+  it("trims whitespace from test_runners entries", () => {
+    const { config, warnings } = parseAndValidateConfig(
+      JSON.stringify({ test_runners: ["  jest  ", "pytest  "] }),
+    );
+    expect(config.test_runners).toEqual(["jest", "pytest"]);
+    expect(warnings).toHaveLength(0);
+  });
 });

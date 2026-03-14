@@ -1,4 +1,5 @@
 import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import { DEFAULT_TEST_RUNNERS } from "@weaver/shared/types";
 import { mockFs } from "../../__test-helpers__/index";
 
 const { existsSync, readFileSync } = await mockFs();
@@ -43,5 +44,31 @@ describe("resolveTestRunners", () => {
       validation: { test_runners: ["jest"] },
     });
     expect(runners.filter((r) => r === "jest").length).toBe(1);
+  });
+
+  it("filters whitespace-only entries from global config", () => {
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(
+      JSON.stringify({ test_runners: ["jest", "  ", "", "pytest"] }),
+    );
+    const runners = resolveTestRunners(null);
+    expect(runners).toContain("jest");
+    expect(runners).toContain("pytest");
+    expect(runners).not.toContain("  ");
+    expect(runners).not.toContain("");
+  });
+
+  it("handles non-array test_runners in global config", () => {
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue(JSON.stringify({ test_runners: "not-array" }));
+    const runners = resolveTestRunners(null);
+    expect(runners).toEqual(DEFAULT_TEST_RUNNERS);
+  });
+
+  it("handles malformed JSON in global config", () => {
+    existsSync.mockReturnValue(true);
+    readFileSync.mockReturnValue("not json");
+    const runners = resolveTestRunners(null);
+    expect(runners).toEqual(DEFAULT_TEST_RUNNERS);
   });
 });

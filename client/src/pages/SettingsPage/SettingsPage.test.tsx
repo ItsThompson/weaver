@@ -87,4 +87,29 @@ describe("SettingsPage", () => {
       screen.getByText("webhook_url must start with http:// or https://"),
     ).toBeInTheDocument();
   });
+
+  it("renders test runners section", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(screen.getByText("Test runners")).toBeInTheDocument();
+  });
+
+  it("saves config with test_runners", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
+    await act(async () => {
+      renderPage();
+    });
+
+    const saveBtn = screen.getByText("Save");
+    await act(async () => {
+      fireEvent.click(saveBtn);
+    });
+
+    const savedConfig = mockUpdateConfig.mock.calls[0][0];
+    expect(savedConfig.test_runners).toEqual(DEFAULT_CONFIG.test_runners);
+  });
 });

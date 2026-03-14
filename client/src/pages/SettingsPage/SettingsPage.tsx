@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -9,62 +8,28 @@ import Slider from "@cloudscape-design/components/slider";
 import Input from "@cloudscape-design/components/input";
 import Button from "@cloudscape-design/components/button";
 import Alert from "@cloudscape-design/components/alert";
-import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
-import { useConfigQuery, revalidateConfig } from "../../hooks/queries";
-import { updateConfig } from "../../utils/api";
 import { isElectron } from "../../utils/isElectron";
+import { useSettings } from "./hooks/useSettings";
+import { TestRunnersField } from "./components/TestRunnersField";
 
 export function SettingsPage() {
-  const { data, isLoading } = useConfigQuery();
-  const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
-  const [saving, setSaving] = useState(false);
-  const [saveResult, setSaveResult] = useState<{
-    type: "success" | "error";
-    message: string;
-  } | null>(null);
-
-  const warnings = data?.warnings ?? [];
-  const hasWarnings = warnings.length > 0;
-
-  useEffect(() => {
-    if (data?.config) {
-      setConfig(data.config);
-    }
-  }, [data]);
-
-  const handleSave = async () => {
-    setSaving(true);
-    setSaveResult(null);
-    try {
-      await updateConfig(config);
-      await revalidateConfig();
-      setSaveResult({ type: "success", message: "Settings saved" });
-    } catch (err) {
-      setSaveResult({
-        type: "error",
-        message: err instanceof Error ? err.message : "Failed to save",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
+  const { state, actions } = useSettings();
+  const { config, saving, isLoading, warnings, hasWarnings, saveResult } =
+    state;
+  const { setConfig, handleSave, dismissSaveResult } = actions;
 
   return (
     <SpaceBetween size="l">
       <Header variant="h1">Settings</Header>
       {hasWarnings && (
         <Alert type="warning" header="Configuration warnings">
-          {warnings.map((w, i) => (
-            <div key={i}>{w}</div>
+          {warnings.map((warning, i) => (
+            <div key={i}>{warning}</div>
           ))}
         </Alert>
       )}
       {saveResult && (
-        <Alert
-          type={saveResult.type}
-          dismissible
-          onDismiss={() => setSaveResult(null)}
-        >
+        <Alert type={saveResult.type} dismissible onDismiss={dismissSaveResult}>
           {saveResult.message}
         </Alert>
       )}
@@ -89,8 +54,8 @@ export function SettingsPage() {
               <Toggle
                 checked={config.enable_notification_sounds}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({
-                    ...c,
+                  setConfig((prev) => ({
+                    ...prev,
                     enable_notification_sounds: detail.checked,
                   }))
                 }
@@ -104,7 +69,10 @@ export function SettingsPage() {
               <Input
                 value={config.webhook_url}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({ ...c, webhook_url: detail.value }))
+                  setConfig((prev) => ({
+                    ...prev,
+                    webhook_url: detail.value,
+                  }))
                 }
                 disabled={hasWarnings}
                 placeholder="https://hooks.slack.com/services/..."
@@ -117,8 +85,8 @@ export function SettingsPage() {
               <Toggle
                 checked={config.webhook_format === "advanced"}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({
-                    ...c,
+                  setConfig((prev) => ({
+                    ...prev,
                     webhook_format: detail.checked ? "advanced" : "simple",
                   }))
                 }
@@ -131,7 +99,10 @@ export function SettingsPage() {
               <Toggle
                 checked={config.dark_mode}
                 onChange={({ detail }) =>
-                  setConfig((c) => ({ ...c, dark_mode: detail.checked }))
+                  setConfig((prev) => ({
+                    ...prev,
+                    dark_mode: detail.checked,
+                  }))
                 }
                 disabled={hasWarnings}
               />
@@ -147,13 +118,21 @@ export function SettingsPage() {
                   max={1}
                   step={0.05}
                   onChange={({ detail }) =>
-                    setConfig((c) => ({ ...c, ghost_opacity: detail.value }))
+                    setConfig((prev) => ({
+                      ...prev,
+                      ghost_opacity: detail.value,
+                    }))
                   }
                   disabled={hasWarnings}
                   valueFormatter={(value) => `${Math.round(value * 100)}%`}
                 />
               </FormField>
             )}
+            <TestRunnersField
+              config={config}
+              setConfig={setConfig}
+              disabled={hasWarnings}
+            />
           </SpaceBetween>
         </Container>
       </Form>
