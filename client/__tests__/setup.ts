@@ -2,6 +2,9 @@ import { TextEncoder, TextDecoder } from "node:util";
 
 Object.assign(globalThis, { TextEncoder, TextDecoder });
 
+// jsdom does not implement URL.createObjectURL (needed by soundUtils)
+URL.createObjectURL = () => "blob:mock";
+
 // Mock EventSource for SSE tests
 class MockEventSource {
   onmessage: ((event: MessageEvent) => void) | null = null;

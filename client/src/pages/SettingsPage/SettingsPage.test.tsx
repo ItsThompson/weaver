@@ -5,6 +5,8 @@ import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
+import { NotificationProvider } from "../../context/NotificationContext";
+import { NotificationBar } from "../../components/NotificationBar/NotificationBar";
 
 jest.unstable_mockModule("../../utils/api", () => ({
   apiFetch: jest.fn(),
@@ -38,7 +40,10 @@ function renderPage() {
   return render(
     <SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>
       <MemoryRouter>
-        <SettingsPage />
+        <NotificationProvider>
+          <SettingsPage />
+          <NotificationBar />
+        </NotificationProvider>
       </MemoryRouter>
     </SWRConfig>,
   );
@@ -72,6 +77,34 @@ describe("SettingsPage", () => {
     });
 
     expect(mockUpdateConfig).toHaveBeenCalled();
+  });
+
+  it("shows success toast after saving", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
+    await act(async () => {
+      renderPage();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    expect(screen.getByText("Settings saved")).toBeInTheDocument();
+  });
+
+  it("shows error toast when save fails", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockUpdateConfig.mockRejectedValue(new Error("Network error"));
+    await act(async () => {
+      renderPage();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    expect(screen.getByText("Network error")).toBeInTheDocument();
   });
 
   it("displays validation warnings", async () => {
