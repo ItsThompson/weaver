@@ -6,6 +6,7 @@ import Box from "@cloudscape-design/components/box";
 import Spinner from "@cloudscape-design/components/spinner";
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { useSkillDetailQuery } from "../../hooks/queries";
 
 export function SkillDetailPage() {
@@ -40,7 +41,7 @@ export function SkillDetailPage() {
           </Header>
           <Container>
             <div style={{ overflowX: "auto" }}>
-              <Markdown>{data.body}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm]}>{data.body}</Markdown>
             </div>
           </Container>
         </SpaceBetween>
