@@ -9,6 +9,7 @@ import {
   deleteOrphanEvents,
   NotFoundError,
 } from "../../services/orphan-storage/index";
+import { makeOrphanEvent } from "../../services/log-parser/test-helpers";
 import Fastify from "fastify";
 import { registerOrphanRoutes } from "./orphans";
 
@@ -23,11 +24,7 @@ beforeEach(async () => {
 
 afterEach(() => server.close());
 
-const makeEvent = (pid: number) => ({
-  timestamp: "2026-01-01T00:00:00Z",
-  pid,
-  event: { hook_event_name: "userPromptSubmit", cwd: "/tmp" },
-});
+const makeEvent = (pid: number) => makeOrphanEvent(pid);
 
 describe("GET /api/orphans", () => {
   it("returns grouped orphan events", async () => {
@@ -43,6 +40,8 @@ describe("GET /api/orphans", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.groups).toHaveLength(2);
+    expect(body.groups[0].eventCount).toBe(2);
+    expect(body.groups[1].eventCount).toBe(1);
   });
 
   it("returns empty groups when no orphan events", async () => {

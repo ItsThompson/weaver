@@ -4,32 +4,20 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 import type { HookEvent, OrphanGroup } from "@weaver/shared/types";
 import { groupEventsByTurn } from "../log-parser/index";
+import { parseJsonlFile } from "../file-cache/index";
 import { log } from "../../utils/logger";
 
 const ORPHAN_PATH = () => join(homedir(), ".weaver", "logs", "orphan.jsonl");
 const LOGS_DIR = () => join(homedir(), ".weaver", "logs");
 
 export async function readOrphanEvents(): Promise<HookEvent[]> {
-  const filePath = ORPHAN_PATH();
-  if (!existsSync(filePath)) {
-    return [];
-  }
-  const content = await readFile(filePath, "utf-8");
-  return content.split("\n").flatMap((line) => {
-    if (!line.trim()) {
-      return [];
-    }
-    try {
-      return [JSON.parse(line) as HookEvent];
-    } catch (e) {
-      log({
-        timestamp: new Date().toISOString(),
-        event: "orphan_parse_error",
-        error: String(e),
-      });
-      return [];
-    }
-  });
+  return parseJsonlFile<HookEvent>(ORPHAN_PATH(), (line) =>
+    log({
+      timestamp: new Date().toISOString(),
+      event: "orphan_parse_error",
+      line,
+    }),
+  );
 }
 
 export function groupByPid(events: HookEvent[]): OrphanGroup[] {
@@ -52,27 +40,19 @@ export function groupByPid(events: HookEvent[]): OrphanGroup[] {
   }));
 }
 
-export async function assignOrphanEvents(
-  targetSessionId: string,
+interface PartitionResult {
+  matched: HookEvent[];
+  remainingLines: string[];
+}
+
+/** Read orphan file and partition lines by PID. Throws NotFoundError if file missing or no matches. */
+function partitionByPid(
+  content: string,
   pid: number,
-): Promise<{ movedCount: number }> {
-  const filePath = ORPHAN_PATH();
-  const targetLog = join(LOGS_DIR(), `${targetSessionId}.jsonl`);
-
-  if (!existsSync(filePath)) {
-    throw new NotFoundError("No orphan log found");
-  }
-  if (!existsSync(targetLog)) {
-    throw new NotFoundError("Target session log not found");
-  }
-
-  const content = await readFile(filePath, "utf-8");
+  errorEvent: string,
+): PartitionResult {
   const lines = content.split("\n");
-
-  const { toMove, toKeep } = lines.reduce<{
-    toMove: string[];
-    toKeep: string[];
-  }>(
+  return lines.reduce<PartitionResult>(
     (acc, line) => {
       if (!line.trim()) {
         return acc;
@@ -80,95 +60,102 @@ export async function assignOrphanEvents(
       try {
         const event = JSON.parse(line) as HookEvent;
         if ((event.pid ?? 0) === pid) {
-          const { pid: _, ...clean } = event;
-          acc.toMove.push(JSON.stringify(clean));
+          acc.matched.push(event);
         } else {
-          acc.toKeep.push(line);
+          acc.remainingLines.push(line);
         }
       } catch (e) {
         log({
           timestamp: new Date().toISOString(),
-          event: "orphan_assign_parse_error",
+          event: errorEvent,
           error: String(e),
         });
-        acc.toKeep.push(line);
+        acc.remainingLines.push(line);
       }
       return acc;
     },
-    { toMove: [], toKeep: [] },
+    { matched: [], remainingLines: [] },
+  );
+}
+
+function requireOrphanFile(): string {
+  const filePath = ORPHAN_PATH();
+  if (!existsSync(filePath)) {
+    throw new NotFoundError("No orphan log found");
+  }
+  return filePath;
+}
+
+function writeRemaining(filePath: string, lines: string[]): Promise<void> {
+  return writeFile(filePath, lines.length > 0 ? lines.join("\n") + "\n" : "");
+}
+
+export async function assignOrphanEvents(
+  targetSessionId: string,
+  pid: number,
+): Promise<{ movedCount: number }> {
+  const filePath = requireOrphanFile();
+  const targetLog = join(LOGS_DIR(), `${targetSessionId}.jsonl`);
+
+  if (!existsSync(targetLog)) {
+    throw new NotFoundError("Target session log not found");
+  }
+
+  const content = await readFile(filePath, "utf-8");
+  const { matched, remainingLines } = partitionByPid(
+    content,
+    pid,
+    "orphan_assign_parse_error",
   );
 
-  if (toMove.length === 0) {
+  if (matched.length === 0) {
     throw new NotFoundError(`No orphan events found for PID ${pid}`);
   }
 
-  await appendFile(targetLog, toMove.join("\n") + "\n");
-  await writeFile(filePath, toKeep.length > 0 ? toKeep.join("\n") + "\n" : "");
+  const cleanedLines = matched.map((event) => {
+    const { pid: _, ...clean } = event;
+    return JSON.stringify(clean);
+  });
+
+  await appendFile(targetLog, cleanedLines.join("\n") + "\n");
+  await writeRemaining(filePath, remainingLines);
 
   log({
     timestamp: new Date().toISOString(),
     event: "orphans_assigned",
     pid,
     targetSessionId,
-    count: toMove.length,
+    count: matched.length,
   });
 
-  return { movedCount: toMove.length };
+  return { movedCount: matched.length };
 }
 
 export async function deleteOrphanEvents(
   pid: number,
 ): Promise<{ deletedCount: number }> {
-  const filePath = ORPHAN_PATH();
-  if (!existsSync(filePath)) {
-    throw new NotFoundError("No orphan log found");
-  }
-
+  const filePath = requireOrphanFile();
   const content = await readFile(filePath, "utf-8");
-  const lines = content.split("\n");
-
-  const { deleted, toKeep } = lines.reduce<{
-    deleted: number;
-    toKeep: string[];
-  }>(
-    (acc, line) => {
-      if (!line.trim()) {
-        return acc;
-      }
-      try {
-        const event = JSON.parse(line) as HookEvent;
-        if ((event.pid ?? 0) === pid) {
-          acc.deleted++;
-        } else {
-          acc.toKeep.push(line);
-        }
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "orphan_delete_parse_error",
-          error: String(e),
-        });
-        acc.toKeep.push(line);
-      }
-      return acc;
-    },
-    { deleted: 0, toKeep: [] },
+  const { matched, remainingLines } = partitionByPid(
+    content,
+    pid,
+    "orphan_delete_parse_error",
   );
 
-  if (deleted === 0) {
+  if (matched.length === 0) {
     throw new NotFoundError(`No orphan events found for PID ${pid}`);
   }
 
-  await writeFile(filePath, toKeep.length > 0 ? toKeep.join("\n") + "\n" : "");
+  await writeRemaining(filePath, remainingLines);
 
   log({
     timestamp: new Date().toISOString(),
     event: "orphans_deleted",
     pid,
-    count: deleted,
+    count: matched.length,
   });
 
-  return { deletedCount: deleted };
+  return { deletedCount: matched.length };
 }
 
 export class NotFoundError extends Error {

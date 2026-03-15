@@ -13,7 +13,7 @@ export function registerDeleteRoute(server: FastifyInstance): void {
     async (request, reply) => {
       const { id } = request.params;
       const sessions = await readSessions();
-      const index = sessions.findIndex((s) => s.id === id);
+      const index = sessions.findIndex((session) => session.id === id);
       if (index === -1) {
         return reply.status(404).send({ error: "Session not found" });
       }

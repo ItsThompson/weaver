@@ -7,11 +7,9 @@ import {
   useSessionsQuery,
   revalidateOrphans,
 } from "../../../hooks/queries";
+import type { DeleteTarget } from "../types";
 
-export interface DeleteTarget {
-  pid: number;
-  eventCount: number;
-}
+export type { DeleteTarget };
 
 export interface OrphansPageState {
   groups: OrphanGroup[];
@@ -67,8 +65,8 @@ export function useOrphansPage(): OrphansPageState {
         delete next[pid];
         return next;
       });
-    } catch {
-      // Error will surface on next revalidation
+    } catch (error) {
+      console.error("Failed to assign orphans:", error);
     } finally {
       setAssigning(null);
     }

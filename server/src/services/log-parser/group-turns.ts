@@ -6,13 +6,17 @@ import type {
 import { matchToolCalls } from "./tool-calls";
 
 function extractValidationResults(evts: HookEvent[]): ValidationResult[] {
-  return evts
-    .filter(
-      (e): e is HookEvent & { event: { results: ValidationResult[] } } =>
-        e.event.hook_event_name === "validation" &&
-        Array.isArray((e.event as any).results),
-    )
-    .flatMap((e) => e.event.results);
+  return evts.reduce<ValidationResult[]>((acc, event) => {
+    if (
+      event.event.hook_event_name === "validation" &&
+      Array.isArray((event.event as any).results)
+    ) {
+      acc.push(
+        ...(event.event as unknown as { results: ValidationResult[] }).results,
+      );
+    }
+    return acc;
+  }, []);
 }
 
 export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {

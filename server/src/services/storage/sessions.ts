@@ -45,7 +45,8 @@ export async function appendSession(session: Session): Promise<void> {
 }
 
 export async function writeSessions(sessions: Session[]): Promise<void> {
-  const content = sessions.map((s) => JSON.stringify(s)).join("\n") + "\n";
+  const content =
+    sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
   await writeFile(SESSIONS_FILE(), content, "utf-8");
   sessionCache.invalidate(SESSIONS_FILE());
 }

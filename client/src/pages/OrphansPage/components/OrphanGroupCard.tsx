@@ -6,7 +6,7 @@ import Container from "@cloudscape-design/components/container";
 import Select, { type SelectProps } from "@cloudscape-design/components/select";
 import type { OrphanGroup } from "@weaver/shared/types";
 import { TurnContainer } from "../../SessionDetailPage/components/TurnContainer";
-import type { DeleteTarget } from "../hooks/useOrphansPage";
+import type { DeleteTarget } from "../types";
 
 interface OrphanGroupCardProps {
   group: OrphanGroup;

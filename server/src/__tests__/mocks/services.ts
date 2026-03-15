@@ -12,6 +12,7 @@ vi.mock("../../services/storage/index", () => ({
 vi.mock("../../services/log-parser/index", () => ({
   parseLogFile: vi.fn(),
   groupEventsByTurn: vi.fn(),
+  matchToolCalls: vi.fn().mockReturnValue([]),
   getLastEvent: vi
     .fn<() => Promise<{ name: string; timestamp: string } | null>>()
     .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),

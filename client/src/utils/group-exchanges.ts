@@ -27,13 +27,13 @@ export function getAssistantContent(turn: ConversationTurn): string {
 /** Extract tool names from a ToolUse assistant response. */
 export function getToolNames(turn: ConversationTurn): string[] {
   if ("ToolUse" in turn.assistant) {
-    return turn.assistant.ToolUse.tool_uses.map((t) => t.name);
+    return turn.assistant.ToolUse.tool_uses.map((toolUse) => toolUse.name);
   }
   return [];
 }
 
 /** Check if the assistant response is a final Response (not a ToolUse). */
-export function isFinalResponse(turn: ConversationTurn): boolean {
+function isFinalResponse(turn: ConversationTurn): boolean {
   return "Response" in turn.assistant;
 }
 

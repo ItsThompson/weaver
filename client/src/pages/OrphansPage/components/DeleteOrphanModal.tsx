@@ -3,7 +3,7 @@ import Box from "@cloudscape-design/components/box";
 import Button from "@cloudscape-design/components/button";
 import Modal from "@cloudscape-design/components/modal";
 import Alert from "@cloudscape-design/components/alert";
-import type { DeleteTarget } from "../hooks/useOrphansPage";
+import type { DeleteTarget } from "../types";
 
 interface DeleteOrphanModalProps {
   target: DeleteTarget | null;
