@@ -9,6 +9,8 @@ import { SessionDetailPage } from "./pages/SessionDetailPage";
 import { CherrypickPage } from "./pages/CherrypickPage";
 import { OrphansPage } from "./pages/OrphansPage/OrphansPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { SkillGraphPage } from "./pages/SkillGraphPage";
+import { SkillDetailPage } from "./pages/SkillDetailPage";
 import { MiniPage } from "./pages/MiniPage";
 import { useNavigateOnView } from "./hooks/useNavigateOnView";
 import { useSessionNotifications } from "./hooks/useSessionNotifications";
@@ -21,6 +23,7 @@ import { COMMAND_PALETTE_OPEN_EVENT } from "./constants";
 
 const NAV_ITEMS: SideNavigationProps.Item[] = [
   { type: "link", text: "Sessions", href: "/" },
+  { type: "link", text: "Skills", href: "/skills" },
   { type: "link", text: "Cherrypick", href: "/cherrypick" },
   { type: "link", text: "Settings", href: "/settings" },
   { type: "link", text: "Command Palette", href: "#command-palette" },
@@ -92,6 +95,8 @@ export function App() {
             <Route path="/cherrypick" element={<CherrypickPage />} />
             <Route path="/sessions/orphans" element={<OrphansPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/skills" element={<SkillGraphPage />} />
+            <Route path="/skills/:skillName" element={<SkillDetailPage />} />
           </Routes>
         }
         toolsHide
