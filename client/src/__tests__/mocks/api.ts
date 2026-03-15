@@ -15,4 +15,10 @@ vi.mock("../../utils/api", () => ({
     .fn<() => Promise<{ config: object; warnings: string[] }>>()
     .mockResolvedValue({ config: {}, warnings: [] }),
   updateConfig: vi.fn(),
+  getSkillGraph: vi
+    .fn<() => Promise<any>>()
+    .mockResolvedValue({ nodes: [], edges: [] }),
+  getSkillDetail: vi
+    .fn<() => Promise<any>>()
+    .mockResolvedValue({ frontmatter: {}, body: "" }),
 }));
