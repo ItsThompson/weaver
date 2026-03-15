@@ -85,13 +85,15 @@
       {
         "matcher": "*",
         "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-        "description": "Weaver: log post-tool-use for all tools"
+        "description": "Weaver: log post-tool-use for all tools",
+        "timeout_ms": 35000
       }
     ],
     "stop": [
       {
         "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-        "description": "Weaver: log turn completion"
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 165000
       }
     ]
   },
