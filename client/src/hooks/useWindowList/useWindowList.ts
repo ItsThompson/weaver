@@ -1,9 +1,10 @@
 import { useMemo } from "react";
-import { useSessionsQuery } from "../queries";
+import { useSessionsQuery, useSkillGraphQuery } from "../queries";
 import type { WindowEntry } from "../../components/CommandPalette/types";
 
 const STATIC_WINDOWS: WindowEntry[] = [
   { label: "Sessions", href: "/", searchableText: "Sessions" },
+  { label: "Skills", href: "/skills", searchableText: "Skills skill graph" },
   { label: "Cherry Pick", href: "/cherrypick", searchableText: "Cherry Pick" },
   { label: "Settings", href: "/settings", searchableText: "Settings" },
 ];
@@ -14,6 +15,7 @@ function dirName(cwd: string): string {
 
 export function useWindowList(): WindowEntry[] {
   const { data: sessions = [] } = useSessionsQuery();
+  const { data: skillGraph } = useSkillGraphQuery();
 
   return useMemo(() => {
     const sessionWindows = sessions.reduce<WindowEntry[]>((acc, s) => {
@@ -32,6 +34,12 @@ export function useWindowList(): WindowEntry[] {
       return acc;
     }, []);
 
-    return [...STATIC_WINDOWS, ...sessionWindows];
-  }, [sessions]);
+    const skillWindows = (skillGraph?.nodes ?? []).map((skill) => ({
+      label: `Skill: ${skill.name}`,
+      href: `/skills/${skill.name}`,
+      searchableText: `${skill.name} ${skill.category} skill`,
+    }));
+
+    return [...STATIC_WINDOWS, ...sessionWindows, ...skillWindows];
+  }, [sessions, skillGraph]);
 }

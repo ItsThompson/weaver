@@ -1,14 +1,15 @@
-import { ReactFlow, Controls } from "@xyflow/react";
+import { ReactFlow, ReactFlowProvider } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Box from "@cloudscape-design/components/box";
 import Spinner from "@cloudscape-design/components/spinner";
 import { useSkillGraph } from "./hooks/useSkillGraph";
 import { SkillNode } from "./components/SkillNode";
 import { GraphControls } from "./components/GraphControls";
+import { ZoomControls } from "./components/ZoomControls";
 
 const nodeTypes = { skill: SkillNode };
 
-export function SkillGraphPage() {
+function SkillGraph() {
   const { nodes, edges, isLoading, error } = useSkillGraph();
 
   if (isLoading) {
@@ -19,20 +20,18 @@ export function SkillGraphPage() {
   }
 
   return (
-    <div
-      style={{
-        height: "100vh",
-        position: "relative",
-      }}
-    >
-      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>
-        <Controls
-          position="bottom-right"
-          showFitView={false}
-          showInteractive={false}
-        />
-      </ReactFlow>
+    <div style={{ height: "100vh", position: "relative" }}>
+      <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView />
       <GraphControls />
+      <ZoomControls />
     </div>
+  );
+}
+
+export function SkillGraphPage() {
+  return (
+    <ReactFlowProvider>
+      <SkillGraph />
+    </ReactFlowProvider>
   );
 }
