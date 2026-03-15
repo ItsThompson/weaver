@@ -8,6 +8,7 @@ import { registerSessionRoutes } from "./routes/sessions/index";
 import { registerEventRoutes } from "./routes/events/index";
 import { registerOrphanRoutes } from "./routes/orphans/index";
 import { registerConfigRoutes } from "./routes/config";
+import { registerSkillRoutes } from "./routes/skills/index";
 import {
   ensureDataDir,
   stopStaleSessionCleanup,
@@ -41,6 +42,7 @@ registerSessionRoutes(server);
 registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
+registerSkillRoutes(server);
 
 const clientDist =
   process.env.WEAVER_CLIENT_DIST || resolve(__dirname, "../../client/dist");
