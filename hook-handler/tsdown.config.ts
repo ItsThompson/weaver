@@ -11,4 +11,5 @@ const shared = {
 export default defineConfig([
   { entry: ["src/validate/validate.ts"], ...shared },
   { entry: ["src/inject/inject.ts"], ...shared },
+  { entry: ["src/sync/sync-entry.ts"], ...shared },
 ]);
