@@ -47,6 +47,7 @@ npm run dist
 | [Ghost mode](docs/features/ghost-mode.md)       | Transparent overlay mode                         |
 | [Mini mode](docs/features/mini-mode.md)         | Compact session list panel                       |
 | [Notifications](docs/features/notifications.md) | Sound and visual notifications                   |
+| [Skill graph](docs/features/skill-graph.md)     | Visual skill relationship map                    |
 
 ## Testing
 

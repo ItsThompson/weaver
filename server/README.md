@@ -35,6 +35,8 @@ The server listens on port `8143`.
 | `GET /api/config`                | Read config                                   |
 | `PUT /api/config`                | Replace config                                |
 | `PATCH /api/config`              | Merge-update config                           |
+| `GET /api/skills`                | List all skills as a graph (nodes + edges)    |
+| `GET /api/skills/:name`          | Get a single skill's detail                   |
 | `GET /api/orphans`               | List orphaned event groups                    |
 | `GET /api/orphans/count`         | Count orphaned events                         |
 | `POST /api/orphans/assign`       | Assign orphan events to a session             |
@@ -46,4 +48,5 @@ Full request/response documentation for each endpoint is in the [`docs/`](docs/)
 - [Sessions](docs/sessions.md)
 - [Events](docs/events.md)
 - [Config](docs/config.md)
+- [Skills](docs/skills.md)
 - [Orphans](docs/orphans.md)
