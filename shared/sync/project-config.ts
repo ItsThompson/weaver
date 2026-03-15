@@ -4,6 +4,10 @@ import { stopHookSchema, postToolHookSchema } from "./schemas";
 import { parseValidationArray } from "./validation";
 import { readFile, parseJson, isPlainObject } from "./parsing";
 
+/**
+ * Reads and parses `.weaver.json` from the given directory. Returns null if
+ * the file doesn't exist or contains invalid JSON.
+ */
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   const raw = readFile(join(cwd, ".weaver.json"));
   if (raw === null) {

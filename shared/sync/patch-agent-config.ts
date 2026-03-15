@@ -3,6 +3,7 @@ import { isPlainObject } from "./parsing";
 import { WEAVER_LOG_HOOK } from "../types/validation";
 import type { SyncResult, TimeoutPatch } from "./types";
 
+/** Type guard: returns true if the hook entry has a command containing `weaver-log.sh`. */
 function isWeaverHook(
   entry: unknown,
 ): entry is Record<string, unknown> & { timeout_ms?: number } {
@@ -13,6 +14,10 @@ function isWeaverHook(
   );
 }
 
+/**
+ * Applies timeout patches to hook arrays in-memory. Returns true if any
+ * value was changed.
+ */
 function applyPatches(
   hooks: Record<string, unknown>,
   patches: TimeoutPatch[],
@@ -32,6 +37,11 @@ function applyPatches(
   }, false);
 }
 
+/**
+ * Reads a single agent config file, patches `timeout_ms` on weaver-log.sh
+ * hook entries, and writes back if values changed. Populates `result` with
+ * patched/skipped/error status.
+ */
 export function patchAgentConfig(
   filePath: string,
   stopTimeout: number | null,

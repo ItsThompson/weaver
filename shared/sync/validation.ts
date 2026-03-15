@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+/** Validates each item against a Zod schema, returning only valid entries. Logs invalid items to stderr. */
 export function filterValid<T>(
   items: unknown[],
   schema: z.ZodType<T>,
@@ -16,6 +17,7 @@ export function filterValid<T>(
   }, []);
 }
 
+/** Reads a validation array from a config object, validates each entry against a schema. Returns undefined if the key is absent. */
 export function parseValidationArray<T>(
   v: Record<string, unknown>,
   key: string,

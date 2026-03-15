@@ -9,6 +9,12 @@ import {
 import { patchAgentConfig } from "./patch-agent-config";
 import type { SyncOptions, SyncResult } from "./types";
 
+/**
+ * Reads `.weaver.json` from `cwd`, calculates the required kiro-cli hook
+ * timeouts, and patches all agent config files containing `weaver-log.sh`
+ * hooks in both workspace (`.kiro/agents/`) and global (`~/.kiro/agents/`)
+ * directories.
+ */
 export function syncAgentTimeouts(
   cwd: string,
   options?: SyncOptions,
