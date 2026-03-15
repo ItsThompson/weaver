@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { SelectProps } from "@cloudscape-design/components/select";
-import type { OrphanGroup, SessionWithStatus } from "@weaver/shared/types";
+import type { OrphanGroup } from "@weaver/shared/types";
 import { assignOrphans, deleteOrphans } from "../../../utils/api";
 import {
   useOrphansQuery,
@@ -13,7 +13,22 @@ export interface DeleteTarget {
   eventCount: number;
 }
 
-export function useOrphansPage() {
+export interface OrphansPageState {
+  groups: OrphanGroup[];
+  loading: boolean;
+  error: Error | undefined;
+  sessionOptions: SelectProps.Options;
+  selectedSessions: Record<number, SelectProps.Option | null>;
+  assigning: number | null;
+  deleteTarget: DeleteTarget | null;
+  deleting: boolean;
+  handleAssign: (pid: number) => Promise<void>;
+  handleDelete: () => Promise<void>;
+  selectSession: (pid: number, option: SelectProps.Option) => void;
+  setDeleteTarget: (target: DeleteTarget | null) => void;
+}
+
+export function useOrphansPage(): OrphansPageState {
   const {
     data: orphanData,
     error: orphanError,
