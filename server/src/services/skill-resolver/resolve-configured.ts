@@ -49,7 +49,7 @@ async function resolveCustomAgentSkills(
     return [];
   }
 
-  const resources = (config as { resources?: unknown[] }).resources;
+  const resources = config.resources;
   if (!Array.isArray(resources)) {
     return [];
   }
