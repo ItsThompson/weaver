@@ -14,24 +14,18 @@ export async function loadAgentConfig(
   agentName: string,
   cwd: string,
 ): Promise<Record<string, unknown> | null> {
-  const existing = kiroSearchPaths(cwd, "agents", `${agentName}.json`).filter(
+  const configPath = kiroSearchPaths(cwd, "agents", `${agentName}.json`).find(
     (p) => existsSync(p),
   );
+  if (!configPath) {
+    return null;
+  }
 
-  return existing.reduce<Promise<Record<string, unknown> | null>>(
-    async (prev, configPath) => {
-      const result = await prev;
-      if (result) {
-        return result;
-      }
-      try {
-        return await configCache.get(configPath, () =>
-          readFile(configPath, "utf-8").then((content) => JSON.parse(content)),
-        );
-      } catch {
-        return null;
-      }
-    },
-    Promise.resolve(null),
-  );
+  try {
+    return await configCache.get(configPath, () =>
+      readFile(configPath, "utf-8").then((content) => JSON.parse(content)),
+    );
+  } catch {
+    return null;
+  }
 }
