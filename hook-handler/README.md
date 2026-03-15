@@ -1,67 +1,27 @@
-# Weaver Hook Installation
+# weaver-hook-handler
 
-## Prerequisites
+kiro-cli hook scripts that capture session events, run validation, and inject failure context into the LLM's next prompt.
 
-- kiro-cli installed and configured
-- An agent config file (e.g., `~/.config/amazonq/global/agents/your-agent.json`)
+## Installation
 
-## Steps
+See the [setup guide](../docs/setup.md) for full hook installation instructions.
 
-1. Symlink the hook script to the kiro-cli hooks directory:
+## Development
 
 ```bash
-mkdir -p ~/.config/amazonq/global/hooks
-ln -s ~/Documents/weaver/hook-handler/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
-chmod +x ~/Documents/weaver/hook-handler/weaver-log.sh
+# Build
+npm run build --prefix hook-handler
+
+# Run tests
+npm test --prefix hook-handler
 ```
 
-2. Add hook entries to your agent config JSON. Add the following `hooks` block to your agent config file:
+## What it does
 
-```json
-"hooks": {
-  "agentSpawn": [
-    {
-      "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-      "description": "Weaver: log agent spawn event"
-    }
-  ],
-  "userPromptSubmit": [
-    {
-      "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-      "description": "Weaver: log user prompt submission"
-    }
-  ],
-  "preToolUse": [
-    {
-      "matcher": "*",
-      "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-      "description": "Weaver: log pre-tool-use for all tools"
-    }
-  ],
-  "postToolUse": [
-    {
-      "matcher": "*",
-      "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-      "description": "Weaver: log post-tool-use for all tools"
-    }
-  ],
-  "stop": [
-    {
-      "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
-      "description": "Weaver: log turn completion"
-    }
-  ]
-},
-```
+1. **Event logging**: Captures all kiro-cli hook events (agent spawn, user prompts, tool calls, turn completion) and writes them to `~/.weaver/` for the dashboard to read.
+2. **Validation**: Runs configured linting, type-checking, and test commands after each agent turn. See [validation hooks](../docs/features/validation.md).
+3. **Prompt injection**: When validation failures occurred on the previous turn, injects the failure details into the LLM's context on the next prompt.
 
 ## Configuration
 
-- `WEAVER_MAX_RESPONSE_LENGTH`: Maximum character length for tool response truncation (default: 500). Set as an environment variable to override.
-
-## Data Location
-
-All session data is stored in `~/.weaver/`:
-
-- `sessions.jsonl`: Session index (one JSON line per session)
-- `logs/<session-id>.jsonl`: Per-session event logs
-- `.current-session-<pid>`: Temporary marker files mapping kiro-cli PIDs to session IDs
+Validation hooks are configured via `.weaver.json` files in your project. See [validation hooks](../docs/features/validation.md) for the full schema and examples.

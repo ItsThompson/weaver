@@ -1,41 +1,24 @@
 # Weaver
 
-A local developer tool that provides observability and conversation editing capabilities on top of kiro-cli. Runs as a standalone Electron app with a global hotkey, or in the browser for development.
+A local developer tool that provides observability, conversation editing, and automated validation on top of kiro-cli. Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
 
 ## Features
 
-- **Observability**: View conversation logs, tool usage, and session history through a web dashboard
+- **Observability**: View conversation logs, tool usage, and session history through a dashboard
 - **Cherrypick**: Select and remove parts of a conversation, then reload a pruned context via `/chat load`
-- **Desktop app**: Electron wrapper with global hotkey (F5), tray icon, and no Dock presence
+- **Validation hooks**: Automatically run linting, type-checking, and tests after each agent turn, with failure context injected into the next prompt
+- **Webhooks**: POST event payloads to Slack, Discord, or any URL when session events occur
+- **Desktop app**: Electron wrapper with global hotkey (F5), tray icon, ghost mode, and mini mode
+- **CLI**: Control the dashboard and configure settings from inside kiro-cli sessions
+- **Orphan management**: Recover events from sessions that failed to initialize properly
 
-## Prerequisites
+## Quick start
 
-- Node.js 20+
-- kiro-cli installed and configured
-
-## Setup
+See the [setup guide](docs/setup.md) for full instructions.
 
 ```bash
-# Install root dependencies
 npm install
-
-# Install package dependencies
-npm install --prefix server
-npm install --prefix client
-npm install --prefix electron
-
-# Install hook handler (see hook-handler/README.md for details)
-ln -s ~/Documents/weaver/hook-handler/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
-chmod +x hook-handler/weaver-log.sh
-
-# Install CLI dependencies
-npm install --prefix cli
-
-# Add weaver to your PATH (works in bash, zsh, and kiro-cli)
-ln -s ~/Documents/weaver/bin/weaver ~/.local/bin/weaver
-
-# Optional: add a shorthand alias (add to ~/.zshrc or ~/.bashrc)
-alias wv='weaver view'
+npm run app
 ```
 
 ## Running
@@ -44,125 +27,44 @@ alias wv='weaver view'
 # Desktop app (build + launch Electron)
 npm run app
 
-# Browser dev mode (Vite hot reload + Fastify server)
+# Browser dev mode (hot reload)
 npm run dev
 
 # Package into a distributable .app / .dmg
 npm run dist
 ```
 
-The desktop app:
-- Press **F5** from anywhere to toggle the window
-- Click the tray icon (top-right menu bar) to show/hide
-- Right-click the tray icon to quit
-- No Dock icon — runs as a background panel
+## Documentation
 
-## CLI Commands
-
-| Command | Description |
-|---------|-------------|
-| `weaver view` | Navigate dashboard to the current kiro-cli session |
-| `weaver session` | Navigate dashboard to the sessions list |
-| `weaver session list` | Navigate dashboard to the sessions list |
-| `weaver session <PID>` | Navigate dashboard to a specific session by PID |
-
-## Development
-
-```bash
-# Start both client and server with hot reload
-npm run dev
-```
-
-- Client: http://localhost:5173
-- Server: http://localhost:8143
-- Health check: http://localhost:8143/api/health
+| Document                                        | Description                                      |
+| ----------------------------------------------- | ------------------------------------------------ |
+| [Setup guide](docs/setup.md)                    | Prerequisites, installation, hook configuration  |
+| [Configuration](docs/configuration.md)          | All config files and options                     |
+| [CLI reference](docs/cli.md)                    | Full command reference                           |
+| [Validation hooks](docs/features/validation.md) | Automated linting, testing, and prompt injection |
+| [Webhooks](docs/features/webhooks.md)           | Event notifications to external services         |
+| [Cherrypick](docs/features/cherrypick.md)       | Conversation pruning                             |
+| [Ghost mode](docs/features/ghost-mode.md)       | Transparent overlay mode                         |
+| [Mini mode](docs/features/mini-mode.md)         | Compact session list panel                       |
+| [Notifications](docs/features/notifications.md) | Sound and visual notifications                   |
 
 ## Testing
 
 ```bash
-# Run server tests
-npm test --prefix server
+# Unit tests
+npm test
+
+# E2E tests (requires macOS)
+npm run test:e2e
 ```
 
-## Webhooks
-
-Weaver can POST event payloads to a configured URL when session events occur. Useful for Slack/Discord notifications, especially for pending tool approvals.
-
-### Setup
-
-Set `webhook_url` in the Settings page or directly in `~/.weaver/config.json`:
-
-```json
-{
-  "webhook_url": "https://hooks.slack.com/services/T00/B00/xxx"
-}
-```
-
-Leave empty to disable. Must start with `http://` or `https://`.
-
-### Payload schema
-
-```json
-{
-  "event": "preToolUse",
-  "activity": "running_tool",
-  "timestamp": "2026-03-05T12:58:00.000Z",
-  "session_id": "abc-123",
-  "session_name": "my-project",
-  "session_pid": 12345,
-  "session_cwd": "/Users/me/project",
-  "prompt": "add error handling to the upload function",
-  "tool_name": "fs_write",
-  "tool_input": "{\"command\":\"str_replace\",\"path\":\"/src/upload.ts\"}",
-  "tool_response": null,
-  "source": "weaver"
-}
-```
-
-All values are flat (strings, numbers, or null) for compatibility with Slack Workflow Builder and similar tools that don't support nested JSON.
-
-| Field | Type | Description |
-|-------|------|-------------|
-| `event` | `string` | Hook event name: `agentSpawn`, `userPromptSubmit`, `preToolUse`, `postToolUse`, `stop` |
-| `activity` | `string` | Derived status: `starting`, `processing`, `running_tool`, `pending_approval`, `idle` |
-| `timestamp` | `string` | ISO 8601 timestamp of when the webhook was dispatched |
-| `session_id` | `string` | Session UUID |
-| `session_name` | `string` | Custom name or directory name fallback |
-| `session_pid` | `number` | kiro-cli process ID |
-| `session_cwd` | `string` | Working directory of the session |
-| `prompt` | `string \| null` | User prompt from the current turn |
-| `tool_name` | `string \| null` | Tool name (for tool events) |
-| `tool_input` | `string \| null` | JSON-stringified tool input (for tool events) |
-| `tool_response` | `string \| null` | JSON-stringified tool response (for `postToolUse` only) |
-| `source` | `"weaver"` | Static identifier |
-
-### Context by event type
-
-| Event | `context` contents |
-|-------|-------------------|
-| `agentSpawn`, `stop` | `null` |
-| `userPromptSubmit` | `{ prompt }` |
-| `preToolUse` | `{ prompt, tool_name, tool_input }` |
-| `postToolUse` | `{ prompt, tool_name, tool_input, tool_response }` |
-| `pending_approval` | Same as `preToolUse` |
-
-### Pending approval
-
-When a `preToolUse` event is not resolved by a `postToolUse` or `stop` within 15 seconds, a second webhook fires with `activity: "pending_approval"`. The `event` field remains `preToolUse`.
-
-### Delivery
-
-- Fire-and-forget: no retries, no delivery guarantees
-- 5-second timeout per request
-- Failures are logged server-side but never block the event pipeline
-
-## Data Directory
+## Data directory
 
 All session data is stored in `~/.weaver/`:
 
-| Path | Description |
-|------|-------------|
-| `sessions.jsonl` | Session index (one JSON line per session) |
-| `logs/<session-id>.jsonl` | Per-session event logs |
-| `.current-session-<pid>` | Temporary marker files mapping kiro-cli PIDs to session IDs |
-| `config.json` | User configuration (see [`config.example.json`](config.example.json) for defaults) |
+| Path                      | Description                                                     |
+| ------------------------- | --------------------------------------------------------------- |
+| `sessions.jsonl`          | Session index                                                   |
+| `logs/<session-id>.jsonl` | Per-session event logs                                          |
+| `logs/orphan.jsonl`       | Events from unmatched PIDs                                      |
+| `config.json`             | User configuration (see [configuration](docs/configuration.md)) |
