@@ -12,7 +12,8 @@
     "test": "vitest run && bash ../bin/weaver.test.sh"
   },
   "dependencies": {
-    "@weaver/shared": "*"
+    "@weaver/shared": "*",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",

@@ -23,12 +23,20 @@
     "./utils": {
       "types": "./dist/utils/index.d.ts",
       "default": "./dist/utils/index.js"
+    },
+    "./sync": {
+      "types": "./dist/sync/index.d.ts",
+      "default": "./dist/sync/index.js"
     }
   },
   "scripts": {
     "build": "tsc"
   },
+  "dependencies": {
+    "zod": "^4.3.6"
+  },
   "devDependencies": {
+    "@types/node": "^22.15.3",
     "typescript": "^5.8.3"
   }
 }
