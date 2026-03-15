@@ -1,0 +1,1 @@
+export { registerSkillRoutes } from "./skills";
