@@ -5,6 +5,7 @@ import Container from "@cloudscape-design/components/container";
 import Box from "@cloudscape-design/components/box";
 import Spinner from "@cloudscape-design/components/spinner";
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
+import Badge from "@cloudscape-design/components/badge";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { useSkillDetailQuery } from "../../hooks/queries";
@@ -43,12 +44,17 @@ export function SkillDetailPage() {
       )}
       {data && (
         <SpaceBetween size="m">
-          <Header
-            variant="h1"
-            description={String(data.frontmatter.description ?? "")}
-          >
-            {String(data.frontmatter.name ?? skillName)}
-          </Header>
+          <SpaceBetween size="xxs">
+            <Header variant="h1">
+              {String(data.frontmatter.name ?? skillName)}
+            </Header>
+            <Badge color={data.source === "global" ? "blue" : "grey"}>
+              {data.source === "global" ? "Global" : "Workspace"}
+            </Badge>
+            <Box color="text-body-secondary">
+              {String(data.frontmatter.description ?? "")}
+            </Box>
+          </SpaceBetween>
           <Container>
             <div style={{ overflowX: "auto" }}>
               <Markdown remarkPlugins={[remarkGfm]}>{data.body}</Markdown>

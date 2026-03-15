@@ -19,7 +19,7 @@ export async function getSkillDetail(
   const searchPaths = kiroSearchPaths(cwd, "skills");
 
   return searchPaths.reduce<Promise<SkillDetail | null>>(
-    async (accPromise, dirPath) => {
+    async (accPromise, dirPath, index) => {
       const acc = await accPromise;
       if (acc) {
         return acc;
@@ -31,11 +31,15 @@ export async function getSkillDetail(
         return null;
       }
 
+      const source: "workspace" | "global" =
+        index === 0 ? "workspace" : "global";
+
       try {
-        return await skillCache.get(skillPath, async () => {
+        const parsed = await skillCache.get(skillPath, async () => {
           const content = await readFile(skillPath, "utf-8");
           return parseSkillFile(content);
         });
+        return { ...parsed, source };
       } catch (error) {
         if (isEnoent(error)) {
           return null;

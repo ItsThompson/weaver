@@ -38,7 +38,7 @@ describe("SkillDetailPage breadcrumbs", () => {
   it("shows Skills breadcrumb when navigated directly", async () => {
     mockGetSkillDetail.mockResolvedValue({
       frontmatter: { name: "typescript", description: "TS" },
-      body: "# TS",
+      body: "# TS", source: "global" as const,
     });
 
     const wrapper = renderWithRoute("typescript");
@@ -56,7 +56,7 @@ describe("SkillDetailPage breadcrumbs", () => {
   it("shows Sessions breadcrumb when navigated from a session", async () => {
     mockGetSkillDetail.mockResolvedValue({
       frontmatter: { name: "typescript", description: "TS" },
-      body: "# TS",
+      body: "# TS", source: "global" as const,
     });
 
     const wrapper = renderWithRoute("typescript", {

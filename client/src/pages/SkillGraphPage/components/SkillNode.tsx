@@ -7,7 +7,10 @@ import { Link } from "react-router-dom";
 type SkillFlowNode = Node<SkillNodeData, "skill">;
 
 export function SkillNode({ data }: NodeProps<SkillFlowNode>) {
-  const color = CATEGORY_COLORS[data.category] ?? "#888";
+  const color =
+    data.source === "workspace"
+      ? "#888"
+      : (CATEGORY_COLORS[data.category] ?? "#888");
 
   return (
     <Link

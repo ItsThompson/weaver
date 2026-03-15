@@ -25,6 +25,7 @@ describe("getSkillDetail", () => {
     expect(detail).toEqual({
       frontmatter: { name: "skill-a", description: "Skill A description" },
       body: expect.stringContaining("Body of skill A"),
+      source: "workspace",
     });
   });
 

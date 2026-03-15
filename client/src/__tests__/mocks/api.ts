@@ -20,5 +20,5 @@ vi.mock("../../utils/api", () => ({
     .mockResolvedValue({ nodes: [], edges: [] }),
   getSkillDetail: vi
     .fn<() => Promise<any>>()
-    .mockResolvedValue({ frontmatter: {}, body: "" }),
+    .mockResolvedValue({ frontmatter: {}, body: "", source: "global" }),
 }));

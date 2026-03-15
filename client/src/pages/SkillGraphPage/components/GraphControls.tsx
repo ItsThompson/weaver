@@ -48,6 +48,24 @@ export function GraphControls() {
           </span>
         </div>
       ))}
+      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+        <div
+          style={{
+            width: 12,
+            height: 12,
+            borderRadius: 2,
+            background: "#888",
+          }}
+        />
+        <span
+          style={{
+            fontSize: "var(--font-size-body-s, 12px)",
+            color: "var(--color-text-body-secondary, #8d99a8)",
+          }}
+        >
+          Workspace
+        </span>
+      </div>
     </div>
   );
 }

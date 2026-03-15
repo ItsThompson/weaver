@@ -38,6 +38,7 @@ export function useSkillGraph() {
           label: skill.name,
           category: skill.category,
           description: skill.description,
+          source: skill.source,
         },
       };
     });
