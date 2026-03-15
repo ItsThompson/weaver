@@ -1,34 +1,29 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { renderHook, act } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
-jest.unstable_mockModule("../../../utils/api", () => ({
-  apiFetch: jest.fn(),
-  getSessions: jest.fn<() => Promise<any[]>>().mockResolvedValue([]),
-  getSession: jest.fn(),
-  updateSessionName: jest.fn(),
-  getOrphanCount: jest
+vi.mock("../../../utils/api", () => ({
+  apiFetch: vi.fn(),
+  getSessions: vi.fn<() => Promise<any[]>>().mockResolvedValue([]),
+  getSession: vi.fn(),
+  updateSessionName: vi.fn(),
+  getOrphanCount: vi
     .fn<() => Promise<{ count: number }>>()
     .mockResolvedValue({ count: 0 }),
-  getOrphans: jest.fn(),
-  assignOrphans: jest.fn(),
-  getConfig: jest.fn(),
-  updateConfig: jest.fn<() => Promise<{ config: typeof DEFAULT_CONFIG }>>(),
+  getOrphans: vi.fn(),
+  assignOrphans: vi.fn(),
+  getConfig: vi.fn(),
+  updateConfig: vi.fn<() => Promise<{ config: typeof DEFAULT_CONFIG }>>(),
 }));
 
-const api = await import("../../../utils/api");
-const { useSettings } = await import("./useSettings");
+import * as api from "../../../utils/api";
+import { useSettings } from "./useSettings";
 
-const mockGetConfig = api.getConfig as jest.MockedFunction<
-  typeof api.getConfig
->;
-const mockUpdateConfig = api.updateConfig as jest.MockedFunction<
-  typeof api.updateConfig
->;
+const mockGetConfig = vi.mocked(api.getConfig);
+const mockUpdateConfig = vi.mocked(api.updateConfig);
 
-const mockAddNotification = jest.fn();
+const mockAddNotification = vi.fn();
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return (
@@ -38,7 +33,7 @@ function wrapper({ children }: { children: React.ReactNode }) {
   );
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => vi.clearAllMocks());
 
 describe("useSettings", () => {
   it("returns default config initially", async () => {

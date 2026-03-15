@@ -1,24 +1,23 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { DEFAULT_TEST_RUNNERS } from "@weaver/shared/types";
-import { mockFs } from "../../__test-helpers__/index";
+import "../../__test-helpers__/mock-fs";
 
-const { existsSync, readFileSync } = await mockFs();
-const { resolveTestRunners } = await import("./test-runners");
+import { existsSync, readFileSync } from "node:fs";
+import { DEFAULT_TEST_RUNNERS } from "@weaver/shared/types";
+import { resolveTestRunners } from "./test-runners";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("resolveTestRunners", () => {
   it("returns defaults when no project or global config", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const runners = resolveTestRunners(null);
     expect(runners).toContain("jest");
     expect(runners).toContain("rspec");
   });
 
   it("merges project runners with defaults", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const runners = resolveTestRunners({
       validation: { test_runners: ["mix test"] },
     });
@@ -27,8 +26,8 @@ describe("resolveTestRunners", () => {
   });
 
   it("merges global runners with project runners", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ test_runners: ["custom-global"] }),
     );
     const runners = resolveTestRunners({
@@ -39,7 +38,7 @@ describe("resolveTestRunners", () => {
   });
 
   it("deduplicates runners", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const runners = resolveTestRunners({
       validation: { test_runners: ["jest"] },
     });
@@ -47,8 +46,8 @@ describe("resolveTestRunners", () => {
   });
 
   it("filters whitespace-only entries from global config", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ test_runners: ["jest", "  ", "", "pytest"] }),
     );
     const runners = resolveTestRunners(null);
@@ -59,15 +58,17 @@ describe("resolveTestRunners", () => {
   });
 
   it("handles non-array test_runners in global config", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(JSON.stringify({ test_runners: "not-array" }));
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
+      JSON.stringify({ test_runners: "not-array" }),
+    );
     const runners = resolveTestRunners(null);
     expect(runners).toEqual(DEFAULT_TEST_RUNNERS);
   });
 
   it("handles malformed JSON in global config", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue("not json");
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue("not json");
     const runners = resolveTestRunners(null);
     expect(runners).toEqual(DEFAULT_TEST_RUNNERS);
   });

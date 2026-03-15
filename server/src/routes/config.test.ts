@@ -1,41 +1,31 @@
-import { jest } from "@jest/globals";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
-jest.unstable_mockModule("../services/config/index", () => ({
-  readConfig: jest.fn(),
-  parseAndValidateConfig: jest.fn(),
-  writeConfig: jest.fn(),
+vi.mock("../services/config/index", () => ({
+  readConfig: vi.fn(),
+  parseAndValidateConfig: vi.fn(),
+  writeConfig: vi.fn(),
 }));
 
-jest.unstable_mockModule("../services/event-bus", () => ({
-  broadcast: jest.fn(),
-  emit: jest.fn(),
-  sseReply: jest.fn(),
+vi.mock("../services/event-bus", () => ({
+  broadcast: vi.fn(),
+  emit: vi.fn(),
+  sseReply: vi.fn(),
 }));
 
-const configService = await import("../services/config/index");
-const eventBus = await import("../services/event-bus");
-
-const mockReadConfig = configService.readConfig as jest.MockedFunction<
-  typeof configService.readConfig
->;
-const mockParseAndValidateConfig =
-  configService.parseAndValidateConfig as jest.MockedFunction<
-    typeof configService.parseAndValidateConfig
-  >;
-const mockWriteConfig = configService.writeConfig as jest.MockedFunction<
-  typeof configService.writeConfig
->;
-const mockEmit = eventBus.emit as jest.MockedFunction<typeof eventBus.emit>;
-
-const { default: Fastify } = await import("fastify");
-const { registerConfigRoutes } = await import("./config");
+import {
+  readConfig,
+  parseAndValidateConfig,
+  writeConfig,
+} from "../services/config/index";
+import { emit } from "../services/event-bus";
+import Fastify from "fastify";
+import { registerConfigRoutes } from "./config";
 
 let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
-  jest.clearAllMocks();
-  mockWriteConfig.mockResolvedValue(undefined);
+  vi.clearAllMocks();
+  vi.mocked(writeConfig).mockResolvedValue(undefined);
   server = Fastify();
   registerConfigRoutes(server);
   await server.ready();
@@ -46,7 +36,7 @@ afterEach(() => server.close());
 describe("PUT /api/config", () => {
   it("emits configChanged SSE after successful write", async () => {
     const config = { ...DEFAULT_CONFIG, dark_mode: false };
-    mockParseAndValidateConfig.mockReturnValue({ config, warnings: [] });
+    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
 
     const res = await server.inject({
       method: "PUT",
@@ -55,14 +45,14 @@ describe("PUT /api/config", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(mockEmit).toHaveBeenCalledWith({
+    expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "configChanged",
       data: { ...config },
     });
   });
 
   it("does not emit SSE on validation failure", async () => {
-    mockParseAndValidateConfig.mockReturnValue({
+    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: DEFAULT_CONFIG,
       warnings: ["bad field"],
     });
@@ -74,7 +64,7 @@ describe("PUT /api/config", () => {
     });
 
     expect(res.statusCode).toBe(422);
-    expect(mockEmit).not.toHaveBeenCalled();
+    expect(vi.mocked(emit)).not.toHaveBeenCalled();
   });
 });
 
@@ -82,8 +72,8 @@ describe("PATCH /api/config", () => {
   it("merges partial body with current config and returns merged result", async () => {
     const current = { ...DEFAULT_CONFIG, ghost_mode: false };
     const merged = { ...current, ghost_mode: true };
-    mockReadConfig.mockResolvedValue({ config: current, warnings: [] });
-    mockParseAndValidateConfig.mockReturnValue({
+    vi.mocked(readConfig).mockResolvedValue({ config: current, warnings: [] });
+    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: merged,
       warnings: [],
     });
@@ -96,13 +86,16 @@ describe("PATCH /api/config", () => {
 
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res.body)).toEqual({ config: merged });
-    expect(mockWriteConfig).toHaveBeenCalledWith(merged);
+    expect(vi.mocked(writeConfig)).toHaveBeenCalledWith(merged);
   });
 
   it("emits configChanged SSE after successful write", async () => {
     const config = { ...DEFAULT_CONFIG, ghost_mode: true };
-    mockReadConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockParseAndValidateConfig.mockReturnValue({ config, warnings: [] });
+    vi.mocked(readConfig).mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+    });
+    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
 
     await server.inject({
       method: "PATCH",
@@ -110,15 +103,18 @@ describe("PATCH /api/config", () => {
       payload: { ghost_mode: true },
     });
 
-    expect(mockEmit).toHaveBeenCalledWith({
+    expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "configChanged",
       data: { ...config },
     });
   });
 
   it("returns 422 on validation failure", async () => {
-    mockReadConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockParseAndValidateConfig.mockReturnValue({
+    vi.mocked(readConfig).mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+    });
+    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: DEFAULT_CONFIG,
       warnings: ["ghost_opacity must be a number between 0 and 1"],
     });
@@ -133,12 +129,15 @@ describe("PATCH /api/config", () => {
     expect(JSON.parse(res.body)).toEqual({
       error: "ghost_opacity must be a number between 0 and 1",
     });
-    expect(mockEmit).not.toHaveBeenCalled();
+    expect(vi.mocked(emit)).not.toHaveBeenCalled();
   });
 
   it("returns current config unchanged when body is empty", async () => {
-    mockReadConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockParseAndValidateConfig.mockReturnValue({
+    vi.mocked(readConfig).mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+    });
+    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: DEFAULT_CONFIG,
       warnings: [],
     });

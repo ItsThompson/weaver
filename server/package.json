@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc --noEmit && tsdown",
+    "build": "tsc --noEmit -p tsconfig.build.json && tsdown",
     "start": "node dist/index.mjs",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest"
+    "test": "vitest run"
   },
   "dependencies": {
     "@fastify/static": "^9.0.0",
@@ -15,12 +15,10 @@
     "fastify": "^5.3.3"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.14",
     "@types/node": "^22.15.3",
-    "jest": "^29.7.0",
-    "ts-jest": "^29.3.4",
     "tsdown": "^0.21.0",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.18"
   }
 }

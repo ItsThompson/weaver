@@ -1,27 +1,6 @@
-import { jest } from "@jest/globals";
-import type { HookEvent, Session, WeaverConfig } from "@weaver/shared/types";
+import type { HookEvent, Session } from "@weaver/shared/types";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
-
-export const mockReadConfig =
-  jest.fn<() => Promise<{ config: WeaverConfig; warnings: string[] }>>();
-export const mockParseLogFile = jest.fn<() => Promise<HookEvent[]>>();
-export const mockDeriveActivity = jest.fn<(name: string) => string>();
-export const mockLog = jest.fn();
-export const mockFetch = jest.fn<() => Promise<Response>>();
-
-jest.unstable_mockModule("../../config.js", () => ({
-  readConfig: mockReadConfig,
-}));
-jest.unstable_mockModule("../../log-parser.js", () => ({
-  parseLogFile: mockParseLogFile,
-  deriveActivity: mockDeriveActivity,
-}));
-jest.unstable_mockModule("../../../utils/logger.js", () => ({ log: mockLog }));
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-globalThis.fetch = mockFetch as any;
-
-export const webhook = await import("../index.js");
+import type * as WebhookModule from "../index";
 
 export const TEST_SESSION: Session = {
   id: "sess-1",
@@ -53,14 +32,25 @@ export function configWith(
   };
 }
 
-export function setupMocks() {
+export const mockFetch = vi.fn<() => Promise<Response>>();
+globalThis.fetch = mockFetch as any;
+
+export function setupWebhookTests(
+  webhook: typeof WebhookModule,
+  readConfig: () => unknown,
+  parseLogFile: () => unknown,
+  deriveActivity: (name: string) => string,
+  format: "simple" | "advanced" = "simple",
+) {
   beforeEach(() => {
-    jest.clearAllMocks();
-    jest.useFakeTimers();
+    vi.clearAllMocks();
+    vi.useFakeTimers();
     mockFetch.mockResolvedValue(new Response("ok"));
-    mockReadConfig.mockResolvedValue(configWith("https://hooks.example.com"));
-    mockParseLogFile.mockResolvedValue([]);
-    mockDeriveActivity.mockImplementation((name: string) => {
+    vi.mocked(readConfig).mockResolvedValue(
+      configWith("https://hooks.example.com", format),
+    );
+    vi.mocked(parseLogFile).mockResolvedValue([]);
+    vi.mocked(deriveActivity).mockImplementation((name: string) => {
       if (name === "agentSpawn") {
         return "starting";
       }
@@ -77,7 +67,7 @@ export function setupMocks() {
   });
 
   afterEach(() => {
-    jest.useRealTimers();
+    vi.useRealTimers();
     webhook.stopWebhookTimers();
   });
 }

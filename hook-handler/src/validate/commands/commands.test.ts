@@ -1,14 +1,11 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import "../../__test-helpers__/mock-child-process";
+
 import type { SpawnSyncReturns } from "node:child_process";
-import { mockChildProcess } from "../../__test-helpers__/index";
-
-const { spawnSync } = await mockChildProcess();
-
-const { substituteVars, commandUsesVar, runCommand } =
-  await import("./commands");
+import { spawnSync } from "node:child_process";
+import { substituteVars, commandUsesVar, runCommand } from "./commands";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 function spawnResult(
@@ -57,7 +54,7 @@ describe("commandUsesVar", () => {
 
 describe("runCommand", () => {
   it("returns output and exit code", () => {
-    spawnSync.mockReturnValue(
+    vi.mocked(spawnSync).mockReturnValue(
       spawnResult({ status: 0, stdout: "ok", stderr: "" }),
     );
     const result = runCommand("echo ok", "/project", 5000);
@@ -67,20 +64,24 @@ describe("runCommand", () => {
   });
 
   it("detects SIGTERM timeout", () => {
-    spawnSync.mockReturnValue(spawnResult({ status: null, signal: "SIGTERM" }));
+    vi.mocked(spawnSync).mockReturnValue(
+      spawnResult({ status: null, signal: "SIGTERM" }),
+    );
     const result = runCommand("sleep 999", "/project", 100);
     expect(result.timedOut).toBe(true);
   });
 
   it("truncates output at MAX_OUTPUT_LENGTH", () => {
-    spawnSync.mockReturnValue(spawnResult({ stdout: "x".repeat(10_000) }));
+    vi.mocked(spawnSync).mockReturnValue(
+      spawnResult({ stdout: "x".repeat(10_000) }),
+    );
     const result = runCommand("echo lots", "/project", 5000);
     expect(result.output.length).toBe(5_000);
   });
 
   it("keeps tail when tailBiased is true", () => {
     const tail = "y".repeat(5_000);
-    spawnSync.mockReturnValue(
+    vi.mocked(spawnSync).mockReturnValue(
       spawnResult({ stdout: "x".repeat(5_000) + tail }),
     );
     const result = runCommand("echo lots", "/project", 5000, true);
@@ -88,7 +89,7 @@ describe("runCommand", () => {
   });
 
   it("does not truncate when output fits within limit (tailBiased)", () => {
-    spawnSync.mockReturnValue(spawnResult({ stdout: "short" }));
+    vi.mocked(spawnSync).mockReturnValue(spawnResult({ stdout: "short" }));
     const result = runCommand("echo short", "/project", 5000, true);
     expect(result.output).toBe("short");
   });

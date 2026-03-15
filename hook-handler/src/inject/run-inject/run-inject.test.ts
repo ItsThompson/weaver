@@ -1,25 +1,23 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs } from "../../__test-helpers__/index";
+import "../../__test-helpers__/mock-fs";
 
-const { existsSync, readFileSync, unlinkSync } = await mockFs();
-
-const { runInject } = await import("./run-inject");
+import { existsSync, readFileSync, unlinkSync } from "node:fs";
+import { runInject } from "./run-inject";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("runInject", () => {
   it("exits 0 with no output when pending file does not exist", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const result = runInject("sess-1");
     expect(result).toEqual({ stdout: "", exitCode: 0 });
     expect(unlinkSync).not.toHaveBeenCalled();
   });
 
   it("formats output with summary and failed details only", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         results: [
           {
@@ -52,8 +50,8 @@ describe("runInject", () => {
   });
 
   it("deletes malformed pending file and exits 0 with no output", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue("not valid json{{{");
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue("not valid json{{{");
 
     const result = runInject("sess-1");
     expect(result).toEqual({ stdout: "", exitCode: 0 });
@@ -61,8 +59,8 @@ describe("runInject", () => {
   });
 
   it("counts skipped results in summary instead of showing ⊘ marker", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         results: [
           {
@@ -83,8 +81,8 @@ describe("runInject", () => {
   });
 
   it("shows only summary for all-passed results", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         results: [
           {
@@ -105,8 +103,8 @@ describe("runInject", () => {
   });
 
   it("shows failed results with ✗ marker and indented output", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         results: [
           {
@@ -126,8 +124,8 @@ describe("runInject", () => {
   });
 
   it("shows timed_out indicator on failed results", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         results: [
           {

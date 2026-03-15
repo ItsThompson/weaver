@@ -1,31 +1,39 @@
-import { jest } from "@jest/globals";
 import type { Session } from "@weaver/shared/types";
 
-const mockReadSessions = jest.fn<() => Promise<Session[]>>();
-const mockIsProcessRunning = jest.fn<(pid: number) => boolean>();
-const mockGetLastEvent =
-  jest.fn<() => Promise<{ name: string; timestamp: string } | null>>();
-const mockDeriveActivity = jest.fn<(name: string) => string>();
-const mockLog = jest.fn();
-const mockExecFile = jest.fn();
+const {
+  mockReadSessions,
+  mockIsProcessRunning,
+  mockGetLastEvent,
+  mockDeriveActivity,
+  mockLog,
+  mockExecFile,
+} = vi.hoisted(() => ({
+  mockReadSessions: vi.fn<() => Promise<Session[]>>(),
+  mockIsProcessRunning: vi.fn<(pid: number) => boolean>(),
+  mockGetLastEvent:
+    vi.fn<() => Promise<{ name: string; timestamp: string } | null>>(),
+  mockDeriveActivity: vi.fn<(name: string) => string>(),
+  mockLog: vi.fn(),
+  mockExecFile: vi.fn(),
+}));
 
-jest.unstable_mockModule("./storage/index", () => ({
+vi.mock("./storage/index", () => ({
   readSessions: mockReadSessions,
   isProcessRunning: mockIsProcessRunning,
 }));
 
-jest.unstable_mockModule("./log-parser/index", () => ({
+vi.mock("./log-parser/index", () => ({
   getLastEvent: mockGetLastEvent,
   deriveActivity: mockDeriveActivity,
 }));
 
-jest.unstable_mockModule("../utils/logger", () => ({ log: mockLog }));
+vi.mock("../utils/logger", () => ({ log: mockLog }));
 
-jest.unstable_mockModule("node:child_process", () => ({
+vi.mock("node:child_process", () => ({
   execFile: mockExecFile,
 }));
 
-const { startKeepAwake, stopKeepAwake } = await import("./keep-awake");
+import { startKeepAwake, stopKeepAwake } from "./keep-awake";
 
 function makeSession(overrides: Partial<Session> = {}): Session {
   return {
@@ -41,21 +49,21 @@ function makeSession(overrides: Partial<Session> = {}): Session {
 }
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  jest.useFakeTimers();
+  vi.clearAllMocks();
+  vi.useFakeTimers();
   mockReadSessions.mockResolvedValue([]);
   stopKeepAwake();
 });
 
 afterEach(() => {
   stopKeepAwake();
-  jest.useRealTimers();
+  vi.useRealTimers();
 });
 
 describe("startKeepAwake", () => {
   it("polls immediately on start", async () => {
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
     expect(mockReadSessions).toHaveBeenCalledTimes(1);
   });
 
@@ -69,7 +77,7 @@ describe("startKeepAwake", () => {
     mockDeriveActivity.mockReturnValue("running_tool");
 
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(mockExecFile).toHaveBeenCalledWith(
       "bash",
@@ -85,7 +93,7 @@ describe("startKeepAwake", () => {
     mockDeriveActivity.mockReturnValue("idle");
 
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(mockExecFile).not.toHaveBeenCalled();
   });
@@ -95,7 +103,7 @@ describe("startKeepAwake", () => {
     mockIsProcessRunning.mockReturnValue(false);
 
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(mockGetLastEvent).not.toHaveBeenCalled();
     expect(mockExecFile).not.toHaveBeenCalled();
@@ -105,7 +113,7 @@ describe("startKeepAwake", () => {
     mockReadSessions.mockRejectedValue(new Error("disk full"));
 
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(mockLog).toHaveBeenCalledWith(
       expect.objectContaining({ event: "keep_awake_poll_error" }),
@@ -126,7 +134,7 @@ describe("startKeepAwake", () => {
     });
 
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
 
     expect(mockLog).toHaveBeenCalledWith(
       expect.objectContaining({ event: "keep_awake_error" }),
@@ -137,11 +145,11 @@ describe("startKeepAwake", () => {
 describe("stopKeepAwake", () => {
   it("stops the polling interval", async () => {
     startKeepAwake();
-    await jest.advanceTimersByTimeAsync(0);
+    await vi.advanceTimersByTimeAsync(0);
     mockReadSessions.mockClear();
 
     stopKeepAwake();
-    await jest.advanceTimersByTimeAsync(120_000);
+    await vi.advanceTimersByTimeAsync(120_000);
 
     expect(mockReadSessions).not.toHaveBeenCalled();
   });

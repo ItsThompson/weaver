@@ -1,17 +1,16 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { render, screen } from "@testing-library/react";
-import "@testing-library/jest-dom";
+
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
 
-const { TestRunnersField } = await import("./TestRunnersField");
+import { TestRunnersField } from "./TestRunnersField";
 
 function renderField(overrides?: {
   config?: WeaverConfig;
   disabled?: boolean;
 }) {
   const setConfig =
-    jest.fn<React.Dispatch<React.SetStateAction<WeaverConfig>>>();
+    vi.fn<React.Dispatch<React.SetStateAction<WeaverConfig>>>();
   const config = overrides?.config ?? DEFAULT_CONFIG;
   const disabled = overrides?.disabled ?? false;
 

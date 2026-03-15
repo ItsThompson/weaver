@@ -1,27 +1,26 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+
 import { MemoryRouter } from "react-router-dom";
 import type { SessionWithStatus } from "@weaver/shared/types";
 
-jest.unstable_mockModule("../../../utils/api", () => ({
-  apiFetch: jest.fn(),
-  getSessions: jest.fn(),
-  getSession: jest.fn(),
-  updateSessionName: jest.fn(),
-  getOrphanCount: jest
+vi.mock("../../../utils/api", () => ({
+  apiFetch: vi.fn(),
+  getSessions: vi.fn(),
+  getSession: vi.fn(),
+  updateSessionName: vi.fn(),
+  getOrphanCount: vi
     .fn<() => Promise<{ count: number }>>()
     .mockResolvedValue({ count: 0 }),
-  getOrphans: jest.fn(),
-  assignOrphans: jest.fn(),
-  getConfig: jest
+  getOrphans: vi.fn(),
+  assignOrphans: vi.fn(),
+  getConfig: vi
     .fn<() => Promise<{ config: object; warnings: string[] }>>()
     .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: jest.fn(),
+  updateConfig: vi.fn(),
 }));
 
-const { SessionTable } = await import("./SessionTable");
+import { SessionTable } from "./SessionTable";
 
 function makeSession(index: number): SessionWithStatus {
   return {
@@ -99,7 +98,7 @@ describe("SessionTable", () => {
 
   it("filters by custom name", () => {
     renderTable();
-    const filter = screen.getByRole("textbox");
+    const filter = screen.getByRole("searchbox");
     fireEvent.change(filter, { target: { value: "Frontend" } });
 
     expect(screen.getByText("Frontend App")).toBeInTheDocument();
@@ -108,7 +107,7 @@ describe("SessionTable", () => {
 
   it("filters by cwd", () => {
     renderTable();
-    const filter = screen.getByRole("textbox");
+    const filter = screen.getByRole("searchbox");
     fireEvent.change(filter, { target: { value: "backend" } });
 
     expect(screen.queryByText("Frontend App")).not.toBeInTheDocument();
@@ -117,7 +116,7 @@ describe("SessionTable", () => {
 
   it("filters by session id", () => {
     renderTable();
-    const filter = screen.getByRole("textbox");
+    const filter = screen.getByRole("searchbox");
     fireEvent.change(filter, { target: { value: "session-1" } });
 
     expect(screen.getByText("Frontend App")).toBeInTheDocument();
@@ -126,7 +125,7 @@ describe("SessionTable", () => {
 
   it("shows empty state when no sessions match filter", () => {
     renderTable();
-    const filter = screen.getByRole("textbox");
+    const filter = screen.getByRole("searchbox");
     fireEvent.change(filter, { target: { value: "nonexistent" } });
 
     expect(screen.getByText("No matching sessions")).toBeInTheDocument();

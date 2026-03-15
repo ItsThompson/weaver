@@ -1,14 +1,13 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs } from "../__test-helpers__/index";
+import "../__test-helpers__/mock-fs";
 
-const { realpathSync } = await mockFs();
-const { resolveTestDirs } = await import("./scope");
+import { realpathSync } from "node:fs";
+import { resolveTestDirs } from "./scope";
 
 const CWD = "/project";
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  realpathSync.mockImplementation((p: string) => String(p));
+  vi.clearAllMocks();
+  vi.mocked(realpathSync).mockImplementation((p: string) => String(p));
 });
 
 describe("resolveTestDirs", () => {
@@ -78,7 +77,7 @@ describe("resolveTestDirs", () => {
   });
 
   it("resolves symlink inside CWD normally", () => {
-    realpathSync.mockImplementation((p: string) =>
+    vi.mocked(realpathSync).mockImplementation((p: string) =>
       String(p).replace("linked", "real"),
     );
     const result = resolveTestDirs(
@@ -91,7 +90,9 @@ describe("resolveTestDirs", () => {
   });
 
   it('clamps to "." when symlink resolves outside CWD', () => {
-    realpathSync.mockImplementation(() => "/outside/project/file.ts");
+    vi.mocked(realpathSync).mockImplementation(
+      () => "/outside/project/file.ts",
+    );
     const result = resolveTestDirs(["/project/src/link.ts"], "file", CWD, []);
     expect(result).toEqual(["."]);
   });

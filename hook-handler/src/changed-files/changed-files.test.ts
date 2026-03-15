@@ -1,17 +1,17 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs, makeEvent } from "../__test-helpers__/index";
+import "../__test-helpers__/mock-fs";
 
-const { existsSync, readFileSync } = await mockFs();
-const { extractChangedFiles } = await import("./changed-files");
+import { existsSync, readFileSync } from "node:fs";
+import { makeEvent } from "../__test-helpers__/index";
+import { extractChangedFiles } from "./changed-files";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("extractChangedFiles", () => {
   it("extracts file paths from fs_write postToolUse events in current turn", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -32,8 +32,8 @@ describe("extractChangedFiles", () => {
   });
 
   it("deduplicates repeated writes to the same file", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -51,8 +51,8 @@ describe("extractChangedFiles", () => {
   });
 
   it("ignores events from previous turns", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "first" }),
         makeEvent("postToolUse", {
@@ -72,13 +72,13 @@ describe("extractChangedFiles", () => {
   });
 
   it("returns [] for empty session log", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     expect(extractChangedFiles("/missing.jsonl")).toEqual([]);
   });
 
   it("returns [] when no fs_write events in turn", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -92,8 +92,8 @@ describe("extractChangedFiles", () => {
   });
 
   it("handles malformed log lines gracefully", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         "broken json line",

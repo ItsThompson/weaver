@@ -1,17 +1,17 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs, makeEvent } from "../__test-helpers__/index";
+import "../__test-helpers__/mock-fs";
 
-const { existsSync, readFileSync } = await mockFs();
-const { getCurrentTurnEvents } = await import("./turn-boundary");
+import { existsSync, readFileSync } from "node:fs";
+import { makeEvent } from "../__test-helpers__/index";
+import { getCurrentTurnEvents } from "./turn-boundary";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("getCurrentTurnEvents", () => {
   it("returns events after last userPromptSubmit", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("agentSpawn"),
         makeEvent("userPromptSubmit", { prompt: "first" }),
@@ -29,8 +29,8 @@ describe("getCurrentTurnEvents", () => {
   });
 
   it("returns events after last agentSpawn when no userPromptSubmit follows", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("agentSpawn"),
         makeEvent("postToolUse", { tool_name: "fs_write" }),
@@ -43,8 +43,8 @@ describe("getCurrentTurnEvents", () => {
   });
 
   it("returns all events when no boundary event exists", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("postToolUse", { tool_name: "fs_write" }),
         makeEvent("stop"),
@@ -56,19 +56,19 @@ describe("getCurrentTurnEvents", () => {
   });
 
   it("returns [] for missing log file", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     expect(getCurrentTurnEvents("/missing.jsonl")).toEqual([]);
   });
 
   it("returns [] for empty log file", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue("");
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue("");
     expect(getCurrentTurnEvents("/empty.jsonl")).toEqual([]);
   });
 
   it("skips malformed lines gracefully", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "hi" }),
         "not valid json",

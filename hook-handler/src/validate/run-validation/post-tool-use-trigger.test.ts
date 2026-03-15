@@ -1,27 +1,20 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import "../../__test-helpers__/mock-fs";
+import "../../__test-helpers__/mock-child-process";
+import "../__test-helpers__/mock-validate-deps";
+
 import type { SpawnSyncReturns } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import { appendFileSync } from "node:fs";
 import type { ValidateArgs } from "./parse-args";
-import {
-  mockFs,
-  mockChildProcess,
-  mockValidateDeps,
-} from "../../__test-helpers__/index";
+import { findNearestConfig } from "../../config/index";
+import { runPostToolUseTrigger } from "./post-tool-use-trigger";
 
-const { appendFileSync } = await mockFs();
-const { spawnSync } = await mockChildProcess();
-const { findNearestConfig: mockFindNearestConfig } =
-  await mockValidateDeps("../..");
-
-const { runPostToolUseTrigger } = await import("./post-tool-use-trigger");
-
-let mockFetch: jest.MockedFunction<typeof globalThis.fetch>;
+let mockFetch: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  mockFetch = jest
-    .fn<typeof globalThis.fetch>()
-    .mockResolvedValue(new Response());
-  globalThis.fetch = mockFetch;
+  vi.clearAllMocks();
+  mockFetch = vi.fn().mockResolvedValue(new Response());
+  globalThis.fetch = mockFetch as typeof globalThis.fetch;
 });
 
 function spawnResult(
@@ -49,12 +42,12 @@ const args: ValidateArgs = {
 
 describe("runPostToolUseTrigger", () => {
   it("exits 0 when no config found", () => {
-    mockFindNearestConfig.mockReturnValue(null);
+    vi.mocked(findNearestConfig).mockReturnValue(null);
     expect(runPostToolUseTrigger(args, "/logs/sess-1.jsonl").exitCode).toBe(0);
   });
 
   it("exits 0 when no matching hooks", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -68,7 +61,7 @@ describe("runPostToolUseTrigger", () => {
   });
 
   it("runs matching hooks with file substitution", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -82,7 +75,7 @@ describe("runPostToolUseTrigger", () => {
       },
       configRoot: "/project",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const result = runPostToolUseTrigger(args, "/logs/sess-1.jsonl");
     expect(result.exitCode).toBe(0);
@@ -93,7 +86,7 @@ describe("runPostToolUseTrigger", () => {
   });
 
   it("writes validation event after running hooks", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -103,7 +96,7 @@ describe("runPostToolUseTrigger", () => {
       },
       configRoot: "/project",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runPostToolUseTrigger(args, "/logs/sess-1.jsonl");
     expect(appendFileSync).toHaveBeenCalledWith(
@@ -113,7 +106,7 @@ describe("runPostToolUseTrigger", () => {
   });
 
   it("uses configRoot as cwd for hook execution", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -123,7 +116,7 @@ describe("runPostToolUseTrigger", () => {
       },
       configRoot: "/mono/pkg-a",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runPostToolUseTrigger(
       { ...args, toolPath: "/mono/pkg-a/src/x.ts" },
@@ -136,7 +129,7 @@ describe("runPostToolUseTrigger", () => {
   });
 
   it("falls back to args.cwd when toolPath is empty", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -146,14 +139,14 @@ describe("runPostToolUseTrigger", () => {
       },
       configRoot: "/project",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runPostToolUseTrigger({ ...args, toolPath: "" }, "/logs/sess-1.jsonl");
-    expect(mockFindNearestConfig).toHaveBeenCalledWith("/project");
+    expect(findNearestConfig).toHaveBeenCalledWith("/project");
   });
 
   it("exits 0 when no config at cwd for non-file event", () => {
-    mockFindNearestConfig.mockReturnValue(null);
+    vi.mocked(findNearestConfig).mockReturnValue(null);
     const result = runPostToolUseTrigger(
       { ...args, toolPath: "" },
       "/logs/sess-1.jsonl",

@@ -1,22 +1,13 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import "../../__test-helpers__/mock-child-process";
+import "../__test-helpers__/mock-validate-deps";
+
 import type { SpawnSyncReturns } from "node:child_process";
-import { mockChildProcess } from "../../__test-helpers__/index";
-
-const { spawnSync } = await mockChildProcess();
-
-jest.unstable_mockModule("../../scope/index", () => ({
-  resolveTestDirs: jest.fn<() => string[]>(),
-}));
-
-const scope = await import("../../scope/index");
-const mockResolveTestDirs = scope.resolveTestDirs as jest.MockedFunction<
-  typeof scope.resolveTestDirs
->;
-
-const { runStopHook } = await import("./stop-hook");
+import { spawnSync } from "node:child_process";
+import { resolveTestDirs } from "../../scope/index";
+import { runStopHook } from "./stop-hook";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 function spawnResult(
@@ -36,7 +27,7 @@ function spawnResult(
 
 describe("runStopHook", () => {
   it("substitutes {{files}} correctly", () => {
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runStopHook(
       { name: "lint", command: "eslint {{files}}" },
@@ -51,8 +42,8 @@ describe("runStopHook", () => {
   });
 
   it("substitutes {{test_dirs}} with scope-derived dirs", () => {
-    spawnSync.mockReturnValue(spawnResult());
-    mockResolveTestDirs.mockReturnValue(["src"]);
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
+    vi.mocked(resolveTestDirs).mockReturnValue(["src"]);
 
     runStopHook(
       { name: "test", command: "jest {{test_dirs}}", scope: "parent" },
@@ -60,7 +51,7 @@ describe("runStopHook", () => {
       [],
       "/project",
     );
-    expect(mockResolveTestDirs).toHaveBeenCalledWith(
+    expect(resolveTestDirs).toHaveBeenCalledWith(
       ["/project/src/a.ts"],
       "parent",
       "/project",
@@ -99,7 +90,7 @@ describe("runStopHook", () => {
   });
 
   it("skips when {{test_dirs}} empty after dedup", () => {
-    mockResolveTestDirs.mockReturnValue([]);
+    vi.mocked(resolveTestDirs).mockReturnValue([]);
 
     const result = runStopHook(
       { name: "test", command: "jest {{test_dirs}}", scope: "parent" },
@@ -112,7 +103,7 @@ describe("runStopHook", () => {
   });
 
   it("marks timed_out when process is killed", () => {
-    spawnSync.mockReturnValue(
+    vi.mocked(spawnSync).mockReturnValue(
       spawnResult({
         status: null,
         signal: "SIGTERM",
@@ -132,7 +123,9 @@ describe("runStopHook", () => {
   });
 
   it("truncates output at MAX_OUTPUT_LENGTH", () => {
-    spawnSync.mockReturnValue(spawnResult({ stdout: "x".repeat(10_000) }));
+    vi.mocked(spawnSync).mockReturnValue(
+      spawnResult({ stdout: "x".repeat(10_000) }),
+    );
 
     const result = runStopHook(
       { name: "verbose", command: "echo lots" },
@@ -144,7 +137,7 @@ describe("runStopHook", () => {
   });
 
   it("defaults hook_type to check when type is omitted", () => {
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const result = runStopHook(
       { name: "lint", command: "eslint ." },
@@ -156,7 +149,7 @@ describe("runStopHook", () => {
   });
 
   it("sets hook_type to test when type is test", () => {
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const result = runStopHook(
       { name: "test", command: "jest .", type: "test" },
@@ -168,7 +161,7 @@ describe("runStopHook", () => {
   });
 
   it("passes tailBiased true to runCommand for test hooks", () => {
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runStopHook(
       { name: "test", command: "jest .", type: "test" },

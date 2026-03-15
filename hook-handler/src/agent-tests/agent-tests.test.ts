@@ -1,8 +1,8 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs, makeEvent } from "../__test-helpers__/index";
+import "../__test-helpers__/mock-fs";
 
-const { existsSync, readFileSync } = await mockFs();
-const { extractAgentTestedDirs } = await import("./agent-tests");
+import { existsSync, readFileSync } from "node:fs";
+import { makeEvent } from "../__test-helpers__/index";
+import { extractAgentTestedDirs } from "./agent-tests";
 
 const DEFAULT_RUNNERS = [
   "jest",
@@ -17,13 +17,13 @@ const DEFAULT_RUNNERS = [
 ];
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("extractAgentTestedDirs", () => {
   it("detects npx jest with directory arg", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -39,8 +39,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects npm test as CWD", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -56,8 +56,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects vitest run with directory arg", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -73,8 +73,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects pytest with directory arg", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -90,8 +90,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects cargo test as CWD", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -107,8 +107,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects rspec with directory arg", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -124,8 +124,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("detects custom test runner from config", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -141,8 +141,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("ignores non-test execute_bash commands", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -162,8 +162,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("returns [] when no execute_bash events in turn", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -179,15 +179,15 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("returns [] when command has no parseable input", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     expect(
       extractAgentTestedDirs("/missing.jsonl", "/project", DEFAULT_RUNNERS),
     ).toEqual([]);
   });
 
   it("does not match runner embedded in another word (e.g. my-pytest-wrapper)", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -203,8 +203,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("matches runner with special characters like c++ test", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
@@ -220,8 +220,8 @@ describe("extractAgentTestedDirs", () => {
   });
 
   it("returns [] when test runners list is empty", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {

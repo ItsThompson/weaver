@@ -1,17 +1,25 @@
-import { jest } from "@jest/globals";
 import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
 import {
-  webhook,
   mockFetch,
-  mockParseLogFile,
-  mockLog,
   TEST_SESSION,
   makeEvent,
   configWith,
-  setupMocks,
-} from "./webhook-helpers.js";
+  setupWebhookTests,
+} from "./webhook-helpers";
 
-setupMocks();
+vi.mock("../../config", () => ({ readConfig: vi.fn() }));
+vi.mock("../../log-parser", () => ({
+  parseLogFile: vi.fn(),
+  deriveActivity: vi.fn(),
+}));
+vi.mock("../../../utils/logger", () => ({ log: vi.fn() }));
+
+import * as webhook from "../index";
+import { readConfig } from "../../config";
+import { parseLogFile, deriveActivity } from "../../log-parser";
+import { log } from "../../../utils/logger";
+
+setupWebhookTests(webhook, readConfig, parseLogFile, deriveActivity);
 
 describe("buildSimpleWebhookPayload", () => {
   it("formats agentSpawn", () => {
@@ -127,7 +135,7 @@ describe("dispatchWebhook", () => {
     await webhook.dispatchWebhook("https://hooks.example.com", {
       text: "test",
     });
-    expect(mockLog).toHaveBeenCalledWith(
+    expect(vi.mocked(log)).toHaveBeenCalledWith(
       expect.objectContaining({ event: "webhook_error" }),
     );
   });
@@ -136,8 +144,7 @@ describe("dispatchWebhook", () => {
 describe("handleWebhookEvent (simple)", () => {
   it("skips dispatch when webhook_url is empty", async () => {
     mockFetch.mockClear();
-    const { mockReadConfig } = await import("./webhook-helpers.js");
-    mockReadConfig.mockResolvedValue(configWith(""));
+    vi.mocked(readConfig).mockResolvedValue(configWith(""));
     await webhook.handleWebhookEvent(
       "sess-1",
       "agentSpawn",
@@ -159,7 +166,7 @@ describe("handleWebhookEvent (simple)", () => {
 
   it("skips dispatch when session webhook is disabled", async () => {
     webhook.setWebhookEnabled("sess-1", false);
-    mockParseLogFile.mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
     await webhook.handleWebhookEvent(
       "sess-1",
       "agentSpawn",
@@ -170,20 +177,19 @@ describe("handleWebhookEvent (simple)", () => {
   });
 
   it("dispatches simple format by default", async () => {
-    mockParseLogFile.mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
     await webhook.handleWebhookEvent(
       "sess-1",
       "agentSpawn",
       "my-project",
       TEST_SESSION,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = JSON.parse((mockFetch.mock.calls[0] as any)[1].body);
     expect(body).toEqual({ text: "🟢 my-project started" });
   });
 
   it("fires pending_approval after threshold", async () => {
-    mockParseLogFile.mockResolvedValue([
+    vi.mocked(parseLogFile).mockResolvedValue([
       makeEvent("userPromptSubmit", { prompt: "do it" }),
       makeEvent("preToolUse", {
         tool_name: "fs_write",
@@ -196,15 +202,14 @@ describe("handleWebhookEvent (simple)", () => {
       "my-project",
       TEST_SESSION,
     );
-    await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
+    await vi.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
     expect(mockFetch).toHaveBeenCalledTimes(2);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
     expect(body.text).toContain("⏳");
   });
 
   it("cancels pending timer on postToolUse", async () => {
-    mockParseLogFile.mockResolvedValue([
+    vi.mocked(parseLogFile).mockResolvedValue([
       makeEvent("preToolUse", { tool_name: "fs_write", tool_input: {} }),
     ]);
     await webhook.handleWebhookEvent(
@@ -213,7 +218,7 @@ describe("handleWebhookEvent (simple)", () => {
       "my-project",
       TEST_SESSION,
     );
-    mockParseLogFile.mockResolvedValue([
+    vi.mocked(parseLogFile).mockResolvedValue([
       makeEvent("postToolUse", { tool_name: "fs_write", tool_input: {} }),
     ]);
     await webhook.handleWebhookEvent(
@@ -222,12 +227,12 @@ describe("handleWebhookEvent (simple)", () => {
       "my-project",
       TEST_SESSION,
     );
-    await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
+    await vi.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 
   it("cancels pending timer on stop", async () => {
-    mockParseLogFile.mockResolvedValue([
+    vi.mocked(parseLogFile).mockResolvedValue([
       makeEvent("preToolUse", { tool_name: "fs_write", tool_input: {} }),
     ]);
     await webhook.handleWebhookEvent(
@@ -236,14 +241,14 @@ describe("handleWebhookEvent (simple)", () => {
       "my-project",
       TEST_SESSION,
     );
-    mockParseLogFile.mockResolvedValue([makeEvent("stop")]);
+    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("stop")]);
     await webhook.handleWebhookEvent(
       "sess-1",
       "stop",
       "my-project",
       TEST_SESSION,
     );
-    await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
+    await vi.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
     expect(mockFetch).toHaveBeenCalledTimes(2);
   });
 });

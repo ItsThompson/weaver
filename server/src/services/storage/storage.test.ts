@@ -1,90 +1,57 @@
-import { jest } from "@jest/globals";
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/child-process";
+import "../../__tests__/mocks/logger";
 
-// Mock fs modules before importing storage
-jest.unstable_mockModule("node:fs/promises", () => ({
-  mkdir: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readFile: jest.fn<() => Promise<string>>(),
-  writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: jest.fn<() => Promise<string[]>>(),
-  unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  stat: jest
-    .fn<() => Promise<{ mtimeMs: number }>>()
-    .mockRejectedValue(new Error("no stat mock")),
-}));
-
-jest.unstable_mockModule("node:fs", () => ({
-  existsSync: jest.fn<() => boolean>(),
-}));
-
-jest.unstable_mockModule("node:child_process", () => ({
-  execFileSync: jest.fn<() => string>(),
-}));
-
-// Silence logger in tests
-jest.unstable_mockModule("../../utils/logger", () => ({
-  log: jest.fn(),
-}));
-
-// Dynamic imports must come after all jest.unstable_mockModule calls
-const fsp = await import("node:fs/promises");
-const fs = await import("node:fs");
-const cp = await import("node:child_process");
-const storage = await import("./storage");
-
-const { mkdir, readFile, appendFile, readdir, unlink } = fsp;
-const { existsSync } = fs;
-const {
+import { mkdir, readFile, appendFile, readdir, unlink } from "node:fs/promises";
+import { existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import {
   ensureDataDir,
   readSessions,
   appendSession,
   cleanStaleSessions,
   isProcessRunning,
   _sessionCache,
-} = storage;
-
-const mockMkdir = mkdir as jest.MockedFunction<typeof mkdir>;
-const mockReadFile = readFile as jest.MockedFunction<typeof readFile>;
-const mockAppendFile = appendFile as jest.MockedFunction<typeof appendFile>;
-const mockReaddir = readdir as jest.MockedFunction<typeof readdir>;
-const mockUnlink = unlink as jest.MockedFunction<typeof unlink>;
-const mockExistsSync = existsSync as jest.MockedFunction<typeof existsSync>;
-const mockExecFileSync = cp.execFileSync as jest.MockedFunction<
-  typeof cp.execFileSync
->;
+} from "./storage";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   _sessionCache.clear();
 });
 
 describe("ensureDataDir", () => {
   it("creates data and logs directories", async () => {
     await ensureDataDir();
-    expect(mockMkdir).toHaveBeenCalledTimes(2);
-    expect(mockMkdir).toHaveBeenCalledWith(expect.stringContaining(".weaver"), {
-      recursive: true,
-    });
-    expect(mockMkdir).toHaveBeenCalledWith(expect.stringContaining("logs"), {
-      recursive: true,
-    });
+    expect(vi.mocked(mkdir)).toHaveBeenCalledTimes(2);
+    expect(vi.mocked(mkdir)).toHaveBeenCalledWith(
+      expect.stringContaining(".weaver"),
+      {
+        recursive: true,
+      },
+    );
+    expect(vi.mocked(mkdir)).toHaveBeenCalledWith(
+      expect.stringContaining("logs"),
+      {
+        recursive: true,
+      },
+    );
   });
 
   it("throws when directory creation fails", async () => {
-    mockMkdir.mockRejectedValueOnce(new Error("permission denied"));
+    vi.mocked(mkdir).mockRejectedValueOnce(new Error("permission denied"));
     await expect(ensureDataDir()).rejects.toThrow("permission denied");
   });
 });
 
 describe("readSessions", () => {
   it("returns empty array when file does not exist", async () => {
-    mockExistsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     const sessions = await readSessions();
     expect(sessions).toEqual([]);
   });
 
   it("parses JSONL into Session array", async () => {
-    mockExistsSync.mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const line1 = JSON.stringify({
       id: "a",
       pid: 1,
@@ -103,7 +70,7 @@ describe("readSessions", () => {
       startTime: "t2",
       lastEventTime: "t2",
     });
-    mockReadFile.mockResolvedValue(`${line1}\n${line2}\n`);
+    vi.mocked(readFile).mockResolvedValue(`${line1}\n${line2}\n`);
 
     const sessions = await readSessions();
     expect(sessions).toHaveLength(2);
@@ -112,7 +79,7 @@ describe("readSessions", () => {
   });
 
   it("skips malformed lines gracefully", async () => {
-    mockExistsSync.mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const valid = JSON.stringify({
       id: "a",
       pid: 1,
@@ -122,7 +89,7 @@ describe("readSessions", () => {
       startTime: "t1",
       lastEventTime: "t1",
     });
-    mockReadFile.mockResolvedValue(`${valid}\n{bad json\n`);
+    vi.mocked(readFile).mockResolvedValue(`${valid}\n{bad json\n`);
 
     const sessions = await readSessions();
     expect(sessions).toHaveLength(1);
@@ -142,7 +109,7 @@ describe("appendSession", () => {
       lastEventTime: "t1",
     };
     await appendSession(session);
-    expect(mockAppendFile).toHaveBeenCalledWith(
+    expect(vi.mocked(appendFile)).toHaveBeenCalledWith(
       expect.stringContaining("sessions.jsonl"),
       JSON.stringify(session) + "\n",
       "utf-8",
@@ -154,10 +121,12 @@ describe("cleanStaleSessions", () => {
   it("deletes marker files for dead PIDs", async () => {
     // Use a PID that is almost certainly not running
     const deadPid = 999999;
-    mockReaddir.mockResolvedValue([`.current-session-${deadPid}`] as any);
+    vi.mocked(readdir).mockResolvedValue([
+      `.current-session-${deadPid}`,
+    ] as any);
 
     await cleanStaleSessions();
-    expect(mockUnlink).toHaveBeenCalledWith(
+    expect(vi.mocked(unlink)).toHaveBeenCalledWith(
       expect.stringContaining(`.current-session-${deadPid}`),
     );
   });
@@ -165,22 +134,24 @@ describe("cleanStaleSessions", () => {
   it("leaves marker files for live PIDs", async () => {
     // Use current process PID which is guaranteed to be running and signalable
     const livePid = process.pid;
-    mockReaddir.mockResolvedValue([`.current-session-${livePid}`] as any);
-    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat\n`);
+    vi.mocked(readdir).mockResolvedValue([
+      `.current-session-${livePid}`,
+    ] as any);
+    vi.mocked(execFileSync).mockReturnValue(`/path/to/kiro-cli chat\n`);
 
     await cleanStaleSessions();
-    expect(mockUnlink).not.toHaveBeenCalled();
+    expect(vi.mocked(unlink)).not.toHaveBeenCalled();
   });
 
   it("skips files with non-numeric PID suffixes", async () => {
-    mockReaddir.mockResolvedValue([".current-session-abc"] as any);
+    vi.mocked(readdir).mockResolvedValue([".current-session-abc"] as any);
 
     await cleanStaleSessions();
-    expect(mockUnlink).not.toHaveBeenCalled();
+    expect(vi.mocked(unlink)).not.toHaveBeenCalled();
   });
 
   it("handles readdir failure gracefully", async () => {
-    mockReaddir.mockRejectedValue(new Error("no such directory"));
+    vi.mocked(readdir).mockRejectedValue(new Error("no such directory"));
 
     await expect(cleanStaleSessions()).resolves.toBeUndefined();
   });
@@ -188,7 +159,9 @@ describe("cleanStaleSessions", () => {
 
 describe("isProcessRunning", () => {
   it("returns true for a running kiro-cli process", () => {
-    mockExecFileSync.mockReturnValue(`/path/to/kiro-cli chat --agent dev\n`);
+    vi.mocked(execFileSync).mockReturnValue(
+      `/path/to/kiro-cli chat --agent dev\n`,
+    );
     expect(isProcessRunning(process.pid)).toBe(true);
   });
 
@@ -197,7 +170,7 @@ describe("isProcessRunning", () => {
   });
 
   it("returns false when PID is alive but not kiro-cli (PID reuse)", () => {
-    mockExecFileSync.mockReturnValue(`/usr/bin/some-other-process\n`);
+    vi.mocked(execFileSync).mockReturnValue(`/usr/bin/some-other-process\n`);
     expect(isProcessRunning(process.pid)).toBe(false);
   });
 });

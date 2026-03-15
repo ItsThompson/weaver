@@ -1,35 +1,29 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
+import "../../__test-helpers__/mock-fs";
+import "../../__test-helpers__/mock-child-process";
+import "../__test-helpers__/mock-validate-deps";
+
 import type { SpawnSyncReturns } from "node:child_process";
+import { spawnSync } from "node:child_process";
+import { appendFileSync, writeFileSync } from "node:fs";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
 import {
-  mockFs,
-  mockChildProcess,
-  mockValidateDeps,
-} from "../../__test-helpers__/index";
+  findNearestConfig,
+  groupFilesByConfig,
+  resolveTestRunners,
+} from "../../config/index";
+import { extractChangedFiles } from "../../changed-files/index";
+import { extractAgentTestedDirs } from "../../agent-tests/index";
+import { runValidation } from "./run-validation";
 
-const { appendFileSync, writeFileSync } = await mockFs();
-const { spawnSync } = await mockChildProcess();
-const {
-  findNearestConfig: mockFindNearestConfig,
-  groupFilesByConfig: mockGroupFilesByConfig,
-  resolveTestRunners: mockResolveTestRunners,
-  extractChangedFiles: mockExtractChangedFiles,
-  extractAgentTestedDirs: mockExtractAgentTestedDirs,
-} = await mockValidateDeps("../..");
-
-const { runValidation } = await import("./run-validation");
-
-let mockFetch: jest.MockedFunction<typeof globalThis.fetch>;
+let mockFetch: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  mockFetch = jest
-    .fn<typeof globalThis.fetch>()
-    .mockResolvedValue(new Response());
-  globalThis.fetch = mockFetch;
-  mockResolveTestRunners.mockReturnValue(["jest", "vitest", "npm test"]);
-  mockExtractAgentTestedDirs.mockReturnValue([]);
+  vi.clearAllMocks();
+  mockFetch = vi.fn().mockResolvedValue(new Response());
+  globalThis.fetch = mockFetch as typeof globalThis.fetch;
+  vi.mocked(resolveTestRunners).mockReturnValue(["jest", "vitest", "npm test"]);
+  vi.mocked(extractAgentTestedDirs).mockReturnValue([]);
 });
 
 function spawnResult(
@@ -67,19 +61,19 @@ const postToolArgs: ValidateArgs = {
 
 describe("runValidation - stop trigger", () => {
   it("exits 0 when no changed files", () => {
-    mockExtractChangedFiles.mockReturnValue([]);
+    vi.mocked(extractChangedFiles).mockReturnValue([]);
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
   it("exits 0 when no config groups found", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(new Map());
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(new Map());
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
   it("runs all hooks and collects results", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/src/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/src/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(
       makeGroups([
         [
           "/project",
@@ -97,7 +91,7 @@ describe("runValidation - stop trigger", () => {
         ],
       ]),
     );
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
     expect(spawnSync).toHaveBeenCalledTimes(2);
@@ -105,8 +99,8 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("all pass → exit 0, no pending file", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(
       makeGroups([
         [
           "/project",
@@ -119,7 +113,7 @@ describe("runValidation - stop trigger", () => {
         ],
       ]),
     );
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const result = runValidation(stopArgs);
     expect(result.exitCode).toBe(0);
@@ -127,8 +121,8 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("some fail → exit 1, pending file written, STDERR summary", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(
       makeGroups([
         [
           "/project",
@@ -147,7 +141,7 @@ describe("runValidation - stop trigger", () => {
         ],
       ]),
     );
-    spawnSync
+    vi.mocked(spawnSync)
       .mockReturnValueOnce(spawnResult({ status: 1, stderr: "type error" }))
       .mockReturnValueOnce(spawnResult())
       .mockReturnValueOnce(spawnResult({ status: 1, stderr: "test fail" }));
@@ -162,8 +156,8 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("appends validation event to session log", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(
       makeGroups([
         [
           "/project",
@@ -176,7 +170,7 @@ describe("runValidation - stop trigger", () => {
         ],
       ]),
     );
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
     expect(appendFileSync).toHaveBeenCalledWith(
@@ -186,8 +180,8 @@ describe("runValidation - stop trigger", () => {
   });
 
   it("notifies server after appending validation event", () => {
-    mockExtractChangedFiles.mockReturnValue(["/project/a.ts"]);
-    mockGroupFilesByConfig.mockReturnValue(
+    vi.mocked(extractChangedFiles).mockReturnValue(["/project/a.ts"]);
+    vi.mocked(groupFilesByConfig).mockReturnValue(
       makeGroups([
         [
           "/project",
@@ -200,7 +194,7 @@ describe("runValidation - stop trigger", () => {
         ],
       ]),
     );
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runValidation(stopArgs);
     expect(mockFetch).toHaveBeenCalledWith(
@@ -215,12 +209,12 @@ describe("runValidation - stop trigger", () => {
 
 describe("runValidation - postToolUse trigger", () => {
   it("exits 0 when no config found", () => {
-    mockFindNearestConfig.mockReturnValue(null);
+    vi.mocked(findNearestConfig).mockReturnValue(null);
     expect(runValidation(postToolArgs).exitCode).toBe(0);
   });
 
   it("exits 0 when no matching hooks", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -234,7 +228,7 @@ describe("runValidation - postToolUse trigger", () => {
   });
 
   it("matcher filters correctly", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -249,7 +243,7 @@ describe("runValidation - postToolUse trigger", () => {
       },
       configRoot: "/project",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runValidation({ ...postToolArgs, toolPath: "/project/src/a.ts" });
     expect(spawnSync).toHaveBeenCalledTimes(1);
@@ -260,7 +254,7 @@ describe("runValidation - postToolUse trigger", () => {
   });
 
   it("substitutes {{file}} from toolPath", () => {
-    mockFindNearestConfig.mockReturnValue({
+    vi.mocked(findNearestConfig).mockReturnValue({
       config: {
         validation: {
           postToolUse: [
@@ -270,7 +264,7 @@ describe("runValidation - postToolUse trigger", () => {
       },
       configRoot: "/project",
     });
-    spawnSync.mockReturnValue(spawnResult());
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     runValidation({ ...postToolArgs, toolPath: "/project/x.ts" });
     expect(spawnSync).toHaveBeenCalledWith(
@@ -282,12 +276,12 @@ describe("runValidation - postToolUse trigger", () => {
 
 describe("runValidation - no config", () => {
   it("exits 0 when no changed files for stop", () => {
-    mockExtractChangedFiles.mockReturnValue([]);
+    vi.mocked(extractChangedFiles).mockReturnValue([]);
     expect(runValidation(stopArgs).exitCode).toBe(0);
   });
 
   it("exits 0 when no config found for postToolUse", () => {
-    mockFindNearestConfig.mockReturnValue(null);
+    vi.mocked(findNearestConfig).mockReturnValue(null);
     expect(runValidation(postToolArgs).exitCode).toBe(0);
   });
 });

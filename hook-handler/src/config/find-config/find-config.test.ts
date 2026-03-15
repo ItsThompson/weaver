@@ -1,34 +1,32 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import type { WeaverProjectConfig } from "@weaver/shared/types";
-
-jest.unstable_mockModule("../project-config", () => ({
-  readProjectConfig: jest.fn<(cwd: string) => WeaverProjectConfig | null>(),
+vi.mock("../project-config", () => ({
+  readProjectConfig:
+    vi.fn<
+      (cwd: string) => import("@weaver/shared/types").WeaverProjectConfig | null
+    >(),
 }));
 
-const { readProjectConfig } = await import("../project-config");
-const mockReadProjectConfig = readProjectConfig as jest.MockedFunction<
-  typeof readProjectConfig
->;
-const { findNearestConfig, groupFilesByConfig } = await import("./find-config");
+import type { WeaverProjectConfig } from "@weaver/shared/types";
+import { readProjectConfig } from "../project-config";
+import { findNearestConfig, groupFilesByConfig } from "./find-config";
 
 const config: WeaverProjectConfig = {
   validation: { stop: [{ name: "lint", command: "eslint ." }] },
 };
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("findNearestConfig", () => {
   it("returns config when found in starting directory", () => {
-    mockReadProjectConfig.mockReturnValue(config);
+    vi.mocked(readProjectConfig).mockReturnValue(config);
     const result = findNearestConfig("/project");
     expect(result).toEqual({ config, configRoot: "/project" });
-    expect(mockReadProjectConfig).toHaveBeenCalledWith("/project");
+    expect(readProjectConfig).toHaveBeenCalledWith("/project");
   });
 
   it("walks up and returns config from ancestor", () => {
-    mockReadProjectConfig.mockImplementation((dir) =>
+    vi.mocked(readProjectConfig).mockImplementation((dir) =>
       dir === "/project" ? config : null,
     );
     const result = findNearestConfig("/project/src/deep");
@@ -36,7 +34,7 @@ describe("findNearestConfig", () => {
   });
 
   it("returns null when no config found anywhere", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+    vi.mocked(readProjectConfig).mockReturnValue(null);
     const result = findNearestConfig("/a/b/c");
     expect(result).toBeNull();
   });
@@ -50,7 +48,7 @@ describe("groupFilesByConfig", () => {
     const configB: WeaverProjectConfig = {
       validation: { stop: [{ name: "b", command: "echo b" }] },
     };
-    mockReadProjectConfig.mockImplementation((dir) => {
+    vi.mocked(readProjectConfig).mockImplementation((dir) => {
       if (dir === "/mono/pkg-a") {
         return configA;
       }
@@ -76,13 +74,13 @@ describe("groupFilesByConfig", () => {
   });
 
   it("excludes files with no config ancestor", () => {
-    mockReadProjectConfig.mockReturnValue(null);
+    vi.mocked(readProjectConfig).mockReturnValue(null);
     const groups = groupFilesByConfig(["/outside/file.ts"]);
     expect(groups.size).toBe(0);
   });
 
   it("handles mix of config and no-config files", () => {
-    mockReadProjectConfig.mockImplementation((dir) =>
+    vi.mocked(readProjectConfig).mockImplementation((dir) =>
       dir === "/project" ? config : null,
     );
     const groups = groupFilesByConfig(["/project/src/a.ts", "/outside/b.ts"]);

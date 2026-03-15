@@ -1,4 +1,3 @@
-import { describe, it, expect } from "@jest/globals";
 import { isWithinDir } from "./path-utils";
 
 describe("isWithinDir", () => {

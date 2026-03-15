@@ -1,39 +1,13 @@
-import { jest } from "@jest/globals";
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/logger";
+
 import type { HookEvent } from "@weaver/shared/types";
-
-// Mock fs modules before importing
-jest.unstable_mockModule("node:fs/promises", () => ({
-  readFile: jest.fn<() => Promise<string>>(),
-  mkdir: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  writeFile: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: jest.fn<() => Promise<string[]>>(),
-  unlink: jest.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  stat: jest
-    .fn<() => Promise<{ mtimeMs: number }>>()
-    .mockRejectedValue(new Error("no stat mock")),
-}));
-
-jest.unstable_mockModule("node:fs", () => ({
-  existsSync: jest.fn<() => boolean>(),
-}));
-
-jest.unstable_mockModule("../../utils/logger", () => ({
-  log: jest.fn(),
-}));
-
-const fs = await import("node:fs");
-const fsp = await import("node:fs/promises");
-const { parseLogFile, groupEventsByTurn, _logCache } =
-  await import("./log-parser");
-
-const mockExistsSync = fs.existsSync as jest.MockedFunction<
-  typeof fs.existsSync
->;
-const mockReadFile = fsp.readFile as jest.MockedFunction<typeof fsp.readFile>;
+import { existsSync } from "node:fs";
+import { readFile } from "node:fs/promises";
+import { parseLogFile, groupEventsByTurn, _logCache } from "./log-parser";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   _logCache.clear();
 });
 
@@ -60,23 +34,23 @@ function makeTimedEvent(
 
 describe("parseLogFile", () => {
   it("returns empty array when file does not exist", async () => {
-    mockExistsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     expect(await parseLogFile("missing")).toEqual([]);
   });
 
   it("parses valid JSONL into HookEvent array", async () => {
-    mockExistsSync.mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const event = makeEvent("agentSpawn");
-    mockReadFile.mockResolvedValue(JSON.stringify(event) + "\n");
+    vi.mocked(readFile).mockResolvedValue(JSON.stringify(event) + "\n");
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
     expect(result[0].event.hook_event_name).toBe("agentSpawn");
   });
 
   it("skips malformed lines without crashing", async () => {
-    mockExistsSync.mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     const valid = JSON.stringify(makeEvent("agentSpawn"));
-    mockReadFile.mockResolvedValue(`${valid}\n{bad json\n`);
+    vi.mocked(readFile).mockResolvedValue(`${valid}\n{bad json\n`);
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
   });

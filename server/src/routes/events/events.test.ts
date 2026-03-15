@@ -1,35 +1,16 @@
-import { jest } from "@jest/globals";
-import { mockServices } from "../../__tests__/mocks/services";
+import "../../__tests__/mocks/services";
+
 import { SESSION_A } from "../../__tests__/fixtures/sessions";
-
-mockServices();
-
-const storage = await import("../../services/storage/index");
-const eventBus = await import("../../services/event-bus");
-const webhook = await import("../../services/webhook/index");
-
-const mockReadSessions = storage.readSessions as jest.MockedFunction<
-  typeof storage.readSessions
->;
-const mockBroadcast = eventBus.broadcast as jest.MockedFunction<
-  typeof eventBus.broadcast
->;
-const mockEmit = eventBus.emit as jest.MockedFunction<typeof eventBus.emit>;
-const mockSseReply = eventBus.sseReply as jest.MockedFunction<
-  typeof eventBus.sseReply
->;
-const mockHandleWebhookEvent =
-  webhook.handleWebhookEvent as jest.MockedFunction<
-    typeof webhook.handleWebhookEvent
-  >;
-
-const { default: Fastify } = await import("fastify");
-const { registerEventRoutes } = await import("./events");
+import { readSessions } from "../../services/storage/index";
+import { broadcast, emit, sseReply } from "../../services/event-bus";
+import { handleWebhookEvent } from "../../services/webhook/index";
+import Fastify from "fastify";
+import { registerEventRoutes } from "./events";
 
 let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   server = Fastify();
   registerEventRoutes(server);
   await server.ready();
@@ -39,7 +20,7 @@ afterEach(() => server.close());
 
 describe("POST /api/notify", () => {
   it("broadcasts with enriched session name", async () => {
-    mockReadSessions.mockResolvedValue([
+    vi.mocked(readSessions).mockResolvedValue([
       { ...SESSION_A, customName: "My App" },
     ]);
 
@@ -50,12 +31,12 @@ describe("POST /api/notify", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(mockBroadcast).toHaveBeenCalledWith(
+    expect(vi.mocked(broadcast)).toHaveBeenCalledWith(
       "aaa",
       "userPromptSubmit",
       "My App",
     );
-    expect(mockHandleWebhookEvent).toHaveBeenCalled();
+    expect(vi.mocked(handleWebhookEvent)).toHaveBeenCalled();
   });
 
   it("returns 400 when sessionId missing", async () => {
@@ -71,7 +52,7 @@ describe("POST /api/notify", () => {
 
 describe("POST /api/view", () => {
   it("resolves PID to session and emits navigate", async () => {
-    mockReadSessions.mockResolvedValue([SESSION_A]);
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
 
     const res = await server.inject({
       method: "POST",
@@ -82,14 +63,14 @@ describe("POST /api/view", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.sessionId).toBe("aaa");
-    expect(mockEmit).toHaveBeenCalledWith({
+    expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "navigate",
       data: { sessionId: "aaa" },
     });
   });
 
   it("returns 404 when PID not found", async () => {
-    mockReadSessions.mockResolvedValue([]);
+    vi.mocked(readSessions).mockResolvedValue([]);
 
     const res = await server.inject({
       method: "POST",
@@ -110,7 +91,7 @@ describe("POST /api/navigate", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(mockEmit).toHaveBeenCalledWith({
+    expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "navigate",
       data: { page: "sessions" },
     });
@@ -120,6 +101,6 @@ describe("POST /api/navigate", () => {
 describe("GET /api/events", () => {
   it("delegates to sseReply", async () => {
     await server.inject({ method: "GET", url: "/api/events" });
-    expect(mockSseReply).toHaveBeenCalled();
+    expect(vi.mocked(sseReply)).toHaveBeenCalled();
   });
 });

@@ -1,12 +1,10 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs } from "../../__test-helpers__/index";
+import "../../__test-helpers__/mock-fs";
 
-const { writeFileSync } = await mockFs();
-
-const { handleExitLogic } = await import("./exit");
+import { writeFileSync } from "node:fs";
+import { handleExitLogic } from "./exit";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 const passed = {
