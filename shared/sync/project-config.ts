@@ -1,9 +1,13 @@
 import { join } from "node:path";
-import type { WeaverProjectConfig } from "@weaver/shared/types";
-import { stopHookSchema, postToolHookSchema } from "../schemas";
-import { parseValidationArray } from "../validation";
-import { readFile, parseJson, isPlainObject } from "../parsing";
+import type { WeaverProjectConfig } from "../types/validation";
+import { stopHookSchema, postToolHookSchema } from "./schemas";
+import { parseValidationArray } from "./validation";
+import { readFile, parseJson, isPlainObject } from "../utils/fs";
 
+/**
+ * Reads and parses `.weaver.json` from the given directory. Returns null if
+ * the file doesn't exist or contains invalid JSON.
+ */
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   const raw = readFile(join(cwd, ".weaver.json"));
   if (raw === null) {
@@ -12,6 +16,7 @@ export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
 
   const result = parseJson(raw);
   if (result === null) {
+    console.error("weaver: invalid JSON in .weaver.json config");
     return null;
   }
 
