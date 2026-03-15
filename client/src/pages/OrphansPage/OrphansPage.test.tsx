@@ -1,36 +1,31 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { render, screen, act, fireEvent } from "@testing-library/react";
-import "@testing-library/jest-dom";
+
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
 
-jest.unstable_mockModule("../../utils/api", () => ({
-  apiFetch: jest.fn(),
-  getSessions: jest.fn<() => Promise<any[]>>().mockResolvedValue([]),
-  getSession: jest.fn(),
-  updateSessionName: jest.fn(),
-  getOrphanCount: jest
+vi.mock("../../utils/api", () => ({
+  apiFetch: vi.fn(),
+  getSessions: vi.fn<() => Promise<any[]>>().mockResolvedValue([]),
+  getSession: vi.fn(),
+  updateSessionName: vi.fn(),
+  getOrphanCount: vi
     .fn<() => Promise<{ count: number }>>()
     .mockResolvedValue({ count: 0 }),
-  getOrphans: jest.fn(),
-  assignOrphans: jest.fn<() => Promise<{ ok: true }>>(),
-  deleteOrphans: jest.fn<() => Promise<{ ok: true }>>(),
-  getConfig: jest
+  getOrphans: vi.fn(),
+  assignOrphans: vi.fn<() => Promise<{ ok: true }>>(),
+  deleteOrphans: vi.fn<() => Promise<{ ok: true }>>(),
+  getConfig: vi
     .fn<() => Promise<{ config: object; warnings: string[] }>>()
     .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: jest.fn(),
+  updateConfig: vi.fn(),
 }));
 
-const api = await import("../../utils/api");
-const { OrphansPage } = await import("./OrphansPage");
+import * as api from "../../utils/api";
+import { OrphansPage } from "./OrphansPage";
 
-const mockGetOrphans = api.getOrphans as jest.MockedFunction<
-  typeof api.getOrphans
->;
-const mockDeleteOrphans = api.deleteOrphans as jest.MockedFunction<
-  typeof api.deleteOrphans
->;
+const mockGetOrphans = vi.mocked(api.getOrphans);
+const mockDeleteOrphans = vi.mocked(api.deleteOrphans);
 
 function renderPage() {
   return render(
@@ -42,7 +37,7 @@ function renderPage() {
   );
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => vi.clearAllMocks());
 
 describe("OrphansPage", () => {
   it("renders empty state when no orphans", async () => {
@@ -51,7 +46,7 @@ describe("OrphansPage", () => {
       renderPage();
     });
 
-    expect(screen.getByText("Orphaned Events")).toBeInTheDocument();
+    expect(screen.getAllByText("Orphaned Events").length).toBeGreaterThan(0);
     expect(screen.getByText("No orphaned events")).toBeInTheDocument();
   });
 

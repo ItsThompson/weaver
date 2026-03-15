@@ -1,34 +1,31 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { render, screen, act } from "@testing-library/react";
-import "@testing-library/jest-dom";
+
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
 import type { SessionWithStatus } from "@weaver/shared/types";
 
-jest.unstable_mockModule("../../utils/api", () => ({
-  apiFetch: jest.fn(),
-  getSessions: jest.fn(),
-  getSession: jest.fn(),
-  updateSessionName: jest.fn(),
-  getOrphanCount: jest
+vi.mock("../../utils/api", () => ({
+  apiFetch: vi.fn(),
+  getSessions: vi.fn(),
+  getSession: vi.fn(),
+  updateSessionName: vi.fn(),
+  getOrphanCount: vi
     .fn<() => Promise<{ count: number }>>()
     .mockResolvedValue({ count: 0 }),
-  getOrphans: jest.fn(),
-  assignOrphans: jest.fn(),
-  getConfig: jest
+  getOrphans: vi.fn(),
+  assignOrphans: vi.fn(),
+  getConfig: vi
     .fn<() => Promise<{ config: object; warnings: string[] }>>()
     .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: jest.fn(),
-  deleteSession: jest.fn(),
+  updateConfig: vi.fn(),
+  deleteSession: vi.fn(),
 }));
 
-const api = await import("../../utils/api");
-const { SessionsPage } = await import(".");
+import * as api from "../../utils/api";
+import { SessionsPage } from ".";
 
-const mockGetSessions = api.getSessions as jest.MockedFunction<
-  typeof api.getSessions
->;
+const mockGetSessions = vi.mocked(api.getSessions);
 
 const OPEN_SESSION: SessionWithStatus = {
   id: "open-1",
@@ -62,7 +59,7 @@ function renderPage() {
   );
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => vi.clearAllMocks());
 
 describe("SessionsPage", () => {
   it("renders header and tabs", async () => {

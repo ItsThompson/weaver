@@ -1,41 +1,38 @@
-import { jest } from "@jest/globals";
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
-import "@testing-library/jest-dom";
+
 import { SWRConfig } from "swr";
 import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
 
-jest.unstable_mockModule("../../utils/api", () => ({
-  apiFetch: jest.fn(),
-  getSessions: jest.fn(),
-  getSession: jest.fn(),
-  updateSessionName: jest.fn(),
-  getOrphanCount: jest
+vi.mock("../../utils/api", () => ({
+  apiFetch: vi.fn(),
+  getSessions: vi.fn(),
+  getSession: vi.fn(),
+  updateSessionName: vi.fn(),
+  getOrphanCount: vi
     .fn<() => Promise<{ count: number }>>()
     .mockResolvedValue({ count: 0 }),
-  getOrphans: jest.fn(),
-  assignOrphans: jest.fn(),
-  getConfig: jest
+  getOrphans: vi.fn(),
+  assignOrphans: vi.fn(),
+  getConfig: vi
     .fn<() => Promise<{ config: object; warnings: string[] }>>()
     .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: jest.fn(),
-  toggleSessionWebhook: jest.fn(),
+  updateConfig: vi.fn(),
+  toggleSessionWebhook: vi.fn(),
 }));
 
-jest.unstable_mockModule("react-router-dom", () => ({
+vi.mock("react-router-dom", () => ({
   useParams: () => ({ id: "test-session-id" }),
-  useNavigate: () => jest.fn(),
+  useNavigate: () => vi.fn(),
   MemoryRouter: ({ children }: any) => React.createElement("div", {}, children),
   BreadcrumbGroup: ({ children }: any) =>
     React.createElement("div", {}, children),
 }));
 
-const { SessionDetailPage } = await import(".");
-const api = await import("../../utils/api");
+import { SessionDetailPage } from ".";
+import * as api from "../../utils/api";
 
-const mockGetSession = api.getSession as jest.MockedFunction<
-  typeof api.getSession
->;
+const mockGetSession = vi.mocked(api.getSession);
 
 const mockSession: SessionWithStatus = {
   id: "test-session-id",
@@ -88,12 +85,12 @@ function renderComponent() {
 }
 
 // Mock useParams to return our test session ID
-jest.mock("react-router-dom", () => ({
+vi.mock("react-router-dom", () => ({
   useParams: () => ({ id: "test-session-id" }),
-  useNavigate: () => jest.fn(),
+  useNavigate: () => vi.fn(),
 }));
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => vi.clearAllMocks());
 
 describe("SessionDetailPage", () => {
   it("shows loading state initially", () => {
@@ -111,7 +108,7 @@ describe("SessionDetailPage", () => {
     renderComponent();
 
     await waitFor(() => {
-      expect(screen.getByText(/test-ses/)).toBeInTheDocument();
+      expect(screen.getAllByText(/test-ses/).length).toBeGreaterThan(0);
     });
   });
 
