@@ -1,17 +1,51 @@
-import { jest } from "@jest/globals";
 import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
-import {
-  webhook,
-  mockFetch,
-  mockReadConfig,
-  mockParseLogFile,
-  TEST_SESSION,
-  makeEvent,
-  configWith,
-  setupMocks,
-} from "./webhook-helpers.js";
+import { TEST_SESSION, makeEvent, configWith } from "./webhook-helpers";
 
-setupMocks();
+vi.mock("../../config", () => ({
+  readConfig: vi.fn(),
+}));
+vi.mock("../../log-parser", () => ({
+  parseLogFile: vi.fn(),
+  deriveActivity: vi.fn(),
+}));
+vi.mock("../../../utils/logger", () => ({ log: vi.fn() }));
+
+import * as webhook from "../index";
+import { readConfig } from "../../config";
+import { parseLogFile, deriveActivity } from "../../log-parser";
+
+const mockFetch = vi.fn<() => Promise<Response>>();
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+globalThis.fetch = mockFetch as any;
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  vi.useFakeTimers();
+  mockFetch.mockResolvedValue(new Response("ok"));
+  vi.mocked(readConfig).mockResolvedValue(
+    configWith("https://hooks.example.com", "advanced"),
+  );
+  vi.mocked(parseLogFile).mockResolvedValue([]);
+  vi.mocked(deriveActivity).mockImplementation((name: string) => {
+    if (name === "agentSpawn") {
+      return "starting";
+    }
+    if (name === "stop") {
+      return "idle";
+    }
+    if (name === "preToolUse") {
+      return "running_tool";
+    }
+    return "processing";
+  });
+  webhook.stopWebhookTimers();
+  webhook.setWebhookEnabled("sess-1", true);
+});
+
+afterEach(() => {
+  vi.useRealTimers();
+  webhook.stopWebhookTimers();
+});
 
 describe("buildWebhookPayload (advanced)", () => {
   it("returns null fields for agentSpawn", () => {
@@ -110,10 +144,7 @@ describe("buildWebhookPayload (advanced)", () => {
 
 describe("handleWebhookEvent (advanced)", () => {
   it("dispatches advanced format when configured", async () => {
-    mockReadConfig.mockResolvedValue(
-      configWith("https://hooks.example.com", "advanced"),
-    );
-    mockParseLogFile.mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
     await webhook.handleWebhookEvent(
       "sess-1",
       "agentSpawn",
@@ -127,9 +158,6 @@ describe("handleWebhookEvent (advanced)", () => {
   });
 
   it("fires pending_approval with advanced payload after threshold", async () => {
-    mockReadConfig.mockResolvedValue(
-      configWith("https://hooks.example.com", "advanced"),
-    );
     const events = [
       makeEvent("userPromptSubmit", { prompt: "do it" }),
       makeEvent("preToolUse", {
@@ -137,7 +165,7 @@ describe("handleWebhookEvent (advanced)", () => {
         tool_input: { path: "/a" },
       }),
     ];
-    mockParseLogFile.mockResolvedValue(events);
+    vi.mocked(parseLogFile).mockResolvedValue(events);
 
     await webhook.handleWebhookEvent(
       "sess-1",
@@ -145,7 +173,7 @@ describe("handleWebhookEvent (advanced)", () => {
       "my-project",
       TEST_SESSION,
     );
-    await jest.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
+    await vi.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const pendingBody = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);

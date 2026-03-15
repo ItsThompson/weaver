@@ -1,40 +1,38 @@
-import { jest } from "@jest/globals";
-
 export function mockServices() {
-  jest.unstable_mockModule("../../services/storage/index", () => ({
-    readSessions: jest.fn(),
-    writeSessions: jest.fn(),
-    isProcessRunning: jest.fn(),
-    ensureDataDir: jest.fn(),
-    appendSession: jest.fn(),
-    startStaleSessionCleanup: jest.fn(),
-    stopStaleSessionCleanup: jest.fn(),
-    cleanStaleSessions: jest.fn(),
+  vi.mock("../../services/storage/index", () => ({
+    readSessions: vi.fn(),
+    writeSessions: vi.fn(),
+    isProcessRunning: vi.fn(),
+    ensureDataDir: vi.fn(),
+    appendSession: vi.fn(),
+    startStaleSessionCleanup: vi.fn(),
+    stopStaleSessionCleanup: vi.fn(),
+    cleanStaleSessions: vi.fn(),
   }));
 
-  jest.unstable_mockModule("../../services/log-parser/index", () => ({
-    parseLogFile: jest.fn(),
-    groupEventsByTurn: jest.fn(),
-    getLastEvent: jest
+  vi.mock("../../services/log-parser/index", () => ({
+    parseLogFile: vi.fn(),
+    groupEventsByTurn: vi.fn(),
+    getLastEvent: vi
       .fn<() => Promise<{ name: string; timestamp: string } | null>>()
       .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
-    deriveActivity: jest.fn().mockReturnValue("idle"),
+    deriveActivity: vi.fn().mockReturnValue("idle"),
   }));
 
-  jest.unstable_mockModule("../../services/event-bus", () => ({
-    broadcast: jest.fn(),
-    emit: jest.fn(),
-    sseReply: jest.fn(),
+  vi.mock("../../services/event-bus", () => ({
+    broadcast: vi.fn(),
+    emit: vi.fn(),
+    sseReply: vi.fn(),
   }));
 
-  jest.unstable_mockModule("../../services/webhook/index", () => ({
-    handleWebhookEvent: jest.fn(),
-    isWebhookEnabled: jest.fn().mockReturnValue(false),
-    setWebhookEnabled: jest.fn(),
-    stopWebhookTimers: jest.fn(),
+  vi.mock("../../services/webhook/index", () => ({
+    handleWebhookEvent: vi.fn(),
+    isWebhookEnabled: vi.fn().mockReturnValue(false),
+    setWebhookEnabled: vi.fn(),
+    stopWebhookTimers: vi.fn(),
   }));
 
-  jest.unstable_mockModule("../../utils/logger", () => ({
-    log: jest.fn(),
+  vi.mock("../../utils/logger", () => ({
+    log: vi.fn(),
   }));
 }

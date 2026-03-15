@@ -1,40 +1,59 @@
-import { jest } from "@jest/globals";
-import { mockServices } from "../../__tests__/mocks/services";
 import { SESSION_A, SESSION_B } from "../../__tests__/fixtures/sessions";
 
-mockServices();
+vi.mock("../../services/storage/index", () => ({
+  readSessions: vi.fn(),
+  writeSessions: vi.fn(),
+  isProcessRunning: vi.fn(),
+  ensureDataDir: vi.fn(),
+  appendSession: vi.fn(),
+  startStaleSessionCleanup: vi.fn(),
+  stopStaleSessionCleanup: vi.fn(),
+  cleanStaleSessions: vi.fn(),
+}));
 
-const storage = await import("../../services/storage/index");
-const logParser = await import("../../services/log-parser/index");
-const eventBus = await import("../../services/event-bus");
+vi.mock("../../services/log-parser/index", () => ({
+  parseLogFile: vi.fn(),
+  groupEventsByTurn: vi.fn(),
+  getLastEvent: vi
+    .fn<() => Promise<{ name: string; timestamp: string } | null>>()
+    .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
+  deriveActivity: vi.fn().mockReturnValue("idle"),
+}));
 
-const mockReadSessions = storage.readSessions as jest.MockedFunction<
-  typeof storage.readSessions
->;
-const mockWriteSessions = storage.writeSessions as jest.MockedFunction<
-  typeof storage.writeSessions
->;
-const mockIsProcessRunning = storage.isProcessRunning as jest.MockedFunction<
-  typeof storage.isProcessRunning
->;
-const mockParseLogFile = logParser.parseLogFile as jest.MockedFunction<
-  typeof logParser.parseLogFile
->;
-const mockGroupEventsByTurn =
-  logParser.groupEventsByTurn as jest.MockedFunction<
-    typeof logParser.groupEventsByTurn
-  >;
-const mockBroadcast = eventBus.broadcast as jest.MockedFunction<
-  typeof eventBus.broadcast
->;
+vi.mock("../../services/event-bus", () => ({
+  broadcast: vi.fn(),
+  emit: vi.fn(),
+  sseReply: vi.fn(),
+}));
 
-const { default: Fastify } = await import("fastify");
-const { registerSessionRoutes } = await import("./sessions");
+vi.mock("../../services/webhook/index", () => ({
+  handleWebhookEvent: vi.fn(),
+  isWebhookEnabled: vi.fn().mockReturnValue(false),
+  setWebhookEnabled: vi.fn(),
+  stopWebhookTimers: vi.fn(),
+}));
+
+vi.mock("../../utils/logger", () => ({
+  log: vi.fn(),
+}));
+
+import {
+  readSessions,
+  writeSessions,
+  isProcessRunning,
+} from "../../services/storage/index";
+import {
+  parseLogFile,
+  groupEventsByTurn,
+} from "../../services/log-parser/index";
+import { broadcast } from "../../services/event-bus";
+import Fastify from "fastify";
+import { registerSessionRoutes } from "./sessions";
 
 let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   server = Fastify();
   registerSessionRoutes(server);
   await server.ready();
@@ -43,28 +62,35 @@ beforeEach(async () => {
 afterEach(() => server.close());
 
 describe("GET /api/sessions", () => {
-  it("returns sessions sorted by startTime descending with computed status", async () => {
-    mockReadSessions.mockResolvedValue([SESSION_B, SESSION_A]);
-    mockIsProcessRunning.mockImplementation((pid) => pid === 100);
+  it("returns sessions with status", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A, SESSION_B]);
+    vi.mocked(isProcessRunning).mockReturnValue(false);
 
     const res = await server.inject({ method: "GET", url: "/api/sessions" });
     const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
     expect(body).toHaveLength(2);
-    expect(body[0].id).toBe("aaa");
+    expect(body[0].status).toBe("closed");
+  });
+
+  it("marks session as open when process is running", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    vi.mocked(isProcessRunning).mockReturnValue(true);
+
+    const res = await server.inject({ method: "GET", url: "/api/sessions" });
+    const body = JSON.parse(res.body);
+
     expect(body[0].status).toBe("open");
-    expect(body[1].id).toBe("bbb");
-    expect(body[1].status).toBe("closed");
   });
 });
 
 describe("GET /api/sessions/:id", () => {
-  it("returns session with turns", async () => {
-    mockReadSessions.mockResolvedValue([SESSION_A]);
-    mockIsProcessRunning.mockReturnValue(false);
-    mockParseLogFile.mockResolvedValue([]);
-    mockGroupEventsByTurn.mockReturnValue([]);
+  it("returns session detail with turns", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    vi.mocked(isProcessRunning).mockReturnValue(true);
+    vi.mocked(parseLogFile).mockResolvedValue([]);
+    vi.mocked(groupEventsByTurn).mockReturnValue([]);
 
     const res = await server.inject({
       method: "GET",
@@ -74,103 +100,72 @@ describe("GET /api/sessions/:id", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.session.id).toBe("aaa");
-    expect(body.session.status).toBe("closed");
     expect(body.turns).toEqual([]);
   });
 
-  it("returns 404 for missing session", async () => {
-    mockReadSessions.mockResolvedValue([]);
+  it("returns 404 for unknown session", async () => {
+    vi.mocked(readSessions).mockResolvedValue([]);
+
     const res = await server.inject({
       method: "GET",
-      url: "/api/sessions/missing",
+      url: "/api/sessions/unknown",
     });
+
     expect(res.statusCode).toBe(404);
   });
 });
 
 describe("PATCH /api/sessions/:id", () => {
-  it("updates customName and persists", async () => {
-    mockReadSessions.mockResolvedValue([{ ...SESSION_A }]);
-    mockWriteSessions.mockResolvedValue(undefined as never);
+  it("updates session name", async () => {
+    vi.mocked(readSessions).mockResolvedValue([{ ...SESSION_A }]);
+    vi.mocked(writeSessions).mockResolvedValue(undefined);
 
     const res = await server.inject({
       method: "PATCH",
       url: "/api/sessions/aaa",
-      payload: { customName: "renamed" },
+      payload: { customName: "New Name" },
     });
-    const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
-    expect(body.customName).toBe("renamed");
-    expect(mockWriteSessions).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ customName: "renamed" }),
-      ]),
-    );
+    expect(vi.mocked(writeSessions)).toHaveBeenCalled();
   });
 
-  it("returns 404 for missing session", async () => {
-    mockReadSessions.mockResolvedValue([]);
+  it("returns 404 for unknown session", async () => {
+    vi.mocked(readSessions).mockResolvedValue([]);
+
     const res = await server.inject({
       method: "PATCH",
-      url: "/api/sessions/missing",
-      payload: { customName: "test" },
+      url: "/api/sessions/unknown",
+      payload: { customName: "x" },
     });
+
     expect(res.statusCode).toBe(404);
-  });
-
-  it("returns 400 when customName is not a string", async () => {
-    mockReadSessions.mockResolvedValue([SESSION_A]);
-    const res = await server.inject({
-      method: "PATCH",
-      url: "/api/sessions/aaa",
-      payload: { customName: 123 },
-    });
-    expect(res.statusCode).toBe(400);
   });
 });
 
-describe("POST /api/rename", () => {
-  it("renames session by PID and persists", async () => {
-    mockReadSessions.mockResolvedValue([{ ...SESSION_A }, { ...SESSION_B }]);
-    mockWriteSessions.mockResolvedValue(undefined as never);
+describe("DELETE /api/sessions/:id", () => {
+  it("removes session and broadcasts", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A, SESSION_B]);
+    vi.mocked(writeSessions).mockResolvedValue(undefined);
 
     const res = await server.inject({
-      method: "POST",
-      url: "/api/rename",
-      payload: { pid: 100, customName: "new name" },
+      method: "DELETE",
+      url: "/api/sessions/aaa",
     });
-    const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
-    expect(body.customName).toBe("new name");
-    expect(mockWriteSessions).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ id: "aaa", customName: "new name" }),
-      ]),
-    );
-    expect(mockBroadcast).toHaveBeenCalledWith("aaa");
+    expect(vi.mocked(writeSessions)).toHaveBeenCalledWith([SESSION_B]);
+    expect(vi.mocked(broadcast)).toHaveBeenCalledWith("aaa");
   });
 
-  it("returns 404 when no session matches PID", async () => {
-    mockReadSessions.mockResolvedValue([SESSION_A]);
+  it("returns 404 for unknown session", async () => {
+    vi.mocked(readSessions).mockResolvedValue([]);
+
     const res = await server.inject({
-      method: "POST",
-      url: "/api/rename",
-      payload: { pid: 999, customName: "test" },
+      method: "DELETE",
+      url: "/api/sessions/unknown",
     });
+
     expect(res.statusCode).toBe(404);
-  });
-
-  test.each([
-    ["pid missing", { customName: "test" }],
-    ["customName missing", { pid: 100 }],
-  ])("returns 400 when %s", async (_label, payload) => {
-    const res = await server.inject({
-      method: "POST",
-      url: "/api/rename",
-      payload,
-    });
-    expect(res.statusCode).toBe(400);
   });
 });

@@ -1,21 +1,20 @@
-import { jest } from "@jest/globals";
 import { subscribe, broadcast, emit, sseReply } from "./event-bus";
 import type { SSETarget } from "./event-bus";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 describe("subscribe", () => {
   it("returns an unsubscribe function", () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const unsub = subscribe(listener);
     expect(typeof unsub).toBe("function");
     unsub();
   });
 
   it("delivers messages to subscribed listeners", () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const unsub = subscribe(listener);
     emit({ event: "test", data: { a: 1 } });
     expect(listener).toHaveBeenCalledWith({ event: "test", data: { a: 1 } });
@@ -23,7 +22,7 @@ describe("subscribe", () => {
   });
 
   it("stops delivering after unsubscribe", () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const unsub = subscribe(listener);
     unsub();
     emit({ event: "test", data: {} });
@@ -33,8 +32,8 @@ describe("subscribe", () => {
 
 describe("emit", () => {
   it("fans out to all listeners", () => {
-    const a = jest.fn();
-    const b = jest.fn();
+    const a = vi.fn();
+    const b = vi.fn();
     const unsubA = subscribe(a);
     const unsubB = subscribe(b);
     emit({ event: "ping", data: { x: true } });
@@ -51,7 +50,7 @@ describe("emit", () => {
 
 describe("broadcast", () => {
   it("emits an update event with session data", () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const unsub = subscribe(listener);
     broadcast("sess-1", "agentSpawn", "my-project");
     expect(listener).toHaveBeenCalledWith({
@@ -66,7 +65,7 @@ describe("broadcast", () => {
   });
 
   it("passes undefined for optional fields when omitted", () => {
-    const listener = jest.fn();
+    const listener = vi.fn();
     const unsub = subscribe(listener);
     broadcast("sess-1");
     expect(listener).toHaveBeenCalledWith({
@@ -85,9 +84,9 @@ describe("sseReply", () => {
   function mockReply(): SSETarget {
     return {
       raw: {
-        writeHead: jest.fn(),
-        write: jest.fn<() => boolean>(),
-        on: jest.fn(),
+        writeHead: vi.fn(),
+        write: vi.fn<() => boolean>(),
+        on: vi.fn(),
       },
     };
   }
@@ -123,7 +122,7 @@ describe("sseReply", () => {
   it("unsubscribes when the connection closes", () => {
     const reply = mockReply();
     sseReply(reply);
-    const onClose = (reply.raw.on as jest.Mock).mock.calls.find(
+    const onClose = (reply.raw.on as ReturnType<typeof vi.fn>).mock.calls.find(
       (call) => call[0] === "close",
     );
     expect(onClose).toBeDefined();
