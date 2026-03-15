@@ -3,10 +3,8 @@ import type {
   SavedConversation,
   ConversationExchange,
 } from "../../../types/conversation";
-import {
-  parseConversation,
-  pruneConversation,
-} from "../../../utils/conversation-parser";
+import { parseConversation } from "../../../utils/group-exchanges";
+import { pruneConversation } from "../../../utils/prune-conversation";
 import type { PageState, CherrypickState, CherrypickActions } from "../types";
 
 function toggleId(
