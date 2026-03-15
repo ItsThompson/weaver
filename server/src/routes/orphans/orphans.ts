@@ -1,58 +1,13 @@
 import type { FastifyInstance } from "fastify";
-import { readFile, writeFile, appendFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
-import type { HookEvent, OrphanGroup, ApiError } from "@weaver/shared/types";
+import type { OrphanGroup, ApiError } from "@weaver/shared/types";
 import { readSessions, writeSessions } from "../../services/storage/index";
-import { groupEventsByTurn } from "../../services/log-parser/index";
-import { log } from "../../utils/logger";
-
-const ORPHAN_PATH = () => join(homedir(), ".weaver", "logs", "orphan.jsonl");
-const LOGS_DIR = () => join(homedir(), ".weaver", "logs");
-
-async function readOrphanEvents(): Promise<HookEvent[]> {
-  const filePath = ORPHAN_PATH();
-  if (!existsSync(filePath)) {
-    return [];
-  }
-  const content = await readFile(filePath, "utf-8");
-  return content
-    .split("\n")
-    .filter((l) => l.trim().length > 0)
-    .reduce<HookEvent[]>((events, line) => {
-      try {
-        events.push(JSON.parse(line));
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "orphan_parse_error",
-          error: String(e),
-        });
-      }
-      return events;
-    }, []);
-}
-
-function groupByPid(events: HookEvent[]): OrphanGroup[] {
-  const byPid = events.reduce((map, event) => {
-    const pid = event.pid ?? 0;
-    const group = map.get(pid) ?? [];
-    group.push(event);
-    map.set(pid, group);
-    return map;
-  }, new Map<number, HookEvent[]>());
-
-  return Array.from(byPid.entries()).map(([pid, pidEvents]) => ({
-    pid,
-    turns: groupEventsByTurn(pidEvents),
-    eventCount: pidEvents.length,
-    timeRange: {
-      start: pidEvents[0].timestamp,
-      end: pidEvents[pidEvents.length - 1].timestamp,
-    },
-  }));
-}
+import {
+  readOrphanEvents,
+  groupByPid,
+  assignOrphanEvents,
+  deleteOrphanEvents,
+  NotFoundError,
+} from "../../services/orphan-storage/index";
 
 export function registerOrphanRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { groups: OrphanGroup[] } }>("/api/orphans", async () => {
@@ -82,56 +37,14 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
       return reply.status(404).send({ error: "Target session not found" });
     }
 
-    const targetLog = join(LOGS_DIR(), `${targetSessionId}.jsonl`);
-    if (!existsSync(targetLog)) {
-      return reply.status(404).send({ error: "Target session log not found" });
+    try {
+      await assignOrphanEvents(targetSessionId, pid);
+    } catch (e) {
+      if (e instanceof NotFoundError) {
+        return reply.status(404).send({ error: e.message });
+      }
+      throw e;
     }
-
-    const filePath = ORPHAN_PATH();
-    if (!existsSync(filePath)) {
-      return reply.status(404).send({ error: "No orphan log found" });
-    }
-
-    const content = await readFile(filePath, "utf-8");
-    const lines = content.split("\n").filter((l) => l.trim().length > 0);
-
-    const { toMove, toKeep } = lines.reduce<{
-      toMove: string[];
-      toKeep: string[];
-    }>(
-      (acc, line) => {
-        try {
-          const event = JSON.parse(line) as HookEvent;
-          if ((event.pid ?? 0) === pid) {
-            const { pid: _, ...clean } = event;
-            acc.toMove.push(JSON.stringify(clean));
-          } else {
-            acc.toKeep.push(line);
-          }
-        } catch (e) {
-          log({
-            timestamp: new Date().toISOString(),
-            event: "orphan_assign_parse_error",
-            error: String(e),
-          });
-          acc.toKeep.push(line);
-        }
-        return acc;
-      },
-      { toMove: [], toKeep: [] },
-    );
-
-    if (toMove.length === 0) {
-      return reply
-        .status(404)
-        .send({ error: `No orphan events found for PID ${pid}` });
-    }
-
-    await appendFile(targetLog, toMove.join("\n") + "\n");
-    await writeFile(
-      filePath,
-      toKeep.length > 0 ? toKeep.join("\n") + "\n" : "",
-    );
 
     // Update the session's PID to the orphan group's PID since it's the current process
     if (pid !== 0 && targetSession.pid !== pid) {
@@ -143,13 +56,6 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
       }
     }
 
-    log({
-      timestamp: new Date().toISOString(),
-      event: "orphans_assigned",
-      pid,
-      targetSessionId,
-      count: toMove.length,
-    });
     return { ok: true };
   });
 
@@ -161,56 +67,15 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
         return reply.status(400).send({ error: "Invalid PID" });
       }
 
-      const filePath = ORPHAN_PATH();
-      if (!existsSync(filePath)) {
-        return reply.status(404).send({ error: "No orphan log found" });
+      try {
+        await deleteOrphanEvents(pid);
+      } catch (e) {
+        if (e instanceof NotFoundError) {
+          return reply.status(404).send({ error: e.message });
+        }
+        throw e;
       }
 
-      const content = await readFile(filePath, "utf-8");
-      const lines = content.split("\n").filter((l) => l.trim().length > 0);
-
-      const { deleted, toKeep } = lines.reduce<{
-        deleted: number;
-        toKeep: string[];
-      }>(
-        (acc, line) => {
-          try {
-            const event = JSON.parse(line) as HookEvent;
-            if ((event.pid ?? 0) === pid) {
-              acc.deleted++;
-            } else {
-              acc.toKeep.push(line);
-            }
-          } catch (e) {
-            log({
-              timestamp: new Date().toISOString(),
-              event: "orphan_delete_parse_error",
-              error: String(e),
-            });
-            acc.toKeep.push(line);
-          }
-          return acc;
-        },
-        { deleted: 0, toKeep: [] },
-      );
-
-      if (deleted === 0) {
-        return reply
-          .status(404)
-          .send({ error: `No orphan events found for PID ${pid}` });
-      }
-
-      await writeFile(
-        filePath,
-        toKeep.length > 0 ? toKeep.join("\n") + "\n" : "",
-      );
-
-      log({
-        timestamp: new Date().toISOString(),
-        event: "orphans_deleted",
-        pid,
-        count: deleted,
-      });
       return { ok: true };
     },
   );

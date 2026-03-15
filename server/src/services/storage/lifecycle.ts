@@ -1,63 +1,35 @@
-import {
-  mkdir,
-  writeFile,
-  appendFile,
-  readdir,
-  unlink,
-} from "node:fs/promises";
+import { readdir, unlink } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
 import { homedir } from "node:os";
 import type { Session } from "@weaver/shared/types";
 import { log } from "../../utils/logger";
-import { FileCache, parseJsonlFile } from "../file-cache/index";
+import { readSessions } from "./sessions";
 
 const DATA_DIR = () => join(homedir(), ".weaver");
-const LOGS_DIR = () => join(DATA_DIR(), "logs");
-const SESSIONS_FILE = () => join(DATA_DIR(), "sessions.jsonl");
 
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const PID_POLL_INTERVAL_MS = 30 * 1000;
 
-const sessionCache = new FileCache<Session[]>();
-export const _sessionCache = sessionCache;
+let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+let pidPollInterval: ReturnType<typeof setInterval> | null = null;
+const openPids = new Set<number>();
 
-export async function ensureDataDir(): Promise<void> {
+export function isProcessRunning(pid: number): boolean {
   try {
-    await mkdir(DATA_DIR(), { recursive: true });
-    await mkdir(LOGS_DIR(), { recursive: true });
-  } catch (err) {
-    log({
-      timestamp: new Date().toISOString(),
-      event: "ensure_data_dir_failed",
-      error: String(err),
-    });
-    throw err;
+    process.kill(pid, 0);
+  } catch {
+    return false;
   }
-}
-
-export async function readSessions(): Promise<Session[]> {
-  const filePath = SESSIONS_FILE();
-  return sessionCache.get(filePath, () =>
-    parseJsonlFile<Session>(filePath, (line) =>
-      log({
-        timestamp: new Date().toISOString(),
-        event: "malformed_session_line",
-        line,
-      }),
-    ),
-  );
-}
-
-export async function appendSession(session: Session): Promise<void> {
-  await appendFile(SESSIONS_FILE(), JSON.stringify(session) + "\n", "utf-8");
-  sessionCache.invalidate(SESSIONS_FILE());
-}
-
-export async function writeSessions(sessions: Session[]): Promise<void> {
-  const content = sessions.map((s) => JSON.stringify(s)).join("\n") + "\n";
-  await writeFile(SESSIONS_FILE(), content, "utf-8");
-  sessionCache.invalidate(SESSIONS_FILE());
+  // Guard against PID reuse: verify the process is actually kiro-cli
+  try {
+    const args = execFileSync("ps", ["-p", String(pid), "-o", "args="], {
+      encoding: "utf-8",
+    });
+    return args.includes("kiro-cli");
+  } catch {
+    return false;
+  }
 }
 
 export async function cleanStaleSessions(): Promise<void> {
@@ -98,27 +70,6 @@ export async function cleanStaleSessions(): Promise<void> {
     }),
   );
 }
-
-export function isProcessRunning(pid: number): boolean {
-  try {
-    process.kill(pid, 0);
-  } catch {
-    return false;
-  }
-  // Guard against PID reuse: verify the process is actually kiro-cli
-  try {
-    const args = execFileSync("ps", ["-p", String(pid), "-o", "args="], {
-      encoding: "utf-8",
-    });
-    return args.includes("kiro-cli");
-  } catch {
-    return false;
-  }
-}
-
-let cleanupInterval: ReturnType<typeof setInterval> | null = null;
-let pidPollInterval: ReturnType<typeof setInterval> | null = null;
-const openPids = new Set<number>();
 
 export function startStaleSessionCleanup(): void {
   cleanStaleSessions();

@@ -1,1 +1,1 @@
-export * from "./sessions";
+export { registerSessionRoutes } from "./sessions";

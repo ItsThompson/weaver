@@ -9,7 +9,7 @@ import type {
   SavedConversation,
   ConversationExchange,
 } from "../../../types/conversation";
-import { parseConversation } from "../../../utils/conversation-parser";
+import { parseConversation } from "../../../utils/group-exchanges";
 import { ExchangeSummaryLine } from "./ExchangeSummaryLine";
 
 interface PreviewPhaseProps {

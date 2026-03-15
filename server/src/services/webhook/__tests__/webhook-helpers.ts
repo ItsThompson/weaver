@@ -2,6 +2,13 @@ import type { HookEvent, Session } from "@weaver/shared/types";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 import type * as WebhookModule from "../index";
 
+vi.mock("../../config", () => ({ readConfig: vi.fn() }));
+vi.mock("../../log-parser", () => ({
+  parseLogFile: vi.fn(),
+  deriveActivity: vi.fn(),
+}));
+vi.mock("../../../utils/logger", () => ({ log: vi.fn() }));
+
 export const TEST_SESSION: Session = {
   id: "sess-1",
   pid: 111,
