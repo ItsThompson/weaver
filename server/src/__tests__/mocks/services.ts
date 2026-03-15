@@ -34,7 +34,7 @@ vi.mock("../../services/orphan-storage/index", () => ({
 }));
 
 vi.mock("../../services/skill-resolver/index", () => ({
-  skillNameFromPath: vi.fn((p: string) => p),
+  skillNameFromPath: vi.fn((p: string) => p.split("/").at(-2) ?? p),
   resolveConfiguredSkills: vi.fn().mockResolvedValue([]),
 }));
 

@@ -84,9 +84,7 @@ describe("GET /api/sessions/:id", () => {
     });
     const body = JSON.parse(res.body);
 
-    expect(body.activeSkills).toEqual([
-      "/home/.kiro/skills/coding-practices/SKILL.md",
-    ]);
+    expect(body.activeSkills).toEqual(["coding-practices"]);
     expect(body.configuredSkills).toEqual(["coding-practices", "testing"]);
   });
 

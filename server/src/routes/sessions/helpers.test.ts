@@ -1,18 +1,11 @@
+import "../../__tests__/mocks/services";
+
 import type { Session } from "@weaver/shared/types";
 import {
   toSessionWithStatus,
   safeActiveSkills,
   safeConfiguredSkills,
 } from "./helpers";
-
-vi.mock("../../services/log-parser/index", () => ({
-  extractActiveSkillPaths: vi.fn().mockReturnValue([]),
-}));
-
-vi.mock("../../services/skill-resolver/index", () => ({
-  skillNameFromPath: vi.fn((p: string) => p.split("/").at(-2) ?? p),
-  resolveConfiguredSkills: vi.fn().mockResolvedValue([]),
-}));
 
 import { extractActiveSkillPaths } from "../../services/log-parser/index";
 import { resolveConfiguredSkills } from "../../services/skill-resolver/index";

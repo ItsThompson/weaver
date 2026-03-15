@@ -5,13 +5,6 @@ vi.mock("../log-parser/index", () => ({
   groupEventsByTurn: vi.fn().mockReturnValue([]),
 }));
 
-vi.mock("../file-cache/index", async () => {
-  const actual = await vi.importActual<typeof import("../file-cache/index")>(
-    "../file-cache/index",
-  );
-  return actual;
-});
-
 import { readFile, writeFile, appendFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { makeOrphanEvent } from "../log-parser/test-helpers";

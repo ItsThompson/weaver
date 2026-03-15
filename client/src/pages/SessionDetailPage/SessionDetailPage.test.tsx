@@ -69,12 +69,6 @@ function renderComponent() {
   );
 }
 
-// Mock useParams to return our test session ID
-vi.mock("react-router-dom", () => ({
-  useParams: () => ({ id: "test-session-id" }),
-  useNavigate: () => vi.fn(),
-}));
-
 beforeEach(() => vi.clearAllMocks());
 
 describe("SessionDetailPage", () => {

@@ -6,13 +6,6 @@ import {
   setupWebhookTests,
 } from "./webhook-helpers";
 
-vi.mock("../../config", () => ({ readConfig: vi.fn() }));
-vi.mock("../../log-parser", () => ({
-  parseLogFile: vi.fn(),
-  deriveActivity: vi.fn(),
-}));
-vi.mock("../../../utils/logger", () => ({ log: vi.fn() }));
-
 import * as webhook from "../index";
 import { readConfig } from "../../config";
 import { parseLogFile, deriveActivity } from "../../log-parser";
