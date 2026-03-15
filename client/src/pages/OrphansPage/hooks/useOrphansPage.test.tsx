@@ -2,22 +2,7 @@ import React from "react";
 import { renderHook, act } from "@testing-library/react";
 import { SWRConfig } from "swr";
 
-vi.mock("../../../utils/api", () => ({
-  apiFetch: vi.fn(),
-  getSessions: vi.fn<() => Promise<any[]>>().mockResolvedValue([]),
-  getSession: vi.fn(),
-  updateSessionName: vi.fn(),
-  getOrphanCount: vi
-    .fn<() => Promise<{ count: number }>>()
-    .mockResolvedValue({ count: 0 }),
-  getOrphans: vi.fn(),
-  assignOrphans: vi.fn(),
-  deleteOrphans: vi.fn(),
-  getConfig: vi
-    .fn<() => Promise<{ config: object; warnings: string[] }>>()
-    .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: vi.fn(),
-}));
+import "../../../__tests__/mocks/api";
 
 import * as api from "../../../utils/api";
 import { useOrphansPage } from "./useOrphansPage";

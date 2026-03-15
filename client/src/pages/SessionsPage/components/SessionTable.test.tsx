@@ -4,21 +4,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import type { SessionWithStatus } from "@weaver/shared/types";
 
-vi.mock("../../../utils/api", () => ({
-  apiFetch: vi.fn(),
-  getSessions: vi.fn(),
-  getSession: vi.fn(),
-  updateSessionName: vi.fn(),
-  getOrphanCount: vi
-    .fn<() => Promise<{ count: number }>>()
-    .mockResolvedValue({ count: 0 }),
-  getOrphans: vi.fn(),
-  assignOrphans: vi.fn(),
-  getConfig: vi
-    .fn<() => Promise<{ config: object; warnings: string[] }>>()
-    .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: vi.fn(),
-}));
+import "../../../__tests__/mocks/api";
 
 import { SessionTable } from "./SessionTable";
 

@@ -1,25 +1,10 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 
+import "../../__tests__/mocks/api";
+
 import { SWRConfig } from "swr";
 import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
-
-vi.mock("../../utils/api", () => ({
-  apiFetch: vi.fn(),
-  getSessions: vi.fn(),
-  getSession: vi.fn(),
-  updateSessionName: vi.fn(),
-  getOrphanCount: vi
-    .fn<() => Promise<{ count: number }>>()
-    .mockResolvedValue({ count: 0 }),
-  getOrphans: vi.fn(),
-  assignOrphans: vi.fn(),
-  getConfig: vi
-    .fn<() => Promise<{ config: object; warnings: string[] }>>()
-    .mockResolvedValue({ config: {}, warnings: [] }),
-  updateConfig: vi.fn(),
-  toggleSessionWebhook: vi.fn(),
-}));
 
 vi.mock("react-router-dom", () => ({
   useParams: () => ({ id: "test-session-id" }),

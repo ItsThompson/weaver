@@ -3,19 +3,7 @@ import { renderHook, act } from "@testing-library/react";
 import { SWRConfig } from "swr";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
-vi.mock("../../../utils/api", () => ({
-  apiFetch: vi.fn(),
-  getSessions: vi.fn<() => Promise<any[]>>().mockResolvedValue([]),
-  getSession: vi.fn(),
-  updateSessionName: vi.fn(),
-  getOrphanCount: vi
-    .fn<() => Promise<{ count: number }>>()
-    .mockResolvedValue({ count: 0 }),
-  getOrphans: vi.fn(),
-  assignOrphans: vi.fn(),
-  getConfig: vi.fn(),
-  updateConfig: vi.fn<() => Promise<{ config: typeof DEFAULT_CONFIG }>>(),
-}));
+import "../../../__tests__/mocks/api";
 
 import * as api from "../../../utils/api";
 import { useSettings } from "./useSettings";
