@@ -4,34 +4,12 @@ import "../../__tests__/mocks/logger";
 import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { skillNameFromPath, resolveConfiguredSkills } from "./skill-resolver";
-import { _configCache } from "./skill-resolver";
+import { resolveConfiguredSkills } from "./resolve-configured";
+import { _configCache } from "./agent-config";
 
 beforeEach(() => {
   vi.clearAllMocks();
   _configCache.clear();
-});
-
-describe("skillNameFromPath", () => {
-  it("extracts directory name from absolute path", () => {
-    expect(
-      skillNameFromPath("/Users/me/.kiro/skills/coding-practices/SKILL.md"),
-    ).toBe("coding-practices");
-  });
-
-  it("extracts directory name from home-relative path", () => {
-    expect(
-      skillNameFromPath(
-        `${homedir()}/.config/amazonq/global/skills/typescript-standards/SKILL.md`,
-      ),
-    ).toBe("typescript-standards");
-  });
-
-  it("extracts directory name from workspace path", () => {
-    expect(skillNameFromPath("/project/.kiro/skills/my-skill/SKILL.md")).toBe(
-      "my-skill",
-    );
-  });
 });
 
 describe("resolveConfiguredSkills", () => {
@@ -101,7 +79,6 @@ describe("resolveConfiguredSkills", () => {
           path === "/project/.kiro/skills" ||
           path === `${homedir()}/.kiro/skills`
         );
-        // SKILL.md checks return false
       });
 
       vi.mocked(readdir).mockImplementation(async (dirPath) => {
@@ -194,7 +171,6 @@ describe("resolveConfiguredSkills", () => {
           path === `${homedir()}/.kiro/skills` ||
           path === `${homedir()}/.kiro/skills/global-skill/SKILL.md`
         );
-        // workspace config does NOT exist
       });
 
       vi.mocked(readFile).mockResolvedValue(JSON.stringify(agentConfig));

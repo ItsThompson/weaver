@@ -1,1 +1,2 @@
-export { skillNameFromPath, resolveConfiguredSkills } from "./skill-resolver";
+export { skillNameFromPath } from "./skill-name";
+export { resolveConfiguredSkills } from "./resolve-configured";
