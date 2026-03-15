@@ -1,11 +1,5 @@
 import { SkillCategory } from "@weaver/shared/types";
-
-const CATEGORY_COLORS: Record<SkillCategory, string> = {
-  [SkillCategory.CORE]: "#ff6b6b",
-  [SkillCategory.LANGUAGE]: "#4ecdc4",
-  [SkillCategory.DOMAIN]: "#45b7d1",
-  [SkillCategory.WORKFLOW]: "#96ceb4",
-};
+import { CATEGORY_COLORS } from "../constants";
 
 const CATEGORY_LABELS: Record<SkillCategory, string> = {
   [SkillCategory.CORE]: "Core",
@@ -22,16 +16,18 @@ export function GraphControls() {
         gap: 16,
         padding: "8px 12px",
         position: "absolute",
-        bottom: 12,
-        left: 12,
-        background: "rgba(0,0,0,0.6)",
+        top: 12,
+        right: 12,
+        background: "var(--color-background-container-content, #0f1b2a)",
+        border: "1px solid var(--color-border-divider-default, #414d5c)",
         borderRadius: 6,
         zIndex: 5,
+        fontFamily: "var(--font-family-base, 'Open Sans', sans-serif)",
       }}
     >
-      {Object.values(SkillCategory).map((cat) => (
+      {Object.values(SkillCategory).map((category) => (
         <div
-          key={cat}
+          key={category}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
           <div
@@ -39,11 +35,16 @@ export function GraphControls() {
               width: 12,
               height: 12,
               borderRadius: 2,
-              background: CATEGORY_COLORS[cat],
+              background: CATEGORY_COLORS[category],
             }}
           />
-          <span style={{ fontSize: 12, color: "#ccc" }}>
-            {CATEGORY_LABELS[cat]}
+          <span
+            style={{
+              fontSize: "var(--font-size-body-s, 12px)",
+              color: "var(--color-text-body-secondary, #8d99a8)",
+            }}
+          >
+            {CATEGORY_LABELS[category]}
           </span>
         </div>
       ))}

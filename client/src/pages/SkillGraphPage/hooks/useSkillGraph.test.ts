@@ -79,7 +79,6 @@ describe("useSkillGraph", () => {
     expect(result.current.edges[0]).toMatchObject({
       source: "typescript",
       target: "react",
-      animated: true,
     });
     expect(result.current.edges[0].markerEnd).toBeDefined();
   });

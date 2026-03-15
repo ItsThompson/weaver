@@ -1,4 +1,4 @@
-import { ReactFlow, Background, Controls } from "@xyflow/react";
+import { ReactFlow, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import Box from "@cloudscape-design/components/box";
 import Spinner from "@cloudscape-design/components/spinner";
@@ -19,10 +19,18 @@ export function SkillGraphPage() {
   }
 
   return (
-    <div style={{ height: "calc(100vh - 120px)", position: "relative" }}>
+    <div
+      style={{
+        height: "100vh",
+        position: "relative",
+      }}
+    >
       <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView>
-        <Background />
-        <Controls />
+        <Controls
+          position="bottom-right"
+          showFitView={false}
+          showInteractive={false}
+        />
       </ReactFlow>
       <GraphControls />
     </div>

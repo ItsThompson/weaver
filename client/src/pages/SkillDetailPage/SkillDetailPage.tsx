@@ -39,7 +39,9 @@ export function SkillDetailPage() {
             {String(data.frontmatter.name ?? skillName)}
           </Header>
           <Container>
-            <Markdown>{data.body}</Markdown>
+            <div style={{ overflowX: "auto" }}>
+              <Markdown>{data.body}</Markdown>
+            </div>
           </Container>
         </SpaceBetween>
       )}

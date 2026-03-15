@@ -14,10 +14,13 @@ export function useSkillGraph() {
     }
 
     const g = new dagre.graphlib.Graph().setDefaultEdgeLabel(() => ({}));
-    g.setGraph({ rankdir: "TB", ranksep: 80, nodesep: 50 });
+    g.setGraph({ rankdir: "LR", ranksep: 80, nodesep: 50 });
+
+    const nodeWidth = 200;
+    const nodeHeight = 50;
 
     for (const node of data.nodes) {
-      g.setNode(node.name, { width: 180, height: 60 });
+      g.setNode(node.name, { width: nodeWidth, height: nodeHeight });
     }
     for (const edge of data.edges) {
       g.setEdge(edge.from, edge.to);
@@ -29,7 +32,10 @@ export function useSkillGraph() {
       return {
         id: skill.name,
         type: "skill",
-        position: { x: pos.x - 90, y: pos.y - 30 },
+        position: {
+          x: pos.x - nodeWidth / 2,
+          y: pos.y - nodeHeight / 2,
+        },
         data: {
           label: skill.name,
           category: skill.category,
@@ -38,11 +44,11 @@ export function useSkillGraph() {
       };
     });
 
-    const edges: Edge[] = data.edges.map((e, i) => ({
-      id: `e-${i}`,
-      source: e.from,
-      target: e.to,
-      animated: true,
+    const edges: Edge[] = data.edges.map((edge, index) => ({
+      id: `e-${index}`,
+      source: edge.from,
+      target: edge.to,
+      style: { strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed },
     }));
 

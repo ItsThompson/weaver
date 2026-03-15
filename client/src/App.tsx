@@ -99,7 +99,9 @@ export function App() {
             <Route path="/skills/:skillName" element={<SkillDetailPage />} />
           </Routes>
         }
+        disableContentPaddings={location.pathname === "/skills"}
         toolsHide
+        maxContentWidth={Number.MAX_VALUE}
       />
       <NotificationBar />
       <CommandPalette />
