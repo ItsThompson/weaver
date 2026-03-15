@@ -45,12 +45,12 @@ export function useOrphansPage(): OrphansPageState {
   const groups = orphanData?.groups ?? [];
 
   const sessionOptions: SelectProps.Options = sessions
-    .sort((a, b) => b.startTime.localeCompare(a.startTime))
-    .map((s) => ({
-      value: s.id,
-      label: s.customName || `Session ${s.id.slice(0, 8)}`,
-      description: `${s.cwd} · PID ${s.pid}`,
-      tags: [s.status],
+    .toSorted((a, b) => b.startTime.localeCompare(a.startTime))
+    .map((session) => ({
+      value: session.id,
+      label: session.customName || `Session ${session.id.slice(0, 8)}`,
+      description: `${session.cwd} · PID ${session.pid}`,
+      tags: [session.status],
     }));
 
   const handleAssign = async (pid: number) => {

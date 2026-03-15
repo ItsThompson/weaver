@@ -49,9 +49,15 @@ export function pruneConversation(
 
   if (!isInTangent) {
     const mainExchanges = groupIntoExchanges(original.history);
-    const keptTurns = mainExchanges
-      .filter((ex) => !deleteMainIds.has(ex.id))
-      .flatMap((ex) => ex.turns);
+    const keptTurns = mainExchanges.reduce<ConversationTurn[]>(
+      (acc, exchange) => {
+        if (!deleteMainIds.has(exchange.id)) {
+          acc.push(...exchange.turns);
+        }
+        return acc;
+      },
+      [],
+    );
 
     return {
       ...original,
@@ -68,13 +74,25 @@ export function pruneConversation(
   const mainExchanges = groupIntoExchanges(mainHistory);
   const tangentExchanges = groupIntoExchanges(tangentHistory);
 
-  const keptMainTurns = mainExchanges
-    .filter((ex) => !deleteMainIds.has(ex.id))
-    .flatMap((ex) => ex.turns);
+  const keptMainTurns = mainExchanges.reduce<ConversationTurn[]>(
+    (acc, exchange) => {
+      if (!deleteMainIds.has(exchange.id)) {
+        acc.push(...exchange.turns);
+      }
+      return acc;
+    },
+    [],
+  );
 
-  const keptTangentTurns = tangentExchanges
-    .filter((ex) => !deleteTangentIds.has(ex.id))
-    .flatMap((ex) => ex.turns);
+  const keptTangentTurns = tangentExchanges.reduce<ConversationTurn[]>(
+    (acc, exchange) => {
+      if (!deleteTangentIds.has(exchange.id)) {
+        acc.push(...exchange.turns);
+      }
+      return acc;
+    },
+    [],
+  );
 
   // If all tangent exchanges deleted, remove tangent_state entirely
   const allTangentDeleted = keptTangentTurns.length === 0;

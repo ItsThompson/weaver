@@ -15,21 +15,21 @@ export async function readOrphanEvents(): Promise<HookEvent[]> {
     return [];
   }
   const content = await readFile(filePath, "utf-8");
-  return content
-    .split("\n")
-    .filter((l) => l.trim().length > 0)
-    .reduce<HookEvent[]>((events, line) => {
-      try {
-        events.push(JSON.parse(line));
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "orphan_parse_error",
-          error: String(e),
-        });
-      }
-      return events;
-    }, []);
+  return content.split("\n").flatMap((line) => {
+    if (!line.trim()) {
+      return [];
+    }
+    try {
+      return [JSON.parse(line) as HookEvent];
+    } catch (e) {
+      log({
+        timestamp: new Date().toISOString(),
+        event: "orphan_parse_error",
+        error: String(e),
+      });
+      return [];
+    }
+  });
 }
 
 export function groupByPid(events: HookEvent[]): OrphanGroup[] {
@@ -67,13 +67,16 @@ export async function assignOrphanEvents(
   }
 
   const content = await readFile(filePath, "utf-8");
-  const lines = content.split("\n").filter((l) => l.trim().length > 0);
+  const lines = content.split("\n");
 
   const { toMove, toKeep } = lines.reduce<{
     toMove: string[];
     toKeep: string[];
   }>(
     (acc, line) => {
+      if (!line.trim()) {
+        return acc;
+      }
       try {
         const event = JSON.parse(line) as HookEvent;
         if ((event.pid ?? 0) === pid) {
@@ -122,13 +125,16 @@ export async function deleteOrphanEvents(
   }
 
   const content = await readFile(filePath, "utf-8");
-  const lines = content.split("\n").filter((l) => l.trim().length > 0);
+  const lines = content.split("\n");
 
   const { deleted, toKeep } = lines.reduce<{
     deleted: number;
     toKeep: string[];
   }>(
     (acc, line) => {
+      if (!line.trim()) {
+        return acc;
+      }
       try {
         const event = JSON.parse(line) as HookEvent;
         if ((event.pid ?? 0) === pid) {

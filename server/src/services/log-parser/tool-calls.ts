@@ -16,39 +16,26 @@ export function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
       queue.push(event);
       pending.set(toolName, queue);
     } else if (name === "postToolUse") {
-      const queue = pending.get(toolName);
-      const pre = queue?.shift();
-      if (pre) {
-        pairs.push({
-          toolName,
-          input: pre.event.tool_input ?? {},
-          response: event.event.tool_response,
-          startTime: pre.timestamp,
-          endTime: event.timestamp,
-        });
-      } else {
-        // postToolUse without matching preToolUse
-        pairs.push({
-          toolName,
-          input: event.event.tool_input ?? {},
-          response: event.event.tool_response,
-          startTime: event.timestamp,
-          endTime: event.timestamp,
-        });
-      }
-    }
-  }
-
-  // Unmatched preToolUse events (no response yet)
-  for (const [toolName, queue] of pending) {
-    for (const pre of queue) {
+      const pre = pending.get(toolName)?.shift();
+      const source = pre ?? event;
       pairs.push({
         toolName,
-        input: pre.event.tool_input ?? {},
-        startTime: pre.timestamp,
+        input: source.event.tool_input ?? {},
+        response: event.event.tool_response,
+        startTime: source.timestamp,
+        endTime: event.timestamp,
       });
     }
   }
 
-  return pairs;
+  // Unmatched preToolUse events (no response yet)
+  const unmatched = [...pending.values()].flatMap((queue) =>
+    queue.map((pre) => ({
+      toolName: pre.event.tool_name!,
+      input: pre.event.tool_input ?? {},
+      startTime: pre.timestamp,
+    })),
+  );
+
+  return [...pairs, ...unmatched];
 }
