@@ -1,4 +1,4 @@
-import "../../__test-helpers__/mock-fs";
+import "./__test-helpers__/mock-fs";
 
 import { existsSync, readFileSync } from "node:fs";
 import { readProjectConfig } from "./project-config";

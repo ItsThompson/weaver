@@ -1,8 +1,8 @@
 import { join } from "node:path";
-import type { WeaverProjectConfig } from "@weaver/shared/types";
-import { stopHookSchema, postToolHookSchema } from "../schemas";
-import { parseValidationArray } from "../validation";
-import { readFile, parseJson, isPlainObject } from "../parsing";
+import type { WeaverProjectConfig } from "../types/validation";
+import { stopHookSchema, postToolHookSchema } from "./schemas";
+import { parseValidationArray } from "./validation";
+import { readFile, parseJson, isPlainObject } from "./parsing";
 
 export function readProjectConfig(cwd: string): WeaverProjectConfig | null {
   const raw = readFile(join(cwd, ".weaver.json"));

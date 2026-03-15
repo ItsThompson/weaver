@@ -1,1 +1,1 @@
-export { readProjectConfig } from "./project-config";
+export { readProjectConfig } from "@weaver/shared/sync";
