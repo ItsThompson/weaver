@@ -104,6 +104,8 @@ describe("SessionDetailPage", () => {
       session: mockSession,
       turns: mockTurns,
       webhookEnabled: false,
+      activeSkills: [],
+      configuredSkills: [],
     });
     renderComponent();
 
@@ -126,6 +128,8 @@ describe("SessionDetailPage", () => {
       session: mockSession,
       turns: mockTurns,
       webhookEnabled: false,
+      activeSkills: [],
+      configuredSkills: [],
     });
     renderComponent();
 
@@ -139,6 +143,8 @@ describe("SessionDetailPage", () => {
       session: mockSession,
       turns: mockTurns,
       webhookEnabled: false,
+      activeSkills: [],
+      configuredSkills: [],
     });
     renderComponent();
 
@@ -173,6 +179,8 @@ describe("SessionDetailPage", () => {
       session: mockSession,
       turns: turnsWithValidation,
       webhookEnabled: false,
+      activeSkills: [],
+      configuredSkills: [],
     });
     renderComponent();
 
@@ -186,6 +194,8 @@ describe("SessionDetailPage", () => {
       session: mockSession,
       turns: mockTurns,
       webhookEnabled: false,
+      activeSkills: [],
+      configuredSkills: [],
     });
     renderComponent();
 

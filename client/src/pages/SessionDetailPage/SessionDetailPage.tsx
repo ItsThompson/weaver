@@ -12,6 +12,7 @@ import { useSessionQuery } from "../../hooks/queries";
 import { ActivityIndicator } from "../../components/ActivityIndicator";
 import { SessionActions } from "./components/SessionActions";
 import { TurnContainer } from "./components/TurnContainer";
+import { SkillTags } from "./components/SkillTags";
 
 export function SessionDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -23,6 +24,8 @@ export function SessionDetailPage() {
   const session = data?.session ?? null;
   const turns = data?.turns ?? [];
   const webhookEnabled = data?.webhookEnabled ?? false;
+  const activeSkills = data?.activeSkills ?? [];
+  const configuredSkills = data?.configuredSkills ?? [];
 
   const handleRename = async (name: string) => {
     if (!id || !data) {
@@ -118,6 +121,10 @@ export function SessionDetailPage() {
           >
             {displayName}
           </Header>
+          <SkillTags
+            activeSkills={activeSkills}
+            configuredSkills={configuredSkills}
+          />
           <Box fontSize="body-s" color="text-body-secondary">
             Assistant responses are not available in this view. Use{" "}
             <a href="/cherrypick">Cherrypick</a> to export and analyze full
