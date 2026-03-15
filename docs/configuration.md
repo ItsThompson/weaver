@@ -6,6 +6,8 @@ Weaver uses two configuration files: a global user config and per-project valida
 
 Controls dashboard behavior, appearance, and integrations. Changes can be made through the Settings page in the dashboard, the CLI, or by editing the file directly.
 
+Changes made via the Settings page or CLI take effect immediately. If you edit the file directly while the app is running, changes are picked up the next time the dashboard refreshes (e.g. switching tabs or pages). You do not need to restart the app.
+
 | Option                       | Type                     | Default     | Description                                                  |
 | ---------------------------- | ------------------------ | ----------- | ------------------------------------------------------------ |
 | `enable_notification_sounds` | `boolean`                | `true`      | Play sounds on session events                                |

@@ -292,3 +292,9 @@ When validation failures are injected into the LLM's next prompt, they look like
 - Only one pending file exists per session. Consecutive failures without a prompt in between overwrite the previous results.
 - Failed commands are not retried.
 - Agent test deduplication is heuristic: unusual test invocations may not be recognized. When in doubt, Weaver runs the validation.
+
+## Fix-validation prompt
+
+A reusable `@fix-validation` prompt is available for instructing the LLM to read the injected validation errors and fix them. After seeing validation failures in a session, type `@fix-validation` to have the agent address the issues.
+
+See [setup guide](../setup.md) for installation instructions.

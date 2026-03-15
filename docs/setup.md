@@ -9,15 +9,21 @@
 
 ## Installation
 
+### Option 1: From source
+
 ```bash
 git clone <repo-url>
 cd weaver
 npm install
 ```
 
+### Option 2: Download a release
+
+Download the latest `.dmg` from the [releases page](releases-url) and install the app. You still need to set up the hook scripts and CLI symlink below.
+
 ## Running Weaver
 
-Start the desktop app:
+If you installed from source:
 
 ```bash
 npm run app
@@ -28,6 +34,8 @@ Or run in the browser for development (hot reload):
 ```bash
 npm run dev
 ```
+
+If you installed from a release, launch the Weaver app from your Applications folder.
 
 The dashboard is available at `http://localhost:8143` when running.
 
