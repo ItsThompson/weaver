@@ -28,13 +28,13 @@ function applyPatches(
       return changed;
     }
 
-    return (hooks[hookKey] as unknown[]).reduce((acc, entry) => {
+    return (hooks[hookKey] as unknown[]).reduce<boolean>((acc, entry) => {
       if (!isWeaverHook(entry) || entry.timeout_ms === timeout) {
         return acc;
       }
       entry.timeout_ms = timeout;
       return true;
-    }, changed as boolean);
+    }, changed);
   }, false);
 }
 
