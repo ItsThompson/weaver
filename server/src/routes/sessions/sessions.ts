@@ -3,12 +3,8 @@ import type {
   Session,
   SessionWithStatus,
   TurnGroup,
-  ActivityStatus,
   ApiError,
 } from "@weaver/shared/types";
-import { unlink } from "node:fs/promises";
-import { join } from "node:path";
-import { homedir } from "node:os";
 import {
   readSessions,
   writeSessions,
@@ -19,44 +15,18 @@ import {
   groupEventsByTurn,
   getLastEvent,
   deriveActivity,
-  extractActiveSkillPaths,
 } from "../../services/log-parser/index";
-import {
-  skillNameFromPath,
-  resolveConfiguredSkills,
-} from "../../services/skill-resolver/index";
 import { broadcast } from "../../services/event-bus";
-import { log } from "../../utils/logger";
 import {
   isWebhookEnabled,
   setWebhookEnabled,
 } from "../../services/webhook/index";
-
-function toSessionWithStatus(
-  session: Session,
-  isOpen: boolean,
-  activity?: ActivityStatus,
-): SessionWithStatus {
-  return { ...session, status: isOpen ? "open" : "closed", activity };
-}
-
-function safeActiveSkills(
-  events: Parameters<typeof extractActiveSkillPaths>[0],
-): string[] {
-  try {
-    return extractActiveSkillPaths(events).map(skillNameFromPath);
-  } catch {
-    return [];
-  }
-}
-
-async function safeConfiguredSkills(session: Session): Promise<string[]> {
-  try {
-    return await resolveConfiguredSkills(session.agentName, session.cwd);
-  } catch {
-    return [];
-  }
-}
+import {
+  toSessionWithStatus,
+  safeActiveSkills,
+  safeConfiguredSkills,
+} from "./helpers";
+import { registerDeleteRoute } from "./delete";
 
 export function registerSessionRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SessionWithStatus[] }>("/api/sessions", async () => {
@@ -181,49 +151,5 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     return { ok: true as const, enabled };
   });
 
-  server.delete<{ Params: { id: string }; Reply: { ok: true } | ApiError }>(
-    "/api/sessions/:id",
-    async (request, reply) => {
-      const { id } = request.params;
-      const sessions = await readSessions();
-      const index = sessions.findIndex((s) => s.id === id);
-      if (index === -1) {
-        return reply.status(404).send({ error: "Session not found" });
-      }
-
-      const session = sessions[index];
-      const dataDir = join(homedir(), ".weaver");
-
-      // Remove log file
-      try {
-        await unlink(join(dataDir, "logs", `${id}.jsonl`));
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "session_delete_log_error",
-          sessionId: id,
-          error: String(e),
-        });
-      }
-
-      // Remove session marker if present
-      try {
-        await unlink(join(dataDir, `.current-session-${session.pid}`));
-      } catch (e) {
-        log({
-          timestamp: new Date().toISOString(),
-          event: "session_delete_marker_error",
-          sessionId: id,
-          error: String(e),
-        });
-      }
-
-      // Remove from sessions index
-      sessions.splice(index, 1);
-      await writeSessions(sessions);
-      broadcast(id);
-
-      return { ok: true as const };
-    },
-  );
+  registerDeleteRoute(server);
 }
