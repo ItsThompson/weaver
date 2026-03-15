@@ -1,26 +1,21 @@
-import { jest } from "@jest/globals";
-
-jest.unstable_mockModule("./utils", () => ({
-  post: jest.fn(),
-  get: jest.fn(),
-  patch: jest.fn(),
+vi.mock("./utils", () => ({
+  post: vi.fn(),
+  get: vi.fn(),
+  patch: vi.fn(),
 }));
 
-const { post, get, patch } = await import("./utils.js");
-const { view } = await import("./commands/view.js");
-const { session } = await import("./commands/session.js");
-const { rename } = await import("./commands/rename.js");
-const { toggle } = await import("./commands/toggle.js");
-const { config } = await import("./commands/config.js");
+import { post, get, patch } from "./utils.js";
+import { view } from "./commands/view.js";
+import { session } from "./commands/session.js";
+import { rename } from "./commands/rename.js";
+import { toggle } from "./commands/toggle.js";
+import { config } from "./commands/config.js";
 
-const mockPost = post as jest.MockedFunction<typeof post>;
-const mockGet = get as jest.MockedFunction<typeof get>;
-const mockPatch = patch as jest.MockedFunction<typeof patch>;
-let logSpy: jest.SpiedFunction<typeof console.log>;
+let logSpy: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+  vi.clearAllMocks();
+  logSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 });
 
 afterEach(() => logSpy.mockRestore());
@@ -32,9 +27,9 @@ describe("view", () => {
     [0, false, "Weaver server not running"],
     [500, false, "Weaver server error (500)"],
   ])('status %i → "%s"', (status, ok, expected) => {
-    mockPost.mockReturnValue({ ok, status, data: null });
+    vi.mocked(post).mockReturnValue({ ok, status, data: null });
     view(12345, []);
-    expect(mockPost).toHaveBeenCalledWith("/api/view", { pid: 12345 });
+    expect(vi.mocked(post)).toHaveBeenCalledWith("/api/view", { pid: 12345 });
     expect(logSpy).toHaveBeenCalledWith(expected);
   });
 });
@@ -45,16 +40,16 @@ describe("session", () => {
       [[], "Opening sessions list in Weaver dashboard"],
       [["list"], "Opening sessions list in Weaver dashboard"],
     ])("navigates to sessions list with args %j", (args, expected) => {
-      mockPost.mockReturnValue({ ok: true, status: 200, data: null });
+      vi.mocked(post).mockReturnValue({ ok: true, status: 200, data: null });
       session(12345, args);
-      expect(mockPost).toHaveBeenCalledWith("/api/navigate", {
+      expect(vi.mocked(post)).toHaveBeenCalledWith("/api/navigate", {
         page: "sessions",
       });
       expect(logSpy).toHaveBeenCalledWith(expected);
     });
 
     it("prints server not running when status is 0", () => {
-      mockPost.mockReturnValue({ ok: false, status: 0, data: null });
+      vi.mocked(post).mockReturnValue({ ok: false, status: 0, data: null });
       session(12345, []);
       expect(logSpy).toHaveBeenCalledWith("Weaver server not running");
     });
@@ -66,10 +61,12 @@ describe("session", () => {
       [404, false, "No session found for PID 67890"],
       [0, false, "Weaver server not running"],
     ])('status %i → "%s"', (status, ok, expected) => {
-      mockPost.mockReturnValue({ ok, status, data: null });
+      vi.mocked(post).mockReturnValue({ ok, status, data: null });
       session(12345, ["67890"]);
       if (status === 200) {
-        expect(mockPost).toHaveBeenCalledWith("/api/view", { pid: 67890 });
+        expect(vi.mocked(post)).toHaveBeenCalledWith("/api/view", {
+          pid: 67890,
+        });
       }
       expect(logSpy).toHaveBeenCalledWith(expected);
     });
@@ -83,9 +80,9 @@ describe("rename", () => {
     [0, false, "Weaver server not running"],
     [500, false, "Weaver server error (500)"],
   ])('status %i → "%s"', (status, ok, expected) => {
-    mockPost.mockReturnValue({ ok, status, data: null });
+    vi.mocked(post).mockReturnValue({ ok, status, data: null });
     rename(12345, ["my", "feature"]);
-    expect(mockPost).toHaveBeenCalledWith("/api/rename", {
+    expect(vi.mocked(post)).toHaveBeenCalledWith("/api/rename", {
       pid: 12345,
       customName: "my feature",
     });
@@ -93,8 +90,8 @@ describe("rename", () => {
   });
 
   it("exits with error when no name provided", () => {
-    const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    const exitSpy = jest
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const exitSpy = vi
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
     rename(12345, []);
@@ -111,9 +108,9 @@ describe("toggle", () => {
     [0, false, "Weaver server not running"],
     [500, false, "Weaver server error (500)"],
   ])('status %i → "%s"', (status, ok, expected) => {
-    mockPost.mockReturnValue({ ok, status, data: null });
+    vi.mocked(post).mockReturnValue({ ok, status, data: null });
     toggle(12345, []);
-    expect(mockPost).toHaveBeenCalledWith("/api/navigate", {
+    expect(vi.mocked(post)).toHaveBeenCalledWith("/api/navigate", {
       page: "toggle",
       pid: 12345,
     });
@@ -122,12 +119,12 @@ describe("toggle", () => {
 });
 
 describe("config", () => {
-  let errorSpy: jest.SpiedFunction<typeof console.error>;
-  let exitSpy: jest.SpiedFunction<typeof process.exit>;
+  let errorSpy: ReturnType<typeof vi.spyOn>;
+  let exitSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
-    errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-    exitSpy = jest
+    errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    exitSpy = vi
       .spyOn(process, "exit")
       .mockImplementation(() => undefined as never);
   });
@@ -138,12 +135,12 @@ describe("config", () => {
   });
 
   it("toggles ghost_mode via GET then PATCH", () => {
-    mockGet.mockReturnValue({
+    vi.mocked(get).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { ghost_mode: false } },
     });
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { ghost_mode: true } },
@@ -151,13 +148,15 @@ describe("config", () => {
 
     config(123, ["ghost"]);
 
-    expect(mockGet).toHaveBeenCalledWith("/api/config");
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", { ghost_mode: true });
+    expect(vi.mocked(get)).toHaveBeenCalledWith("/api/config");
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
+      ghost_mode: true,
+    });
     expect(logSpy).toHaveBeenCalledWith("ghost: on");
   });
 
   it("sets ghost_mode on without GET", () => {
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { ghost_mode: true } },
@@ -165,13 +164,15 @@ describe("config", () => {
 
     config(123, ["ghost", "on"]);
 
-    expect(mockGet).not.toHaveBeenCalled();
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", { ghost_mode: true });
+    expect(vi.mocked(get)).not.toHaveBeenCalled();
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
+      ghost_mode: true,
+    });
     expect(logSpy).toHaveBeenCalledWith("ghost: on");
   });
 
   it("sets ghost_mode off without GET", () => {
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { ghost_mode: false } },
@@ -179,19 +180,19 @@ describe("config", () => {
 
     config(123, ["ghost", "off"]);
 
-    expect(mockGet).not.toHaveBeenCalled();
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", {
+    expect(vi.mocked(get)).not.toHaveBeenCalled();
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
       ghost_mode: false,
     });
     expect(logSpy).toHaveBeenCalledWith("ghost: off");
   });
 
   it("sets ghost opacity", () => {
-    mockPatch.mockReturnValue({ ok: true, status: 200, data: null });
+    vi.mocked(patch).mockReturnValue({ ok: true, status: 200, data: null });
 
     config(123, ["ghost", "opacity", "0.7"]);
 
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", {
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
       ghost_opacity: 0.7,
     });
     expect(logSpy).toHaveBeenCalledWith("ghost opacity: 0.7");
@@ -216,12 +217,12 @@ describe("config", () => {
   });
 
   it("toggles dark_mode", () => {
-    mockGet.mockReturnValue({
+    vi.mocked(get).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { dark_mode: true } },
     });
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { dark_mode: false } },
@@ -229,12 +230,14 @@ describe("config", () => {
 
     config(123, ["dark"]);
 
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", { dark_mode: false });
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
+      dark_mode: false,
+    });
     expect(logSpy).toHaveBeenCalledWith("dark: off");
   });
 
   it("sets sounds on explicitly", () => {
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: true,
       status: 200,
       data: { config: { enable_notification_sounds: true } },
@@ -242,14 +245,14 @@ describe("config", () => {
 
     config(123, ["sounds", "on"]);
 
-    expect(mockPatch).toHaveBeenCalledWith("/api/config", {
+    expect(vi.mocked(patch)).toHaveBeenCalledWith("/api/config", {
       enable_notification_sounds: true,
     });
     expect(logSpy).toHaveBeenCalledWith("enable notification sounds: on");
   });
 
   it("prints server not running when GET returns status 0", () => {
-    mockGet.mockReturnValue({ ok: false, status: 0, data: null });
+    vi.mocked(get).mockReturnValue({ ok: false, status: 0, data: null });
 
     config(123, ["ghost"]);
 
@@ -257,7 +260,7 @@ describe("config", () => {
   });
 
   it("prints server not running when PATCH returns status 0", () => {
-    mockPatch.mockReturnValue({ ok: false, status: 0, data: null });
+    vi.mocked(patch).mockReturnValue({ ok: false, status: 0, data: null });
 
     config(123, ["ghost", "on"]);
 
@@ -265,7 +268,7 @@ describe("config", () => {
   });
 
   it("prints validation error on 422", () => {
-    mockPatch.mockReturnValue({
+    vi.mocked(patch).mockReturnValue({
       ok: false,
       status: 422,
       data: { error: "ghost_mode must be a boolean" },
