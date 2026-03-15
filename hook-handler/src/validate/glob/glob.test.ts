@@ -1,4 +1,3 @@
-import { describe, it, expect } from "@jest/globals";
 import { matchesExtensionGlob } from "./glob";
 
 const files = ["/a.ts", "/b.tsx", "/c.py", "/d.md", "/e.ts"];

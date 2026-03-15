@@ -1,18 +1,22 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs } from "../../__test-helpers__/index";
+vi.mock("node:fs", () => ({
+  existsSync: vi.fn<() => boolean>(),
+  readFileSync: vi.fn<() => string>(),
+  writeFileSync: vi.fn(),
+  appendFileSync: vi.fn(),
+  mkdirSync: vi.fn(),
+  unlinkSync: vi.fn(),
+  realpathSync: vi.fn<(p: string) => string>(),
+}));
 
-const { appendFileSync, mkdirSync } = await mockFs();
+import { appendFileSync, mkdirSync } from "node:fs";
+import { writeValidationEvent } from "./logging";
 
-const { writeValidationEvent } = await import("./logging");
-
-let mockFetch: jest.MockedFunction<typeof globalThis.fetch>;
+let mockFetch: ReturnType<typeof vi.fn>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  mockFetch = jest
-    .fn<typeof globalThis.fetch>()
-    .mockResolvedValue(new Response());
-  globalThis.fetch = mockFetch;
+  vi.clearAllMocks();
+  mockFetch = vi.fn().mockResolvedValue(new Response());
+  globalThis.fetch = mockFetch as typeof globalThis.fetch;
 });
 
 const result = {
@@ -49,7 +53,7 @@ describe("writeValidationEvent", () => {
       [],
       ["src"],
     );
-    const written = (appendFileSync as jest.Mock).mock.calls[0][1] as string;
+    const written = vi.mocked(appendFileSync).mock.calls[0][1] as string;
     const parsed = JSON.parse(written);
     expect(parsed.event.trigger).toBe("postToolUse");
     expect(parsed.event.changed_files).toEqual([]);
@@ -75,7 +79,7 @@ describe("writeValidationEvent", () => {
   });
 
   it("does not throw when appendFileSync fails", () => {
-    appendFileSync.mockImplementation(() => {
+    vi.mocked(appendFileSync).mockImplementation(() => {
       throw new Error("disk full");
     });
     expect(() =>

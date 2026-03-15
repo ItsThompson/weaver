@@ -1,21 +1,21 @@
-import {
-  jest,
-  describe,
-  it,
-  expect,
-  beforeEach,
-  afterEach,
-} from "@jest/globals";
-import { mockFs } from "../../__test-helpers__/index";
+vi.mock("node:fs", () => ({
+  existsSync: vi.fn<() => boolean>(),
+  readFileSync: vi.fn<() => string>(),
+  writeFileSync: vi.fn(),
+  appendFileSync: vi.fn(),
+  mkdirSync: vi.fn(),
+  unlinkSync: vi.fn(),
+  realpathSync: vi.fn<(p: string) => string>(),
+}));
 
-const { existsSync, readFileSync } = await mockFs();
-const { readProjectConfig } = await import("./project-config");
+import { existsSync, readFileSync } from "node:fs";
+import { readProjectConfig } from "./project-config";
 
-let stderrSpy: jest.SpiedFunction<typeof console.error>;
+let stderrSpy: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
-  jest.clearAllMocks();
-  stderrSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+  vi.clearAllMocks();
+  stderrSpy = vi.spyOn(console, "error").mockImplementation(() => {});
 });
 
 afterEach(() => {
@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe("readProjectConfig", () => {
   it("returns null when .weaver.json file does not exist", () => {
-    existsSync.mockReturnValue(false);
+    vi.mocked(existsSync).mockReturnValue(false);
     expect(readProjectConfig("/project")).toBeNull();
   });
 
@@ -43,14 +43,14 @@ describe("readProjectConfig", () => {
         ],
       },
     };
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(JSON.stringify(config));
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(JSON.stringify(config));
     expect(readProjectConfig("/project")).toEqual(config);
   });
 
   it("returns null and warns on invalid JSON", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue("not json{");
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue("not json{");
     expect(readProjectConfig("/project")).toBeNull();
     expect(stderrSpy).toHaveBeenCalledWith(
       expect.stringContaining("invalid JSON"),
@@ -58,20 +58,20 @@ describe("readProjectConfig", () => {
   });
 
   it("returns config with empty validation object", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(JSON.stringify({ validation: {} }));
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(JSON.stringify({ validation: {} }));
     expect(readProjectConfig("/project")).toEqual({ validation: {} });
   });
 
   it("returns config without validation key", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(JSON.stringify({}));
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(JSON.stringify({}));
     expect(readProjectConfig("/project")).toEqual({});
   });
 
   it("filters out stop hook missing name", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         validation: {
           stop: [{ command: "echo hi" }, { name: "ok", command: "echo ok" }],
@@ -88,8 +88,8 @@ describe("readProjectConfig", () => {
   });
 
   it("filters out stop hook missing command", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         validation: { stop: [{ name: "bad" }] },
       }),
@@ -99,8 +99,8 @@ describe("readProjectConfig", () => {
   });
 
   it("filters out postToolUse hook missing matcher", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         validation: { postToolUse: [{ name: "fmt", command: "echo" }] },
       }),
@@ -118,8 +118,8 @@ describe("readProjectConfig", () => {
       working_dir: "src",
       timeout_ms: 5000,
     };
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ validation: { stop: [hook] } }),
     );
     const result = readProjectConfig("/project");
@@ -127,8 +127,8 @@ describe("readProjectConfig", () => {
   });
 
   it("parses test_runners from project config", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ validation: { test_runners: ["rspec", "mix test"] } }),
     );
     const result = readProjectConfig("/project");
@@ -136,8 +136,8 @@ describe("readProjectConfig", () => {
   });
 
   it("filters non-string test_runners entries", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ validation: { test_runners: ["jest", 42, null] } }),
     );
     const result = readProjectConfig("/project");
@@ -145,12 +145,12 @@ describe("readProjectConfig", () => {
   });
 
   it("returns null and warns when top-level value is not an object", () => {
-    existsSync.mockReturnValue(true);
+    vi.mocked(existsSync).mockReturnValue(true);
     for (const value of ['"hello"', "42", "null", "[1,2]"]) {
-      jest.clearAllMocks();
-      stderrSpy = jest.spyOn(console, "error").mockImplementation(() => {});
-      existsSync.mockReturnValue(true);
-      readFileSync.mockReturnValue(value);
+      vi.clearAllMocks();
+      stderrSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+      vi.mocked(existsSync).mockReturnValue(true);
+      vi.mocked(readFileSync).mockReturnValue(value);
       expect(readProjectConfig("/project")).toBeNull();
       expect(stderrSpy).toHaveBeenCalledWith(
         expect.stringContaining("must be a JSON object"),
@@ -159,8 +159,10 @@ describe("readProjectConfig", () => {
   });
 
   it("returns {} and warns when validation is not an object", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(JSON.stringify({ validation: "bad" }));
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
+      JSON.stringify({ validation: "bad" }),
+    );
     expect(readProjectConfig("/project")).toEqual({});
     expect(stderrSpy).toHaveBeenCalledWith(
       expect.stringContaining("validation must be an object"),
@@ -168,8 +170,8 @@ describe("readProjectConfig", () => {
   });
 
   it("warns and skips when validation.stop is not an array", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ validation: { stop: "bad" } }),
     );
     const result = readProjectConfig("/project");
@@ -180,8 +182,8 @@ describe("readProjectConfig", () => {
   });
 
   it("warns and skips when validation.postToolUse is not an array", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({ validation: { postToolUse: 42 } }),
     );
     const result = readProjectConfig("/project");
@@ -192,8 +194,8 @@ describe("readProjectConfig", () => {
   });
 
   it("filters out stop hook with invalid scope type", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         validation: {
           stop: [
@@ -213,8 +215,8 @@ describe("readProjectConfig", () => {
   });
 
   it("filters out stop hook with invalid timeout_ms type", () => {
-    existsSync.mockReturnValue(true);
-    readFileSync.mockReturnValue(
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
       JSON.stringify({
         validation: {
           stop: [{ name: "bad-timeout", command: "echo", timeout_ms: "30000" }],

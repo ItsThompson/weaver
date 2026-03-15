@@ -1,4 +1,3 @@
-import { describe, it, expect } from "@jest/globals";
 import { formatPendingOutput } from "./formatting";
 
 describe("formatPendingOutput", () => {

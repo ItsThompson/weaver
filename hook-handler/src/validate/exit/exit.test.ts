@@ -1,12 +1,18 @@
-import { jest, describe, it, expect, beforeEach } from "@jest/globals";
-import { mockFs } from "../../__test-helpers__/index";
+vi.mock("node:fs", () => ({
+  existsSync: vi.fn<() => boolean>(),
+  readFileSync: vi.fn<() => string>(),
+  writeFileSync: vi.fn(),
+  appendFileSync: vi.fn(),
+  mkdirSync: vi.fn(),
+  unlinkSync: vi.fn(),
+  realpathSync: vi.fn<(p: string) => string>(),
+}));
 
-const { writeFileSync } = await mockFs();
-
-const { handleExitLogic } = await import("./exit");
+import { writeFileSync } from "node:fs";
+import { handleExitLogic } from "./exit";
 
 beforeEach(() => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
 });
 
 const passed = {
