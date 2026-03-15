@@ -2,6 +2,7 @@ import SpaceBetween from "@cloudscape-design/components/space-between";
 import Badge from "@cloudscape-design/components/badge";
 import Box from "@cloudscape-design/components/box";
 import ExpandableSection from "@cloudscape-design/components/expandable-section";
+import { Link } from "react-router-dom";
 
 interface SkillTagsProps {
   activeSkills: string[];
@@ -22,9 +23,13 @@ export function SkillTags({ activeSkills, configuredSkills }: SkillTagsProps) {
         {activeSkills.length > 0 ? (
           <SpaceBetween direction="horizontal" size="xs">
             {activeSkills.map((skill) => (
-              <Badge key={skill} color="blue">
-                {skill}
-              </Badge>
+              <Link
+                key={skill}
+                to={`/skills/${skill}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Badge color="blue">{skill}</Badge>
+              </Link>
             ))}
           </SpaceBetween>
         ) : (
@@ -41,9 +46,13 @@ export function SkillTags({ activeSkills, configuredSkills }: SkillTagsProps) {
         >
           <SpaceBetween direction="horizontal" size="xs">
             {configuredSkills.map((skill) => (
-              <Badge key={skill} color="grey">
-                {skill}
-              </Badge>
+              <Link
+                key={skill}
+                to={`/skills/${skill}`}
+                style={{ textDecoration: "none" }}
+              >
+                <Badge color="grey">{skill}</Badge>
+              </Link>
             ))}
           </SpaceBetween>
         </ExpandableSection>
