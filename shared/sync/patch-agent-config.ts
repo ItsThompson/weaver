@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { isPlainObject } from "./parsing";
+import { isPlainObject } from "../utils/fs";
 import { WEAVER_LOG_HOOK } from "../types/validation";
 import type { SyncResult, TimeoutPatch } from "./types";
 

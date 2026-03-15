@@ -18,3 +18,12 @@ export function readFile(configPath: string): string | null {
     return null;
   }
 }
+
+/** Parses a JSON string. Returns null on parse failure. */
+export function parseJson(raw: string): { value: unknown } | null {
+  try {
+    return { value: JSON.parse(raw) };
+  } catch {
+    return null;
+  }
+}
