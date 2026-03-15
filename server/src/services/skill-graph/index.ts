@@ -1,1 +1,2 @@
-export { buildSkillGraph, getSkillDetail } from "./build-graph";
+export { buildSkillGraph } from "./build-graph";
+export { getSkillDetail } from "./get-skill-detail";

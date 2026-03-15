@@ -31,7 +31,8 @@ describe("GET /api/skills", () => {
     vi.mocked(buildSkillGraph).mockResolvedValue({
       nodes: [
         {
-          name: "skill-a",
+          id: "skill-a",
+          name: "Skill A",
           description: "desc",
           category: "core" as SkillCategory,
           source: "workspace",

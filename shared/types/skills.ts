@@ -6,6 +6,7 @@ export enum SkillCategory {
 }
 
 export interface SkillNode {
+  id: string;
   name: string;
   description: string;
   category: SkillCategory;

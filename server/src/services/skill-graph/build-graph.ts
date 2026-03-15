@@ -1,30 +1,6 @@
-import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-import type {
-  SkillGraph,
-  SkillNode,
-  SkillEdge,
-  SkillDetail,
-} from "@weaver/shared/types";
-import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
-import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
-import { FileCache } from "../file-cache/file-cache";
-import { parseSkillFile } from "./parse-skill";
+import type { SkillGraph, SkillNode, SkillEdge } from "@weaver/shared/types";
 import { categorizeSkill } from "./category";
-import { log } from "../../utils/logger";
-
-interface ParsedSkill {
-  frontmatter: Record<string, unknown>;
-  body: string;
-}
-
-interface SkillEntry {
-  name: string;
-  source: "workspace" | "global";
-  parsed: ParsedSkill;
-}
-
-const skillCache = new FileCache<ParsedSkill>();
+import { discoverSkills } from "./discover";
 
 function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -42,50 +18,8 @@ function findReferences(body: string, knownNames: string[]): string[] {
   return [...new Set([...body.matchAll(pattern)].map((match) => match[1]))];
 }
 
-async function discoverSkills(cwd: string): Promise<SkillEntry[]> {
-  const searchPaths = kiroSearchPaths(cwd, "skills");
-
-  const pathResults = await Promise.all(
-    searchPaths.map(async (dirPath, index) => {
-      const source: "workspace" | "global" =
-        index === 0 ? "workspace" : "global";
-      const names = await listSkillDirNames(dirPath);
-
-      const entries = await Promise.all(
-        names.map(async (name): Promise<SkillEntry | null> => {
-          const skillPath = join(dirPath, name, "SKILL.md");
-          try {
-            const parsed = await skillCache.get(skillPath, async () => {
-              const content = await readFile(skillPath, "utf-8");
-              return parseSkillFile(content);
-            });
-            return { name, source, parsed };
-          } catch (error) {
-            log({
-              timestamp: new Date().toISOString(),
-              event: "skill_parse_error",
-              skill: name,
-              path: skillPath,
-              error: String(error),
-            });
-            return null;
-          }
-        }),
-      );
-
-      return entries.filter((entry): entry is SkillEntry => entry !== null);
-    }),
-  );
-
-  // Flatten with workspace precedence: first occurrence wins.
-  const seen = new Set<string>();
-  return pathResults.flat().reduce<SkillEntry[]>((acc, entry) => {
-    if (!seen.has(entry.name)) {
-      seen.add(entry.name);
-      acc.push(entry);
-    }
-    return acc;
-  }, []);
+function extractFrontmatterString(value: unknown, fallback: string): string {
+  return typeof value === "string" ? value : fallback;
 }
 
 export async function buildSkillGraph(cwd: string): Promise<SkillGraph> {
@@ -110,32 +44,12 @@ export async function buildSkillGraph(cwd: string): Promise<SkillGraph> {
   });
 
   const nodes: SkillNode[] = skills.map((skill) => ({
-    name: (skill.parsed.frontmatter.name as string) ?? skill.name,
+    id: skill.name,
+    name: extractFrontmatterString(skill.parsed.frontmatter.name, skill.name),
     description: String(skill.parsed.frontmatter.description ?? ""),
     category: categorizeSkill(skill.name, edgeCounts.get(skill.name)!),
     source: skill.source,
   }));
 
   return { nodes, edges };
-}
-
-export async function getSkillDetail(
-  skillName: string,
-  cwd: string,
-): Promise<SkillDetail | null> {
-  const searchPaths = kiroSearchPaths(cwd, "skills");
-
-  for (const dirPath of searchPaths) {
-    const skillPath = join(dirPath, skillName, "SKILL.md");
-    try {
-      return await skillCache.get(skillPath, async () => {
-        const content = await readFile(skillPath, "utf-8");
-        return parseSkillFile(content);
-      });
-    } catch {
-      continue;
-    }
-  }
-
-  return null;
 }

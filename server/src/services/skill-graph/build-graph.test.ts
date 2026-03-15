@@ -22,10 +22,10 @@ vi.mock("../../utils/logger", () => ({
 import { readFile } from "node:fs/promises";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
-import { buildSkillGraph, getSkillDetail } from "./build-graph";
+import { buildSkillGraph } from "./build-graph";
 
 const SKILL_A = `---
-name: skill-a
+name: Skill A
 description: Skill A description
 ---
 Body of skill A with \`skill-b\` reference.`;
@@ -45,7 +45,7 @@ beforeEach(() => {
 });
 
 describe("buildSkillGraph", () => {
-  it("builds nodes from skill directories", async () => {
+  it("builds nodes with stable id and display name from frontmatter", async () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce([]);
@@ -55,13 +55,31 @@ describe("buildSkillGraph", () => {
 
     expect(graph.nodes).toHaveLength(1);
     expect(graph.nodes[0]).toMatchObject({
-      name: "skill-a",
+      id: "skill-a",
+      name: "Skill A",
       description: "Skill A description",
       source: "workspace",
     });
   });
 
-  it("detects backtick-wrapped references as edges", async () => {
+  it("falls back to directory name when frontmatter name is not a string", async () => {
+    const skillWithNumericName = `---
+name: 42
+description: bad name
+---
+Body.`;
+    vi.mocked(listSkillDirNames)
+      .mockResolvedValueOnce(["my-skill"])
+      .mockResolvedValueOnce([]);
+    vi.mocked(readFile).mockResolvedValue(skillWithNumericName);
+
+    const graph = await buildSkillGraph("/workspace");
+
+    expect(graph.nodes[0].id).toBe("my-skill");
+    expect(graph.nodes[0].name).toBe("my-skill");
+  });
+
+  it("detects backtick-wrapped references as edges using directory names", async () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a", "skill-b"])
       .mockResolvedValueOnce([]);
@@ -111,26 +129,5 @@ describe("buildSkillGraph", () => {
 
     expect(graph.nodes).toEqual([]);
     expect(graph.edges).toEqual([]);
-  });
-});
-
-describe("getSkillDetail", () => {
-  it("returns parsed frontmatter and body for existing skill", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_A);
-
-    const detail = await getSkillDetail("skill-a", "/workspace");
-
-    expect(detail).toEqual({
-      frontmatter: { name: "skill-a", description: "Skill A description" },
-      body: expect.stringContaining("Body of skill A"),
-    });
-  });
-
-  it("returns null for nonexistent skill", async () => {
-    vi.mocked(readFile).mockRejectedValue(new Error("ENOENT"));
-
-    const detail = await getSkillDetail("nonexistent", "/workspace");
-
-    expect(detail).toBeNull();
   });
 });
