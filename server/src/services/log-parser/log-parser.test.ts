@@ -4,7 +4,12 @@ import "../../__tests__/mocks/logger";
 import type { HookEvent } from "@weaver/shared/types";
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
-import { parseLogFile, groupEventsByTurn, _logCache } from "./log-parser";
+import {
+  parseLogFile,
+  groupEventsByTurn,
+  extractActiveSkillPaths,
+  _logCache,
+} from "./log-parser";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -265,5 +270,115 @@ describe("groupEventsByTurn", () => {
     ];
     const turns = groupEventsByTurn(events);
     expect(turns[0].validationResults).toEqual([]);
+  });
+});
+
+describe("extractActiveSkillPaths", () => {
+  it("extracts skill paths from postToolUse fs_read events", () => {
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: {
+          operations: [
+            {
+              path: "/Users/me/.config/amazonq/global/skills/coding-practices/SKILL.md",
+            },
+          ],
+        },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([
+      "/Users/me/.config/amazonq/global/skills/coding-practices/SKILL.md",
+    ]);
+  });
+
+  it("ignores non-skill fs_read paths", () => {
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: {
+          operations: [{ path: "/Users/me/project/src/index.ts" }],
+        },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([]);
+  });
+
+  it("ignores preToolUse events", () => {
+    const events: HookEvent[] = [
+      makeEvent("preToolUse", {
+        tool_name: "fs_read",
+        tool_input: {
+          operations: [{ path: "/Users/me/.kiro/skills/testing/SKILL.md" }],
+        },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([]);
+  });
+
+  it("ignores non-fs_read tool events", () => {
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "grep",
+        tool_input: { pattern: "skills" },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([]);
+  });
+
+  it("deduplicates paths", () => {
+    const skillPath = "/Users/me/.kiro/skills/coding-practices/SKILL.md";
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: { operations: [{ path: skillPath }] },
+      }),
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: { operations: [{ path: skillPath }] },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([skillPath]);
+  });
+
+  it("handles multiple operations in a single event", () => {
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: {
+          operations: [
+            { path: "/Users/me/.kiro/skills/coding-practices/SKILL.md" },
+            { path: "/Users/me/project/src/index.ts" },
+            { path: "/Users/me/.kiro/skills/testing/SKILL.md" },
+          ],
+        },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([
+      "/Users/me/.kiro/skills/coding-practices/SKILL.md",
+      "/Users/me/.kiro/skills/testing/SKILL.md",
+    ]);
+  });
+
+  it("returns empty array for empty events", () => {
+    expect(extractActiveSkillPaths([])).toEqual([]);
+  });
+
+  it("handles malformed tool_input gracefully", () => {
+    const events: HookEvent[] = [
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: { operations: "not-an-array" },
+      }),
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: null,
+      }),
+      makeEvent("postToolUse", {
+        tool_name: "fs_read",
+        tool_input: { operations: [{ noPath: true }] },
+      }),
+    ];
+    expect(extractActiveSkillPaths(events)).toEqual([]);
   });
 });

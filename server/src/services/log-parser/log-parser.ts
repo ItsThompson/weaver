@@ -141,6 +141,31 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   return turns;
 }
 
+export function extractActiveSkillPaths(events: HookEvent[]): string[] {
+  const paths = new Set<string>();
+
+  events.forEach((event) => {
+    const { hook_event_name, tool_name, tool_input } = event.event;
+    if (hook_event_name !== "postToolUse" || tool_name !== "fs_read") {
+      return;
+    }
+
+    const operations = (tool_input as { operations?: Array<{ path?: string }> })
+      ?.operations;
+    if (!Array.isArray(operations)) {
+      return;
+    }
+
+    operations.forEach((op) => {
+      if (op.path?.includes("/skills/") && op.path.endsWith("SKILL.md")) {
+        paths.add(op.path);
+      }
+    });
+  });
+
+  return [...paths];
+}
+
 function matchToolCalls(events: HookEvent[]): ToolCallPair[] {
   const pairs: ToolCallPair[] = [];
   const pending = new Map<string, HookEvent[]>();
