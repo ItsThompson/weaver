@@ -34,6 +34,8 @@ export const getSession = (id: string) =>
     session: SessionWithStatus;
     turns: TurnGroup[];
     webhookEnabled: boolean;
+    activeSkills: string[];
+    configuredSkills: string[];
   }>(`/sessions/${id}`);
 
 export const toggleSessionWebhook = (id: string, enabled: boolean) =>
