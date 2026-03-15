@@ -25,8 +25,8 @@ export async function loadAgentConfig(
         return result;
       }
       try {
-        return await configCache.get(configPath, async () =>
-          JSON.parse(await readFile(configPath, "utf-8")),
+        return await configCache.get(configPath, () =>
+          readFile(configPath, "utf-8").then((content) => JSON.parse(content)),
         );
       } catch {
         return null;
