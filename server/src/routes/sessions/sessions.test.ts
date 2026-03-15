@@ -62,33 +62,26 @@ beforeEach(async () => {
 afterEach(() => server.close());
 
 describe("GET /api/sessions", () => {
-  it("returns sessions with status", async () => {
-    vi.mocked(readSessions).mockResolvedValue([SESSION_A, SESSION_B]);
-    vi.mocked(isProcessRunning).mockReturnValue(false);
+  it("returns sessions sorted by startTime descending with computed status", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_B, SESSION_A]);
+    vi.mocked(isProcessRunning).mockImplementation((pid) => pid === 100);
 
     const res = await server.inject({ method: "GET", url: "/api/sessions" });
     const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
     expect(body).toHaveLength(2);
-    expect(body[0].status).toBe("closed");
-  });
-
-  it("marks session as open when process is running", async () => {
-    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(true);
-
-    const res = await server.inject({ method: "GET", url: "/api/sessions" });
-    const body = JSON.parse(res.body);
-
+    expect(body[0].id).toBe("aaa");
     expect(body[0].status).toBe("open");
+    expect(body[1].id).toBe("bbb");
+    expect(body[1].status).toBe("closed");
   });
 });
 
 describe("GET /api/sessions/:id", () => {
-  it("returns session detail with turns", async () => {
+  it("returns session with turns", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(true);
+    vi.mocked(isProcessRunning).mockReturnValue(false);
     vi.mocked(parseLogFile).mockResolvedValue([]);
     vi.mocked(groupEventsByTurn).mockReturnValue([]);
 
@@ -100,6 +93,7 @@ describe("GET /api/sessions/:id", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.session.id).toBe("aaa");
+    expect(body.session.status).toBe("closed");
     expect(body.turns).toEqual([]);
   });
 
@@ -116,18 +110,24 @@ describe("GET /api/sessions/:id", () => {
 });
 
 describe("PATCH /api/sessions/:id", () => {
-  it("updates session name", async () => {
+  it("updates customName and persists", async () => {
     vi.mocked(readSessions).mockResolvedValue([{ ...SESSION_A }]);
     vi.mocked(writeSessions).mockResolvedValue(undefined);
 
     const res = await server.inject({
       method: "PATCH",
       url: "/api/sessions/aaa",
-      payload: { customName: "New Name" },
+      payload: { customName: "renamed" },
     });
+    const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
-    expect(vi.mocked(writeSessions)).toHaveBeenCalled();
+    expect(body.customName).toBe("renamed");
+    expect(vi.mocked(writeSessions)).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ customName: "renamed" }),
+      ]),
+    );
   });
 
   it("returns 404 for unknown session", async () => {
@@ -141,31 +141,62 @@ describe("PATCH /api/sessions/:id", () => {
 
     expect(res.statusCode).toBe(404);
   });
+
+  it("returns 400 when customName is not a string", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    const res = await server.inject({
+      method: "PATCH",
+      url: "/api/sessions/aaa",
+      payload: { customName: 123 },
+    });
+    expect(res.statusCode).toBe(400);
+  });
 });
 
-describe("DELETE /api/sessions/:id", () => {
-  it("removes session and broadcasts", async () => {
-    vi.mocked(readSessions).mockResolvedValue([SESSION_A, SESSION_B]);
+describe("POST /api/rename", () => {
+  it("renames session by PID and persists", async () => {
+    vi.mocked(readSessions).mockResolvedValue([
+      { ...SESSION_A },
+      { ...SESSION_B },
+    ]);
     vi.mocked(writeSessions).mockResolvedValue(undefined);
 
     const res = await server.inject({
-      method: "DELETE",
-      url: "/api/sessions/aaa",
+      method: "POST",
+      url: "/api/rename",
+      payload: { pid: 100, customName: "new name" },
     });
+    const body = JSON.parse(res.body);
 
     expect(res.statusCode).toBe(200);
-    expect(vi.mocked(writeSessions)).toHaveBeenCalledWith([SESSION_B]);
+    expect(body.customName).toBe("new name");
+    expect(vi.mocked(writeSessions)).toHaveBeenCalledWith(
+      expect.arrayContaining([
+        expect.objectContaining({ id: "aaa", customName: "new name" }),
+      ]),
+    );
     expect(vi.mocked(broadcast)).toHaveBeenCalledWith("aaa");
   });
 
-  it("returns 404 for unknown session", async () => {
-    vi.mocked(readSessions).mockResolvedValue([]);
-
+  it("returns 404 when no session matches PID", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
     const res = await server.inject({
-      method: "DELETE",
-      url: "/api/sessions/unknown",
+      method: "POST",
+      url: "/api/rename",
+      payload: { pid: 999, customName: "test" },
     });
-
     expect(res.statusCode).toBe(404);
+  });
+
+  test.each([
+    ["pid missing", { customName: "test" }],
+    ["customName missing", { pid: 100 }],
+  ])("returns 400 when %s", async (_label, payload) => {
+    const res = await server.inject({
+      method: "POST",
+      url: "/api/rename",
+      payload,
+    });
+    expect(res.statusCode).toBe(400);
   });
 });

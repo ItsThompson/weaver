@@ -1,38 +1,6 @@
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn<() => boolean>(),
-  readFileSync: vi.fn<() => string>(),
-  writeFileSync: vi.fn(),
-  appendFileSync: vi.fn(),
-  mkdirSync: vi.fn(),
-  unlinkSync: vi.fn(),
-  realpathSync: vi.fn<(p: string) => string>(),
-}));
-
-vi.mock("node:child_process", () => ({
-  spawnSync:
-    vi.fn<
-      () => Partial<import("node:child_process").SpawnSyncReturns<string>>
-    >(),
-}));
-
-vi.mock("../../config/index", () => ({
-  readProjectConfig: vi.fn(),
-  resolveTestRunners: vi.fn<() => string[]>(),
-  findNearestConfig: vi.fn(),
-  groupFilesByConfig: vi.fn(),
-}));
-
-vi.mock("../../changed-files/index", () => ({
-  extractChangedFiles: vi.fn<() => string[]>(),
-}));
-
-vi.mock("../../agent-tests/index", () => ({
-  extractAgentTestedDirs: vi.fn<() => string[]>(),
-}));
-
-vi.mock("../../scope/index", () => ({
-  resolveTestDirs: vi.fn<() => string[]>(),
-}));
+import "../../__test-helpers__/mock-fs";
+import "../../__test-helpers__/mock-child-process";
+import "../__test-helpers__/mock-validate-deps";
 
 import type { SpawnSyncReturns } from "node:child_process";
 import { spawnSync } from "node:child_process";

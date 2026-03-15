@@ -1,9 +1,4 @@
-vi.mock("node:child_process", () => ({
-  spawnSync:
-    vi.fn<
-      () => Partial<import("node:child_process").SpawnSyncReturns<string>>
-    >(),
-}));
+import "../../__test-helpers__/mock-child-process";
 
 import type { SpawnSyncReturns } from "node:child_process";
 import { spawnSync } from "node:child_process";

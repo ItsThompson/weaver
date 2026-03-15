@@ -1,13 +1,5 @@
-vi.mock("node:child_process", () => ({
-  spawnSync:
-    vi.fn<
-      () => Partial<import("node:child_process").SpawnSyncReturns<string>>
-    >(),
-}));
-
-vi.mock("../../scope/index", () => ({
-  resolveTestDirs: vi.fn<() => string[]>(),
-}));
+import "../../__test-helpers__/mock-child-process";
+import "../__test-helpers__/mock-validate-deps";
 
 import type { SpawnSyncReturns } from "node:child_process";
 import { spawnSync } from "node:child_process";
