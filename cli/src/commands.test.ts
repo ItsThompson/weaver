@@ -8,14 +8,14 @@ vi.mock("@weaver/shared/sync", () => ({
   syncAgentTimeouts: vi.fn(),
 }));
 
-import { post, get, patch } from "./utils.js";
+import { post, get, patch } from "./utils";
 import { syncAgentTimeouts } from "@weaver/shared/sync";
-import { view } from "./commands/view.js";
-import { session } from "./commands/session.js";
-import { rename } from "./commands/rename.js";
-import { toggle } from "./commands/toggle.js";
-import { config } from "./commands/config.js";
-import { sync } from "./commands/sync.js";
+import { view } from "./commands/view";
+import { session } from "./commands/session";
+import { rename } from "./commands/rename";
+import { toggle } from "./commands/toggle";
+import { config } from "./commands/config";
+import { sync } from "./commands/sync";
 
 let logSpy: ReturnType<typeof vi.spyOn>;
 

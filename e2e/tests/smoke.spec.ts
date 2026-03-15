@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 
 test.describe("smoke", () => {
   test("app launches and has a window", async ({ page }) => {

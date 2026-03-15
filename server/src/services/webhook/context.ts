@@ -1,5 +1,5 @@
 import type { HookEvent } from "@weaver/shared/types";
-import type { EventContext } from "./types.js";
+import type { EventContext } from "./types";
 
 export function extractContext(
   eventName: string,

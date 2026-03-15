@@ -1,10 +1,10 @@
 #!/usr/bin/env node
-import { view } from "./commands/view.js";
-import { session } from "./commands/session.js";
-import { rename } from "./commands/rename.js";
-import { toggle } from "./commands/toggle.js";
-import { config } from "./commands/config.js";
-import { sync } from "./commands/sync.js";
+import { view } from "./commands/view";
+import { session } from "./commands/session";
+import { rename } from "./commands/rename";
+import { toggle } from "./commands/toggle";
+import { config } from "./commands/config";
+import { sync } from "./commands/sync";
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);

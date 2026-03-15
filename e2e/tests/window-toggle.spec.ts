@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 
 test.describe("window toggle", () => {
   test("window starts visible", async ({ electronApp, page }) => {

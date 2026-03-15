@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 

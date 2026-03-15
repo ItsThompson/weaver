@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 
