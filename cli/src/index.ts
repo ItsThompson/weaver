@@ -4,6 +4,7 @@ import { session } from "./commands/session.js";
 import { rename } from "./commands/rename.js";
 import { toggle } from "./commands/toggle.js";
 import { config } from "./commands/config.js";
+import { sync } from "./commands/sync.js";
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -16,6 +17,7 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   rename,
   toggle,
   config,
+  sync,
 };
 
 if (!command || command === "--help" || command === "-h") {
@@ -31,7 +33,8 @@ Commands:
   config ghost      Toggle ghost mode (or: on | off)
   config ghost opacity <0-1>  Set ghost opacity
   config dark       Toggle dark mode (or: on | off)
-  config sounds     Toggle notification sounds (or: on | off)`);
+  config sounds     Toggle notification sounds (or: on | off)
+  sync [--dry-run]  Sync .weaver validation timeouts to .kiro/agents/ configs`);
   process.exit(0);
 }
 

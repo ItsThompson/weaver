@@ -4,12 +4,18 @@ vi.mock("./utils", () => ({
   patch: vi.fn(),
 }));
 
+vi.mock("@weaver/shared/sync", () => ({
+  syncAgentTimeouts: vi.fn(),
+}));
+
 import { post, get, patch } from "./utils.js";
+import { syncAgentTimeouts } from "@weaver/shared/sync";
 import { view } from "./commands/view.js";
 import { session } from "./commands/session.js";
 import { rename } from "./commands/rename.js";
 import { toggle } from "./commands/toggle.js";
 import { config } from "./commands/config.js";
+import { sync } from "./commands/sync.js";
 
 let logSpy: ReturnType<typeof vi.spyOn>;
 
@@ -306,5 +312,65 @@ describe("config", () => {
       'Unknown modifier: maybe. Use "on" or "off".',
     );
     expect(exitSpy).toHaveBeenCalledWith(1);
+  });
+});
+
+describe("sync", () => {
+  it("logs patched files", () => {
+    vi.mocked(syncAgentTimeouts).mockReturnValue({
+      patched: ["/project/.kiro/agents/agent.json"],
+      skipped: [],
+      errors: [],
+    });
+
+    sync(123, []);
+
+    expect(syncAgentTimeouts).toHaveBeenCalledWith(process.cwd(), {
+      dryRun: false,
+    });
+    expect(logSpy).toHaveBeenCalledWith(
+      "patched: /project/.kiro/agents/agent.json",
+    );
+  });
+
+  it("logs 'already in sync' when no changes", () => {
+    vi.mocked(syncAgentTimeouts).mockReturnValue({
+      patched: [],
+      skipped: ["/project/.kiro/agents/agent.json"],
+      errors: [],
+    });
+
+    sync(123, []);
+
+    expect(logSpy).toHaveBeenCalledWith("All agent configs already in sync");
+  });
+
+  it("logs errors", () => {
+    vi.mocked(syncAgentTimeouts).mockReturnValue({
+      patched: [],
+      skipped: [],
+      errors: ["bad.json: invalid JSON"],
+    });
+
+    sync(123, []);
+
+    expect(logSpy).toHaveBeenCalledWith("error: bad.json: invalid JSON");
+  });
+
+  it("passes dryRun when --dry-run flag is present", () => {
+    vi.mocked(syncAgentTimeouts).mockReturnValue({
+      patched: ["/project/.kiro/agents/agent.json"],
+      skipped: [],
+      errors: [],
+    });
+
+    sync(123, ["--dry-run"]);
+
+    expect(syncAgentTimeouts).toHaveBeenCalledWith(process.cwd(), {
+      dryRun: true,
+    });
+    expect(logSpy).toHaveBeenCalledWith(
+      "would patch: /project/.kiro/agents/agent.json",
+    );
   });
 });
