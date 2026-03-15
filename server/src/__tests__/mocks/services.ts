@@ -19,6 +19,19 @@ vi.mock("../../services/log-parser/index", () => ({
   extractActiveSkillPaths: vi.fn().mockReturnValue([]),
 }));
 
+vi.mock("../../services/orphan-storage/index", () => ({
+  readOrphanEvents: vi.fn().mockResolvedValue([]),
+  groupByPid: vi.fn().mockReturnValue([]),
+  assignOrphanEvents: vi.fn().mockResolvedValue({ movedCount: 0 }),
+  deleteOrphanEvents: vi.fn().mockResolvedValue({ deletedCount: 0 }),
+  NotFoundError: class NotFoundError extends Error {
+    constructor(message: string) {
+      super(message);
+      this.name = "NotFoundError";
+    }
+  },
+}));
+
 vi.mock("../../services/skill-resolver/index", () => ({
   skillNameFromPath: vi.fn((p: string) => p),
   resolveConfiguredSkills: vi.fn().mockResolvedValue([]),
