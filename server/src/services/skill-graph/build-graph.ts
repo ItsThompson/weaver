@@ -1,26 +1,7 @@
 import type { SkillGraph, SkillNode, SkillEdge } from "@weaver/shared/types";
 import { categorizeSkill } from "./category";
 import { discoverSkills } from "./discover";
-
-function escapeRegex(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
-function findReferences(body: string, knownNames: string[]): string[] {
-  if (knownNames.length === 0) {
-    return [];
-  }
-
-  const pattern = new RegExp(
-    `\`(${knownNames.map(escapeRegex).join("|")})\``,
-    "g",
-  );
-  return [...new Set([...body.matchAll(pattern)].map((match) => match[1]))];
-}
-
-function extractFrontmatterString(value: unknown, fallback: string): string {
-  return typeof value === "string" ? value : fallback;
-}
+import { findReferences, extractFrontmatterString } from "./utils";
 
 export async function buildSkillGraph(cwd: string): Promise<SkillGraph> {
   const skills = await discoverSkills(cwd);
