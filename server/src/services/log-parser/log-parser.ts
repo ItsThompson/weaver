@@ -151,13 +151,12 @@ export function extractActiveSkillPaths(events: HookEvent[]): string[] {
       return;
     }
 
-    const operations = (tool_input as { operations?: Array<{ path?: string }> })
-      ?.operations;
+    const operations = tool_input?.operations;
     if (!Array.isArray(operations)) {
       return;
     }
 
-    operations.forEach((op) => {
+    operations.forEach((op: { path?: string }) => {
       if (op.path?.includes("/skills/") && op.path.endsWith("SKILL.md")) {
         paths.add(op.path);
       }
