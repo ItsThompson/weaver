@@ -5,6 +5,8 @@ import {
   getOrphans,
   getOrphanCount,
   getConfig,
+  getSkillGraph,
+  getSkillDetail,
 } from "../../utils/api";
 
 export const KEYS = {
@@ -13,6 +15,8 @@ export const KEYS = {
   orphans: "/orphans",
   orphanCount: "/orphans/count",
   config: "/config",
+  skills: "/skills",
+  skill: (name: string) => `/skills/${name}`,
 } as const;
 
 export const useSessionsQuery = () => useSWR(KEYS.sessions, getSessions);
@@ -37,3 +41,8 @@ export const revalidateOrphans = () => {
 export const useConfigQuery = () => useSWR(KEYS.config, getConfig);
 
 export const revalidateConfig = () => mutate(KEYS.config);
+
+export const useSkillGraphQuery = () => useSWR(KEYS.skills, getSkillGraph);
+
+export const useSkillDetailQuery = (name: string | undefined) =>
+  useSWR(name ? KEYS.skill(name) : null, () => getSkillDetail(name!));
