@@ -4,16 +4,12 @@ import type {
   ValidationResult,
 } from "@weaver/shared/types";
 import { matchToolCalls } from "./tool-calls";
+import { isValidationEvent } from "./types";
 
 function extractValidationResults(evts: HookEvent[]): ValidationResult[] {
   return evts.reduce<ValidationResult[]>((acc, event) => {
-    if (
-      event.event.hook_event_name === "validation" &&
-      Array.isArray((event.event as any).results)
-    ) {
-      acc.push(
-        ...(event.event as unknown as { results: ValidationResult[] }).results,
-      );
+    if (isValidationEvent(event.event)) {
+      acc.push(...event.event.results);
     }
     return acc;
   }, []);
