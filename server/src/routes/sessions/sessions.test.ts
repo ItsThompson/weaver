@@ -9,7 +9,9 @@ import {
 import {
   parseLogFile,
   groupEventsByTurn,
+  extractActiveSkillPaths,
 } from "../../services/log-parser/index";
+import { resolveConfiguredSkills } from "../../services/skill-resolver/index";
 import { broadcast } from "../../services/event-bus";
 import Fastify from "fastify";
 import { registerSessionRoutes } from "./sessions";
@@ -59,6 +61,33 @@ describe("GET /api/sessions/:id", () => {
     expect(body.session.id).toBe("aaa");
     expect(body.session.status).toBe("closed");
     expect(body.turns).toEqual([]);
+    expect(body.activeSkills).toEqual([]);
+    expect(body.configuredSkills).toEqual([]);
+  });
+
+  it("includes activeSkills and configuredSkills in response", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    vi.mocked(isProcessRunning).mockReturnValue(false);
+    vi.mocked(parseLogFile).mockResolvedValue([]);
+    vi.mocked(groupEventsByTurn).mockReturnValue([]);
+    vi.mocked(extractActiveSkillPaths).mockReturnValue([
+      "/home/.kiro/skills/coding-practices/SKILL.md",
+    ]);
+    vi.mocked(resolveConfiguredSkills).mockResolvedValue([
+      "coding-practices",
+      "testing",
+    ]);
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/sessions/aaa",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(body.activeSkills).toEqual([
+      "/home/.kiro/skills/coding-practices/SKILL.md",
+    ]);
+    expect(body.configuredSkills).toEqual(["coding-practices", "testing"]);
   });
 
   it("returns 404 for unknown session", async () => {

@@ -19,7 +19,12 @@ import {
   groupEventsByTurn,
   getLastEvent,
   deriveActivity,
+  extractActiveSkillPaths,
 } from "../../services/log-parser/index";
+import {
+  skillNameFromPath,
+  resolveConfiguredSkills,
+} from "../../services/skill-resolver/index";
 import { broadcast } from "../../services/event-bus";
 import { log } from "../../utils/logger";
 import {
@@ -33,6 +38,24 @@ function toSessionWithStatus(
   activity?: ActivityStatus,
 ): SessionWithStatus {
   return { ...session, status: isOpen ? "open" : "closed", activity };
+}
+
+function safeActiveSkills(
+  events: Parameters<typeof extractActiveSkillPaths>[0],
+): string[] {
+  try {
+    return extractActiveSkillPaths(events).map(skillNameFromPath);
+  } catch {
+    return [];
+  }
+}
+
+async function safeConfiguredSkills(session: Session): Promise<string[]> {
+  try {
+    return await resolveConfiguredSkills(session.agentName, session.cwd);
+  } catch {
+    return [];
+  }
 }
 
 export function registerSessionRoutes(server: FastifyInstance): void {
@@ -85,6 +108,8 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       session: toSessionWithStatus(session, isOpen, activity),
       turns: groupEventsByTurn(events),
       webhookEnabled: isWebhookEnabled(id),
+      activeSkills: safeActiveSkills(events),
+      configuredSkills: await safeConfiguredSkills(session),
     };
   });
 

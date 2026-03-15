@@ -16,6 +16,12 @@ vi.mock("../../services/log-parser/index", () => ({
     .fn<() => Promise<{ name: string; timestamp: string } | null>>()
     .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
   deriveActivity: vi.fn().mockReturnValue("idle"),
+  extractActiveSkillPaths: vi.fn().mockReturnValue([]),
+}));
+
+vi.mock("../../services/skill-resolver/index", () => ({
+  skillNameFromPath: vi.fn((p: string) => p),
+  resolveConfiguredSkills: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("../../services/event-bus", () => ({
