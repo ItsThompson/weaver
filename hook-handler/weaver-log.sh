@@ -25,6 +25,7 @@ source "$LIB_DIR/pid.sh"
 source "$LIB_DIR/truncate.sh"
 source "$LIB_DIR/session.sh"
 source "$LIB_DIR/validate.sh"
+source "$LIB_DIR/init.sh"
 
 # Read hook event JSON from STDIN
 EVENT=$(cat)
@@ -55,6 +56,7 @@ if [ "$SESSION_ID" = "orphan" ]; then
   exit 1
 fi
 
+run_init
 run_validation
 
 exit 0

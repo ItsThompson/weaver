@@ -63,6 +63,24 @@ weaver config sounds on         # Enable notification sounds
 weaver config sounds off        # Disable notification sounds
 ```
 
+### `weaver sync`
+
+Sync `.weaver.json` validation timeouts to `.kiro/agents/` configs. Calculates
+the required kiro-cli hook timeouts from your validation hooks and patches all
+agent config files that use `weaver-log.sh`.
+
+Scans both workspace (`.kiro/agents/`) and global (`~/.kiro/agents/`) agent
+configs.
+
+```bash
+weaver sync              # Patch agent configs
+weaver sync --dry-run    # Show what would change without writing
+```
+
+Run before starting an agent session to ensure kiro-cli won't kill validation
+early. Also runs automatically on `agentSpawn` so the next session picks up
+changes.
+
 ## Notes
 
 - The CLI communicates with the Weaver server at `http://localhost:8143` by default. Override with the `WEAVER_SERVER` environment variable.

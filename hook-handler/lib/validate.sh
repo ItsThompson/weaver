@@ -17,12 +17,6 @@ run_validation() {
     return
   fi
 
-  if [ "$HOOK_EVENT_NAME" = "agentSpawn" ]; then
-    local sync_script="$hook_dir/dist/sync-entry.mjs"
-    [ -f "$sync_script" ] && node "$sync_script" --cwd "$CWD" 2>/dev/null || true
-    return
-  fi
-
   if [ "$HOOK_EVENT_NAME" != "stop" ] && [ "$HOOK_EVENT_NAME" != "postToolUse" ]; then
     return
   fi
