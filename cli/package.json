@@ -9,18 +9,15 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
-    "test": "NODE_OPTIONS='--experimental-vm-modules' npx jest && bash ../bin/weaver.test.sh"
+    "test": "vitest run && bash ../bin/weaver.test.sh"
   },
   "dependencies": {
     "@weaver/shared": "*"
   },
   "devDependencies": {
-    "@jest/globals": "^30.2.0",
-    "@types/jest": "^30.0.0",
     "@types/node": "^22.15.3",
-    "jest": "^30.2.0",
-    "ts-jest": "^29.4.6",
     "tsx": "^4.19.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.18"
   }
 }
