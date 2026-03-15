@@ -6,6 +6,10 @@ import { kiroSearchPaths } from "./kiro-paths";
 const configCache = new FileCache<Record<string, unknown>>();
 export const _configCache = configCache;
 
+/**
+ * Loads a custom agent's JSON config, checking workspace then global `.kiro/agents/`.
+ * Results are cached by file path via FileCache. Returns null if no config is found.
+ */
 export async function loadAgentConfig(
   agentName: string,
   cwd: string,

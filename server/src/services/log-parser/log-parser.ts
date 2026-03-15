@@ -141,6 +141,7 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   return turns;
 }
 
+/** Scans postToolUse fs_read events for SKILL.md paths and returns deduplicated skill file paths. */
 export function extractActiveSkillPaths(events: HookEvent[]): string[] {
   const paths = new Set<string>();
 

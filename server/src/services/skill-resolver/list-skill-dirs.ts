@@ -3,6 +3,7 @@ import { readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { log } from "../../utils/logger";
 
+/** Lists skill directory names within a parent directory by checking for subdirectories that contain a SKILL.md file. */
 export async function listSkillDirNames(dirPath: string): Promise<string[]> {
   if (!existsSync(dirPath)) {
     return [];

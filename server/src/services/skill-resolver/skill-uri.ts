@@ -2,6 +2,7 @@ import { join, resolve } from "node:path";
 import { homedir } from "node:os";
 import { listSkillDirNames } from "./list-skill-dirs";
 
+/** Expands a leading `~/` to the user's home directory. */
 export function expandHome(filePath: string): string {
   if (filePath.startsWith("~/")) {
     return join(homedir(), filePath.slice(2));
@@ -9,6 +10,11 @@ export function expandHome(filePath: string): string {
   return filePath;
 }
 
+/**
+ * Resolves a `skill://` URI to a list of skill directory names.
+ * Handles home expansion (`~/`) and resolves relative paths against cwd.
+ * Expects a glob pattern like `*/SKILL.md` to identify the base directory.
+ */
 export async function resolveSkillUri(
   uri: string,
   cwd: string,

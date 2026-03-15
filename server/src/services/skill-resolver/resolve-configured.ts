@@ -4,6 +4,12 @@ import { loadAgentConfig } from "./agent-config";
 import { resolveSkillUri } from "./skill-uri";
 import { kiroSearchPaths } from "./kiro-paths";
 
+/**
+ * Resolves configured skill names for a session's agent.
+ * For the default agent (null), lists skill directories in workspace and global `.kiro/skills/`.
+ * For custom agents, reads the agent config and resolves `skill://` URIs from its resources.
+ * Returns `[]` on any failure.
+ */
 export async function resolveConfiguredSkills(
   agentName: string | null,
   cwd: string,
@@ -25,6 +31,7 @@ export async function resolveConfiguredSkills(
   }
 }
 
+/** Collects deduplicated skill directory names from workspace and global skill directories. */
 async function resolveDefaultAgentSkills(cwd: string): Promise<string[]> {
   const names = await Promise.all(
     kiroSearchPaths(cwd, "skills").map(listSkillDirNames),
@@ -32,6 +39,7 @@ async function resolveDefaultAgentSkills(cwd: string): Promise<string[]> {
   return [...new Set(names.flat())];
 }
 
+/** Reads a custom agent's config and resolves its `skill://` resource URIs to skill directory names. */
 async function resolveCustomAgentSkills(
   agentName: string,
   cwd: string,
