@@ -1,11 +1,4 @@
-vi.mock("../../services/skill-graph/index", () => ({
-  buildSkillGraph: vi.fn(),
-  getSkillDetail: vi.fn(),
-}));
-
-vi.mock("../../utils/logger", () => ({
-  log: vi.fn(),
-}));
+import "../../__tests__/mocks/services";
 
 import Fastify from "fastify";
 import { registerSkillRoutes } from "./skills";

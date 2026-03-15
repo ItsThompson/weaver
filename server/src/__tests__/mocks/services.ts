@@ -51,6 +51,11 @@ vi.mock("../../services/webhook/index", () => ({
   stopWebhookTimers: vi.fn(),
 }));
 
+vi.mock("../../services/skill-graph/index", () => ({
+  buildSkillGraph: vi.fn(),
+  getSkillDetail: vi.fn(),
+}));
+
 vi.mock("../../utils/logger", () => ({
   log: vi.fn(),
 }));
