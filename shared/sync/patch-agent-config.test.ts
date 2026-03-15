@@ -2,7 +2,7 @@ import "./__test-helpers__/mock-fs";
 
 import { readFileSync, writeFileSync } from "node:fs";
 import { patchAgentConfig } from "./patch-agent-config";
-import type { SyncResult } from "./sync";
+import type { SyncResult } from "./types";
 
 function makeResult(): SyncResult {
   return { patched: [], skipped: [], errors: [] };

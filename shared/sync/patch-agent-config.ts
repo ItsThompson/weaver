@@ -1,13 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { isPlainObject } from "./parsing";
-import type { SyncResult } from "./sync";
-
-const WEAVER_LOG = "weaver-log.sh";
-
-interface TimeoutPatch {
-  hookKey: string;
-  timeout: number;
-}
+import { WEAVER_LOG_HOOK } from "../types/validation";
+import type { SyncResult, TimeoutPatch } from "./types";
 
 function isWeaverHook(
   entry: unknown,
@@ -15,7 +9,7 @@ function isWeaverHook(
   return (
     isPlainObject(entry) &&
     typeof entry.command === "string" &&
-    entry.command.includes(WEAVER_LOG)
+    entry.command.includes(WEAVER_LOG_HOOK)
   );
 }
 

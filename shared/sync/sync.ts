@@ -7,16 +7,7 @@ import {
   calculatePostToolUseTimeout,
 } from "./timeout-calc";
 import { patchAgentConfig } from "./patch-agent-config";
-
-export interface SyncOptions {
-  dryRun?: boolean;
-}
-
-export interface SyncResult {
-  patched: string[];
-  skipped: string[];
-  errors: string[];
-}
+import type { SyncOptions, SyncResult } from "./types";
 
 export function syncAgentTimeouts(
   cwd: string,

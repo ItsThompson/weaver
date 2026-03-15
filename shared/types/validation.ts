@@ -62,4 +62,5 @@ export interface ValidationEvent {
 export const DEFAULT_STOP_TIMEOUT_MS = 30_000;
 export const DEFAULT_POST_TOOL_TIMEOUT_MS = 10_000;
 export const TIMEOUT_BUFFER_MS = 15_000;
+export const WEAVER_LOG_HOOK = "weaver-log.sh";
 export const MAX_OUTPUT_LENGTH = 5_000;
