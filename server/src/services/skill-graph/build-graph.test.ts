@@ -1,23 +1,6 @@
-vi.mock("node:fs/promises", () => ({
-  readFile: vi.fn(),
-  stat: vi.fn().mockRejectedValue(new Error("no stat mock")),
-}));
-
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn(),
-}));
-
-vi.mock("../skill-resolver/kiro-paths", () => ({
-  kiroSearchPaths: vi.fn(),
-}));
-
-vi.mock("../skill-resolver/list-skill-dirs", () => ({
-  listSkillDirNames: vi.fn(),
-}));
-
-vi.mock("../../utils/logger", () => ({
-  log: vi.fn(),
-}));
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/logger";
+import "../../__tests__/mocks/skill-resolver";
 
 import { readFile } from "node:fs/promises";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
