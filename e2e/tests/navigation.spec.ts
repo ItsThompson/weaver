@@ -1,5 +1,5 @@
-import { test, expect } from "../fixtures/app.js";
-import { seedSession } from "../fixtures/seed.js";
+import { test, expect } from "../fixtures/app";
+import { seedSession } from "../fixtures/seed";
 
 async function waitForAppReady(
   page: import("@playwright/test").Page,

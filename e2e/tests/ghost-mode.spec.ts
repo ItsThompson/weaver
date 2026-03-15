@@ -5,8 +5,8 @@ import {
   REPO_ROOT,
   SERVER_URL,
   killPort,
-} from "../fixtures/app.js";
-import { seedConfig } from "../fixtures/seed.js";
+} from "../fixtures/app";
+import { seedConfig } from "../fixtures/seed";
 import { _electron } from "playwright";
 
 test.describe("ghost mode", () => {

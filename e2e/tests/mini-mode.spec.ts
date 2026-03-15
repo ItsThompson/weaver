@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 
 const MAIN_SIZE = { width: 900, height: 600 };
 const MINI_WIDTH = 300;

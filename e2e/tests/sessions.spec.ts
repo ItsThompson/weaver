@@ -1,5 +1,5 @@
-import { test, expect } from "../fixtures/app.js";
-import { seedSession, seedLogEvents, makeHookEvent } from "../fixtures/seed.js";
+import { test, expect } from "../fixtures/app";
+import { seedSession, seedLogEvents, makeHookEvent } from "../fixtures/seed";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 

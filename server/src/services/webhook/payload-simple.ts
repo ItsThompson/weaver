@@ -1,6 +1,6 @@
 import type { ActivityStatus, HookEvent } from "@weaver/shared/types";
-import type { SimpleWebhookPayload, EventContext } from "./types.js";
-import { extractContext } from "./context.js";
+import type { SimpleWebhookPayload, EventContext } from "./types";
+import { extractContext } from "./context";
 
 export function buildSimpleWebhookPayload(
   eventName: string,

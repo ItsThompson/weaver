@@ -1,5 +1,5 @@
-import type { WebhookPayload, SimpleWebhookPayload } from "./types.js";
-import { log } from "../../utils/logger.js";
+import type { WebhookPayload, SimpleWebhookPayload } from "./types";
+import { log } from "../../utils/logger";
 
 export async function dispatchWebhook(
   url: string,

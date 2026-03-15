@@ -1,4 +1,4 @@
-import { get, patch } from "../utils.js";
+import { get, patch } from "../utils";
 import type { WeaverConfig } from "@weaver/shared/types";
 
 const TOGGLES: Record<string, keyof WeaverConfig> = {

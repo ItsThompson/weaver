@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/app.js";
+import { test, expect } from "../fixtures/app";
 
 /** Wait for React to mount and SSE EventSource to connect. */
 async function waitForAppReady(

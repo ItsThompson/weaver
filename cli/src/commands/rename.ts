@@ -1,4 +1,4 @@
-import { post } from "../utils.js";
+import { post } from "../utils";
 
 export function rename(pid: number, args: string[]): void {
   const name = args.join(" ").trim();

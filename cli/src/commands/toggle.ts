@@ -1,4 +1,4 @@
-import { post } from "../utils.js";
+import { post } from "../utils";
 
 export function toggle(pid: number, _args: string[]): void {
   const { ok, status } = post("/api/navigate", { page: "toggle", pid });

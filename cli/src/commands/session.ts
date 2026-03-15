@@ -1,4 +1,4 @@
-import { post } from "../utils.js";
+import { post } from "../utils";
 
 export function session(pid: number, args: string[]): void {
   const subcommand = args[0];
