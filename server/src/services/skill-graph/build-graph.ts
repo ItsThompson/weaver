@@ -31,17 +31,18 @@ export async function buildSkillGraph(cwd: string): Promise<SkillGraph> {
     edgeCounts.set(name, { incoming: 0, outgoing: 0 }),
   );
 
-  const edges: SkillEdge[] = skills.flatMap((skill) => {
+  const edges = skills.reduce<SkillEdge[]>((acc, skill) => {
     const otherNames = knownNames.filter((name) => name !== skill.name);
     const refs = findReferences(skill.parsed.body, otherNames);
 
     refs.forEach((ref) => {
       edgeCounts.get(skill.name)!.outgoing++;
       edgeCounts.get(ref)!.incoming++;
+      acc.push({ from: skill.name, to: ref });
     });
 
-    return refs.map((ref) => ({ from: skill.name, to: ref }));
-  });
+    return acc;
+  }, []);
 
   const nodes: SkillNode[] = skills.map((skill) => ({
     id: skill.name,
