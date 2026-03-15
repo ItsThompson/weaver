@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -12,15 +12,25 @@ import { useSkillDetailQuery } from "../../hooks/queries";
 export function SkillDetailPage() {
   const { skillName } = useParams<{ skillName: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { data, error, isLoading } = useSkillDetailQuery(skillName);
+
+  const referrer = (location.state as { from?: string } | null)?.from;
+  const breadcrumbs = referrer
+    ? [
+        { text: "Sessions", href: "/" },
+        { text: "Session", href: referrer },
+        { text: skillName ?? "", href: "#" },
+      ]
+    : [
+        { text: "Skills", href: "/skills" },
+        { text: skillName ?? "", href: "#" },
+      ];
 
   return (
     <SpaceBetween size="l">
       <BreadcrumbGroup
-        items={[
-          { text: "Skills", href: "/skills" },
-          { text: skillName ?? "", href: "#" },
-        ]}
+        items={breadcrumbs}
         onFollow={(e) => {
           e.preventDefault();
           navigate(e.detail.href);
