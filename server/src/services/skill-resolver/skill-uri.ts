@@ -13,7 +13,7 @@ export function expandHome(filePath: string): string {
 /**
  * Resolves a `skill://` URI to a list of skill directory names.
  * Handles home expansion (`~/`) and resolves relative paths against cwd.
- * Expects a glob pattern like `*/SKILL.md` to identify the base directory.
+ * Expects a glob pattern (e.g. star/SKILL.md) to identify the base directory.
  */
 export async function resolveSkillUri(
   uri: string,
