@@ -19,12 +19,10 @@ export function useSkillGraph() {
     const nodeWidth = 200;
     const nodeHeight = 50;
 
-    for (const node of data.nodes) {
-      g.setNode(node.name, { width: nodeWidth, height: nodeHeight });
-    }
-    for (const edge of data.edges) {
-      g.setEdge(edge.from, edge.to);
-    }
+    data.nodes.forEach((node) =>
+      g.setNode(node.name, { width: nodeWidth, height: nodeHeight }),
+    );
+    data.edges.forEach((edge) => g.setEdge(edge.from, edge.to));
     dagre.layout(g);
 
     const nodes: Node<SkillNodeData>[] = data.nodes.map((skill) => {

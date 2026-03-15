@@ -1,10 +1,10 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
 import { SWRConfig } from "swr";
-import type { SkillGraph } from "@weaver/shared/types";
 import { SkillCategory } from "@weaver/shared/types";
 
 import "../../../__tests__/mocks/api";
+import { TEST_SKILL_GRAPH } from "../../../__tests__/fixtures/skills";
 
 import * as api from "../../../utils/api";
 import { useSkillGraph } from "./useSkillGraph";
@@ -20,24 +20,6 @@ function wrapper({ children }: { children: React.ReactNode }) {
 
 beforeEach(() => vi.clearAllMocks());
 
-const testGraph: SkillGraph = {
-  nodes: [
-    {
-      name: "typescript",
-      description: "TS lang",
-      category: SkillCategory.LANGUAGE,
-      source: "workspace",
-    },
-    {
-      name: "react",
-      description: "React lib",
-      category: SkillCategory.DOMAIN,
-      source: "global",
-    },
-  ],
-  edges: [{ from: "typescript", to: "react" }],
-};
-
 describe("useSkillGraph", () => {
   it("returns loading state initially", () => {
     mockGetSkillGraph.mockImplementation(() => new Promise(() => {}));
@@ -48,7 +30,7 @@ describe("useSkillGraph", () => {
   });
 
   it("transforms API data into positioned React Flow nodes", async () => {
-    mockGetSkillGraph.mockResolvedValue(testGraph);
+    mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
     const { result } = renderHook(() => useSkillGraph(), { wrapper });
 
     await vi.waitFor(() => {
@@ -69,7 +51,7 @@ describe("useSkillGraph", () => {
   });
 
   it("maps edges from SkillEdge to React Flow Edge format", async () => {
-    mockGetSkillGraph.mockResolvedValue(testGraph);
+    mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
     const { result } = renderHook(() => useSkillGraph(), { wrapper });
 
     await vi.waitFor(() => {
