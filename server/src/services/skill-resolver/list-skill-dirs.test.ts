@@ -1,9 +1,11 @@
 import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/logger";
 
 import { existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { listSkillDirNames } from "./list-skill-dirs";
+import { log } from "../../utils/logger";
 
 beforeEach(() => vi.clearAllMocks());
 
@@ -49,10 +51,17 @@ describe("listSkillDirNames", () => {
     expect(await listSkillDirNames("/skills")).toEqual([]);
   });
 
-  it("returns empty when readdir throws", async () => {
+  it("returns empty and logs error when readdir throws", async () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readdir).mockRejectedValue(new Error("EACCES"));
 
     expect(await listSkillDirNames("/skills")).toEqual([]);
+    expect(vi.mocked(log)).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "list_skill_dirs_error",
+        dirPath: "/skills",
+        error: "Error: EACCES",
+      }),
+    );
   });
 });

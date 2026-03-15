@@ -1,6 +1,7 @@
 import { join } from "node:path";
 import { readdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { log } from "../../utils/logger";
 
 export async function listSkillDirNames(dirPath: string): Promise<string[]> {
   if (!existsSync(dirPath)) {
@@ -18,7 +19,13 @@ export async function listSkillDirNames(dirPath: string): Promise<string[]> {
       }
       return names;
     }, []);
-  } catch {
+  } catch (error) {
+    log({
+      timestamp: new Date().toISOString(),
+      event: "list_skill_dirs_error",
+      dirPath,
+      error: String(error),
+    });
     return [];
   }
 }

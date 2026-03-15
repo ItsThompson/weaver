@@ -1,8 +1,7 @@
-import { join } from "node:path";
-import { homedir } from "node:os";
 import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { FileCache } from "../file-cache/index";
+import { kiroSearchPaths } from "./kiro-paths";
 
 const configCache = new FileCache<Record<string, unknown>>();
 export const _configCache = configCache;
@@ -11,22 +10,24 @@ export async function loadAgentConfig(
   agentName: string,
   cwd: string,
 ): Promise<Record<string, unknown> | null> {
-  const candidates = [
-    join(cwd, ".kiro", "agents", `${agentName}.json`),
-    join(homedir(), ".kiro", "agents", `${agentName}.json`),
-  ];
+  const existing = kiroSearchPaths(cwd, "agents", `${agentName}.json`).filter(
+    (p) => existsSync(p),
+  );
 
-  for (const configPath of candidates) {
-    if (!existsSync(configPath)) {
-      continue;
-    }
-    try {
-      return await configCache.get(configPath, async () =>
-        JSON.parse(await readFile(configPath, "utf-8")),
-      );
-    } catch {
-      continue;
-    }
-  }
-  return null;
+  return existing.reduce<Promise<Record<string, unknown> | null>>(
+    async (prev, configPath) => {
+      const result = await prev;
+      if (result) {
+        return result;
+      }
+      try {
+        return await configCache.get(configPath, async () =>
+          JSON.parse(await readFile(configPath, "utf-8")),
+        );
+      } catch {
+        return null;
+      }
+    },
+    Promise.resolve(null),
+  );
 }
