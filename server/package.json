@@ -12,7 +12,8 @@
   "dependencies": {
     "@fastify/static": "^9.0.0",
     "@weaver/shared": "*",
-    "fastify": "^5.3.3"
+    "fastify": "^5.3.3",
+    "gray-matter": "^4.0.3"
   },
   "devDependencies": {
     "@types/node": "^22.15.3",
