@@ -52,18 +52,18 @@ export function syncAgentTimeouts(
       return;
     }
 
-    readdirSync(dir)
-      .filter((file) => file.endsWith(".json"))
-      .forEach((file) => {
-        const filePath = join(dir, file);
-        patchAgentConfig(
-          filePath,
-          stopTimeout,
-          postToolUseTimeout,
-          result,
-          options?.dryRun ?? false,
-        );
-      });
+    readdirSync(dir).reduce<void>((_, file) => {
+      if (!file.endsWith(".json")) {
+        return;
+      }
+      patchAgentConfig(
+        join(dir, file),
+        stopTimeout,
+        postToolUseTimeout,
+        result,
+        options?.dryRun ?? false,
+      );
+    }, undefined);
   });
 
   return result;
