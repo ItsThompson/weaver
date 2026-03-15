@@ -1,27 +1,6 @@
-vi.mock("node:fs/promises", () => ({
-  mkdir: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readFile: vi.fn<() => Promise<string>>(),
-  writeFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: vi.fn<() => Promise<string[]>>(),
-  unlink: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  stat: vi
-    .fn<() => Promise<{ mtimeMs: number }>>()
-    .mockRejectedValue(new Error("no stat mock")),
-}));
-
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn<() => boolean>(),
-}));
-
-vi.mock("node:child_process", () => ({
-  execFileSync: vi.fn<() => string>(),
-}));
-
-// Silence logger in tests
-vi.mock("../../utils/logger", () => ({
-  log: vi.fn(),
-}));
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/child-process";
+import "../../__tests__/mocks/logger";
 
 import { mkdir, readFile, appendFile, readdir, unlink } from "node:fs/promises";
 import { existsSync } from "node:fs";

@@ -1,55 +1,7 @@
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/services";
+
 import { SESSION_A } from "../../__tests__/fixtures/sessions";
-
-vi.mock("node:fs/promises", () => ({
-  readFile: vi.fn<() => Promise<string>>(),
-  writeFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  mkdir: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: vi.fn<() => Promise<string[]>>(),
-  unlink: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-}));
-
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn<() => boolean>(),
-}));
-
-vi.mock("../../services/storage/index", () => ({
-  readSessions: vi.fn(),
-  writeSessions: vi.fn(),
-  isProcessRunning: vi.fn(),
-  ensureDataDir: vi.fn(),
-  appendSession: vi.fn(),
-  startStaleSessionCleanup: vi.fn(),
-  stopStaleSessionCleanup: vi.fn(),
-  cleanStaleSessions: vi.fn(),
-}));
-
-vi.mock("../../services/log-parser/index", () => ({
-  parseLogFile: vi.fn(),
-  groupEventsByTurn: vi.fn(),
-  getLastEvent: vi
-    .fn()
-    .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
-  deriveActivity: vi.fn().mockReturnValue("idle"),
-}));
-
-vi.mock("../../services/event-bus", () => ({
-  broadcast: vi.fn(),
-  emit: vi.fn(),
-  sseReply: vi.fn(),
-}));
-
-vi.mock("../../services/webhook/index", () => ({
-  handleWebhookEvent: vi.fn(),
-  isWebhookEnabled: vi.fn().mockReturnValue(false),
-  setWebhookEnabled: vi.fn(),
-  stopWebhookTimers: vi.fn(),
-}));
-
-vi.mock("../../utils/logger", () => ({
-  log: vi.fn(),
-}));
-
 import { readFile, writeFile, appendFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { readSessions, writeSessions } from "../../services/storage/index";

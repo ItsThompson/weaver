@@ -1,25 +1,7 @@
+import "../../__tests__/mocks/fs";
+import "../../__tests__/mocks/logger";
+
 import type { HookEvent } from "@weaver/shared/types";
-
-vi.mock("node:fs/promises", () => ({
-  readFile: vi.fn<() => Promise<string>>(),
-  mkdir: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  appendFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  writeFile: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  readdir: vi.fn<() => Promise<string[]>>(),
-  unlink: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
-  stat: vi
-    .fn<() => Promise<{ mtimeMs: number }>>()
-    .mockRejectedValue(new Error("no stat mock")),
-}));
-
-vi.mock("node:fs", () => ({
-  existsSync: vi.fn<() => boolean>(),
-}));
-
-vi.mock("../../utils/logger", () => ({
-  log: vi.fn(),
-}));
-
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { parseLogFile, groupEventsByTurn, _logCache } from "./log-parser";

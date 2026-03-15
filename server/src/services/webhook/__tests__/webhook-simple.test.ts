@@ -1,9 +1,13 @@
 import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
-import { TEST_SESSION, makeEvent, configWith } from "./webhook-helpers";
+import {
+  mockFetch,
+  TEST_SESSION,
+  makeEvent,
+  configWith,
+  setupWebhookTests,
+} from "./webhook-helpers";
 
-vi.mock("../../config", () => ({
-  readConfig: vi.fn(),
-}));
+vi.mock("../../config", () => ({ readConfig: vi.fn() }));
 vi.mock("../../log-parser", () => ({
   parseLogFile: vi.fn(),
   deriveActivity: vi.fn(),
@@ -15,38 +19,7 @@ import { readConfig } from "../../config";
 import { parseLogFile, deriveActivity } from "../../log-parser";
 import { log } from "../../../utils/logger";
 
-const mockFetch = vi.fn<() => Promise<Response>>();
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-globalThis.fetch = mockFetch as any;
-
-beforeEach(() => {
-  vi.clearAllMocks();
-  vi.useFakeTimers();
-  mockFetch.mockResolvedValue(new Response("ok"));
-  vi.mocked(readConfig).mockResolvedValue(
-    configWith("https://hooks.example.com"),
-  );
-  vi.mocked(parseLogFile).mockResolvedValue([]);
-  vi.mocked(deriveActivity).mockImplementation((name: string) => {
-    if (name === "agentSpawn") {
-      return "starting";
-    }
-    if (name === "stop") {
-      return "idle";
-    }
-    if (name === "preToolUse") {
-      return "running_tool";
-    }
-    return "processing";
-  });
-  webhook.stopWebhookTimers();
-  webhook.setWebhookEnabled("sess-1", true);
-});
-
-afterEach(() => {
-  vi.useRealTimers();
-  webhook.stopWebhookTimers();
-});
+setupWebhookTests(webhook, readConfig, parseLogFile, deriveActivity);
 
 describe("buildSimpleWebhookPayload", () => {
   it("formats agentSpawn", () => {
@@ -211,7 +184,6 @@ describe("handleWebhookEvent (simple)", () => {
       "my-project",
       TEST_SESSION,
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = JSON.parse((mockFetch.mock.calls[0] as any)[1].body);
     expect(body).toEqual({ text: "🟢 my-project started" });
   });
@@ -232,7 +204,6 @@ describe("handleWebhookEvent (simple)", () => {
     );
     await vi.advanceTimersByTimeAsync(PENDING_APPROVAL_THRESHOLD_MS);
     expect(mockFetch).toHaveBeenCalledTimes(2);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const body = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
     expect(body.text).toContain("⏳");
   });
