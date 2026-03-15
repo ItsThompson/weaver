@@ -6,6 +6,7 @@ import Container from "@cloudscape-design/components/container";
 import Select, { type SelectProps } from "@cloudscape-design/components/select";
 import type { OrphanGroup } from "@weaver/shared/types";
 import { TurnContainer } from "../../SessionDetailPage/components/TurnContainer";
+import { colors } from "../../../theme/colors";
 import type { DeleteTarget } from "../types";
 
 interface OrphanGroupCardProps {
@@ -56,14 +57,14 @@ export function OrphanGroupCard({
                 style={{
                   root: {
                     color: {
-                      default: "#d91515",
-                      hover: "#b80000",
-                      active: "#a10000",
+                      default: colors.destructiveDefault,
+                      hover: colors.destructiveHover,
+                      active: colors.destructiveActive,
                     },
                     borderColor: {
-                      default: "#d91515",
-                      hover: "#b80000",
-                      active: "#a10000",
+                      default: colors.destructiveDefault,
+                      hover: colors.destructiveHover,
+                      active: colors.destructiveActive,
                     },
                   },
                 }}

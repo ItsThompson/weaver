@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRef, useEffect } from "react";
 import { useSessionsQuery } from "../../hooks/queries";
-import { ACTIVITY_COLORS } from "../../utils/activityColors";
+import { ACTIVITY_COLORS, colors } from "../../theme/colors";
 import { MiniActivityLog } from "./MiniActivityLog";
 import type { SessionWithStatus } from "@weaver/shared/types";
 
@@ -46,8 +46,8 @@ export function MiniPage() {
     <div
       ref={rootRef}
       style={{
-        background: "#161d26",
-        color: "#d1d5db",
+        background: colors.backgroundPage,
+        color: colors.textPrimary,
         fontFamily: "'Open Sans', sans-serif",
       }}
     >
@@ -68,7 +68,11 @@ export function MiniPage() {
         <div style={{ padding: "28px 0" }}>
           {openSessions.length === 0 && (
             <div
-              style={{ padding: "16px 12px", fontSize: 13, color: "#6b7280" }}
+              style={{
+                padding: "16px 12px",
+                fontSize: 13,
+                color: colors.textMuted,
+              }}
             >
               No open sessions
             </div>

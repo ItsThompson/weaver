@@ -1,7 +1,7 @@
 import { Handle, Position } from "@xyflow/react";
 import type { NodeProps, Node } from "@xyflow/react";
 import type { SkillNodeData } from "../types";
-import { CATEGORY_COLORS } from "../constants";
+import { CATEGORY_COLORS, colors } from "../../../theme/colors";
 import { Link } from "react-router-dom";
 
 type SkillFlowNode = Node<SkillNodeData, "skill">;
@@ -9,8 +9,8 @@ type SkillFlowNode = Node<SkillNodeData, "skill">;
 export function SkillNode({ data }: NodeProps<SkillFlowNode>) {
   const color =
     data.source === "workspace"
-      ? "#888"
-      : (CATEGORY_COLORS[data.category] ?? "#888");
+      ? colors.neutral
+      : (CATEGORY_COLORS[data.category] ?? colors.neutral);
 
   return (
     <Link
@@ -19,10 +19,10 @@ export function SkillNode({ data }: NodeProps<SkillFlowNode>) {
         display: "block",
         padding: "8px 12px",
         borderLeft: `4px solid ${color}`,
-        background: "var(--color-background-container-content, #0f1b2a)",
+        background: `var(--color-background-container-content, ${colors.backgroundContainer})`,
         borderRadius: 4,
         cursor: "pointer",
-        color: "var(--color-text-body-default, #d1d5db)",
+        color: `var(--color-text-body-default, ${colors.textPrimary})`,
         fontSize: "var(--font-size-body-m, 14px)",
         fontFamily: "var(--font-family-base, 'Open Sans', sans-serif)",
         minWidth: 140,

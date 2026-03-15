@@ -10,6 +10,7 @@ import {
   COMMAND_PALETTE_KEY,
   COMMAND_PALETTE_OPEN_EVENT,
 } from "../../constants";
+import { colors } from "../../theme/colors";
 import type { WindowEntry, AutosuggestOption } from "./types";
 
 function toOption(entry: WindowEntry): AutosuggestOption {
@@ -85,7 +86,7 @@ export function CommandPalette() {
         style={{
           position: "fixed",
           inset: 0,
-          background: "rgba(0,0,0,0.5)",
+          background: colors.backgroundOverlay,
           zIndex: 10000,
         }}
         onClick={() => setVisible(false)}
