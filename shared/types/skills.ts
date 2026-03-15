@@ -26,4 +26,5 @@ export interface SkillGraph {
 export interface SkillDetail {
   frontmatter: Record<string, unknown>;
   body: string;
+  source: "global" | "workspace";
 }

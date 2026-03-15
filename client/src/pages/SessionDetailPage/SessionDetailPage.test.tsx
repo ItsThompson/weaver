@@ -9,9 +9,12 @@ import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
 vi.mock("react-router-dom", () => ({
   useParams: () => ({ id: "test-session-id" }),
   useNavigate: () => vi.fn(),
+  useLocation: () => ({ pathname: "/sessions/test-session-id", state: null }),
   MemoryRouter: ({ children }: any) => React.createElement("div", {}, children),
   BreadcrumbGroup: ({ children }: any) =>
     React.createElement("div", {}, children),
+  Link: ({ children, to }: any) =>
+    React.createElement("a", { href: to }, children),
 }));
 
 import { SessionDetailPage } from ".";

@@ -4,6 +4,8 @@ import type {
   TurnGroup,
   OrphanGroup,
   WeaverConfig,
+  SkillGraph,
+  SkillDetail,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -85,3 +87,7 @@ export const updateConfig = (config: WeaverConfig) =>
     method: "PUT",
     body: JSON.stringify(config),
   });
+export const getSkillGraph = () => apiFetch<SkillGraph>("/skills");
+
+export const getSkillDetail = (name: string) =>
+  apiFetch<SkillDetail>(`/skills/${name}`);

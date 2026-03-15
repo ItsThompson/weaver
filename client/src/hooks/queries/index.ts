@@ -9,4 +9,6 @@ export {
   revalidateOrphans,
   useConfigQuery,
   revalidateConfig,
+  useSkillGraphQuery,
+  useSkillDetailQuery,
 } from "./queries";
