@@ -1,4 +1,9 @@
-import { escapeRegex, findReferences, extractFrontmatterString } from "./utils";
+import {
+  escapeRegex,
+  findReferences,
+  extractFrontmatterString,
+  isEnoent,
+} from "./utils";
 
 describe("escapeRegex", () => {
   it("escapes special regex characters", () => {
@@ -50,5 +55,24 @@ describe("extractFrontmatterString", () => {
 
   it("returns fallback for object value", () => {
     expect(extractFrontmatterString({}, "fallback")).toBe("fallback");
+  });
+});
+
+describe("isEnoent", () => {
+  it("returns true for ENOENT error", () => {
+    const error = new Error("ENOENT") as NodeJS.ErrnoException;
+    error.code = "ENOENT";
+    expect(isEnoent(error)).toBe(true);
+  });
+
+  it("returns false for other error codes", () => {
+    const error = new Error("EACCES") as NodeJS.ErrnoException;
+    error.code = "EACCES";
+    expect(isEnoent(error)).toBe(false);
+  });
+
+  it("returns false for non-Error values", () => {
+    expect(isEnoent("ENOENT")).toBe(false);
+    expect(isEnoent(null)).toBe(false);
   });
 });

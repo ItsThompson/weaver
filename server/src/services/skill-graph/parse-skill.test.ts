@@ -1,16 +1,12 @@
 import { parseSkillFile } from "./parse-skill";
+import {
+  SKILL_VALID_CONTENT,
+  SKILL_EXTRA_FIELDS_CONTENT,
+} from "../../__tests__/fixtures/skills";
 
 describe("parseSkillFile", () => {
   it("parses valid frontmatter and body", () => {
-    const content = `---
-name: my-skill
-description: A test skill
----
-# Body content
-
-Some markdown here.`;
-
-    const result = parseSkillFile(content);
+    const result = parseSkillFile(SKILL_VALID_CONTENT);
     expect(result.frontmatter).toEqual({
       name: "my-skill",
       description: "A test skill",
@@ -20,8 +16,7 @@ Some markdown here.`;
   });
 
   it("handles missing frontmatter", () => {
-    const content = "Just plain markdown content";
-    const result = parseSkillFile(content);
+    const result = parseSkillFile("Just plain markdown content");
     expect(result.frontmatter).toEqual({});
     expect(result.body).toBe("Just plain markdown content");
   });
@@ -33,17 +28,7 @@ Some markdown here.`;
   });
 
   it("handles frontmatter with extra fields", () => {
-    const content = `---
-name: my-skill
-description: desc
-version: 2
-tags:
-  - foo
-  - bar
----
-Body`;
-
-    const result = parseSkillFile(content);
+    const result = parseSkillFile(SKILL_EXTRA_FIELDS_CONTENT);
     expect(result.frontmatter).toEqual({
       name: "my-skill",
       description: "desc",

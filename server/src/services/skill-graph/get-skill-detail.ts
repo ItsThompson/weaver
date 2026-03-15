@@ -5,12 +5,8 @@ import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { parseSkillFile } from "./parse-skill";
 import { log } from "../../utils/logger";
 import { skillCache } from "./discover";
-
-const VALID_SKILL_NAME = /^[a-z0-9][a-z0-9-]*$/;
-
-function isEnoent(error: unknown): boolean {
-  return error instanceof Error && "code" in error && error.code === "ENOENT";
-}
+import { isEnoent } from "./utils";
+import { VALID_SKILL_NAME } from "./constants";
 
 export async function getSkillDetail(
   skillName: string,

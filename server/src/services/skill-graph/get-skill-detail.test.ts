@@ -6,24 +6,19 @@ import { readFile } from "node:fs/promises";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { log } from "../../utils/logger";
 import { getSkillDetail } from "./get-skill-detail";
-
-const SKILL_CONTENT = `---
-name: skill-a
-description: Skill A description
----
-Body of skill A.`;
+import {
+  SKILL_BASIC_CONTENT,
+  SEARCH_PATHS,
+} from "../../__tests__/fixtures/skills";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(kiroSearchPaths).mockReturnValue([
-    "/workspace/.kiro/skills",
-    "/home/.kiro/skills",
-  ]);
+  vi.mocked(kiroSearchPaths).mockReturnValue([...SEARCH_PATHS]);
 });
 
 describe("getSkillDetail", () => {
   it("returns parsed frontmatter and body for existing skill", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail("skill-a", "/workspace");
 

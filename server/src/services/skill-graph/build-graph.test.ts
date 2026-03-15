@@ -6,25 +6,16 @@ import { readFile } from "node:fs/promises";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { buildSkillGraph } from "./build-graph";
-
-const SKILL_A = `---
-name: Skill A
-description: Skill A description
----
-Body of skill A with \`skill-b\` reference.`;
-
-const SKILL_B = `---
-name: skill-b
-description: Skill B description
----
-Body of skill B.`;
+import {
+  SKILL_A_CONTENT,
+  SKILL_B_CONTENT,
+  SKILL_NUMERIC_NAME_CONTENT,
+  SEARCH_PATHS,
+} from "../../__tests__/fixtures/skills";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(kiroSearchPaths).mockReturnValue([
-    "/workspace/.kiro/skills",
-    "/home/.kiro/skills",
-  ]);
+  vi.mocked(kiroSearchPaths).mockReturnValue([...SEARCH_PATHS]);
 });
 
 describe("buildSkillGraph", () => {
@@ -32,7 +23,7 @@ describe("buildSkillGraph", () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce([]);
-    vi.mocked(readFile).mockResolvedValue(SKILL_A);
+    vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
     const graph = await buildSkillGraph("/workspace");
 
@@ -46,15 +37,10 @@ describe("buildSkillGraph", () => {
   });
 
   it("falls back to directory name when frontmatter name is not a string", async () => {
-    const skillWithNumericName = `---
-name: 42
-description: bad name
----
-Body.`;
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["my-skill"])
       .mockResolvedValueOnce([]);
-    vi.mocked(readFile).mockResolvedValue(skillWithNumericName);
+    vi.mocked(readFile).mockResolvedValue(SKILL_NUMERIC_NAME_CONTENT);
 
     const graph = await buildSkillGraph("/workspace");
 
@@ -68,9 +54,9 @@ Body.`;
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockImplementation(async (path) => {
       if (String(path).includes("skill-a")) {
-        return SKILL_A;
+        return SKILL_A_CONTENT;
       }
-      return SKILL_B;
+      return SKILL_B_CONTENT;
     });
 
     const graph = await buildSkillGraph("/workspace");
@@ -83,7 +69,7 @@ Body.`;
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce(["skill-a"]);
-    vi.mocked(readFile).mockResolvedValue(SKILL_A);
+    vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
     const graph = await buildSkillGraph("/workspace");
 
