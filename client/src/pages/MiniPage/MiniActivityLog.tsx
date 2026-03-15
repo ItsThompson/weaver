@@ -1,5 +1,5 @@
 import { useActivityLog } from "../../context/ActivityLogContext";
-import { ACTIVITY_COLORS } from "../../utils/activityColors";
+import { ACTIVITY_COLORS, colors } from "../../theme/colors";
 
 const MAX_VISIBLE = 10;
 
@@ -12,13 +12,18 @@ export function MiniActivityLog() {
   }
 
   return (
-    <div style={{ borderTop: "1px solid #2a2f38", padding: "6px 12px" }}>
+    <div
+      style={{
+        borderTop: `1px solid ${colors.borderDivider}`,
+        padding: "6px 12px",
+      }}
+    >
       {visible.map((entry) => (
         <div
           key={entry.id}
           style={{
             fontSize: 11,
-            color: "#6b7280",
+            color: colors.textMuted,
             padding: "2px 0",
             display: "flex",
             gap: 6,
