@@ -4,4 +4,6 @@ export interface SkillNodeData extends Record<string, unknown> {
   description: string;
   source: "global" | "workspace";
   color: string;
+  skillName: string;
+  project: string | null;
 }
