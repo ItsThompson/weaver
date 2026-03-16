@@ -42,6 +42,8 @@ export function useSkillGraph() {
           category: skill.category,
           description: skill.description,
           source: skill.source,
+          project: skill.project,
+          variants: skill.variants,
           color: resolveColor(skill.category),
         },
       };
