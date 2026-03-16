@@ -10,12 +10,18 @@ import * as api from "../../utils/api";
 import { SkillDetailPage } from "./SkillDetailPage";
 
 const mockGetSkillDetail = vi.mocked(api.getSkillDetail);
+const mockGetSkillGraph = vi.mocked(api.getSkillGraph);
 
-function renderWithRoute(skillName: string, state?: { from: string }) {
+function renderWithRoute(
+  skillName: string,
+  options?: { state?: { from: string }; search?: string },
+) {
+  const pathname = `/skills/${skillName}`;
+  const search = options?.search ?? "";
   const { container } = render(
     <SWRWrapper>
       <MemoryRouter
-        initialEntries={[{ pathname: `/skills/${skillName}`, state }]}
+        initialEntries={[{ pathname, search, state: options?.state }]}
       >
         <SkillDetailPage />
       </MemoryRouter>
@@ -32,7 +38,49 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockGetSkillGraph.mockResolvedValue({ nodes: [], edges: [] });
+});
+
+describe("SkillDetailPage", () => {
+  it("shows project badge when skill has a project", async () => {
+    mockGetSkillDetail.mockResolvedValue({
+      frontmatter: { name: "typescript", description: "TS" },
+      body: "# TS",
+      source: "workspace" as const,
+      category: null,
+      project: "my-app",
+    });
+
+    renderWithRoute("typescript", { search: "?project=my-app" });
+
+    await vi.waitFor(() => {
+      expect(screen.getByRole("heading", { name: "typescript" })).toBeTruthy();
+    });
+
+    expect(screen.getByText("my-app")).toBeTruthy();
+    expect(screen.getByText("Workspace")).toBeTruthy();
+  });
+
+  it("shows Global badge for source=global", async () => {
+    mockGetSkillDetail.mockResolvedValue({
+      frontmatter: { name: "typescript", description: "TS" },
+      body: "# TS",
+      source: "global" as const,
+      category: null,
+      project: null,
+    });
+
+    renderWithRoute("typescript", { search: "?source=global" });
+
+    await vi.waitFor(() => {
+      expect(screen.getByRole("heading", { name: "typescript" })).toBeTruthy();
+    });
+
+    expect(screen.getByText("Global")).toBeTruthy();
+  });
+});
 
 describe("SkillDetailPage breadcrumbs", () => {
   it("shows Skills breadcrumb when navigated directly", async () => {
@@ -41,6 +89,7 @@ describe("SkillDetailPage breadcrumbs", () => {
       body: "# TS",
       source: "global" as const,
       category: null,
+      project: null,
     });
 
     const wrapper = renderWithRoute("typescript");
@@ -61,10 +110,11 @@ describe("SkillDetailPage breadcrumbs", () => {
       body: "# TS",
       source: "global" as const,
       category: null,
+      project: null,
     });
 
     const wrapper = renderWithRoute("typescript", {
-      from: "/sessions/abc-123",
+      state: { from: "/sessions/abc-123" },
     });
 
     await vi.waitFor(() => {
