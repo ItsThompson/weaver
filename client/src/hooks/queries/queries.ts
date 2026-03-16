@@ -16,7 +16,17 @@ export const KEYS = {
   orphanCount: "/orphans/count",
   config: "/config",
   skills: "/skills",
-  skill: (name: string) => `/skills/${name}`,
+  skill: (name: string, project?: string, source?: string) => {
+    const params = new URLSearchParams();
+    if (project) {
+      params.set("project", project);
+    }
+    if (source) {
+      params.set("source", source);
+    }
+    const queryString = params.toString();
+    return queryString ? `/skills/${name}?${queryString}` : `/skills/${name}`;
+  },
 } as const;
 
 export const useSessionsQuery = () => useSWR(KEYS.sessions, getSessions);
@@ -46,7 +56,17 @@ export const useSkillGraphQuery = () => useSWR(KEYS.skills, getSkillGraph);
 
 export const revalidateSkillGraph = () => mutate(KEYS.skills);
 
-export const useSkillDetailQuery = (name: string | undefined) =>
-  useSWR(name ? KEYS.skill(name) : null, () => getSkillDetail(name!));
+export const useSkillDetailQuery = (
+  name: string | undefined,
+  project?: string,
+  source?: string,
+) =>
+  useSWR(name ? KEYS.skill(name, project, source) : null, () =>
+    getSkillDetail(name!, project, source),
+  );
 
-export const revalidateSkillDetail = (name: string) => mutate(KEYS.skill(name));
+export const revalidateSkillDetail = (
+  name: string,
+  project?: string,
+  source?: string,
+) => mutate(KEYS.skill(name, project, source));
