@@ -1,5 +1,8 @@
 import type { ValidatorResult } from "./types";
 import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+import { existsSync, lstatSync } from "node:fs";
+import { join } from "node:path";
+import { homedir } from "node:os";
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
@@ -151,4 +154,43 @@ export function validateTestRunners(value: unknown): ValidatorResult {
     };
   }
   return { value: trimmed };
+}
+
+export function validateSkillPaths(value: unknown): ValidatorResult {
+  if (!Array.isArray(value)) {
+    return { warning: "skill_paths must be an array of strings" };
+  }
+  if (!value.every((entry: unknown) => typeof entry === "string")) {
+    return { warning: "skill_paths must contain only strings" };
+  }
+
+  const resolved: string[] = [];
+  const seen = new Set<string>();
+  const fieldErrors: Record<string, string> = {};
+
+  (value as string[]).forEach((entry, index) => {
+    const trimmed = entry.trim();
+    if (trimmed.length === 0) {
+      return;
+    }
+    if (seen.has(trimmed)) {
+      return;
+    }
+    seen.add(trimmed);
+    const expanded = trimmed.startsWith("~")
+      ? join(homedir(), trimmed.slice(1))
+      : trimmed;
+    if (existsSync(expanded) && lstatSync(expanded).isDirectory()) {
+      resolved.push(trimmed);
+    } else {
+      fieldErrors[String(index)] =
+        `${expanded} does not exist or is not a directory`;
+    }
+  });
+
+  if (Object.keys(fieldErrors).length > 0) {
+    return { value: resolved, fieldErrors };
+  }
+
+  return { value: resolved };
 }
