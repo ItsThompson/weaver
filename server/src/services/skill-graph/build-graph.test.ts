@@ -6,12 +6,18 @@ import { readFile } from "node:fs/promises";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { buildSkillGraph } from "./build-graph";
+import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
 import {
   SKILL_A_CONTENT,
   SKILL_B_CONTENT,
   SKILL_NUMERIC_NAME_CONTENT,
   SEARCH_PATHS,
 } from "../../__tests__/fixtures/skills";
+
+const testCategories: Record<string, SkillGraphCategoryConfig> = {
+  core: { skills: ["skill-a"] },
+  language: { skills: ["skill-b"] },
+};
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -25,7 +31,7 @@ describe("buildSkillGraph", () => {
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", testCategories);
 
     expect(graph.nodes).toHaveLength(1);
     expect(graph.nodes[0]).toMatchObject({
@@ -36,13 +42,35 @@ describe("buildSkillGraph", () => {
     });
   });
 
+  it("applies config category to matching skill", async () => {
+    vi.mocked(listSkillDirNames)
+      .mockResolvedValueOnce(["skill-a"])
+      .mockResolvedValueOnce([]);
+    vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
+
+    const graph = await buildSkillGraph("/workspace", testCategories);
+
+    expect(graph.nodes[0].category).toBe("core");
+  });
+
+  it("returns null category for uncategorized skill", async () => {
+    vi.mocked(listSkillDirNames)
+      .mockResolvedValueOnce(["skill-a"])
+      .mockResolvedValueOnce([]);
+    vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
+
+    const graph = await buildSkillGraph("/workspace", {});
+
+    expect(graph.nodes[0].category).toBeNull();
+  });
+
   it("falls back to directory name when frontmatter name is not a string", async () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["my-skill"])
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockResolvedValue(SKILL_NUMERIC_NAME_CONTENT);
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", {});
 
     expect(graph.nodes[0].id).toBe("my-skill");
     expect(graph.nodes[0].name).toBe("my-skill");
@@ -59,7 +87,7 @@ describe("buildSkillGraph", () => {
       return SKILL_B_CONTENT;
     });
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", testCategories);
 
     expect(graph.edges).toHaveLength(1);
     expect(graph.edges[0]).toEqual({ from: "skill-a", to: "skill-b" });
@@ -71,7 +99,7 @@ describe("buildSkillGraph", () => {
       .mockResolvedValueOnce(["skill-a"]);
     vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", testCategories);
 
     expect(graph.nodes).toHaveLength(1);
     expect(graph.nodes[0].source).toBe("workspace");
@@ -82,7 +110,7 @@ describe("buildSkillGraph", () => {
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce([]);
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", {});
 
     expect(graph.nodes).toEqual([]);
     expect(graph.edges).toEqual([]);
@@ -94,7 +122,7 @@ describe("buildSkillGraph", () => {
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockRejectedValue(new Error("ENOENT"));
 
-    const graph = await buildSkillGraph("/workspace");
+    const graph = await buildSkillGraph("/workspace", {});
 
     expect(graph.nodes).toEqual([]);
     expect(graph.edges).toEqual([]);

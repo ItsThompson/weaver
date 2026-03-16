@@ -6,12 +6,21 @@ import {
   buildSkillGraph,
   getSkillDetail,
 } from "../../services/skill-graph/index";
-import type { SkillCategory } from "@weaver/shared/types";
+import { readConfig } from "../../services/config/index";
+import { DEFAULT_CONFIG } from "@weaver/shared/types";
+
+vi.mock("../../services/config/index", () => ({
+  readConfig: vi.fn(),
+}));
 
 let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   vi.clearAllMocks();
+  vi.mocked(readConfig).mockResolvedValue({
+    config: { ...DEFAULT_CONFIG },
+    warnings: [],
+  });
   server = Fastify();
   registerSkillRoutes(server);
   await server.ready();
@@ -27,7 +36,7 @@ describe("GET /api/skills", () => {
           id: "skill-a",
           name: "Skill A",
           description: "desc",
-          category: "core" as SkillCategory,
+          category: "core",
           source: "workspace",
         },
       ],
@@ -43,13 +52,31 @@ describe("GET /api/skills", () => {
     expect(body.nodes).toHaveLength(1);
     expect(body.edges).toHaveLength(1);
   });
+
+  it("passes config categories to buildSkillGraph", async () => {
+    const categories = { core: { skills: ["skill-a"] } };
+    vi.mocked(readConfig).mockResolvedValue({
+      config: { ...DEFAULT_CONFIG, skill_graph: { categories } },
+      warnings: [],
+    });
+    vi.mocked(buildSkillGraph).mockResolvedValue({ nodes: [], edges: [] });
+
+    await server.inject({ method: "GET", url: "/api/skills" });
+
+    expect(buildSkillGraph).toHaveBeenCalledWith(
+      expect.any(String),
+      categories,
+    );
+  });
 });
 
 describe("GET /api/skills/:name", () => {
-  it("returns 200 with frontmatter and body for existing skill", async () => {
+  it("returns 200 with frontmatter, body, and category for existing skill", async () => {
     vi.mocked(getSkillDetail).mockResolvedValue({
       frontmatter: { name: "skill-a", description: "desc" },
       body: "# Skill A",
+      source: "global",
+      category: "core",
     });
 
     const res = await server.inject({
@@ -61,6 +88,7 @@ describe("GET /api/skills/:name", () => {
     const body = JSON.parse(res.body);
     expect(body.frontmatter).toEqual({ name: "skill-a", description: "desc" });
     expect(body.body).toBe("# Skill A");
+    expect(body.category).toBe("core");
   });
 
   it("returns 404 for nonexistent skill", async () => {
