@@ -65,9 +65,6 @@ describe("SkillGraphCategoriesField", () => {
     });
 
     expect(setConfig).toHaveBeenCalled();
-    expect(
-      screen.queryByText("No categories configured."),
-    ).not.toBeInTheDocument();
   });
 
   it("calls setConfig when a row is removed", async () => {

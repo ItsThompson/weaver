@@ -8,9 +8,9 @@ Navigating to `/skills` first and then to `/settings` made the categories appear
 
 ## Root cause
 
-A timing gap between SWR resolving and `useEffect` applying the data.
+Two layers of duplicated state created a timing gap that caused `SkillGraphCategoriesField` to mount with stale data.
 
-`useSettings` fetched config via SWR and synced it into local state with `useEffect`:
+**Layer 1: `useSettings` copied SWR data into local state via `useEffect`.**
 
 ```typescript
 const { data, isLoading } = useConfigQuery();
@@ -27,7 +27,7 @@ useEffect(() => {
 - `data` = API response with categories
 - `config` = still `DEFAULT_CONFIG` (empty categories)
 
-`SettingsPage` had no loading gate, so the form rendered immediately. `SkillGraphCategoriesField` mounted during that render and initialized its local `rows` state via `useState`:
+**Layer 2: `SkillGraphCategoriesField` copied config into its own local `rows` state.**
 
 ```typescript
 const [rows, setRows] = useState<CategoryRow[]>(() =>
@@ -35,7 +35,9 @@ const [rows, setRows] = useState<CategoryRow[]>(() =>
 );
 ```
 
-`useState` only runs its initializer once. `config` was `DEFAULT_CONFIG` at that point, so `rows` locked in as `[]`. When `useEffect` fired on the next render and `config` updated to the real data, `rows` stayed empty.
+`useState` only runs its initializer once. `config` was `DEFAULT_CONFIG` at that point, so `rows` locked in as `[]`. When `useEffect` fired on the next render and `config` updated to the real data, `rows` stayed empty because nothing re-synced them.
+
+The underlying issue was component architecture: two levels of state duplication meant the child snapshotted stale parent state at mount time.
 
 ## Why `/skills` first made it work
 
@@ -45,18 +47,21 @@ const [rows, setRows] = useState<CategoryRow[]>(() =>
 
 Existing tests mocked `getConfig` to resolve immediately and flushed everything with `await act(async () => {})`. This collapsed the async gap into a single pass: by the time any assertion ran, `useEffect` had already fired and `config` was populated. The real browser renders the intermediate state; the tests skipped over it.
 
-## Fix
+## Initial fix (superseded)
 
-Two changes:
+The first fix added a `ready` flag inside the same `useEffect` as `setConfig`, gating `isLoading` on it. This worked but was a bandaid: it papered over the timing gap without addressing the duplicated state that caused it. If any future field used the same snapshot-at-mount pattern, the same class of bug could reappear.
 
-1. `useSettings`: added a `ready` flag set inside the same `useEffect` as `setConfig`. React batches both updates, so the next render sees `config = real data` and `ready = true` simultaneously. `isLoading` is now `isLoading || !ready`, which keeps the page in loading state until config is actually set.
+## Final fix
 
-2. `SettingsPage`: added an early return with a spinner while `isLoading` is true. The form only renders after config is populated, so `SkillGraphCategoriesField` always mounts with real data.
+Eliminated both layers of duplicated state:
 
-One test was added to `useSettings.test.tsx` that asserts `isLoading` stays true until `config` reflects the API response. It fails without the `ready` flag.
+1. **`useSettings`**: replaced the `useState` + `useEffect` + `ready` pattern with a `draft` state that starts as `null`. Config is derived as `draft ?? serverConfig ?? DEFAULT_CONFIG`. Before any user edits, the hook reads SWR data directly with no intermediate copy. The first edit forks into `draft`, and `handleSave` resets `draft` to `null` so the hook falls back to freshly revalidated SWR data. No `useEffect`, no timing gap.
+
+2. **`SkillGraphCategoriesField`**: converted from uncontrolled to fully controlled. Removed the internal `rows` `useState`. Rows are now derived via `useMemo` from `config.skill_graph.categories` on every render. Mutations go through `setConfig`, which updates the parent's draft, which re-derives rows on the next render. No local snapshot means no stale data regardless of mount timing.
 
 ## Files changed
 
-- `client/src/pages/SettingsPage/hooks/useSettings.ts`: added `ready` state, gated `isLoading` on it
-- `client/src/pages/SettingsPage/SettingsPage.tsx`: added spinner gate on `isLoading`, added `Spinner` import
-- `client/src/pages/SettingsPage/hooks/useSettings.test.tsx`: added regression test
+- `client/src/pages/SettingsPage/hooks/useSettings.ts`: replaced `useState`/`useEffect`/`ready` with `draft` pattern
+- `client/src/pages/SettingsPage/components/SkillGraphCategoriesField/SkillGraphCategoriesField.tsx`: removed internal `rows` state, derive from config via `useMemo`
+- `client/src/pages/SettingsPage/hooks/useSettings.test.tsx`: replaced `ready` flag test with draft fork/reset tests
+- `client/src/pages/SettingsPage/components/SkillGraphCategoriesField/SkillGraphCategoriesField.test.tsx`: removed UI assertion that depended on internal state
