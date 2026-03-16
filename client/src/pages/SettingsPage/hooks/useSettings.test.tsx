@@ -116,4 +116,21 @@ describe("useSettings", () => {
 
     expect(result.current.state.config.dark_mode).toBe(false);
   });
+
+  it("reports isLoading true until config is synced", async () => {
+    const customConfig = { ...DEFAULT_CONFIG, dark_mode: false };
+    mockGetConfig.mockResolvedValue({ config: customConfig, warnings: [] });
+
+    const { result } = renderHook(() => useSettings(mockAddNotification), {
+      wrapper,
+    });
+
+    expect(result.current.state.isLoading).toBe(true);
+
+    await vi.waitFor(() => {
+      expect(result.current.state.isLoading).toBe(false);
+    });
+
+    expect(result.current.state.config).toEqual(customConfig);
+  });
 });
