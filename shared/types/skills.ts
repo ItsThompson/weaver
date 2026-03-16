@@ -1,9 +1,16 @@
+export interface SkillVariant {
+  source: "global" | "workspace";
+  project: string | null;
+}
+
 export interface SkillNode {
   id: string;
   name: string;
   description: string;
   category: string | null;
   source: "global" | "workspace";
+  project: string | null;
+  variants: SkillVariant[];
 }
 
 export interface SkillEdge {
@@ -21,4 +28,5 @@ export interface SkillDetail {
   body: string;
   source: "global" | "workspace";
   category: string | null;
+  project: string | null;
 }

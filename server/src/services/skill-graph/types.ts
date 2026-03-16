@@ -6,5 +6,6 @@ export interface ParsedSkill {
 export interface SkillEntry {
   name: string;
   source: "workspace" | "global";
+  project: string | null;
   parsed: ParsedSkill;
 }

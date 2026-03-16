@@ -27,6 +27,7 @@ export interface SessionWithStatus extends Session {
 // Standard error shape returned by API routes
 export interface ApiError {
   error: string;
+  fieldErrors?: Record<string, Record<string, string>>;
 }
 
 // Orphaned events grouped by the PID that produced them
