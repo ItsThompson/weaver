@@ -40,6 +40,10 @@
         "to": "server/package.json"
       },
       {
+        "from": "../bin",
+        "to": "bin"
+      },
+      {
         "from": "../client/dist",
         "to": "client/dist"
       },
