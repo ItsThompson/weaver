@@ -1,4 +1,70 @@
 import type { ValidatorResult } from "./types";
+import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
+export function validateSkillGraph(value: unknown): ValidatorResult {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return { warning: "skill_graph must be an object" };
+  }
+
+  const obj = value as Record<string, unknown>;
+  if (obj.categories === undefined) {
+    return { value: { categories: {} } };
+  }
+
+  if (
+    typeof obj.categories !== "object" ||
+    obj.categories === null ||
+    Array.isArray(obj.categories)
+  ) {
+    return { warning: "skill_graph.categories must be an object" };
+  }
+
+  const categories = obj.categories as Record<string, unknown>;
+  const seen = new Set<string>();
+
+  for (const [key, entry] of Object.entries(categories)) {
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+      return { warning: `skill_graph.categories.${key} must be an object` };
+    }
+
+    const cat = entry as Record<string, unknown>;
+
+    if (
+      cat.color !== undefined &&
+      (typeof cat.color !== "string" || !HEX_COLOR.test(cat.color))
+    ) {
+      return {
+        warning: `skill_graph.categories.${key}.color must be a hex string (e.g. #ff6b6b)`,
+      };
+    }
+
+    if (
+      !Array.isArray(cat.skills) ||
+      !cat.skills.every((s: unknown) => typeof s === "string")
+    ) {
+      return {
+        warning: `skill_graph.categories.${key}.skills must be an array of strings`,
+      };
+    }
+
+    for (const skill of cat.skills as string[]) {
+      if (seen.has(skill)) {
+        return {
+          warning: `skill "${skill}" is assigned to multiple categories`,
+        };
+      }
+      seen.add(skill);
+    }
+  }
+
+  return {
+    value: {
+      categories: categories as Record<string, SkillGraphCategoryConfig>,
+    },
+  };
+}
 
 export function validatePageSize(value: unknown): ValidatorResult {
   if (typeof value !== "number" || ![10, 25, 50].includes(value)) {

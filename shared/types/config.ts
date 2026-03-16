@@ -1,5 +1,14 @@
 import { DEFAULT_TEST_RUNNERS } from "./validation";
 
+export interface SkillGraphCategoryConfig {
+  color?: string;
+  skills: string[];
+}
+
+export interface SkillGraphConfig {
+  categories: Record<string, SkillGraphCategoryConfig>;
+}
+
 // Settings stored in ~/.weaver/config.json
 export interface WeaverConfig {
   enable_notification_sounds: boolean;
@@ -12,6 +21,7 @@ export interface WeaverConfig {
   webhook_url: string;
   webhook_format: "simple" | "advanced";
   test_runners: string[];
+  skill_graph: SkillGraphConfig;
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = [
@@ -44,4 +54,5 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   webhook_url: "",
   webhook_format: "simple" as const,
   test_runners: [...DEFAULT_TEST_RUNNERS],
+  skill_graph: { categories: {} },
 };
