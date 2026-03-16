@@ -21,13 +21,12 @@ export function MiniPage() {
 
   useEffect(() => {
     const el = contentRef.current;
-    const weaver = (window as any).weaver;
-    if (!el || !weaver?.resizeMini) {
+    if (!el || !window.weaver?.resizeMini) {
       return;
     }
 
     const observer = new ResizeObserver(() => {
-      weaver.resizeMini(el.offsetHeight);
+      window.weaver!.resizeMini(el.offsetHeight);
     });
     observer.observe(el);
     return () => observer.disconnect();
