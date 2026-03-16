@@ -5,8 +5,8 @@ import {
   collectAssignedSkills,
   availableSkillOptions,
   updateRowAt,
-} from "./skill-graph-utils";
-import type { CategoryRow } from "./skill-graph-utils";
+} from "./utils";
+import type { CategoryRow } from "./utils";
 
 describe("toRows", () => {
   it("converts categories to rows", () => {

@@ -4,7 +4,7 @@ import Input from "@cloudscape-design/components/input";
 import Multiselect from "@cloudscape-design/components/multiselect";
 import AttributeEditor from "@cloudscape-design/components/attribute-editor";
 import type { WeaverConfig } from "@weaver/shared/types";
-import { useSkillGraphQuery } from "../../../hooks/queries";
+import { useSkillGraphQuery } from "../../../../hooks/queries";
 import {
   toRows,
   toConfig,
@@ -12,8 +12,8 @@ import {
   collectAssignedSkills,
   availableSkillOptions,
   updateRowAt,
-} from "./skill-graph-utils";
-import type { CategoryRow } from "./skill-graph-utils";
+} from "./utils";
+import type { CategoryRow } from "./utils";
 
 interface SkillGraphCategoriesFieldProps {
   config: WeaverConfig;

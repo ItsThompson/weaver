@@ -5,7 +5,7 @@ import Input from "@cloudscape-design/components/input";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
 import Box from "@cloudscape-design/components/box";
-import { isValidHex } from "../../SettingsPage/components/skill-graph-utils";
+import { isValidHex } from "../../SettingsPage/components/SkillGraphCategoriesField/utils";
 
 interface CreateCategoryModalProps {
   visible: boolean;
