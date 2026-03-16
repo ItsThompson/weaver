@@ -26,7 +26,27 @@ describe("getSkillDetail", () => {
       frontmatter: { name: "skill-a", description: "Skill A description" },
       body: expect.stringContaining("Body of skill A"),
       source: "workspace",
+      category: null,
     });
+  });
+
+  it("resolves category from config", async () => {
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
+
+    const detail = await getSkillDetail("skill-a", "/workspace", {
+      core: { skills: ["skill-a"] },
+    });
+
+    expect(detail?.category).toBe("core");
+  });
+
+  it("resolves category from frontmatter when not in config", async () => {
+    const content = `---\nname: skill-a\ndescription: desc\ncategory: workflow\n---\nBody`;
+    vi.mocked(readFile).mockResolvedValue(content);
+
+    const detail = await getSkillDetail("skill-a", "/workspace", {});
+
+    expect(detail?.category).toBe("workflow");
   });
 
   it("returns null for nonexistent skill", async () => {

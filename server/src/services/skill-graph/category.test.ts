@@ -1,37 +1,33 @@
-import { SkillCategory } from "@weaver/shared/types";
 import { categorizeSkill } from "./category";
+import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+
+const testCategories: Record<string, SkillGraphCategoryConfig> = {
+  core: { color: "#ff6b6b", skills: ["coding-practices"] },
+  language: { skills: ["typescript-standards"] },
+};
 
 describe("categorizeSkill", () => {
-  it("returns static mapping for known skills", () => {
-    expect(
-      categorizeSkill("coding-practices", { incoming: 0, outgoing: 0 }),
-    ).toBe(SkillCategory.CORE);
-    expect(
-      categorizeSkill("typescript-standards", { incoming: 0, outgoing: 0 }),
-    ).toBe(SkillCategory.LANGUAGE);
-    expect(
-      categorizeSkill("backend-coding-practices", { incoming: 0, outgoing: 0 }),
-    ).toBe(SkillCategory.DOMAIN);
-    expect(
-      categorizeSkill("testing-practices", { incoming: 0, outgoing: 0 }),
-    ).toBe(SkillCategory.WORKFLOW);
+  it("returns config category when skill is in config", () => {
+    expect(categorizeSkill("coding-practices", testCategories)).toBe("core");
   });
 
-  it("falls back to CORE for high outgoing edge count", () => {
-    expect(categorizeSkill("unknown-skill", { incoming: 0, outgoing: 3 })).toBe(
-      SkillCategory.CORE,
+  it("falls back to frontmatter category", () => {
+    expect(categorizeSkill("unknown-skill", testCategories, "workflow")).toBe(
+      "workflow",
     );
   });
 
-  it("falls back to LANGUAGE for high incoming edge count", () => {
-    expect(categorizeSkill("unknown-skill", { incoming: 3, outgoing: 0 })).toBe(
-      SkillCategory.LANGUAGE,
-    );
+  it("config overrides frontmatter", () => {
+    expect(
+      categorizeSkill("coding-practices", testCategories, "workflow"),
+    ).toBe("core");
   });
 
-  it("falls back to DOMAIN for unknown skills with low edge counts", () => {
-    expect(categorizeSkill("unknown-skill", { incoming: 1, outgoing: 1 })).toBe(
-      SkillCategory.DOMAIN,
-    );
+  it("returns null when uncategorized", () => {
+    expect(categorizeSkill("unknown-skill", testCategories)).toBeNull();
+  });
+
+  it("returns null with empty config and no frontmatter", () => {
+    expect(categorizeSkill("anything", {})).toBeNull();
   });
 });

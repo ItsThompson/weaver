@@ -4,6 +4,7 @@ import {
   validateWebhookUrl,
   validateWebhookFormat,
   validateTestRunners,
+  validateSkillGraph,
 } from "./field";
 
 describe("validatePageSize", () => {
@@ -123,5 +124,75 @@ describe("validateTestRunners", () => {
 
   it("accepts empty array", () => {
     expect(validateTestRunners([])).toEqual({ value: [] });
+  });
+});
+
+describe("validateSkillGraph", () => {
+  it("accepts valid config with color and skills", () => {
+    const input = {
+      categories: {
+        core: { color: "#ff6b6b", skills: ["coding-practices"] },
+        language: { skills: ["typescript-standards"] },
+      },
+    };
+    expect(validateSkillGraph(input)).toEqual({ value: input });
+  });
+
+  it("defaults missing categories to empty object", () => {
+    expect(validateSkillGraph({})).toEqual({
+      value: { categories: {} },
+    });
+  });
+
+  it("rejects non-object input", () => {
+    expect(validateSkillGraph("bad")).toEqual({
+      warning: "skill_graph must be an object",
+    });
+  });
+
+  it("rejects non-object categories", () => {
+    expect(validateSkillGraph({ categories: "bad" })).toEqual({
+      warning: "skill_graph.categories must be an object",
+    });
+  });
+
+  it("rejects invalid hex color", () => {
+    const input = {
+      categories: { core: { color: "red", skills: [] } },
+    };
+    expect(validateSkillGraph(input)).toEqual({
+      warning:
+        "skill_graph.categories.core.color must be a hex string (e.g. #ff6b6b)",
+    });
+  });
+
+  it("rejects non-string skill names", () => {
+    const input = {
+      categories: { core: { skills: [123] } },
+    };
+    expect(validateSkillGraph(input)).toEqual({
+      warning: "skill_graph.categories.core.skills must be an array of strings",
+    });
+  });
+
+  it("rejects duplicate skill across categories", () => {
+    const input = {
+      categories: {
+        core: { skills: ["coding-practices"] },
+        domain: { skills: ["coding-practices"] },
+      },
+    };
+    expect(validateSkillGraph(input)).toEqual({
+      warning: 'skill "coding-practices" is assigned to multiple categories',
+    });
+  });
+
+  it("accepts categories without color", () => {
+    const input = {
+      categories: {
+        lang: { skills: ["typescript-standards"] },
+      },
+    };
+    expect(validateSkillGraph(input)).toEqual({ value: input });
   });
 });

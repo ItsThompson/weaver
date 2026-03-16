@@ -1,15 +1,8 @@
-export enum SkillCategory {
-  CORE = "core",
-  LANGUAGE = "language",
-  DOMAIN = "domain",
-  WORKFLOW = "workflow",
-}
-
 export interface SkillNode {
   id: string;
   name: string;
   description: string;
-  category: SkillCategory;
+  category: string | null;
   source: "global" | "workspace";
 }
 
@@ -27,4 +20,5 @@ export interface SkillDetail {
   frontmatter: Record<string, unknown>;
   body: string;
   source: "global" | "workspace";
+  category: string | null;
 }

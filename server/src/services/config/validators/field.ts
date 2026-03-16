@@ -1,4 +1,92 @@
 import type { ValidatorResult } from "./types";
+import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+
+const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+
+export function validateSkillGraph(value: unknown): ValidatorResult {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return { warning: "skill_graph must be an object" };
+  }
+
+  const obj = value as Record<string, unknown>;
+  if (obj.categories === undefined) {
+    return { value: { categories: {} } };
+  }
+
+  if (
+    typeof obj.categories !== "object" ||
+    obj.categories === null ||
+    Array.isArray(obj.categories)
+  ) {
+    return { warning: "skill_graph.categories must be an object" };
+  }
+
+  const categories = obj.categories as Record<string, unknown>;
+
+  const result = Object.entries(categories).reduce<{
+    warning?: string;
+    seen: Set<string>;
+  }>(
+    (acc, [key, entry]) => {
+      if (acc.warning) {
+        return acc;
+      }
+
+      if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+        return {
+          ...acc,
+          warning: `skill_graph.categories.${key} must be an object`,
+        };
+      }
+
+      const cat = entry as Record<string, unknown>;
+
+      if (
+        cat.color !== undefined &&
+        (typeof cat.color !== "string" || !HEX_COLOR.test(cat.color))
+      ) {
+        return {
+          ...acc,
+          warning: `skill_graph.categories.${key}.color must be a hex string (e.g. #ff6b6b)`,
+        };
+      }
+
+      if (
+        !Array.isArray(cat.skills) ||
+        !cat.skills.every((s: unknown) => typeof s === "string")
+      ) {
+        return {
+          ...acc,
+          warning: `skill_graph.categories.${key}.skills must be an array of strings`,
+        };
+      }
+
+      const duplicate = (cat.skills as string[]).find((skill) =>
+        acc.seen.has(skill),
+      );
+      if (duplicate) {
+        return {
+          ...acc,
+          warning: `skill "${duplicate}" is assigned to multiple categories`,
+        };
+      }
+
+      (cat.skills as string[]).forEach((skill) => acc.seen.add(skill));
+      return acc;
+    },
+    { seen: new Set<string>() },
+  );
+
+  if (result.warning) {
+    return { warning: result.warning };
+  }
+
+  return {
+    value: {
+      categories: categories as Record<string, SkillGraphCategoryConfig>,
+    },
+  };
+}
 
 export function validatePageSize(value: unknown): ValidatorResult {
   if (typeof value !== "number" || ![10, 25, 50].includes(value)) {

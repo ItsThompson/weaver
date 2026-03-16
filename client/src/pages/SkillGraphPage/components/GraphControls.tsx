@@ -1,14 +1,13 @@
-import { SkillCategory } from "@weaver/shared/types";
-import { CATEGORY_COLORS, colors } from "../../../theme/colors";
-
-const CATEGORY_LABELS: Record<SkillCategory, string> = {
-  [SkillCategory.CORE]: "Core",
-  [SkillCategory.LANGUAGE]: "Language",
-  [SkillCategory.DOMAIN]: "Domain",
-  [SkillCategory.WORKFLOW]: "Workflow",
-};
+import { useConfigQuery } from "../../../hooks/queries";
+import { useCategoryColors } from "../hooks/useCategoryColors";
+import { UNCATEGORIZED_COLOR } from "../../../theme/colors";
+import { colors } from "../../../theme/colors";
 
 export function GraphControls() {
+  const { data: configData } = useConfigQuery();
+  const resolveColor = useCategoryColors(configData);
+  const categories = configData?.config.skill_graph?.categories ?? {};
+
   return (
     <div
       style={{
@@ -25,9 +24,9 @@ export function GraphControls() {
         fontFamily: "var(--font-family-base, 'Open Sans', sans-serif)",
       }}
     >
-      {Object.values(SkillCategory).map((category) => (
+      {Object.keys(categories).map((name) => (
         <div
-          key={category}
+          key={name}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
           <div
@@ -35,7 +34,7 @@ export function GraphControls() {
               width: 12,
               height: 12,
               borderRadius: 2,
-              background: CATEGORY_COLORS[category],
+              background: resolveColor(name),
             }}
           />
           <span
@@ -44,7 +43,7 @@ export function GraphControls() {
               color: `var(--color-text-body-secondary, ${colors.textSecondary})`,
             }}
           >
-            {CATEGORY_LABELS[category]}
+            {name}
           </span>
         </div>
       ))}
@@ -54,7 +53,7 @@ export function GraphControls() {
             width: 12,
             height: 12,
             borderRadius: 2,
-            background: colors.neutral,
+            background: UNCATEGORIZED_COLOR,
           }}
         />
         <span
@@ -63,7 +62,7 @@ export function GraphControls() {
             color: `var(--color-text-body-secondary, ${colors.textSecondary})`,
           }}
         >
-          Workspace
+          Uncategorized
         </span>
       </div>
     </div>

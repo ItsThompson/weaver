@@ -1,0 +1,122 @@
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "skill-graph",
+  "description": "skill-graph implementation agent for the Ralph Wiggum Loop. Executes one step per session.",
+  "prompt": "file://./skill-graph-prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_search",
+    "web_fetch"
+  ],
+  "allowedTools": [
+    "fs_read",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_search",
+    "web_fetch"
+  ],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**", "~/Desktop/skill-graph/**"]
+    },
+    "fs_write": {
+      "allowedPaths": [
+        "./shared/types/**",
+        "./server/src/services/skill-graph/**",
+        "./server/src/routes/skills/**",
+        "./server/src/index.ts",
+        "./server/docs/**",
+        "./server/README.md",
+        "./server/package.json",
+        "./client/src/pages/SkillDetailPage/**",
+        "./client/src/pages/SkillGraphPage/**",
+        "./client/src/pages/SessionDetailPage/components/**",
+        "./client/src/utils/api.ts",
+        "./client/src/hooks/queries/**",
+        "./client/src/__tests__/mocks/api.ts",
+        "./client/src/App.tsx",
+        "./client/package.json",
+        "./docs/features/**",
+        "./README.md",
+        "./package.json",
+        "./package-lock.json",
+        "~/Desktop/skill-graph/progress.md"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "npm install *",
+        "npm test *",
+        "npm run *",
+        "npm ls *",
+        "npx tsc *",
+        "npx tsx *",
+        "npx vitest *",
+        "node *",
+        "turbo *",
+        "git add *",
+        "git commit *",
+        "git status *",
+        "git diff *",
+        "git checkout *",
+        "git branch *",
+        "mkdir *",
+        "rm *",
+        "cat *",
+        "ls *",
+        "curl *"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file:///Users/thompsnt/Desktop/skill-graph/current-step.md",
+    "file:///Users/thompsnt/Desktop/skill-graph/progress.md",
+    "file://README.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log agent spawn event"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log user prompt submission"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log pre-tool-use for all tools"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log post-tool-use for all tools",
+        "timeout_ms": 35000
+      }
+    ],
+    "stop": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 165000
+      }
+    ]
+  },
+  "useLegacyMcpJson": false
+}

@@ -1,8 +1,12 @@
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import type { SkillDetail } from "@weaver/shared/types";
+import type {
+  SkillDetail,
+  SkillGraphCategoryConfig,
+} from "@weaver/shared/types";
 import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
 import { parseSkillFile } from "./parse-skill";
+import { categorizeSkill } from "./category";
 import { log } from "../../utils/logger";
 import { skillCache } from "./discover";
 import { isEnoent } from "./utils";
@@ -11,6 +15,7 @@ import { VALID_SKILL_NAME } from "./constants";
 export async function getSkillDetail(
   skillName: string,
   cwd: string,
+  configCategories: Record<string, SkillGraphCategoryConfig> = {},
 ): Promise<SkillDetail | null> {
   if (!VALID_SKILL_NAME.test(skillName)) {
     return null;
@@ -39,7 +44,14 @@ export async function getSkillDetail(
           const content = await readFile(skillPath, "utf-8");
           return parseSkillFile(content);
         });
-        return { ...parsed, source };
+        const fm = parsed.frontmatter.category;
+        const frontmatterCategory = typeof fm === "string" ? fm : undefined;
+        const category = categorizeSkill(
+          skillName,
+          configCategories,
+          frontmatterCategory,
+        );
+        return { ...parsed, source, category };
       } catch (error) {
         if (isEnoent(error)) {
           return null;

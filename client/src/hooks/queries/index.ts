@@ -10,5 +10,7 @@ export {
   useConfigQuery,
   revalidateConfig,
   useSkillGraphQuery,
+  revalidateSkillGraph,
   useSkillDetailQuery,
+  revalidateSkillDetail,
 } from "./queries";
