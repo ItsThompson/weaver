@@ -46,7 +46,23 @@ export const useSkillGraphQuery = () => useSWR(KEYS.skills, getSkillGraph);
 
 export const revalidateSkillGraph = () => mutate(KEYS.skills);
 
-export const useSkillDetailQuery = (name: string | undefined) =>
-  useSWR(name ? KEYS.skill(name) : null, () => getSkillDetail(name!));
+export const useSkillDetailQuery = (
+  name: string | undefined,
+  options?: { project?: string; source?: string },
+) => {
+  const params = new URLSearchParams();
+  if (options?.project) {
+    params.set("project", options.project);
+  }
+  if (options?.source) {
+    params.set("source", options.source);
+  }
+  const query = params.toString();
+  return useSWR(
+    name ? `${KEYS.skill(name)}${query ? `?${query}` : ""}` : null,
+    () => getSkillDetail(name!, options),
+  );
+};
 
-export const revalidateSkillDetail = (name: string) => mutate(KEYS.skill(name));
+export const revalidateSkillDetail = (name: string) =>
+  mutate((key) => typeof key === "string" && key.startsWith(KEYS.skill(name)));

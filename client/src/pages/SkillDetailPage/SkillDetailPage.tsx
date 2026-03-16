@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -28,7 +33,13 @@ export function SkillDetailPage() {
   const { skillName } = useParams<{ skillName: string }>();
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, error, isLoading } = useSkillDetailQuery(skillName);
+  const [searchParams] = useSearchParams();
+  const project = searchParams.get("project") ?? undefined;
+  const source = searchParams.get("source") ?? undefined;
+  const { data, error, isLoading } = useSkillDetailQuery(skillName, {
+    project,
+    source,
+  });
   const { data: configData } = useConfigQuery();
   const [showCreateModal, setShowCreateModal] = useState(false);
 
@@ -127,6 +138,7 @@ export function SkillDetailPage() {
             <Badge color={data.source === "global" ? "blue" : "grey"}>
               {data.source === "global" ? "Global" : "Workspace"}
             </Badge>
+            {data.project && <Badge color="grey">{data.project}</Badge>}
             <Box color="text-body-secondary">
               {String(data.frontmatter.description ?? "")}
             </Box>
