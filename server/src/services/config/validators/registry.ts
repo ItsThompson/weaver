@@ -11,6 +11,7 @@ import {
   validateWebhookFormat,
   validateTestRunners,
   validateSkillGraph,
+  validateSkillPaths,
 } from "./field";
 
 export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
@@ -31,4 +32,5 @@ export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
   webhook_format: validateWebhookFormat,
   test_runners: validateTestRunners,
   skill_graph: validateSkillGraph,
+  skill_paths: validateSkillPaths,
 };

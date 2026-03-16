@@ -5,6 +5,7 @@ import {
   validateWebhookFormat,
   validateTestRunners,
   validateSkillGraph,
+  validateSkillPaths,
 } from "./field";
 
 describe("validatePageSize", () => {
@@ -194,5 +195,41 @@ describe("validateSkillGraph", () => {
       },
     };
     expect(validateSkillGraph(input)).toEqual({ value: input });
+  });
+});
+
+describe("validateSkillPaths", () => {
+  it("accepts valid string array", () => {
+    expect(validateSkillPaths(["/path/a", "/path/b"])).toEqual({
+      value: ["/path/a", "/path/b"],
+    });
+  });
+
+  it("accepts empty array", () => {
+    expect(validateSkillPaths([])).toEqual({ value: [] });
+  });
+
+  it("trims whitespace from entries", () => {
+    expect(validateSkillPaths(["  /path/a  ", "/path/b  "])).toEqual({
+      value: ["/path/a", "/path/b"],
+    });
+  });
+
+  it("filters empty and whitespace-only entries with warning", () => {
+    const result = validateSkillPaths(["/path/a", "  ", "", "/path/b"]);
+    expect(result.value).toEqual(["/path/a", "/path/b"]);
+    expect(result.warning).toMatch(/removed 2 empty/);
+  });
+
+  it("rejects non-array", () => {
+    expect(validateSkillPaths("/path/a")).toEqual({
+      warning: "skill_paths must be an array of strings",
+    });
+  });
+
+  it("rejects array with non-string elements", () => {
+    expect(validateSkillPaths(["/path/a", 123])).toEqual({
+      warning: "skill_paths must contain only strings",
+    });
   });
 });
