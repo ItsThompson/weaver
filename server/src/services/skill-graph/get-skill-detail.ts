@@ -1,30 +1,33 @@
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import type {
-  SkillDetail,
-  SkillGraphCategoryConfig,
-} from "@weaver/shared/types";
-import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
+import type { SkillDetail } from "@weaver/shared/types";
 import { parseSkillFile } from "./parse-skill";
 import { categorizeSkill } from "./category";
 import { log } from "../../utils/logger";
 import { skillCache } from "./discover";
 import { isEnoent } from "./utils";
 import { VALID_SKILL_NAME } from "./constants";
+import { buildSearchDirs } from "./search-dirs";
 
 export async function getSkillDetail(
   skillName: string,
-  cwd: string,
-  configCategories: Record<string, SkillGraphCategoryConfig> = {},
+  options?: { project?: string; source?: string },
 ): Promise<SkillDetail | null> {
   if (!VALID_SKILL_NAME.test(skillName)) {
     return null;
   }
 
-  const searchPaths = kiroSearchPaths(cwd, "skills");
+  const { dirs: searchDirs, configCategories } = await buildSearchDirs();
 
-  return searchPaths.reduce<Promise<SkillDetail | null>>(
-    async (accPromise, dirPath, index) => {
+  const candidates =
+    options?.source === "global"
+      ? searchDirs.filter((dir) => dir.source === "global")
+      : options?.project !== undefined
+        ? searchDirs.filter((dir) => dir.project === options.project)
+        : searchDirs;
+
+  return candidates.reduce<Promise<SkillDetail | null>>(
+    async (accPromise, { dirPath, source, project: dirProject }) => {
       const acc = await accPromise;
       if (acc) {
         return acc;
@@ -35,9 +38,6 @@ export async function getSkillDetail(
       if (!resolved.startsWith(resolve(dirPath))) {
         return null;
       }
-
-      const source: "workspace" | "global" =
-        index === 0 ? "workspace" : "global";
 
       try {
         const parsed = await skillCache.get(skillPath, async () => {
@@ -51,7 +51,7 @@ export async function getSkillDetail(
           configCategories,
           frontmatterCategory,
         );
-        return { ...parsed, source, category };
+        return { ...parsed, source, category, project: dirProject };
       } catch (error) {
         if (isEnoent(error)) {
           return null;
