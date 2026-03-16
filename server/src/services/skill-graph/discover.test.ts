@@ -33,8 +33,16 @@ describe("deriveProject", () => {
     expect(deriveProject(globalPath)).toBeNull();
   });
 
+  it("returns null for tilde form of ~/.kiro/skills", () => {
+    expect(deriveProject("~/.kiro/skills")).toBeNull();
+  });
+
   it("strips .kiro/skills suffix and returns basename", () => {
     expect(deriveProject("/projects/my-app/.kiro/skills")).toBe("my-app");
+  });
+
+  it("strips .kiro/skills suffix with tilde path", () => {
+    expect(deriveProject("~/projects/my-app/.kiro/skills")).toBe("my-app");
   });
 
   it("returns basename for plain path", () => {

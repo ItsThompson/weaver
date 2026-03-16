@@ -13,8 +13,12 @@ export { skillCache };
 
 const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
 
+function expandHome(p: string): string {
+  return p.startsWith("~/") ? join(homedir(), p.slice(2)) : p;
+}
+
 export function deriveProject(skillDirPath: string): string | null {
-  const normalized = resolve(skillDirPath);
+  const normalized = resolve(expandHome(skillDirPath));
   if (normalized === GLOBAL_SKILLS_PATH()) {
     return null;
   }
@@ -30,11 +34,14 @@ export async function discoverSkills(
   skillPaths: string[],
 ): Promise<SkillEntry[]> {
   const allPaths = [
-    ...skillPaths.map((dirPath) => ({
-      dirPath,
-      source: "workspace" as const,
-      project: deriveProject(dirPath),
-    })),
+    ...skillPaths.map((dirPath) => {
+      const expanded = resolve(expandHome(dirPath));
+      return {
+        dirPath: expanded,
+        source: "workspace" as const,
+        project: deriveProject(dirPath),
+      };
+    }),
     {
       dirPath: GLOBAL_SKILLS_PATH(),
       source: "global" as const,

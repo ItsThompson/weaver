@@ -15,6 +15,10 @@ import { VALID_SKILL_NAME } from "./constants";
 
 const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
 
+function expandHome(p: string): string {
+  return p.startsWith("~/") ? join(homedir(), p.slice(2)) : p;
+}
+
 interface CandidatePath {
   dirPath: string;
   source: "workspace" | "global";
@@ -33,11 +37,14 @@ export async function getSkillDetail(
   }
 
   const candidates: CandidatePath[] = [
-    ...skillPaths.map((dirPath) => ({
-      dirPath,
-      source: "workspace" as const,
-      project: deriveProject(dirPath),
-    })),
+    ...skillPaths.map((dirPath) => {
+      const expanded = resolve(expandHome(dirPath));
+      return {
+        dirPath: expanded,
+        source: "workspace" as const,
+        project: deriveProject(dirPath),
+      };
+    }),
     {
       dirPath: GLOBAL_SKILLS_PATH(),
       source: "global" as const,
