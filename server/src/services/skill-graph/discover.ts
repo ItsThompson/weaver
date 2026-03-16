@@ -1,6 +1,6 @@
 import { readFile } from "node:fs/promises";
-import { join } from "node:path";
-import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
+import { join, resolve, basename } from "node:path";
+import { homedir } from "node:os";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { FileCache } from "../file-cache/file-cache";
 import { parseSkillFile } from "./parse-skill";
@@ -11,13 +11,39 @@ const skillCache = new FileCache<ParsedSkill>();
 
 export { skillCache };
 
-export async function discoverSkills(cwd: string): Promise<SkillEntry[]> {
-  const searchPaths = kiroSearchPaths(cwd, "skills");
+const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
+
+export function deriveProject(skillDirPath: string): string | null {
+  const normalized = resolve(skillDirPath);
+  if (normalized === GLOBAL_SKILLS_PATH()) {
+    return null;
+  }
+  const suffix = `${join(".kiro", "skills")}`;
+  if (normalized.endsWith(`/${suffix}`) || normalized.endsWith(`\\${suffix}`)) {
+    const parent = normalized.slice(0, -(suffix.length + 1));
+    return basename(parent);
+  }
+  return basename(normalized);
+}
+
+export async function discoverSkills(
+  skillPaths: string[],
+): Promise<SkillEntry[]> {
+  const allPaths = [
+    ...skillPaths.map((dirPath) => ({
+      dirPath,
+      source: "workspace" as const,
+      project: deriveProject(dirPath),
+    })),
+    {
+      dirPath: GLOBAL_SKILLS_PATH(),
+      source: "global" as const,
+      project: null as string | null,
+    },
+  ];
 
   const pathResults = await Promise.all(
-    searchPaths.map(async (dirPath, index) => {
-      const source: "workspace" | "global" =
-        index === 0 ? "workspace" : "global";
+    allPaths.map(async ({ dirPath, source, project }) => {
       const names = await listSkillDirNames(dirPath);
 
       return Promise.all(
@@ -28,7 +54,7 @@ export async function discoverSkills(cwd: string): Promise<SkillEntry[]> {
               const content = await readFile(skillPath, "utf-8");
               return parseSkillFile(content);
             });
-            return [{ name, source, parsed }];
+            return [{ name, source, parsed, project }];
           } catch (error) {
             log({
               timestamp: new Date().toISOString(),
@@ -44,12 +70,5 @@ export async function discoverSkills(cwd: string): Promise<SkillEntry[]> {
     }),
   );
 
-  const seen = new Set<string>();
-  return pathResults.flat(2).reduce<SkillEntry[]>((acc, entry) => {
-    if (!seen.has(entry.name)) {
-      seen.add(entry.name);
-      acc.push(entry);
-    }
-    return acc;
-  }, []);
+  return pathResults.flat(2);
 }
