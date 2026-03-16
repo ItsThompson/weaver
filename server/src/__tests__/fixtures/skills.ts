@@ -39,8 +39,3 @@ tags:
   - bar
 ---
 Body`;
-
-export const SEARCH_PATHS = [
-  "/workspace/.kiro/skills",
-  "/home/.kiro/skills",
-] as const;
