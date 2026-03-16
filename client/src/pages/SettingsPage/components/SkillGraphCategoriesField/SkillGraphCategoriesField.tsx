@@ -42,12 +42,16 @@ export function SkillGraphCategoriesField({
 
   const assigned = useMemo(() => collectAssignedSkills(rows), [rows]);
 
-  const updateRows = (updated: CategoryRow[]) => {
+  const syncRows = (updated: CategoryRow[]) => {
     setRows(updated);
     setConfig((prev) => ({
       ...prev,
       skill_graph: { categories: toConfig(updated) },
     }));
+  };
+
+  const updateRow = (index: number, patch: Partial<CategoryRow>) => {
+    syncRows(updateRowAt(rows, index, patch));
   };
 
   return (
@@ -60,7 +64,7 @@ export function SkillGraphCategoriesField({
           setRows((prev) => [...prev, { name: "", color: "", skills: [] }])
         }
         onRemoveButtonClick={({ detail: { itemIndex } }) =>
-          updateRows(rows.filter((_, i) => i !== itemIndex))
+          syncRows(rows.filter((_, i) => i !== itemIndex))
         }
         items={rows}
         addButtonText="Add category"
@@ -73,9 +77,7 @@ export function SkillGraphCategoriesField({
               <Input
                 value={item.name}
                 onChange={({ detail }) =>
-                  updateRows(
-                    updateRowAt(rows, itemIndex, { name: detail.value }),
-                  )
+                  updateRow(itemIndex, { name: detail.value })
                 }
                 placeholder="e.g. core"
                 disabled={disabled}
@@ -89,9 +91,7 @@ export function SkillGraphCategoriesField({
                 <Input
                   value={item.color}
                   onChange={({ detail }) =>
-                    updateRows(
-                      updateRowAt(rows, itemIndex, { color: detail.value }),
-                    )
+                    updateRow(itemIndex, { color: detail.value })
                   }
                   placeholder="#ff6b6b"
                   disabled={disabled}
@@ -119,13 +119,11 @@ export function SkillGraphCategoriesField({
                   value: skill,
                 }))}
                 onChange={({ detail }) =>
-                  updateRows(
-                    updateRowAt(rows, itemIndex, {
-                      skills: detail.selectedOptions.map(
-                        (opt) => opt.value ?? "",
-                      ),
-                    }),
-                  )
+                  updateRow(itemIndex, {
+                    skills: detail.selectedOptions.map(
+                      (opt) => opt.value ?? "",
+                    ),
+                  })
                 }
                 options={availableSkillOptions(
                   allSkillNames,
