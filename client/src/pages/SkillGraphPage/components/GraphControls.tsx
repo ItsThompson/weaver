@@ -1,6 +1,6 @@
 import { useConfigQuery } from "../../../hooks/queries";
 import { useCategoryColors } from "../hooks/useCategoryColors";
-import { UNCATEGORIZED_COLOR } from "../constants";
+import { UNCATEGORIZED_COLOR } from "../../../theme/colors";
 import { colors } from "../../../theme/colors";
 
 export function GraphControls() {

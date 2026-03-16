@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import type { WeaverConfig } from "@weaver/shared/types";
-import { DEFAULT_PALETTE, UNCATEGORIZED_COLOR } from "../constants";
+import { DEFAULT_PALETTE, UNCATEGORIZED_COLOR } from "../../../theme/colors";
 
 export function useCategoryColors(
   config: { config: WeaverConfig } | undefined,
