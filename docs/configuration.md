@@ -20,6 +20,7 @@ Changes made via the Settings page or CLI take effect immediately. If you edit t
 | `webhook_url`                | `string`                 | `""`        | URL to POST event payloads to                                |
 | `webhook_format`             | `"simple" \| "advanced"` | `"simple"`  | Webhook payload format                                       |
 | `test_runners`               | `string[]`               | see below   | Additional test runner patterns for agent test deduplication |
+| `skill_graph`                | `object`                 | `{}`        | Skill graph category definitions (see below)                 |
 
 ### Display options
 
@@ -34,6 +35,32 @@ The built-in test runner list used for agent test deduplication:
 `jest`, `vitest`, `mocha`, `pytest`, `rspec`, `cargo test`, `npm test`, `npx test`, `bundle exec rspec`, `bundle exec rake test`, `go test`, `dotnet test`, `phpunit`
 
 Add project-specific runners via `test_runners` in the global config or in your project's `.weaver.json`. Entries are merged with the defaults: you only need to add what's missing.
+
+### Skill graph categories
+
+Define custom categories for the skill graph. Each category has an optional hex color and a list of skill names. A skill can belong to at most one category: the validator rejects configs with duplicate assignments.
+
+If a category has no `color`, it gets one from a default palette. Skills not assigned to any category appear as uncategorized (grey).
+
+```json
+{
+  "skill_graph": {
+    "categories": {
+      "core": { "color": "#ff6b6b", "skills": ["coding-practices"] },
+      "language": { "skills": ["typescript-standards", "python-standards"] },
+      "domain": { "color": "#45b7d1", "skills": ["backend-coding-practices"] }
+    }
+  }
+}
+```
+
+| Field                                  | Type       | Required | Description                            |
+| -------------------------------------- | ---------- | -------- | -------------------------------------- |
+| `skill_graph.categories`               | `object`   | No       | Map of category name to definition     |
+| `skill_graph.categories.<name>.color`  | `string`   | No       | Hex color (e.g. `#ff6b6b`)             |
+| `skill_graph.categories.<name>.skills` | `string[]` | Yes      | Skill directory names in this category |
+
+Categories can also be managed from the Settings page (bulk editing) or the Skill Detail page (per-skill assignment).
 
 ### Example
 
