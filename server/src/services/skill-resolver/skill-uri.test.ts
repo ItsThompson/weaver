@@ -4,7 +4,8 @@ import "../../__tests__/mocks/logger";
 import { existsSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import { homedir } from "node:os";
-import { expandHome, resolveSkillUri } from "./skill-uri";
+import { expandHome } from "../../utils/path-utils";
+import { resolveSkillUri } from "./skill-uri";
 
 beforeEach(() => vi.clearAllMocks());
 

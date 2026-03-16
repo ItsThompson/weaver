@@ -5,21 +5,16 @@ import { readFile } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { homedir } from "node:os";
 import { log } from "../../utils/logger";
+import { SKILL_BASIC_CONTENT } from "../../__tests__/fixtures/skills";
 import { getSkillDetail } from "./get-skill-detail";
 
 const globalPath = resolve(join(homedir(), ".kiro", "skills"));
-
-const SKILL_CONTENT = `---
-name: skill-a
-description: Skill A description
----
-Body of skill A.`;
 
 beforeEach(() => vi.clearAllMocks());
 
 describe("getSkillDetail", () => {
   it("returns parsed skill with project from configured path", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail(
       "skill-a",
@@ -38,7 +33,7 @@ describe("getSkillDetail", () => {
   it("returns global skill with project null", async () => {
     vi.mocked(readFile).mockImplementation(async (path) => {
       if (String(path).startsWith(globalPath)) {
-        return SKILL_CONTENT;
+        return SKILL_BASIC_CONTENT;
       }
       throw Object.assign(new Error("ENOENT"), { code: "ENOENT" });
     });
@@ -52,7 +47,7 @@ describe("getSkillDetail", () => {
   });
 
   it("filters by project when provided", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail(
       "skill-a",
@@ -65,7 +60,7 @@ describe("getSkillDetail", () => {
   });
 
   it("filters by source=global", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail(
       "skill-a",
@@ -80,7 +75,7 @@ describe("getSkillDetail", () => {
   });
 
   it("falls back to first match when no project or source", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail(
       "skill-a",
@@ -93,7 +88,7 @@ describe("getSkillDetail", () => {
   });
 
   it("resolves category from config", async () => {
-    vi.mocked(readFile).mockResolvedValue(SKILL_CONTENT);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const detail = await getSkillDetail(
       "skill-a",

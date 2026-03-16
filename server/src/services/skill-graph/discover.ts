@@ -5,6 +5,7 @@ import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { FileCache } from "../file-cache/file-cache";
 import { parseSkillFile } from "./parse-skill";
 import { log } from "../../utils/logger";
+import { expandHome } from "../../utils/path-utils";
 import type { ParsedSkill, SkillEntry } from "./types";
 
 const skillCache = new FileCache<ParsedSkill>();
@@ -12,10 +13,6 @@ const skillCache = new FileCache<ParsedSkill>();
 export { skillCache };
 
 const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
-
-function expandHome(p: string): string {
-  return p.startsWith("~/") ? join(homedir(), p.slice(2)) : p;
-}
 
 export function deriveProject(skillDirPath: string): string | null {
   const normalized = resolve(expandHome(skillDirPath));

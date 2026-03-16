@@ -1,4 +1,5 @@
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { DirectoryPicker } from "./DirectoryPicker";
 
 vi.mock("../../utils/isElectron", () => ({
@@ -31,7 +32,7 @@ describe("DirectoryPicker", () => {
     };
 
     render(<DirectoryPicker onSelect={mockSelect} />);
-    fireEvent.click(screen.getByText("Browse"));
+    await userEvent.click(screen.getByText("Browse"));
 
     await waitFor(() => {
       expect(mockSelect).toHaveBeenCalledWith("/selected/path");
@@ -47,7 +48,7 @@ describe("DirectoryPicker", () => {
     };
 
     render(<DirectoryPicker onSelect={mockSelect} />);
-    fireEvent.click(screen.getByText("Browse"));
+    await userEvent.click(screen.getByText("Browse"));
 
     await waitFor(() => {
       expect(window.weaver!.selectDirectory).toHaveBeenCalled();

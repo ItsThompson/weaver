@@ -6,23 +6,15 @@ import { resolve, join } from "node:path";
 import { homedir } from "node:os";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { log } from "../../utils/logger";
+import {
+  SKILL_BASIC_CONTENT,
+  SKILL_B_CONTENT,
+} from "../../__tests__/fixtures/skills";
 import { discoverSkills, deriveProject } from "./discover";
 
 vi.mock("../skill-resolver/list-skill-dirs", () => ({
   listSkillDirNames: vi.fn(),
 }));
-
-const SKILL_A = `---
-name: skill-a
-description: Skill A description
----
-Body of skill A.`;
-
-const SKILL_B = `---
-name: skill-b
-description: Skill B description
----
-Body of skill B.`;
 
 const globalPath = resolve(join(homedir(), ".kiro", "skills"));
 
@@ -63,7 +55,7 @@ describe("discoverSkills", () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce([]);
-    vi.mocked(readFile).mockResolvedValue(SKILL_A);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const entries = await discoverSkills(["/projects/my-app/.kiro/skills"]);
 
@@ -79,7 +71,7 @@ describe("discoverSkills", () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce([])
       .mockResolvedValueOnce(["skill-b"]);
-    vi.mocked(readFile).mockResolvedValue(SKILL_B);
+    vi.mocked(readFile).mockResolvedValue(SKILL_B_CONTENT);
 
     const entries = await discoverSkills(["/projects/my-app/.kiro/skills"]);
 
@@ -95,7 +87,7 @@ describe("discoverSkills", () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce(["skill-a"]);
-    vi.mocked(readFile).mockResolvedValue(SKILL_A);
+    vi.mocked(readFile).mockResolvedValue(SKILL_BASIC_CONTENT);
 
     const entries = await discoverSkills(["/projects/my-app/.kiro/skills"]);
 
@@ -111,9 +103,9 @@ describe("discoverSkills", () => {
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockImplementation(async (path) => {
       if (String(path).includes("skill-a")) {
-        return SKILL_A;
+        return SKILL_BASIC_CONTENT;
       }
-      return SKILL_B;
+      return SKILL_B_CONTENT;
     });
 
     const entries = await discoverSkills([

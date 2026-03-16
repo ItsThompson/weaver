@@ -163,8 +163,8 @@ export function SkillDetailPage() {
           </SpaceBetween>
           {hasNameCollision && (
             <Alert type="info">
-              This category applies to all skills named &apos;{skillName}&apos;
-              across projects.
+              This category applies to all skills named '{skillName}' across
+              projects.
             </Alert>
           )}
           <Select

@@ -8,16 +8,13 @@ import type {
 import { parseSkillFile } from "./parse-skill";
 import { categorizeSkill } from "./category";
 import { log } from "../../utils/logger";
+import { expandHome } from "../../utils/path-utils";
 import { skillCache } from "./discover";
 import { deriveProject } from "./discover";
 import { isEnoent } from "./utils";
 import { VALID_SKILL_NAME } from "./constants";
 
 const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
-
-function expandHome(p: string): string {
-  return p.startsWith("~/") ? join(homedir(), p.slice(2)) : p;
-}
 
 interface CandidatePath {
   dirPath: string;

@@ -14,22 +14,18 @@ function resolveEdgeTarget(
   sourceProject: string | null,
   skills: SkillEntry[],
 ): string | null {
-  if (sourceProject !== null) {
-    const sameProject = skills.find(
-      (skill) => skill.name === refName && skill.project === sourceProject,
-    );
-    if (sameProject) {
-      return `${refName}::${sourceProject}`;
-    }
-
+  if (sourceProject === null) {
     const global = skills.find(
       (skill) => skill.name === refName && skill.project === null,
     );
-    if (global) {
-      return `${refName}::global`;
-    }
+    return global ? `${refName}::global` : null;
+  }
 
-    return null;
+  const sameProject = skills.find(
+    (skill) => skill.name === refName && skill.project === sourceProject,
+  );
+  if (sameProject) {
+    return `${refName}::${sourceProject}`;
   }
 
   const global = skills.find(

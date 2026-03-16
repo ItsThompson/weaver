@@ -1,10 +1,7 @@
 import { stat } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { homedir } from "node:os";
-
-function expandHome(p: string): string {
-  return p.startsWith("~/") ? join(homedir(), p.slice(2)) : p;
-}
+import { expandHome } from "../../../utils/path-utils";
 
 const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
 

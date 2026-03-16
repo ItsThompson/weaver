@@ -4,23 +4,15 @@ import "../../__tests__/mocks/logger";
 import { readFile } from "node:fs/promises";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { buildSkillGraph } from "./build-graph";
+import {
+  SKILL_A_CONTENT,
+  SKILL_B_CONTENT,
+} from "../../__tests__/fixtures/skills";
 import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
 
 vi.mock("../skill-resolver/list-skill-dirs", () => ({
   listSkillDirNames: vi.fn(),
 }));
-
-const SKILL_A_CONTENT = `---
-name: Skill A
-description: Skill A description
----
-Body of skill A with \`skill-b\` reference.`;
-
-const SKILL_B_CONTENT = `---
-name: skill-b
-description: Skill B description
----
-Body of skill B.`;
 
 const testCategories: Record<string, SkillGraphCategoryConfig> = {
   core: { skills: ["skill-a"] },
