@@ -1,5 +1,4 @@
 import type { ActivityStatus } from "@weaver/shared/types";
-import { SkillCategory } from "@weaver/shared/types";
 
 export const colors = {
   // Backgrounds
@@ -31,11 +30,4 @@ export const ACTIVITY_COLORS: Record<ActivityStatus, string> = {
   processing: "#d29922",
   running_tool: "#58a6ff",
   pending_approval: "#f85149",
-};
-
-export const CATEGORY_COLORS: Record<SkillCategory, string> = {
-  [SkillCategory.CORE]: "#ff6b6b",
-  [SkillCategory.LANGUAGE]: "#4ecdc4",
-  [SkillCategory.DOMAIN]: "#45b7d1",
-  [SkillCategory.WORKFLOW]: "#96ceb4",
 };

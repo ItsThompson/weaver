@@ -2,11 +2,14 @@ import { useMemo } from "react";
 import type { Node, Edge } from "@xyflow/react";
 import { MarkerType } from "@xyflow/react";
 import dagre from "dagre";
-import { useSkillGraphQuery } from "../../../hooks/queries";
+import { useSkillGraphQuery, useConfigQuery } from "../../../hooks/queries";
+import { useCategoryColors } from "./useCategoryColors";
 import type { SkillNodeData } from "../types";
 
 export function useSkillGraph() {
   const { data, error, isLoading } = useSkillGraphQuery();
+  const { data: configData } = useConfigQuery();
+  const resolveColor = useCategoryColors(configData);
 
   const { nodes, edges } = useMemo(() => {
     if (!data) {
@@ -39,6 +42,7 @@ export function useSkillGraph() {
           category: skill.category,
           description: skill.description,
           source: skill.source,
+          color: resolveColor(skill.category),
         },
       };
     });
@@ -52,7 +56,7 @@ export function useSkillGraph() {
     }));
 
     return { nodes, edges };
-  }, [data]);
+  }, [data, resolveColor]);
 
   return { nodes, edges, isLoading, error };
 }

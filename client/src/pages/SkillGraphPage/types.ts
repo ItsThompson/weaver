@@ -1,8 +1,7 @@
-import type { SkillCategory } from "@weaver/shared/types";
-
 export interface SkillNodeData extends Record<string, unknown> {
   label: string;
-  category: SkillCategory;
+  category: string | null;
   description: string;
   source: "global" | "workspace";
+  color: string;
 }

@@ -1,5 +1,4 @@
 import type { SkillGraph } from "@weaver/shared/types";
-import { SkillCategory } from "@weaver/shared/types";
 
 export const TEST_SKILL_GRAPH: SkillGraph = {
   nodes: [
@@ -7,14 +6,14 @@ export const TEST_SKILL_GRAPH: SkillGraph = {
       id: "typescript",
       name: "typescript",
       description: "TS lang",
-      category: SkillCategory.LANGUAGE,
+      category: "language",
       source: "workspace",
     },
     {
       id: "react",
       name: "react",
       description: "React lib",
-      category: SkillCategory.DOMAIN,
+      category: "domain",
       source: "global",
     },
   ],

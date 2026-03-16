@@ -1,7 +1,7 @@
 import React from "react";
 import { renderHook } from "@testing-library/react";
 import { SWRConfig } from "swr";
-import { SkillCategory } from "@weaver/shared/types";
+import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
 import "../../../__tests__/mocks/api";
 import { TEST_SKILL_GRAPH } from "../../../__tests__/fixtures/skills";
@@ -10,6 +10,7 @@ import * as api from "../../../utils/api";
 import { useSkillGraph } from "./useSkillGraph";
 
 const mockGetSkillGraph = vi.mocked(api.getSkillGraph);
+const mockGetConfig = vi.mocked(api.getConfig);
 
 function wrapper({ children }: { children: React.ReactNode }) {
   return React.createElement(SWRConfig, {
@@ -18,7 +19,21 @@ function wrapper({ children }: { children: React.ReactNode }) {
   });
 }
 
-beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockGetConfig.mockResolvedValue({
+    config: {
+      ...DEFAULT_CONFIG,
+      skill_graph: {
+        categories: {
+          language: { color: "#4ecdc4", skills: ["typescript"] },
+          domain: { color: "#45b7d1", skills: ["react"] },
+        },
+      },
+    },
+    warnings: [],
+  });
+});
 
 describe("useSkillGraph", () => {
   it("returns loading state initially", () => {
@@ -47,7 +62,7 @@ describe("useSkillGraph", () => {
 
     const tsNode = result.current.nodes.find((n) => n.id === "typescript");
     expect(tsNode?.data.label).toBe("typescript");
-    expect(tsNode?.data.category).toBe(SkillCategory.LANGUAGE);
+    expect(tsNode?.data.category).toBe("language");
   });
 
   it("maps edges from SkillEdge to React Flow Edge format", async () => {
