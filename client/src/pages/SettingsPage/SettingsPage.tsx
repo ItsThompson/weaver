@@ -8,6 +8,7 @@ import Slider from "@cloudscape-design/components/slider";
 import Input from "@cloudscape-design/components/input";
 import Button from "@cloudscape-design/components/button";
 import Alert from "@cloudscape-design/components/alert";
+import Spinner from "@cloudscape-design/components/spinner";
 import { isElectron } from "../../utils/isElectron";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
@@ -19,6 +20,15 @@ export function SettingsPage() {
   const { state, actions } = useSettings(addNotification);
   const { config, saving, isLoading, warnings, hasWarnings } = state;
   const { setConfig, handleSave } = actions;
+
+  if (isLoading) {
+    return (
+      <SpaceBetween size="l">
+        <Header variant="h1">Settings</Header>
+        <Spinner size="large" />
+      </SpaceBetween>
+    );
+  }
 
   return (
     <SpaceBetween size="l">

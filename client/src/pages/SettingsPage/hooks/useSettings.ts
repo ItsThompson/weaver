@@ -25,7 +25,8 @@ export function useSettings(
   state: SettingsState;
   actions: SettingsActions;
 } {
-  const { data, isLoading } = useConfigQuery();
+  const { data, isLoading: fetching } = useConfigQuery();
+  const serverConfig = data?.config;
   const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
   const [saving, setSaving] = useState(false);
 
@@ -33,10 +34,10 @@ export function useSettings(
   const hasWarnings = warnings.length > 0;
 
   useEffect(() => {
-    if (data?.config) {
-      setConfig(data.config);
+    if (serverConfig) {
+      setConfig(serverConfig);
     }
-  }, [data]);
+  }, [serverConfig]);
 
   const handleSave = async () => {
     setSaving(true);
@@ -55,7 +56,13 @@ export function useSettings(
   };
 
   return {
-    state: { config, saving, isLoading, warnings, hasWarnings },
+    state: {
+      config,
+      saving,
+      isLoading: fetching || !serverConfig,
+      warnings,
+      hasWarnings,
+    },
     actions: { setConfig, handleSave },
   };
 }

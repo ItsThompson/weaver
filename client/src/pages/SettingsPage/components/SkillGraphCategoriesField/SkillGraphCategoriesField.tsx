@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import Multiselect from "@cloudscape-design/components/multiselect";
@@ -32,14 +32,14 @@ export function SkillGraphCategoriesField({
     [graphData],
   );
 
-  const [rows, setRows] = useState<CategoryRow[]>(() =>
-    toRows(config.skill_graph?.categories ?? {}),
+  const rows = useMemo(
+    () => toRows(config.skill_graph?.categories ?? {}),
+    [config.skill_graph?.categories],
   );
 
   const assigned = useMemo(() => collectAssignedSkills(rows), [rows]);
 
   const syncRows = (updated: CategoryRow[]) => {
-    setRows(updated);
     setConfig((prev) => ({
       ...prev,
       skill_graph: { categories: toConfig(updated) },

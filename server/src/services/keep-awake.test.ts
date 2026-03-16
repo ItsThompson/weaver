@@ -60,9 +60,11 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
+const FAKE_SCRIPT = "/tmp/keep-awake.sh";
+
 describe("startKeepAwake", () => {
   it("polls immediately on start", async () => {
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
     expect(mockReadSessions).toHaveBeenCalledTimes(1);
   });
@@ -76,12 +78,12 @@ describe("startKeepAwake", () => {
     });
     mockDeriveActivity.mockReturnValue("running_tool");
 
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockExecFile).toHaveBeenCalledWith(
       "bash",
-      [expect.stringContaining("keep-awake.sh")],
+      [FAKE_SCRIPT],
       expect.any(Function),
     );
   });
@@ -92,7 +94,7 @@ describe("startKeepAwake", () => {
     mockGetLastEvent.mockResolvedValue({ name: "stop", timestamp: "" });
     mockDeriveActivity.mockReturnValue("idle");
 
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockExecFile).not.toHaveBeenCalled();
@@ -102,7 +104,7 @@ describe("startKeepAwake", () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
     mockIsProcessRunning.mockReturnValue(false);
 
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockGetLastEvent).not.toHaveBeenCalled();
@@ -112,7 +114,7 @@ describe("startKeepAwake", () => {
   it("logs and swallows poll errors", async () => {
     mockReadSessions.mockRejectedValue(new Error("disk full"));
 
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockLog).toHaveBeenCalledWith(
@@ -133,7 +135,7 @@ describe("startKeepAwake", () => {
       cb(new Error("script failed"));
     });
 
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
     expect(mockLog).toHaveBeenCalledWith(
@@ -144,7 +146,7 @@ describe("startKeepAwake", () => {
 
 describe("stopKeepAwake", () => {
   it("stops the polling interval", async () => {
-    startKeepAwake();
+    startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
     mockReadSessions.mockClear();
 

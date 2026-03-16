@@ -1,14 +1,12 @@
 import { execFile } from "node:child_process";
-import { dirname, join, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
 import { readSessions, isProcessRunning } from "./storage/index";
 import { getLastEvent, deriveActivity } from "./log-parser/index";
 import { log } from "../utils/logger";
 
 const POLL_INTERVAL_MS = 60_000;
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const SCRIPT_PATH = resolve(__dirname, "../../bin/keep-awake.sh");
 const ACTIVE_STATES = new Set(["processing", "running_tool"]);
+
+let interval: ReturnType<typeof setInterval> | null = null;
 
 async function hasActiveSessions(): Promise<boolean> {
   const sessions = await readSessions();
@@ -28,9 +26,7 @@ async function hasActiveSessions(): Promise<boolean> {
   return false;
 }
 
-let interval: ReturnType<typeof setInterval> | null = null;
-
-export function startKeepAwake(): void {
+export function startKeepAwake(scriptPath: string): void {
   const poll = async () => {
     try {
       const active = await hasActiveSessions();
@@ -40,7 +36,7 @@ export function startKeepAwake(): void {
         active,
       });
       if (active) {
-        execFile("bash", [SCRIPT_PATH], (err) => {
+        execFile("bash", [scriptPath], (err) => {
           if (err) {
             log({
               timestamp: new Date().toISOString(),

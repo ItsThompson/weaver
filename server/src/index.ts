@@ -57,7 +57,7 @@ async function start(): Promise<void> {
   await ensureDataDir();
   startStaleSessionCleanup();
   startPidPolling((sessionId) => broadcast(sessionId));
-  startKeepAwake();
+  startKeepAwake(resolve(__dirname, "../../bin/keep-awake.sh"));
   await server.listen({ port: PORT, host: "0.0.0.0" });
   log({
     timestamp: new Date().toISOString(),
