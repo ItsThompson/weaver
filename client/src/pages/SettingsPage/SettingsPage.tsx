@@ -12,6 +12,7 @@ import { isElectron } from "../../utils/isElectron";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
 import { TestRunnersField } from "./components/TestRunnersField";
+import { SkillGraphCategoriesField } from "./components/SkillGraphCategoriesField";
 
 export function SettingsPage() {
   const { addNotification } = useNotifications();
@@ -125,6 +126,11 @@ export function SettingsPage() {
               </FormField>
             )}
             <TestRunnersField
+              config={config}
+              setConfig={setConfig}
+              disabled={hasWarnings}
+            />
+            <SkillGraphCategoriesField
               config={config}
               setConfig={setConfig}
               disabled={hasWarnings}
