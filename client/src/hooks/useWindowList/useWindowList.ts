@@ -34,11 +34,30 @@ export function useWindowList(): WindowEntry[] {
       return acc;
     }, []);
 
-    const skillWindows = (skillGraph?.nodes ?? []).map((skill) => ({
-      label: `Skill: ${skill.name}`,
-      href: `/skills/${skill.name}`,
-      searchableText: `${skill.name} ${skill.category} skill`,
-    }));
+    const skillWindows = (skillGraph?.nodes ?? []).flatMap((skill) => {
+      if (skill.variants.length <= 1) {
+        return [
+          {
+            label: `Skill: ${skill.name}`,
+            href: `/skills/${skill.name}`,
+            searchableText: `${skill.name} ${skill.category} skill`,
+          },
+        ];
+      }
+
+      return skill.variants.map((variant) => {
+        const suffix = variant.project ?? "Global";
+        const query = variant.project
+          ? `?project=${variant.project}`
+          : "?source=global";
+        return {
+          label: `Skill: ${skill.name} (${suffix})`,
+          href: `/skills/${skill.name}${query}`,
+          description: suffix,
+          searchableText: `${skill.name} ${suffix} ${skill.category} skill`,
+        };
+      });
+    });
 
     return [...STATIC_WINDOWS, ...sessionWindows, ...skillWindows];
   }, [sessions, skillGraph]);
