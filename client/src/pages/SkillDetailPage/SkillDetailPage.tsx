@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
@@ -18,6 +19,10 @@ import {
 } from "../../hooks/queries";
 import { patchConfig } from "../../utils/api";
 import { buildUpdatedCategories } from "./utils";
+import { CreateCategoryModal } from "./components/CreateCategoryModal";
+
+const CREATE_NEW = "__create_new__";
+const UNCATEGORIZED = "__uncategorized__";
 
 export function SkillDetailPage() {
   const { skillName } = useParams<{ skillName: string }>();
@@ -25,16 +30,32 @@ export function SkillDetailPage() {
   const location = useLocation();
   const { data, error, isLoading } = useSkillDetailQuery(skillName);
   const { data: configData } = useConfigQuery();
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const categories = configData?.config.skill_graph?.categories ?? {};
+  const categoryNames = Object.keys(categories);
   const categoryOptions = [
-    { label: "Uncategorized", value: "__uncategorized__" },
-    ...Object.keys(categories).map((name) => ({ label: name, value: name })),
+    { label: "Uncategorized", value: UNCATEGORIZED },
+    ...categoryNames.map((name) => ({ label: name, value: name })),
+    { label: "+ Create new category", value: CREATE_NEW },
   ];
 
-  const selectedCategory = data?.category ?? "__uncategorized__";
+  const selectedCategory = data?.category ?? UNCATEGORIZED;
+
+  const revalidateAll = () => {
+    revalidateConfig();
+    revalidateSkillGraph();
+    if (skillName) {
+      revalidateSkillDetail(skillName);
+    }
+  };
 
   const handleCategoryChange = async (newValue: string) => {
+    if (newValue === CREATE_NEW) {
+      setShowCreateModal(true);
+      return;
+    }
+
     if (!skillName || !configData) {
       return;
     }
@@ -46,9 +67,29 @@ export function SkillDetailPage() {
     );
 
     await patchConfig({ skill_graph: { categories: updatedCategories } });
-    revalidateConfig();
-    revalidateSkillGraph();
-    revalidateSkillDetail(skillName);
+    revalidateAll();
+  };
+
+  const handleCreateCategory = async (name: string, color?: string) => {
+    if (!skillName || !configData) {
+      return;
+    }
+
+    // Remove skill from any existing category first
+    const cleaned = buildUpdatedCategories(
+      configData.config.skill_graph.categories,
+      skillName,
+      UNCATEGORIZED,
+    );
+
+    // Add the new category with the current skill auto-assigned
+    cleaned[name] = {
+      ...(color ? { color } : {}),
+      skills: [skillName],
+    };
+
+    await patchConfig({ skill_graph: { categories: cleaned } });
+    revalidateAll();
   };
 
   const referrer = (location.state as { from?: string } | null)?.from;
@@ -96,9 +137,7 @@ export function SkillDetailPage() {
               categoryOptions[0]
             }
             onChange={({ detail }) =>
-              handleCategoryChange(
-                detail.selectedOption.value ?? "__uncategorized__",
-              )
+              handleCategoryChange(detail.selectedOption.value ?? UNCATEGORIZED)
             }
             options={categoryOptions}
           />
@@ -109,6 +148,12 @@ export function SkillDetailPage() {
           </Container>
         </SpaceBetween>
       )}
+      <CreateCategoryModal
+        visible={showCreateModal}
+        existingNames={categoryNames}
+        onDismiss={() => setShowCreateModal(false)}
+        onCreate={handleCreateCategory}
+      />
     </SpaceBetween>
   );
 }
