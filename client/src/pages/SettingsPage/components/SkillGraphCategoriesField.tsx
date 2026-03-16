@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import Multiselect from "@cloudscape-design/components/multiselect";
@@ -31,19 +31,24 @@ function toRows(
   }));
 }
 
-function toConfig(
+function syncConfig(
   rows: CategoryRow[],
-): Record<string, SkillGraphCategoryConfig> {
-  return rows.reduce<Record<string, SkillGraphCategoryConfig>>((acc, row) => {
-    if (!row.name) {
+  setConfig: React.Dispatch<React.SetStateAction<WeaverConfig>>,
+) {
+  const categories = rows.reduce<Record<string, SkillGraphCategoryConfig>>(
+    (acc, row) => {
+      if (!row.name) {
+        return acc;
+      }
+      acc[row.name] = {
+        ...(row.color ? { color: row.color } : {}),
+        skills: row.skills,
+      };
       return acc;
-    }
-    acc[row.name] = {
-      ...(row.color ? { color: row.color } : {}),
-      skills: row.skills,
-    };
-    return acc;
-  }, {});
+    },
+    {},
+  );
+  setConfig((prev) => ({ ...prev, skill_graph: { categories } }));
 }
 
 export function SkillGraphCategoriesField({
@@ -57,7 +62,13 @@ export function SkillGraphCategoriesField({
     [graphData],
   );
 
-  const rows = toRows(config.skill_graph.categories);
+  const [rows, setRows] = useState<CategoryRow[]>(() =>
+    toRows(config.skill_graph?.categories ?? {}),
+  );
+
+  useEffect(() => {
+    setRows(toRows(config.skill_graph?.categories ?? {}));
+  }, [config.skill_graph]);
 
   const assignedByRow = useMemo(() => {
     const assigned = new Set<string>();
@@ -65,11 +76,9 @@ export function SkillGraphCategoriesField({
     return assigned;
   }, [rows]);
 
-  const updateRows = (updatedRows: CategoryRow[]) => {
-    setConfig((prev) => ({
-      ...prev,
-      skill_graph: { categories: toConfig(updatedRows) },
-    }));
+  const updateRows = (updated: CategoryRow[]) => {
+    setRows(updated);
+    syncConfig(updated, setConfig);
   };
 
   return (
@@ -79,7 +88,7 @@ export function SkillGraphCategoriesField({
     >
       <AttributeEditor
         onAddButtonClick={() =>
-          updateRows([...rows, { name: "", color: "", skills: [] }])
+          setRows((prev) => [...prev, { name: "", color: "", skills: [] }])
         }
         onRemoveButtonClick={({ detail: { itemIndex } }) =>
           updateRows(rows.filter((_, i) => i !== itemIndex))
