@@ -1,7 +1,6 @@
 import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import AttributeEditor from "@cloudscape-design/components/attribute-editor";
-import SpaceBetween from "@cloudscape-design/components/space-between";
 import { DirectoryPicker } from "../../../../components/DirectoryPicker";
 import type { WeaverConfig } from "@weaver/shared/types";
 
@@ -42,20 +41,22 @@ export function SkillPathsField({
           {
             label: "Path",
             control: (item: { value: string }, itemIndex: number) => (
-              <SpaceBetween direction="horizontal" size="xs">
-                <Input
-                  value={item.value}
-                  onChange={({ detail }) =>
-                    setConfig((prev) => ({
-                      ...prev,
-                      skill_paths: prev.skill_paths.map((existing, i) =>
-                        i === itemIndex ? detail.value : existing,
-                      ),
-                    }))
-                  }
-                  placeholder="~/projects/my-app/.kiro/skills"
-                  disabled={disabled}
-                />
+              <div style={{ display: "flex", gap: 8 }}>
+                <div style={{ flex: 1 }}>
+                  <Input
+                    value={item.value}
+                    onChange={({ detail }) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        skill_paths: prev.skill_paths.map((existing, i) =>
+                          i === itemIndex ? detail.value : existing,
+                        ),
+                      }))
+                    }
+                    placeholder="~/projects/my-app/.kiro/skills"
+                    disabled={disabled}
+                  />
+                </div>
                 <DirectoryPicker
                   onSelect={(path) =>
                     setConfig((prev) => ({
@@ -67,7 +68,7 @@ export function SkillPathsField({
                   }
                   disabled={disabled}
                 />
-              </SpaceBetween>
+              </div>
             ),
           },
         ]}
