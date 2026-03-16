@@ -1,12 +1,17 @@
 import "../../__tests__/mocks/fs";
 import "../../__tests__/mocks/logger";
-import "../../__tests__/mocks/skill-resolver";
+import "../../__tests__/mocks/config";
+
+vi.mock("../skill-resolver/list-skill-dirs", () => ({
+  listSkillDirNames: vi.fn(),
+}));
 
 import { readFile } from "node:fs/promises";
-import { kiroSearchPaths } from "../skill-resolver/kiro-paths";
+import { readConfig } from "../config/index";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { log } from "../../utils/logger";
 import { discoverSkills } from "./discover";
+import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
 const SKILL_A = `---
 name: skill-a
@@ -22,41 +27,91 @@ Body of skill B.`;
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(kiroSearchPaths).mockReturnValue([
-    "/workspace/.kiro/skills",
-    "/home/.kiro/skills",
-  ]);
+  vi.mocked(readConfig).mockResolvedValue({
+    config: {
+      ...DEFAULT_CONFIG,
+      skill_paths: ["/projects/my-app/.kiro/skills"],
+    },
+    warnings: [],
+    fieldErrors: {},
+  });
 });
 
 describe("discoverSkills", () => {
-  it("returns entries from workspace and global paths", async () => {
+  it("discovers skills from configured paths as workspace source with correct project", async () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
-      .mockResolvedValueOnce(["skill-b"]);
-    vi.mocked(readFile).mockImplementation(async (path) => {
-      if (String(path).includes("skill-a")) {
-        return SKILL_A;
-      }
-      return SKILL_B;
+      .mockResolvedValueOnce([]);
+    vi.mocked(readFile).mockResolvedValue(SKILL_A);
+
+    const { entries } = await discoverSkills();
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({
+      name: "skill-a",
+      source: "workspace",
+      project: "my-app",
     });
-
-    const entries = await discoverSkills("/workspace");
-
-    expect(entries).toHaveLength(2);
-    expect(entries[0]).toMatchObject({ name: "skill-a", source: "workspace" });
-    expect(entries[1]).toMatchObject({ name: "skill-b", source: "global" });
   });
 
-  it("deduplicates with workspace precedence", async () => {
+  it("always includes global ~/.kiro/skills with project null", async () => {
+    vi.mocked(listSkillDirNames)
+      .mockResolvedValueOnce([])
+      .mockResolvedValueOnce(["skill-b"]);
+    vi.mocked(readFile).mockResolvedValue(SKILL_B);
+
+    const { entries } = await discoverSkills();
+
+    expect(entries).toHaveLength(1);
+    expect(entries[0]).toMatchObject({
+      name: "skill-b",
+      source: "global",
+      project: null,
+    });
+  });
+
+  it("returns all entries including duplicates", async () => {
     vi.mocked(listSkillDirNames)
       .mockResolvedValueOnce(["skill-a"])
       .mockResolvedValueOnce(["skill-a"]);
     vi.mocked(readFile).mockResolvedValue(SKILL_A);
 
-    const entries = await discoverSkills("/workspace");
+    const { entries } = await discoverSkills();
 
-    expect(entries).toHaveLength(1);
+    expect(entries).toHaveLength(2);
     expect(entries[0].source).toBe("workspace");
+    expect(entries[1].source).toBe("global");
+  });
+
+  it("returns configCategories from config alongside entries", async () => {
+    const categories = { core: { skills: ["skill-a"] } };
+    vi.mocked(readConfig).mockResolvedValue({
+      config: {
+        ...DEFAULT_CONFIG,
+        skill_paths: [],
+        skill_graph: { categories },
+      },
+      warnings: [],
+      fieldErrors: {},
+    });
+    vi.mocked(listSkillDirNames).mockResolvedValueOnce([]);
+
+    const { configCategories } = await discoverSkills();
+
+    expect(configCategories).toEqual(categories);
+  });
+
+  it("returns empty array when no paths configured and global is empty", async () => {
+    vi.mocked(readConfig).mockResolvedValue({
+      config: { ...DEFAULT_CONFIG, skill_paths: [] },
+      warnings: [],
+      fieldErrors: {},
+    });
+    vi.mocked(listSkillDirNames).mockResolvedValueOnce([]);
+
+    const { entries } = await discoverSkills();
+
+    expect(entries).toEqual([]);
   });
 
   it("skips skills that fail to parse and logs the error", async () => {
@@ -65,7 +120,7 @@ describe("discoverSkills", () => {
       .mockResolvedValueOnce([]);
     vi.mocked(readFile).mockRejectedValue(new Error("ENOENT"));
 
-    const entries = await discoverSkills("/workspace");
+    const { entries } = await discoverSkills();
 
     expect(entries).toEqual([]);
     expect(log).toHaveBeenCalledWith(
@@ -74,15 +129,5 @@ describe("discoverSkills", () => {
         skill: "broken-skill",
       }),
     );
-  });
-
-  it("returns empty array when no skill directories exist", async () => {
-    vi.mocked(listSkillDirNames)
-      .mockResolvedValueOnce([])
-      .mockResolvedValueOnce([]);
-
-    const entries = await discoverSkills("/workspace");
-
-    expect(entries).toEqual([]);
   });
 });

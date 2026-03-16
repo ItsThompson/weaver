@@ -41,6 +41,7 @@ beforeEach(() => {
   mockGetConfig.mockResolvedValue({
     config: { ghost_mode: false } as any,
     warnings: [],
+    fieldErrors: {},
   });
 });
 

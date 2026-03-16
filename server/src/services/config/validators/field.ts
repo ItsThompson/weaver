@@ -1,6 +1,6 @@
 import type { ValidatorResult } from "./types";
 import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
-import { existsSync, lstatSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
 
@@ -180,7 +180,7 @@ export function validateSkillPaths(value: unknown): ValidatorResult {
     const expanded = trimmed.startsWith("~")
       ? join(homedir(), trimmed.slice(1))
       : trimmed;
-    if (existsSync(expanded) && lstatSync(expanded).isDirectory()) {
+    if (existsSync(expanded) && statSync(expanded).isDirectory()) {
       resolved.push(trimmed);
     } else {
       fieldErrors[String(index)] =

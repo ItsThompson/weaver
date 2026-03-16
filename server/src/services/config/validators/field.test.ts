@@ -5,6 +5,7 @@ import {
   validateWebhookFormat,
   validateTestRunners,
   validateSkillGraph,
+  validateSkillPaths,
 } from "./field";
 
 describe("validatePageSize", () => {
@@ -194,5 +195,62 @@ describe("validateSkillGraph", () => {
       },
     };
     expect(validateSkillGraph(input)).toEqual({ value: input });
+  });
+});
+
+describe("validateSkillPaths", () => {
+  it("accepts empty array", () => {
+    expect(validateSkillPaths([])).toEqual({ value: [] });
+  });
+
+  it("accepts valid array of existing directory paths", () => {
+    // /tmp always exists on macOS
+    const result = validateSkillPaths(["/tmp"]);
+    expect(result.value).toEqual(["/tmp"]);
+    expect(result.fieldErrors).toBeUndefined();
+  });
+
+  it("trims whitespace", () => {
+    const result = validateSkillPaths(["  /tmp  "]);
+    expect(result.value).toEqual(["/tmp"]);
+  });
+
+  it("filters empty entries", () => {
+    const result = validateSkillPaths(["", "  ", "/tmp"]);
+    expect(result.value).toEqual(["/tmp"]);
+  });
+
+  it("deduplicates identical paths", () => {
+    const result = validateSkillPaths(["/tmp", "/tmp"]);
+    expect(result.value).toEqual(["/tmp"]);
+  });
+
+  it("rejects non-array", () => {
+    expect(validateSkillPaths("not-array")).toEqual({
+      warning: "skill_paths must be an array of strings",
+    });
+  });
+
+  it("rejects array with non-string elements", () => {
+    expect(validateSkillPaths([123])).toEqual({
+      warning: "skill_paths must contain only strings",
+    });
+  });
+
+  it("returns fieldErrors with index keys for invalid paths", () => {
+    const result = validateSkillPaths([
+      "/tmp",
+      "/nonexistent/path/that/does/not/exist",
+    ]);
+    expect(result.value).toEqual(["/tmp"]);
+    expect(result.fieldErrors).toHaveProperty("1");
+    expect(result.fieldErrors!["1"]).toContain("does not exist");
+  });
+
+  it("resolves ~ paths", () => {
+    // ~ should resolve to home directory which exists
+    const result = validateSkillPaths(["~"]);
+    expect(result.value).toEqual(["~"]);
+    expect(result.fieldErrors).toBeUndefined();
   });
 });

@@ -8,6 +8,8 @@ export const TEST_SKILL_GRAPH: SkillGraph = {
       description: "TS lang",
       category: "language",
       source: "workspace",
+      project: "my-app",
+      variants: [{ source: "workspace", project: "my-app" }],
     },
     {
       id: "react",
@@ -15,6 +17,8 @@ export const TEST_SKILL_GRAPH: SkillGraph = {
       description: "React lib",
       category: "domain",
       source: "global",
+      project: null,
+      variants: [{ source: "global", project: null }],
     },
   ],
   edges: [{ from: "typescript", to: "react" }],

@@ -14,6 +14,11 @@ describe("parseAndValidateConfig", () => {
     expect(warnings).toContain("Config must be a JSON object");
   });
 
+  it("returns empty fieldErrors for invalid JSON", () => {
+    const { fieldErrors } = parseAndValidateConfig("not json");
+    expect(fieldErrors).toEqual({});
+  });
+
   it("accepts valid ghost_mode boolean", () => {
     const { config, warnings } = parseAndValidateConfig(
       JSON.stringify({ ghost_mode: true }),
@@ -148,5 +153,24 @@ describe("parseAndValidateConfig", () => {
     );
     expect(config.test_runners).toEqual(["jest", "pytest"]);
     expect(warnings).toHaveLength(0);
+  });
+
+  it("returns empty fieldErrors when all validators pass", () => {
+    const { fieldErrors } = parseAndValidateConfig(
+      JSON.stringify({ ghost_mode: true }),
+    );
+    expect(fieldErrors).toEqual({});
+  });
+
+  it("collects fieldErrors from validators that return them", () => {
+    // skill_paths with an invalid path will produce fieldErrors
+    // but since we can't control the filesystem here, we test the structure
+    const { fieldErrors } = parseAndValidateConfig(
+      JSON.stringify({
+        skill_paths: ["/nonexistent/path/that/does/not/exist"],
+      }),
+    );
+    expect(fieldErrors).toHaveProperty("skill_paths");
+    expect(fieldErrors.skill_paths).toHaveProperty("0");
   });
 });

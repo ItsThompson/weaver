@@ -36,6 +36,7 @@ export function configWith(
   return {
     config: { ...DEFAULT_CONFIG, webhook_url: url, webhook_format: format },
     warnings: [],
+    fieldErrors: {},
   };
 }
 

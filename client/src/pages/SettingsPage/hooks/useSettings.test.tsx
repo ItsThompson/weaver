@@ -25,7 +25,11 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("useSettings", () => {
   it("returns default config initially", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     const { result } = renderHook(() => useSettings(mockAddNotification), {
       wrapper,
     });
@@ -36,7 +40,11 @@ describe("useSettings", () => {
 
   it("syncs config when data loads", async () => {
     const customConfig = { ...DEFAULT_CONFIG, dark_mode: false };
-    mockGetConfig.mockResolvedValue({ config: customConfig, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: customConfig,
+      warnings: [],
+      fieldErrors: {},
+    });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
       wrapper,
@@ -51,6 +59,7 @@ describe("useSettings", () => {
     mockGetConfig.mockResolvedValue({
       config: DEFAULT_CONFIG,
       warnings: ["ghost_mode must be a boolean"],
+      fieldErrors: {},
     });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
@@ -66,7 +75,11 @@ describe("useSettings", () => {
   });
 
   it("handleSave calls updateConfig and notifies success", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
@@ -86,7 +99,11 @@ describe("useSettings", () => {
   });
 
   it("handleSave notifies error on failure", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockRejectedValue(new Error("Network error"));
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
@@ -101,7 +118,11 @@ describe("useSettings", () => {
   });
 
   it("setConfig updates the config state", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
       wrapper,

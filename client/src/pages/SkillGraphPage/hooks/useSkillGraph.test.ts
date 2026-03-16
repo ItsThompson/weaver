@@ -32,6 +32,7 @@ beforeEach(() => {
       },
     },
     warnings: [],
+    fieldErrors: {},
   });
 });
 

@@ -36,7 +36,11 @@ beforeEach(() => vi.clearAllMocks());
 
 describe("SettingsPage", () => {
   it("renders current config values", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     await act(async () => {
       renderPage();
     });
@@ -48,7 +52,11 @@ describe("SettingsPage", () => {
   });
 
   it("save button calls updateConfig", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
@@ -63,7 +71,11 @@ describe("SettingsPage", () => {
   });
 
   it("shows success toast after saving", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
@@ -77,7 +89,11 @@ describe("SettingsPage", () => {
   });
 
   it("shows error toast when save fails", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockRejectedValue(new Error("Network error"));
     await act(async () => {
       renderPage();
@@ -94,6 +110,7 @@ describe("SettingsPage", () => {
     mockGetConfig.mockResolvedValue({
       config: DEFAULT_CONFIG,
       warnings: ["webhook_url must start with http:// or https://"],
+      fieldErrors: {},
     });
     await act(async () => {
       renderPage();
@@ -105,7 +122,11 @@ describe("SettingsPage", () => {
   });
 
   it("renders test runners section", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     await act(async () => {
       renderPage();
     });
@@ -114,7 +135,11 @@ describe("SettingsPage", () => {
   });
 
   it("saves config with test_runners", async () => {
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockGetConfig.mockResolvedValue({
+      config: DEFAULT_CONFIG,
+      warnings: [],
+      fieldErrors: {},
+    });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();

@@ -41,6 +41,7 @@ describe("SkillDetailPage breadcrumbs", () => {
       body: "# TS",
       source: "global" as const,
       category: null,
+      project: null,
     });
 
     const wrapper = renderWithRoute("typescript");
@@ -61,6 +62,7 @@ describe("SkillDetailPage breadcrumbs", () => {
       body: "# TS",
       source: "global" as const,
       category: null,
+      project: null,
     });
 
     const wrapper = renderWithRoute("typescript", {
