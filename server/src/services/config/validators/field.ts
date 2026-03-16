@@ -22,41 +22,63 @@ export function validateSkillGraph(value: unknown): ValidatorResult {
   }
 
   const categories = obj.categories as Record<string, unknown>;
-  const seen = new Set<string>();
 
-  for (const [key, entry] of Object.entries(categories)) {
-    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
-      return { warning: `skill_graph.categories.${key} must be an object` };
-    }
+  const result = Object.entries(categories).reduce<{
+    warning?: string;
+    seen: Set<string>;
+  }>(
+    (acc, [key, entry]) => {
+      if (acc.warning) {
+        return acc;
+      }
 
-    const cat = entry as Record<string, unknown>;
-
-    if (
-      cat.color !== undefined &&
-      (typeof cat.color !== "string" || !HEX_COLOR.test(cat.color))
-    ) {
-      return {
-        warning: `skill_graph.categories.${key}.color must be a hex string (e.g. #ff6b6b)`,
-      };
-    }
-
-    if (
-      !Array.isArray(cat.skills) ||
-      !cat.skills.every((s: unknown) => typeof s === "string")
-    ) {
-      return {
-        warning: `skill_graph.categories.${key}.skills must be an array of strings`,
-      };
-    }
-
-    for (const skill of cat.skills as string[]) {
-      if (seen.has(skill)) {
+      if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
         return {
-          warning: `skill "${skill}" is assigned to multiple categories`,
+          ...acc,
+          warning: `skill_graph.categories.${key} must be an object`,
         };
       }
-      seen.add(skill);
-    }
+
+      const cat = entry as Record<string, unknown>;
+
+      if (
+        cat.color !== undefined &&
+        (typeof cat.color !== "string" || !HEX_COLOR.test(cat.color))
+      ) {
+        return {
+          ...acc,
+          warning: `skill_graph.categories.${key}.color must be a hex string (e.g. #ff6b6b)`,
+        };
+      }
+
+      if (
+        !Array.isArray(cat.skills) ||
+        !cat.skills.every((s: unknown) => typeof s === "string")
+      ) {
+        return {
+          ...acc,
+          warning: `skill_graph.categories.${key}.skills must be an array of strings`,
+        };
+      }
+
+      const duplicate = (cat.skills as string[]).find((skill) =>
+        acc.seen.has(skill),
+      );
+      if (duplicate) {
+        return {
+          ...acc,
+          warning: `skill "${duplicate}" is assigned to multiple categories`,
+        };
+      }
+
+      (cat.skills as string[]).forEach((skill) => acc.seen.add(skill));
+      return acc;
+    },
+    { seen: new Set<string>() },
+  );
+
+  if (result.warning) {
+    return { warning: result.warning };
   }
 
   return {
