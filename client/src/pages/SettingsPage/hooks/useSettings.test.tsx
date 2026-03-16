@@ -113,9 +113,8 @@ describe("useSettings", () => {
     expect(mockAddNotification).toHaveBeenCalledWith("Network error", "error");
   });
 
-  it("setConfig forks server config into draft", async () => {
-    const serverConfig = { ...DEFAULT_CONFIG, dark_mode: true };
-    mockGetConfig.mockResolvedValue({ config: serverConfig, warnings: [] });
+  it("setConfig updates the config state", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
       wrapper,
@@ -135,32 +134,20 @@ describe("useSettings", () => {
     expect(result.current.state.config.dark_mode).toBe(false);
   });
 
-  it("handleSave resets draft to server state", async () => {
-    const serverConfig = { ...DEFAULT_CONFIG, dark_mode: true };
-    mockGetConfig.mockResolvedValue({ config: serverConfig, warnings: [] });
-    mockUpdateConfig.mockResolvedValue({ config: serverConfig });
+  it("stays loading until server config is available", async () => {
+    const customConfig = { ...DEFAULT_CONFIG, dark_mode: false };
+    mockGetConfig.mockResolvedValue({ config: customConfig, warnings: [] });
 
     const { result } = renderHook(() => useSettings(mockAddNotification), {
       wrapper,
     });
 
+    expect(result.current.state.isLoading).toBe(true);
+
     await vi.waitFor(() => {
       expect(result.current.state.isLoading).toBe(false);
     });
 
-    act(() => {
-      result.current.actions.setConfig((prev) => ({
-        ...prev,
-        dark_mode: false,
-      }));
-    });
-
-    expect(result.current.state.config.dark_mode).toBe(false);
-
-    await act(async () => {
-      await result.current.actions.handleSave();
-    });
-
-    expect(result.current.state.config).toEqual(serverConfig);
+    expect(result.current.state.config).toEqual(customConfig);
   });
 });

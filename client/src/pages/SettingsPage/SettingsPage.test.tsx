@@ -6,6 +6,7 @@ import { SWRConfig } from "swr";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 import { NotificationProvider } from "../../context/NotificationContext";
 import { NotificationBar } from "../../components/NotificationBar/NotificationBar";
+import { CONFIG_WITH_CATEGORIES } from "../../__tests__/fixtures/config";
 
 import "../../__tests__/mocks/api";
 
@@ -127,5 +128,18 @@ describe("SettingsPage", () => {
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
     expect(savedConfig.test_runners).toEqual(DEFAULT_CONFIG.test_runners);
+  });
+
+  it("renders skill graph categories from config", async () => {
+    mockGetConfig.mockResolvedValue({
+      config: CONFIG_WITH_CATEGORIES,
+      warnings: [],
+    });
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(screen.getByDisplayValue("core")).toBeInTheDocument();
+    expect(screen.getByDisplayValue("#ff6b6b")).toBeInTheDocument();
   });
 });

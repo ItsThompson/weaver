@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
 import { useConfigQuery, revalidateConfig } from "../../../hooks/queries";
 import { updateConfig } from "../../../utils/api";
@@ -27,28 +27,23 @@ export function useSettings(
 } {
   const { data, isLoading: fetching } = useConfigQuery();
   const serverConfig = data?.config;
-  const [draft, setDraft] = useState<WeaverConfig | null>(null);
+  const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
   const [saving, setSaving] = useState(false);
 
-  const config = draft ?? serverConfig ?? DEFAULT_CONFIG;
   const warnings = data?.warnings ?? [];
   const hasWarnings = warnings.length > 0;
 
-  const setConfig: React.Dispatch<React.SetStateAction<WeaverConfig>> = (
-    action,
-  ) => {
-    setDraft((prev) => {
-      const current = prev ?? serverConfig ?? DEFAULT_CONFIG;
-      return typeof action === "function" ? action(current) : action;
-    });
-  };
+  useEffect(() => {
+    if (serverConfig) {
+      setConfig(serverConfig);
+    }
+  }, [serverConfig]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
       await updateConfig(config);
       await revalidateConfig();
-      setDraft(null);
       addNotification("Settings saved", "success");
     } catch (err) {
       addNotification(

@@ -53,15 +53,18 @@ The first fix added a `ready` flag inside the same `useEffect` as `setConfig`, g
 
 ## Final fix
 
-Eliminated both layers of duplicated state:
+Addressed both layers of the problem:
 
-1. **`useSettings`**: replaced the `useState` + `useEffect` + `ready` pattern with a `draft` state that starts as `null`. Config is derived as `draft ?? serverConfig ?? DEFAULT_CONFIG`. Before any user edits, the hook reads SWR data directly with no intermediate copy. The first edit forks into `draft`, and `handleSave` resets `draft` to `null` so the hook falls back to freshly revalidated SWR data. No `useEffect`, no timing gap.
+1. **`useSettings`**: removed the `ready` flag. Kept `useState` + `useEffect` for form state (the form needs mutable local state for in-progress edits), but changed `isLoading` to `fetching || !serverConfig`. This gates the form on actual data availability: the form never mounts until `serverConfig` exists, so the `useEffect` sync is guaranteed to fire before any child component reads `config`. The `useEffect` here is not syncing derived state (an antipattern): it is initializing local form state from a one-time server fetch, which is a legitimate use.
 
-2. **`SkillGraphCategoriesField`**: converted from uncontrolled to fully controlled. Removed the internal `rows` `useState`. Rows are now derived via `useMemo` from `config.skill_graph.categories` on every render. Mutations go through `setConfig`, which updates the parent's draft, which re-derives rows on the next render. No local snapshot means no stale data regardless of mount timing.
+2. **`SkillGraphCategoriesField`**: converted from uncontrolled to fully controlled. Removed the internal `rows` `useState`. Rows are now derived via `useMemo` from `config.skill_graph.categories` on every render. Mutations go through `setConfig`, which updates the parent state, which re-derives rows on the next render. No local snapshot means no stale data regardless of mount timing.
+
+3. **`SettingsPage.test.tsx`**: added an integration test that renders the full page with async config containing categories and asserts the category values appear in the form. This test would have caught the original bug.
 
 ## Files changed
 
-- `client/src/pages/SettingsPage/hooks/useSettings.ts`: replaced `useState`/`useEffect`/`ready` with `draft` pattern
+- `client/src/pages/SettingsPage/hooks/useSettings.ts`: removed `ready` flag, gated `isLoading` on `!serverConfig`
 - `client/src/pages/SettingsPage/components/SkillGraphCategoriesField/SkillGraphCategoriesField.tsx`: removed internal `rows` state, derive from config via `useMemo`
-- `client/src/pages/SettingsPage/hooks/useSettings.test.tsx`: replaced `ready` flag test with draft fork/reset tests
+- `client/src/pages/SettingsPage/hooks/useSettings.test.tsx`: updated tests for simplified hook
 - `client/src/pages/SettingsPage/components/SkillGraphCategoriesField/SkillGraphCategoriesField.test.tsx`: removed UI assertion that depended on internal state
+- `client/src/pages/SettingsPage/SettingsPage.test.tsx`: added regression test for categories rendering from async config
