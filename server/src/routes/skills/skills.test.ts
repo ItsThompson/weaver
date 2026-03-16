@@ -33,50 +33,53 @@ describe("GET /api/skills", () => {
     vi.mocked(buildSkillGraph).mockResolvedValue({
       nodes: [
         {
-          id: "skill-a",
+          id: "skill-a::my-app",
           name: "Skill A",
+          skillName: "skill-a",
           description: "desc",
           category: "core",
           source: "workspace",
+          project: "my-app",
         },
       ],
-      edges: [{ from: "skill-a", to: "skill-b" }],
+      edges: [{ from: "skill-a::my-app", to: "skill-b::global" }],
     });
 
     const res = await server.inject({ method: "GET", url: "/api/skills" });
 
     expect(res.statusCode).toBe(200);
     const body = JSON.parse(res.body);
-    expect(body).toHaveProperty("nodes");
-    expect(body).toHaveProperty("edges");
     expect(body.nodes).toHaveLength(1);
-    expect(body.edges).toHaveLength(1);
+    expect(body.nodes[0].skillName).toBe("skill-a");
+    expect(body.nodes[0].project).toBe("my-app");
   });
 
-  it("passes config categories to buildSkillGraph", async () => {
-    const categories = { core: { skills: ["skill-a"] } };
-    vi.mocked(readConfig).mockResolvedValue({
-      config: { ...DEFAULT_CONFIG, skill_graph: { categories } },
-      warnings: [],
-    });
+  it("passes config skill_paths to buildSkillGraph", async () => {
+    const config = {
+      ...DEFAULT_CONFIG,
+      skill_paths: ["/projects/my-app/.kiro/skills"],
+      skill_graph: { categories: { core: { skills: ["skill-a"] } } },
+    };
+    vi.mocked(readConfig).mockResolvedValue({ config, warnings: [] });
     vi.mocked(buildSkillGraph).mockResolvedValue({ nodes: [], edges: [] });
 
     await server.inject({ method: "GET", url: "/api/skills" });
 
     expect(buildSkillGraph).toHaveBeenCalledWith(
-      expect.any(String),
-      categories,
+      ["/projects/my-app/.kiro/skills"],
+      { core: { skills: ["skill-a"] } },
     );
   });
 });
 
 describe("GET /api/skills/:name", () => {
-  it("returns 200 with frontmatter, body, and category for existing skill", async () => {
+  it("returns 200 with project field for existing skill", async () => {
     vi.mocked(getSkillDetail).mockResolvedValue({
       frontmatter: { name: "skill-a", description: "desc" },
       body: "# Skill A",
-      source: "global",
+      source: "workspace",
       category: "core",
+      project: "my-app",
     });
 
     const res = await server.inject({
@@ -86,9 +89,53 @@ describe("GET /api/skills/:name", () => {
 
     expect(res.statusCode).toBe(200);
     const body = JSON.parse(res.body);
-    expect(body.frontmatter).toEqual({ name: "skill-a", description: "desc" });
-    expect(body.body).toBe("# Skill A");
-    expect(body.category).toBe("core");
+    expect(body.project).toBe("my-app");
+  });
+
+  it("passes project query param to getSkillDetail", async () => {
+    vi.mocked(getSkillDetail).mockResolvedValue({
+      frontmatter: {},
+      body: "",
+      source: "workspace",
+      category: null,
+      project: "my-app",
+    });
+
+    await server.inject({
+      method: "GET",
+      url: "/api/skills/skill-a?project=my-app",
+    });
+
+    expect(getSkillDetail).toHaveBeenCalledWith(
+      "skill-a",
+      [],
+      expect.any(Object),
+      "my-app",
+      undefined,
+    );
+  });
+
+  it("passes source=global query param to getSkillDetail", async () => {
+    vi.mocked(getSkillDetail).mockResolvedValue({
+      frontmatter: {},
+      body: "",
+      source: "global",
+      category: null,
+      project: null,
+    });
+
+    await server.inject({
+      method: "GET",
+      url: "/api/skills/skill-a?source=global",
+    });
+
+    expect(getSkillDetail).toHaveBeenCalledWith(
+      "skill-a",
+      [],
+      expect.any(Object),
+      undefined,
+      "global",
+    );
   });
 
   it("returns 404 for nonexistent skill", async () => {
