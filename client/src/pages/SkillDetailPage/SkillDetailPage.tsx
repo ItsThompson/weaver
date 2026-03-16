@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import {
+  useParams,
+  useNavigate,
+  useLocation,
+  useSearchParams,
+} from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -8,10 +13,12 @@ import Spinner from "@cloudscape-design/components/spinner";
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
 import Badge from "@cloudscape-design/components/badge";
 import Select from "@cloudscape-design/components/select";
+import Alert from "@cloudscape-design/components/alert";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {
   useSkillDetailQuery,
+  useSkillGraphQuery,
   useConfigQuery,
   revalidateConfig,
   revalidateSkillGraph,
@@ -26,11 +33,23 @@ const UNCATEGORIZED = "__uncategorized__";
 
 export function SkillDetailPage() {
   const { skillName } = useParams<{ skillName: string }>();
+  const [searchParams] = useSearchParams();
+  const project = searchParams.get("project") ?? undefined;
+  const source = searchParams.get("source") ?? undefined;
   const navigate = useNavigate();
   const location = useLocation();
-  const { data, error, isLoading } = useSkillDetailQuery(skillName);
+  const { data, error, isLoading } = useSkillDetailQuery(
+    skillName,
+    project,
+    source,
+  );
   const { data: configData } = useConfigQuery();
+  const { data: skillGraph } = useSkillGraphQuery();
   const [showCreateModal, setShowCreateModal] = useState(false);
+
+  const hasNameCollision = skillGraph
+    ? skillGraph.nodes.filter((node) => node.skillName === skillName).length > 1
+    : false;
 
   const categories = configData?.config.skill_graph?.categories ?? {};
   const categoryNames = Object.keys(categories);
@@ -46,9 +65,14 @@ export function SkillDetailPage() {
     revalidateConfig();
     revalidateSkillGraph();
     if (skillName) {
-      revalidateSkillDetail(skillName);
+      revalidateSkillDetail(skillName, project, source);
     }
   };
+
+  if (error?.message?.includes("not found")) {
+    navigate("/skills", { replace: true });
+    return null;
+  }
 
   const handleCategoryChange = async (newValue: string) => {
     if (newValue === CREATE_NEW) {
@@ -75,14 +99,12 @@ export function SkillDetailPage() {
       return;
     }
 
-    // Remove skill from any existing category first
     const cleaned = buildUpdatedCategories(
       configData.config.skill_graph.categories,
       skillName,
       UNCATEGORIZED,
     );
 
-    // Add the new category with the current skill auto-assigned
     cleaned[name] = {
       ...(color ? { color } : {}),
       skills: [skillName],
@@ -93,15 +115,20 @@ export function SkillDetailPage() {
   };
 
   const referrer = (location.state as { from?: string } | null)?.from;
+  const queryString = project
+    ? `?project=${encodeURIComponent(project)}`
+    : source
+      ? `?source=${encodeURIComponent(source)}`
+      : "";
   const breadcrumbs = referrer
     ? [
         { text: "Sessions", href: "/" },
         { text: "Session", href: referrer },
-        { text: skillName ?? "", href: "#" },
+        { text: skillName ?? "", href: `#${queryString}` },
       ]
     : [
         { text: "Skills", href: "/skills" },
-        { text: skillName ?? "", href: "#" },
+        { text: skillName ?? "", href: `#${queryString}` },
       ];
 
   return (
@@ -124,13 +151,22 @@ export function SkillDetailPage() {
             <Header variant="h1">
               {String(data.frontmatter.name ?? skillName)}
             </Header>
-            <Badge color={data.source === "global" ? "blue" : "grey"}>
-              {data.source === "global" ? "Global" : "Workspace"}
-            </Badge>
+            <SpaceBetween direction="horizontal" size="xs">
+              <Badge color={data.source === "global" ? "blue" : "grey"}>
+                {data.source === "global" ? "Global" : "Workspace"}
+              </Badge>
+              {data.project && <Badge color="grey">{data.project}</Badge>}
+            </SpaceBetween>
             <Box color="text-body-secondary">
               {String(data.frontmatter.description ?? "")}
             </Box>
           </SpaceBetween>
+          {hasNameCollision && (
+            <Alert type="info">
+              This category applies to all skills named '{skillName}' across
+              projects.
+            </Alert>
+          )}
           <Select
             selectedOption={
               categoryOptions.find((opt) => opt.value === selectedCategory) ??

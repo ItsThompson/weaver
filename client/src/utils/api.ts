@@ -95,5 +95,20 @@ export const patchConfig = (partial: Partial<WeaverConfig>) =>
   });
 export const getSkillGraph = () => apiFetch<SkillGraph>("/skills");
 
-export const getSkillDetail = (name: string) =>
-  apiFetch<SkillDetail>(`/skills/${name}`);
+export const getSkillDetail = (
+  name: string,
+  project?: string,
+  source?: string,
+) => {
+  const params = new URLSearchParams();
+  if (project) {
+    params.set("project", project);
+  }
+  if (source) {
+    params.set("source", source);
+  }
+  const queryString = params.toString();
+  return apiFetch<SkillDetail>(
+    queryString ? `/skills/${name}?${queryString}` : `/skills/${name}`,
+  );
+};

@@ -6,6 +6,8 @@ import {
   writeConfig,
 } from "../services/config/index";
 import { emit } from "../services/event-bus";
+import { validatePathsExist } from "../services/config/validators/validate-paths";
+import { skillCache } from "../services/skill-graph/discover";
 
 export function registerConfigRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { config: WeaverConfig; warnings: string[] } }>(
@@ -26,7 +28,13 @@ export function registerConfigRoutes(server: FastifyInstance): void {
       return reply.status(422).send({ error: warnings.join("; ") });
     }
 
+    const pathErrors = await validatePathsExist(config.skill_paths);
+    if (pathErrors.length > 0) {
+      return reply.status(422).send({ error: pathErrors.join("; ") });
+    }
+
     await writeConfig(config);
+    skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
     return { config };
   });
@@ -44,7 +52,13 @@ export function registerConfigRoutes(server: FastifyInstance): void {
       return reply.status(422).send({ error: warnings.join("; ") });
     }
 
+    const pathErrors = await validatePathsExist(config.skill_paths);
+    if (pathErrors.length > 0) {
+      return reply.status(422).send({ error: pathErrors.join("; ") });
+    }
+
     await writeConfig(config);
+    skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
     return { config };
   });

@@ -20,6 +20,7 @@ Changes made via the Settings page or CLI take effect immediately. If you edit t
 | `webhook_url`                | `string`                 | `""`        | URL to POST event payloads to                                |
 | `webhook_format`             | `"simple" \| "advanced"` | `"simple"`  | Webhook payload format                                       |
 | `test_runners`               | `string[]`               | see below   | Additional test runner patterns for agent test deduplication |
+| `skill_paths`                | `string[]`               | `[]`        | Directories containing skill subdirectories (see below)      |
 | `skill_graph`                | `object`                 | `{}`        | Skill graph category definitions (see below)                 |
 
 ### Display options
@@ -35,6 +36,20 @@ The built-in test runner list used for agent test deduplication:
 `jest`, `vitest`, `mocha`, `pytest`, `rspec`, `cargo test`, `npm test`, `npx test`, `bundle exec rspec`, `bundle exec rake test`, `go test`, `dotnet test`, `phpunit`
 
 Add project-specific runners via `test_runners` in the global config or in your project's `.weaver.json`. Entries are merged with the defaults: you only need to add what's missing.
+
+### Skill paths
+
+Configure additional directories where Weaver looks for skills. Each path should point to a directory containing skill subdirectories (each with a `SKILL.md` file). `~/.kiro/skills` is always included as the global skills path and cannot be added to `skill_paths`.
+
+If a path ends with `.kiro/skills`, the project name is derived from the parent directory (e.g., `~/projects/my-app/.kiro/skills` yields project `my-app`). Otherwise, the basename of the path is used as the project name.
+
+Paths can be managed from the Settings page or by editing the config file directly. All paths are validated on save: they must exist, be directories, and not be duplicates.
+
+```json
+{
+  "skill_paths": ["~/projects/my-app/.kiro/skills", "~/projects/shared-skills"]
+}
+```
 
 ### Skill graph categories
 

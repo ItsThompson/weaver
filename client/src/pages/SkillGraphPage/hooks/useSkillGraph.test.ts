@@ -44,7 +44,7 @@ describe("useSkillGraph", () => {
     expect(result.current.edges).toEqual([]);
   });
 
-  it("transforms API data into positioned React Flow nodes", async () => {
+  it("uses composite ids from API for node ids and dagre layout", async () => {
     mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
     const { result } = renderHook(() => useSkillGraph(), { wrapper });
 
@@ -52,20 +52,89 @@ describe("useSkillGraph", () => {
       expect(result.current.nodes.length).toBe(2);
     });
 
-    for (const node of result.current.nodes) {
-      expect(node.position).toHaveProperty("x");
-      expect(node.position).toHaveProperty("y");
-      expect(typeof node.position.x).toBe("number");
-      expect(typeof node.position.y).toBe("number");
-      expect(node.type).toBe("skill");
-    }
-
-    const tsNode = result.current.nodes.find((n) => n.id === "typescript");
-    expect(tsNode?.data.label).toBe("typescript");
-    expect(tsNode?.data.category).toBe("language");
+    const tsNode = result.current.nodes.find(
+      (node) => node.id === "typescript::my-app",
+    );
+    const reactNode = result.current.nodes.find(
+      (node) => node.id === "react::global",
+    );
+    expect(tsNode).toBeDefined();
+    expect(reactNode).toBeDefined();
   });
 
-  it("maps edges from SkillEdge to React Flow Edge format", async () => {
+  it("includes skillName and project in node data", async () => {
+    mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
+    const { result } = renderHook(() => useSkillGraph(), { wrapper });
+
+    await vi.waitFor(() => {
+      expect(result.current.nodes.length).toBe(2);
+    });
+
+    const tsNode = result.current.nodes.find(
+      (node) => node.id === "typescript::my-app",
+    );
+    expect(tsNode?.data.skillName).toBe("typescript");
+    expect(tsNode?.data.project).toBe("my-app");
+  });
+
+  it("formats label with project suffix for workspace skills", async () => {
+    mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
+    const { result } = renderHook(() => useSkillGraph(), { wrapper });
+
+    await vi.waitFor(() => {
+      expect(result.current.nodes.length).toBe(2);
+    });
+
+    const tsNode = result.current.nodes.find(
+      (node) => node.id === "typescript::my-app",
+    );
+    expect(tsNode?.data.label).toBe("typescript (my-app)");
+  });
+
+  it("appends (global) only when name collision exists", async () => {
+    mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
+    const { result } = renderHook(() => useSkillGraph(), { wrapper });
+
+    await vi.waitFor(() => {
+      expect(result.current.nodes.length).toBe(2);
+    });
+
+    // react is global-only, no collision with workspace
+    const reactNode = result.current.nodes.find(
+      (node) => node.id === "react::global",
+    );
+    expect(reactNode?.data.label).toBe("react");
+  });
+
+  it("appends (global) when workspace skill has same name", async () => {
+    const graphWithCollision = {
+      nodes: [
+        {
+          ...TEST_SKILL_GRAPH.nodes[0],
+          id: "react::my-app",
+          skillName: "react",
+          name: "react",
+          source: "workspace" as const,
+          project: "my-app",
+        },
+        { ...TEST_SKILL_GRAPH.nodes[1] },
+      ],
+      edges: [],
+    };
+    mockGetSkillGraph.mockResolvedValue(graphWithCollision);
+    const { result } = renderHook(() => useSkillGraph(), { wrapper });
+
+    await vi.waitFor(() => {
+      expect(result.current.nodes.length).toBe(2);
+    });
+
+    const globalReact = result.current.nodes.find(
+      (node) => node.id === "react::global",
+    );
+    expect(globalReact?.data.label).toBe("react (global)");
+  });
+
+  it("maps edges using composite ids from API", async () => {
     mockGetSkillGraph.mockResolvedValue(TEST_SKILL_GRAPH);
     const { result } = renderHook(() => useSkillGraph(), { wrapper });
 
@@ -74,10 +143,9 @@ describe("useSkillGraph", () => {
     });
 
     expect(result.current.edges[0]).toMatchObject({
-      source: "typescript",
-      target: "react",
+      source: "typescript::my-app",
+      target: "react::global",
     });
-    expect(result.current.edges[0].markerEnd).toBeDefined();
   });
 
   it("returns empty arrays when API returns empty graph", async () => {

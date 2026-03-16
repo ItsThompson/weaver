@@ -23,26 +23,46 @@ export function useSkillGraph() {
     const nodeHeight = 50;
 
     data.nodes.forEach((node) =>
-      g.setNode(node.name, { width: nodeWidth, height: nodeHeight }),
+      g.setNode(node.id, { width: nodeWidth, height: nodeHeight }),
     );
     data.edges.forEach((edge) => g.setEdge(edge.from, edge.to));
     dagre.layout(g);
 
+    const workspaceSkillNames = new Set(
+      data.nodes.reduce<string[]>((acc, skill) => {
+        if (skill.source === "workspace") {
+          acc.push(skill.skillName);
+        }
+        return acc;
+      }, []),
+    );
+
     const nodes: Node<SkillNodeData>[] = data.nodes.map((skill) => {
-      const pos = g.node(skill.name);
+      const pos = g.node(skill.id);
+      const showGlobalSuffix =
+        skill.source === "global" && workspaceSkillNames.has(skill.skillName);
+      const label =
+        skill.project !== null
+          ? `${skill.name} (${skill.project})`
+          : showGlobalSuffix
+            ? `${skill.name} (global)`
+            : skill.name;
+
       return {
-        id: skill.name,
+        id: skill.id,
         type: "skill",
         position: {
           x: pos.x - nodeWidth / 2,
           y: pos.y - nodeHeight / 2,
         },
         data: {
-          label: skill.name,
+          label,
           category: skill.category,
           description: skill.description,
           source: skill.source,
           color: resolveColor(skill.category),
+          skillName: skill.skillName,
+          project: skill.project,
         },
       };
     });

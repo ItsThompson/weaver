@@ -7,4 +7,5 @@ export interface SkillEntry {
   name: string;
   source: "workspace" | "global";
   parsed: ParsedSkill;
+  project: string | null;
 }

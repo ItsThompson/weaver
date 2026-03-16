@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from "electron";
+import { BrowserWindow, ipcMain, dialog } from "electron";
 import { resolve } from "node:path";
 import type { WeaverConfig } from "@weaver/shared/types";
 
@@ -86,6 +86,16 @@ export function createWindow(url: string, config: WeaverConfig): void {
     const clamped = Math.max(MINI_MIN_HEIGHT, Math.round(height));
     const [x, y] = win.getPosition();
     win.setBounds({ x, y, width: MINI_WIDTH, height: clamped });
+  });
+
+  ipcMain.handle("select-directory", async () => {
+    if (!win) {
+      return null;
+    }
+    const result = await dialog.showOpenDialog(win, {
+      properties: ["openDirectory"],
+    });
+    return result.canceled ? null : (result.filePaths[0] ?? null);
   });
 
   win.on("close", (e) => {

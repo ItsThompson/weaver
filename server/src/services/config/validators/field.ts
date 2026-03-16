@@ -152,3 +152,33 @@ export function validateTestRunners(value: unknown): ValidatorResult {
   }
   return { value: trimmed };
 }
+
+export function validateSkillPaths(value: unknown): ValidatorResult {
+  if (!Array.isArray(value)) {
+    return { warning: "skill_paths must be an array of strings" };
+  }
+  if (!value.every((entry: unknown) => typeof entry === "string")) {
+    return { warning: "skill_paths must contain only strings" };
+  }
+
+  const { trimmed, removed } = (value as string[]).reduce(
+    (acc, entry) => {
+      const cleaned = entry.trim();
+      if (cleaned.length > 0) {
+        acc.trimmed.push(cleaned);
+      } else {
+        acc.removed++;
+      }
+      return acc;
+    },
+    { trimmed: [] as string[], removed: 0 },
+  );
+
+  if (removed > 0) {
+    return {
+      value: trimmed,
+      warning: `skill_paths: removed ${removed} empty or whitespace-only entries`,
+    };
+  }
+  return { value: trimmed };
+}

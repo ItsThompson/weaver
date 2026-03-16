@@ -44,8 +44,8 @@ globalThis.fetch = mockFetch as any;
 
 export function setupWebhookTests(
   webhook: typeof WebhookModule,
-  readConfig: () => unknown,
-  parseLogFile: () => unknown,
+  readConfig: (...args: never[]) => unknown,
+  parseLogFile: (...args: never[]) => unknown,
   deriveActivity: (name: string) => string,
   format: "simple" | "advanced" = "simple",
 ) {

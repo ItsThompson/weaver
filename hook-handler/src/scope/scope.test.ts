@@ -7,7 +7,7 @@ const CWD = "/project";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  vi.mocked(realpathSync).mockImplementation((p: string) => String(p));
+  vi.mocked(realpathSync).mockImplementation((p) => String(p));
 });
 
 describe("resolveTestDirs", () => {
@@ -77,7 +77,7 @@ describe("resolveTestDirs", () => {
   });
 
   it("resolves symlink inside CWD normally", () => {
-    vi.mocked(realpathSync).mockImplementation((p: string) =>
+    vi.mocked(realpathSync).mockImplementation((p) =>
       String(p).replace("linked", "real"),
     );
     const result = resolveTestDirs(

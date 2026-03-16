@@ -14,9 +14,14 @@ export function SkillNode({ data }: NodeProps<SkillFlowNode>) {
       ? WORKSPACE_BG
       : `var(--color-background-container-content, ${colors.backgroundContainer})`;
 
+  const query =
+    data.project !== null
+      ? `?project=${encodeURIComponent(data.project)}`
+      : `?source=global`;
+
   return (
     <Link
-      to={`/skills/${data.label}`}
+      to={`/skills/${data.skillName}${query}`}
       style={{
         display: "block",
         padding: "8px 12px",

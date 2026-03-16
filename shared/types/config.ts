@@ -22,6 +22,7 @@ export interface WeaverConfig {
   webhook_format: "simple" | "advanced";
   test_runners: string[];
   skill_graph: SkillGraphConfig;
+  skill_paths: string[];
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = [
@@ -55,4 +56,5 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   webhook_format: "simple" as const,
   test_runners: [...DEFAULT_TEST_RUNNERS],
   skill_graph: { categories: {} },
+  skill_paths: [],
 };
