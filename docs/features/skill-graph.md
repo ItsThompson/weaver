@@ -52,9 +52,32 @@ The detail page shows the skill's name, description, full markdown content, and 
 
 ## Where skills come from
 
-Weaver discovers skills from two locations:
+Weaver discovers skills from the following locations:
 
-- **Workspace skills**: `.kiro/skills/` relative to the project root
-- **Global skills**: `~/.kiro/skills/`
+- **Global skills**: `~/.kiro/skills/` (always included)
+- **Configured paths**: any directories listed in `skill_paths` in `~/.weaver/config.json`
 
-Each skill is a directory containing a `SKILL.md` file with YAML frontmatter (`name`, `description`, and optionally `category`) and a markdown body. When both locations contain a skill with the same name, the workspace version takes priority.
+You can add skill paths from the Settings page using the "Skill paths" field, or by editing the config file directly. Each path should point to a directory containing skill subdirectories. Provide the full path (e.g., `~/projects/my-app/.kiro/skills`): Weaver does not auto-append `.kiro/skills`.
+
+### Project labels
+
+Skills from configured paths are labeled with a project name:
+
+- If the path ends with `.kiro/skills`, the project name comes from the parent directory (e.g., `~/projects/my-app/.kiro/skills` yields `my-app`)
+- Otherwise, the basename of the path is used
+
+Workspace skills always show their project label in the graph. Global skills show `(global)` only when a workspace skill has the same name.
+
+Same-named skills from different sources are treated as separate entries. They appear as distinct nodes in the graph and can be navigated to independently.
+
+### Edge resolution
+
+References between skills follow scoping rules:
+
+- A project skill resolves references to same-project skills first, then falls back to global skills
+- A global skill can only reference other global skills
+- Cross-project references are not created
+
+## Known limitations
+
+- Skills with the same directory name across different projects share the same category assignment. Changing the category of one affects all instances with the same name. A future version may make categories project-aware.
