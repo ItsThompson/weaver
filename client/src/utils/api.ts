@@ -10,6 +10,19 @@ import type {
 
 const API_BASE = "/api";
 
+export class ApiResponseError extends Error {
+  fieldErrors?: Record<string, Record<string, string>>;
+
+  constructor(
+    message: string,
+    fieldErrors?: Record<string, Record<string, string>>,
+  ) {
+    super(message);
+    this.name = "ApiResponseError";
+    this.fieldErrors = fieldErrors;
+  }
+}
+
 export async function apiFetch<T>(
   path: string,
   options?: RequestInit,
@@ -23,7 +36,10 @@ export async function apiFetch<T>(
     const body = await response
       .json()
       .catch(() => ({ error: response.statusText }));
-    throw new Error(body.error ?? `Request failed: ${response.status}`);
+    throw new ApiResponseError(
+      body.error ?? `Request failed: ${response.status}`,
+      body.fieldErrors,
+    );
   }
 
   return response.json() as Promise<T>;
@@ -80,7 +96,11 @@ export const deleteOrphans = (pid: number) =>
   });
 
 export const getConfig = () =>
-  apiFetch<{ config: WeaverConfig; warnings: string[] }>("/config");
+  apiFetch<{
+    config: WeaverConfig;
+    warnings: string[];
+    fieldErrors: Record<string, Record<string, string>>;
+  }>("/config");
 
 export const updateConfig = (config: WeaverConfig) =>
   apiFetch<{ config: WeaverConfig }>("/config", {
@@ -93,7 +113,20 @@ export const patchConfig = (partial: Partial<WeaverConfig>) =>
     method: "PATCH",
     body: JSON.stringify(partial),
   });
+
 export const getSkillGraph = () => apiFetch<SkillGraph>("/skills");
 
-export const getSkillDetail = (name: string) =>
-  apiFetch<SkillDetail>(`/skills/${name}`);
+export const getSkillDetail = (
+  name: string,
+  options?: { project?: string; source?: string },
+) => {
+  const params = new URLSearchParams();
+  if (options?.project) {
+    params.set("project", options.project);
+  }
+  if (options?.source) {
+    params.set("source", options.source);
+  }
+  const query = params.toString();
+  return apiFetch<SkillDetail>(`/skills/${name}${query ? `?${query}` : ""}`);
+};

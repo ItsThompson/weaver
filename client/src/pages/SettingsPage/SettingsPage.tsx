@@ -13,11 +13,13 @@ import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
 import { TestRunnersField } from "./components/TestRunnersField";
 import { SkillGraphCategoriesField } from "./components/SkillGraphCategoriesField";
+import { SkillPathsField } from "./components/SkillPathsField";
 
 export function SettingsPage() {
   const { addNotification } = useNotifications();
   const { state, actions } = useSettings(addNotification);
-  const { config, saving, isLoading, warnings, hasWarnings } = state;
+  const { config, saving, isLoading, warnings, hasWarnings, fieldErrors } =
+    state;
   const { setConfig, handleSave } = actions;
 
   return (
@@ -129,6 +131,12 @@ export function SettingsPage() {
               config={config}
               setConfig={setConfig}
               disabled={hasWarnings}
+            />
+            <SkillPathsField
+              config={config}
+              setConfig={setConfig}
+              disabled={hasWarnings}
+              pathErrors={fieldErrors.skill_paths ?? {}}
             />
             <SkillGraphCategoriesField
               config={config}

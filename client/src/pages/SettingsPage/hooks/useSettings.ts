@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
 import { useConfigQuery, revalidateConfig } from "../../../hooks/queries";
-import { updateConfig } from "../../../utils/api";
+import { updateConfig, ApiResponseError } from "../../../utils/api";
 
 export interface SettingsState {
   config: WeaverConfig;
@@ -9,6 +9,7 @@ export interface SettingsState {
   isLoading: boolean;
   warnings: string[];
   hasWarnings: boolean;
+  fieldErrors: Record<string, Record<string, string>>;
 }
 
 export interface SettingsActions {
@@ -28,6 +29,9 @@ export function useSettings(
   const { data, isLoading } = useConfigQuery();
   const [config, setConfig] = useState<WeaverConfig>(DEFAULT_CONFIG);
   const [saving, setSaving] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<
+    Record<string, Record<string, string>>
+  >({});
 
   const warnings = data?.warnings ?? [];
   const hasWarnings = warnings.length > 0;
@@ -38,24 +42,33 @@ export function useSettings(
     }
   }, [data]);
 
+  useEffect(() => {
+    if (data?.fieldErrors && Object.keys(data.fieldErrors).length > 0) {
+      setFieldErrors(data.fieldErrors);
+    }
+  }, [data]);
+
   const handleSave = async () => {
     setSaving(true);
+    setFieldErrors({});
     try {
       await updateConfig(config);
       await revalidateConfig();
       addNotification("Settings saved", "success");
     } catch (err) {
-      addNotification(
-        err instanceof Error ? err.message : "Failed to save",
-        "error",
-      );
+      const message = err instanceof Error ? err.message : "Failed to save";
+      addNotification(message, "error");
+
+      if (err instanceof ApiResponseError && err.fieldErrors) {
+        setFieldErrors(err.fieldErrors);
+      }
     } finally {
       setSaving(false);
     }
   };
 
   return {
-    state: { config, saving, isLoading, warnings, hasWarnings },
+    state: { config, saving, isLoading, warnings, hasWarnings, fieldErrors },
     actions: { setConfig, handleSave },
   };
 }
