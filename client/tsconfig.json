@@ -4,7 +4,7 @@
     "outDir": "dist",
     "rootDir": "src",
     "jsx": "react-jsx",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["dist"]

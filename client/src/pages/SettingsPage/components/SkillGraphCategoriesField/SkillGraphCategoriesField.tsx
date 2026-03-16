@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import Multiselect from "@cloudscape-design/components/multiselect";
@@ -36,10 +36,6 @@ export function SkillGraphCategoriesField({
     toRows(config.skill_graph?.categories ?? {}),
   );
 
-  useEffect(() => {
-    setRows(toRows(config.skill_graph?.categories ?? {}));
-  }, [config.skill_graph]);
-
   const assigned = useMemo(() => collectAssignedSkills(rows), [rows]);
 
   const syncRows = (updated: CategoryRow[]) => {
@@ -61,7 +57,7 @@ export function SkillGraphCategoriesField({
     >
       <AttributeEditor
         onAddButtonClick={() =>
-          setRows((prev) => [...prev, { name: "", color: "", skills: [] }])
+          syncRows([...rows, { name: "", color: "", skills: [] }])
         }
         onRemoveButtonClick={({ detail: { itemIndex } }) =>
           syncRows(rows.filter((_, i) => i !== itemIndex))
@@ -102,8 +98,8 @@ export function SkillGraphCategoriesField({
                       width: 20,
                       height: 20,
                       borderRadius: 4,
-                      background: item.color,
                       flexShrink: 0,
+                      background: item.color,
                     }}
                   />
                 )}
@@ -120,8 +116,8 @@ export function SkillGraphCategoriesField({
                 }))}
                 onChange={({ detail }) =>
                   updateRow(itemIndex, {
-                    skills: detail.selectedOptions.map(
-                      (opt) => opt.value ?? "",
+                    skills: detail.selectedOptions.flatMap((opt) =>
+                      opt.value ? [opt.value] : [],
                     ),
                   })
                 }
@@ -130,6 +126,7 @@ export function SkillGraphCategoriesField({
                   assigned,
                   item.skills,
                 )}
+                filteringType="auto"
                 placeholder="Select skills"
                 disabled={disabled}
               />
