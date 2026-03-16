@@ -6,7 +6,7 @@ import { colors } from "../../../theme/colors";
 export function GraphControls() {
   const { data: configData } = useConfigQuery();
   const resolveColor = useCategoryColors(configData);
-  const categories = configData?.config.skill_graph.categories ?? {};
+  const categories = configData?.config.skill_graph?.categories ?? {};
 
   return (
     <div

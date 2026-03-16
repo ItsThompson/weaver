@@ -87,6 +87,12 @@ export const updateConfig = (config: WeaverConfig) =>
     method: "PUT",
     body: JSON.stringify(config),
   });
+
+export const patchConfig = (partial: Partial<WeaverConfig>) =>
+  apiFetch<{ config: WeaverConfig }>("/config", {
+    method: "PATCH",
+    body: JSON.stringify(partial),
+  });
 export const getSkillGraph = () => apiFetch<SkillGraph>("/skills");
 
 export const getSkillDetail = (name: string) =>

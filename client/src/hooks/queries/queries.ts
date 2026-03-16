@@ -44,5 +44,9 @@ export const revalidateConfig = () => mutate(KEYS.config);
 
 export const useSkillGraphQuery = () => useSWR(KEYS.skills, getSkillGraph);
 
+export const revalidateSkillGraph = () => mutate(KEYS.skills);
+
 export const useSkillDetailQuery = (name: string | undefined) =>
   useSWR(name ? KEYS.skill(name) : null, () => getSkillDetail(name!));
+
+export const revalidateSkillDetail = (name: string) => mutate(KEYS.skill(name));

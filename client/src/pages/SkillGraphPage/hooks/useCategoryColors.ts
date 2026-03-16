@@ -6,7 +6,7 @@ export function useCategoryColors(
   config: { config: WeaverConfig } | undefined,
 ): (category: string | null) => string {
   return useMemo(() => {
-    const categories = config?.config.skill_graph.categories ?? {};
+    const categories = config?.config.skill_graph?.categories ?? {};
     const colorMap = new Map<string, string>();
 
     Object.keys(categories).forEach((name, index) => {
