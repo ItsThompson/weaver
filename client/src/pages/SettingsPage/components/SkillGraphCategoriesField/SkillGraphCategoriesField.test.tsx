@@ -3,37 +3,17 @@ import { render, screen, act } from "@testing-library/react";
 import createWrapper from "@cloudscape-design/components/test-utils/dom";
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
 
+import "../../../../__tests__/mocks/queries";
+import { CONFIG_WITH_CATEGORIES } from "../../../../__tests__/fixtures/config";
+
 import { SkillGraphCategoriesField } from "./SkillGraphCategoriesField";
-
-vi.mock("../../../../hooks/queries", () => ({
-  useSkillGraphQuery: vi.fn().mockReturnValue({
-    data: {
-      nodes: [
-        { name: "coding-practices" },
-        { name: "typescript-standards" },
-        { name: "backend-coding-practices" },
-      ],
-      edges: [],
-    },
-  }),
-}));
-
-const configWithCategories: WeaverConfig = {
-  ...DEFAULT_CONFIG,
-  skill_graph: {
-    categories: {
-      core: { color: "#ff6b6b", skills: ["coding-practices"] },
-      language: { skills: ["typescript-standards"] },
-    },
-  },
-};
 
 function renderField(overrides?: {
   config?: WeaverConfig;
   disabled?: boolean;
 }) {
   const setConfig = vi.fn<React.Dispatch<React.SetStateAction<WeaverConfig>>>();
-  const config = overrides?.config ?? configWithCategories;
+  const config = overrides?.config ?? CONFIG_WITH_CATEGORIES;
   const disabled = overrides?.disabled ?? false;
 
   const { container } = render(
@@ -84,8 +64,7 @@ describe("SkillGraphCategoriesField", () => {
       editor.findAddButton().click();
     });
 
-    // Adding a row doesn't call setConfig (empty name rows are filtered by toConfig)
-    // but the row should appear in the UI
+    expect(setConfig).toHaveBeenCalled();
     expect(
       screen.queryByText("No categories configured."),
     ).not.toBeInTheDocument();
