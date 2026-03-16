@@ -17,6 +17,7 @@ import {
   revalidateSkillDetail,
 } from "../../hooks/queries";
 import { patchConfig } from "../../utils/api";
+import { buildUpdatedCategories } from "./utils";
 
 export function SkillDetailPage() {
   const { skillName } = useParams<{ skillName: string }>();
@@ -38,23 +39,11 @@ export function SkillDetailPage() {
       return;
     }
 
-    const oldCategories = configData.config.skill_graph.categories;
-    const updatedCategories = Object.entries(oldCategories).reduce<
-      Record<string, { color?: string; skills: string[] }>
-    >((acc, [name, entry]) => {
-      acc[name] = {
-        ...(entry.color ? { color: entry.color } : {}),
-        skills: entry.skills.filter((skill) => skill !== skillName),
-      };
-      return acc;
-    }, {});
-
-    if (newValue !== "__uncategorized__" && updatedCategories[newValue]) {
-      updatedCategories[newValue] = {
-        ...updatedCategories[newValue],
-        skills: [...updatedCategories[newValue].skills, skillName],
-      };
-    }
+    const updatedCategories = buildUpdatedCategories(
+      configData.config.skill_graph.categories,
+      skillName,
+      newValue,
+    );
 
     await patchConfig({ skill_graph: { categories: updatedCategories } });
     revalidateConfig();
