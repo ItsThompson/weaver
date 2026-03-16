@@ -5,8 +5,7 @@ import Input from "@cloudscape-design/components/input";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Button from "@cloudscape-design/components/button";
 import Box from "@cloudscape-design/components/box";
-
-const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
+import { isValidHex } from "../../SettingsPage/components/skill-graph-utils";
 
 interface CreateCategoryModalProps {
   visible: boolean;
@@ -29,7 +28,7 @@ export function CreateCategoryModal({
     ? "A category with this name already exists"
     : "";
   const colorError =
-    color && !HEX_COLOR.test(color) ? "Must be a hex color (e.g. #ff6b6b)" : "";
+    color && !isValidHex(color) ? "Must be a hex color (e.g. #ff6b6b)" : "";
   const canSave = name.trim() !== "" && !nameError && !colorError && !saving;
 
   const handleCreate = async () => {
@@ -96,7 +95,7 @@ export function CreateCategoryModal({
               onChange={({ detail }) => setColor(detail.value)}
               placeholder="#ff6b6b"
             />
-            {HEX_COLOR.test(color) && (
+            {isValidHex(color) && (
               <div
                 style={{
                   width: 20,

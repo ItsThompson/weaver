@@ -3,52 +3,22 @@ import FormField from "@cloudscape-design/components/form-field";
 import Input from "@cloudscape-design/components/input";
 import Multiselect from "@cloudscape-design/components/multiselect";
 import AttributeEditor from "@cloudscape-design/components/attribute-editor";
-import type {
-  WeaverConfig,
-  SkillGraphCategoryConfig,
-} from "@weaver/shared/types";
+import type { WeaverConfig } from "@weaver/shared/types";
 import { useSkillGraphQuery } from "../../../hooks/queries";
+import {
+  toRows,
+  toConfig,
+  isValidHex,
+  collectAssignedSkills,
+  availableSkillOptions,
+  updateRowAt,
+} from "./skill-graph-utils";
+import type { CategoryRow } from "./skill-graph-utils";
 
 interface SkillGraphCategoriesFieldProps {
   config: WeaverConfig;
   setConfig: React.Dispatch<React.SetStateAction<WeaverConfig>>;
   disabled: boolean;
-}
-
-interface CategoryRow {
-  name: string;
-  color: string;
-  skills: string[];
-}
-
-function toRows(
-  categories: Record<string, SkillGraphCategoryConfig>,
-): CategoryRow[] {
-  return Object.entries(categories).map(([name, entry]) => ({
-    name,
-    color: entry.color ?? "",
-    skills: entry.skills,
-  }));
-}
-
-function syncConfig(
-  rows: CategoryRow[],
-  setConfig: React.Dispatch<React.SetStateAction<WeaverConfig>>,
-) {
-  const categories = rows.reduce<Record<string, SkillGraphCategoryConfig>>(
-    (acc, row) => {
-      if (!row.name) {
-        return acc;
-      }
-      acc[row.name] = {
-        ...(row.color ? { color: row.color } : {}),
-        skills: row.skills,
-      };
-      return acc;
-    },
-    {},
-  );
-  setConfig((prev) => ({ ...prev, skill_graph: { categories } }));
 }
 
 export function SkillGraphCategoriesField({
@@ -70,15 +40,14 @@ export function SkillGraphCategoriesField({
     setRows(toRows(config.skill_graph?.categories ?? {}));
   }, [config.skill_graph]);
 
-  const assignedByRow = useMemo(() => {
-    const assigned = new Set<string>();
-    rows.forEach((row) => row.skills.forEach((skill) => assigned.add(skill)));
-    return assigned;
-  }, [rows]);
+  const assigned = useMemo(() => collectAssignedSkills(rows), [rows]);
 
   const updateRows = (updated: CategoryRow[]) => {
     setRows(updated);
-    syncConfig(updated, setConfig);
+    setConfig((prev) => ({
+      ...prev,
+      skill_graph: { categories: toConfig(updated) },
+    }));
   };
 
   return (
@@ -103,11 +72,11 @@ export function SkillGraphCategoriesField({
             control: (item: CategoryRow, itemIndex: number) => (
               <Input
                 value={item.name}
-                onChange={({ detail }) => {
-                  const updated = [...rows];
-                  updated[itemIndex] = { ...item, name: detail.value };
-                  updateRows(updated);
-                }}
+                onChange={({ detail }) =>
+                  updateRows(
+                    updateRowAt(rows, itemIndex, { name: detail.value }),
+                  )
+                }
                 placeholder="e.g. core"
                 disabled={disabled}
               />
@@ -119,15 +88,15 @@ export function SkillGraphCategoriesField({
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Input
                   value={item.color}
-                  onChange={({ detail }) => {
-                    const updated = [...rows];
-                    updated[itemIndex] = { ...item, color: detail.value };
-                    updateRows(updated);
-                  }}
+                  onChange={({ detail }) =>
+                    updateRows(
+                      updateRowAt(rows, itemIndex, { color: detail.value }),
+                    )
+                  }
                   placeholder="#ff6b6b"
                   disabled={disabled}
                 />
-                {/^#[0-9a-fA-F]{6}$/.test(item.color) && (
+                {isValidHex(item.color) && (
                   <div
                     style={{
                       width: 20,
@@ -143,41 +112,30 @@ export function SkillGraphCategoriesField({
           },
           {
             label: "Skills",
-            control: (item: CategoryRow, itemIndex: number) => {
-              const otherAssigned = new Set(assignedByRow);
-              item.skills.forEach((skill) => otherAssigned.delete(skill));
-
-              const options = allSkillNames.reduce<
-                { label: string; value: string }[]
-              >((acc, name) => {
-                if (!otherAssigned.has(name)) {
-                  acc.push({ label: name, value: name });
-                }
-                return acc;
-              }, []);
-
-              return (
-                <Multiselect
-                  selectedOptions={item.skills.map((skill) => ({
-                    label: skill,
-                    value: skill,
-                  }))}
-                  onChange={({ detail }) => {
-                    const updated = [...rows];
-                    updated[itemIndex] = {
-                      ...item,
+            control: (item: CategoryRow, itemIndex: number) => (
+              <Multiselect
+                selectedOptions={item.skills.map((skill) => ({
+                  label: skill,
+                  value: skill,
+                }))}
+                onChange={({ detail }) =>
+                  updateRows(
+                    updateRowAt(rows, itemIndex, {
                       skills: detail.selectedOptions.map(
                         (opt) => opt.value ?? "",
                       ),
-                    };
-                    updateRows(updated);
-                  }}
-                  options={options}
-                  placeholder="Select skills"
-                  disabled={disabled}
-                />
-              );
-            },
+                    }),
+                  )
+                }
+                options={availableSkillOptions(
+                  allSkillNames,
+                  assigned,
+                  item.skills,
+                )}
+                placeholder="Select skills"
+                disabled={disabled}
+              />
+            ),
           },
         ]}
         disableAddButton={disabled}
