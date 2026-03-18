@@ -4,7 +4,8 @@
 set -euo pipefail
 
 SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || perl -MCwd -e 'print Cwd::abs_path shift' "$0")"
-CLI_DIR="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)/cli"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 # Walk up from current shell to find the kiro-cli PID
 get_caller_pid() {
@@ -38,4 +39,11 @@ get_caller_pid() {
 # Always resolve the caller PID and pass it as the first arg.
 # The TS CLI decides what to do with it.
 CALLER_PID=$(get_caller_pid)
-exec npx --prefix "$CLI_DIR" tsx "$CLI_DIR/src/index.ts" "$CALLER_PID" "$@"
+
+# Packaged app: cli/dist sits next to bin/ inside Contents/Resources.
+# Dev mode: run from source via tsx.
+if [ -f "$ROOT_DIR/cli/dist/index.mjs" ] && [ ! -d "$ROOT_DIR/cli/src" ]; then
+  exec node "$ROOT_DIR/cli/dist/index.mjs" "$CALLER_PID" "$@"
+else
+  exec npx --prefix "$ROOT_DIR/cli" tsx "$ROOT_DIR/cli/src/index.ts" "$CALLER_PID" "$@"
+fi

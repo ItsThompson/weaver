@@ -48,6 +48,10 @@
         "to": "client/dist"
       },
       {
+        "from": "../cli/dist",
+        "to": "cli/dist"
+      },
+      {
         "from": "assets",
         "to": "assets"
       }

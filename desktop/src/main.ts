@@ -15,6 +15,7 @@ import {
 import { createTray } from "./tray";
 import { fetchConfig, putConfig } from "./config";
 import { subscribeSSE } from "./sse";
+import { installCli } from "./install-cli";
 
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
@@ -35,6 +36,7 @@ app.on("ready", async () => {
   }
 
   currentConfig = await fetchConfig(server.SERVER_URL);
+  installCli();
 
   createWindow(server.SERVER_URL, currentConfig);
   createTray(
