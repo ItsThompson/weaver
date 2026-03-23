@@ -32,14 +32,6 @@
         "to": "server/dist"
       },
       {
-        "from": "../server/node_modules",
-        "to": "server/node_modules"
-      },
-      {
-        "from": "../server/package.json",
-        "to": "server/package.json"
-      },
-      {
         "from": "../bin",
         "to": "bin"
       },
