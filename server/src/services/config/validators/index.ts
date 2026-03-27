@@ -1,2 +1,2 @@
-export type { ValidatorResult, FieldValidator } from "./types";
-export { FIELD_VALIDATORS } from "./registry";
+export type { ValidatorResult, FieldValidator } from "./field";
+export { FIELD_VALIDATORS } from "./field";
