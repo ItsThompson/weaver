@@ -4,6 +4,7 @@ import {
   type Session,
   type HookEvent,
   type WeaverConfig,
+  type HookEventName,
 } from "@weaver/shared/types";
 import type { WebhookPayload, SimpleWebhookPayload } from "./types";
 import { readConfig } from "../config/index";
@@ -31,7 +32,7 @@ export function setWebhookEnabled(sessionId: string, enabled: boolean): void {
 function buildPayloadForFormat(
   format: WeaverConfig["webhook_format"],
   sessionId: string,
-  eventName: string,
+  eventName: HookEventName,
   activity: ActivityStatus,
   sessionName: string,
   session: Session | undefined,
@@ -52,7 +53,7 @@ function buildPayloadForFormat(
 
 export async function handleWebhookEvent(
   sessionId: string,
-  eventName: string | undefined,
+  eventName: HookEventName | undefined,
   sessionName: string,
   session: Session | undefined,
 ): Promise<void> {

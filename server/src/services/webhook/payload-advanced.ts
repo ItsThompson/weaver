@@ -1,10 +1,15 @@
-import type { ActivityStatus, Session, HookEvent } from "@weaver/shared/types";
+import type {
+  ActivityStatus,
+  Session,
+  HookEvent,
+  HookEventName,
+} from "@weaver/shared/types";
 import type { WebhookPayload } from "./types";
 import { extractContext } from "./context";
 
 export function buildWebhookPayload(
   sessionId: string,
-  eventName: string,
+  eventName: HookEventName,
   activity: ActivityStatus,
   sessionName: string,
   session: Session | undefined,

@@ -1,4 +1,4 @@
-import type { HookEvent, Session } from "@weaver/shared/types";
+import type { HookEvent, HookEventName, Session } from "@weaver/shared/types";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 import type * as WebhookModule from "../index";
 
@@ -20,7 +20,7 @@ export const TEST_SESSION: Session = {
 };
 
 export function makeEvent(
-  name: string,
+  name: HookEventName,
   extra: Record<string, unknown> = {},
 ): HookEvent {
   return {

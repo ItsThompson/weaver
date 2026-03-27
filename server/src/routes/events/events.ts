@@ -1,10 +1,11 @@
 import type { FastifyInstance } from "fastify";
+import type { HookEventName } from "@weaver/shared/types";
 import { broadcast, emit, sseReply } from "../../services/event-bus";
 import { readSessions } from "../../services/storage/index";
 import { handleWebhookEvent } from "../../services/webhook/index";
 
 export function registerEventRoutes(server: FastifyInstance): void {
-  server.post<{ Body: { sessionId: string; eventName?: string } }>(
+  server.post<{ Body: { sessionId: string; eventName?: HookEventName } }>(
     "/api/notify",
     async (request, reply) => {
       const { sessionId, eventName } = request.body ?? {};

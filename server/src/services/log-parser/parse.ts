@@ -30,6 +30,6 @@ export async function getLastEvent(
   const events = await parseLogFile(sessionId);
   const last = events.findLast((event) => event.event.hook_event_name);
   return last
-    ? { name: last.event.hook_event_name!, timestamp: last.timestamp }
+    ? { name: last.event.hook_event_name, timestamp: last.timestamp }
     : null;
 }

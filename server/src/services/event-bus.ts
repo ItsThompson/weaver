@@ -1,3 +1,5 @@
+import type { HookEventName } from "@weaver/shared/types";
+
 export interface SSETarget {
   raw: {
     writeHead(statusCode: number, headers: Record<string, string>): void;
@@ -22,7 +24,7 @@ export function subscribe(listener: Listener): () => void {
 
 export function broadcast(
   sessionId: string,
-  eventName?: string,
+  eventName?: HookEventName,
   sessionName?: string,
 ): void {
   emit({ event: "update", data: { sessionId, eventName, sessionName } });

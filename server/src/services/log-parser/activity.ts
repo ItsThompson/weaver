@@ -1,8 +1,12 @@
 import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
-import type { HookEvent, ActivityStatus } from "@weaver/shared/types";
+import type {
+  HookEvent,
+  ActivityStatus,
+  HookEventName,
+} from "@weaver/shared/types";
 
 export function deriveActivity(
-  eventName: string,
+  eventName: HookEventName,
   eventTimestamp?: string,
 ): ActivityStatus {
   switch (eventName) {
