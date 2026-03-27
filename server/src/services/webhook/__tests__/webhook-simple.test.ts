@@ -9,10 +9,10 @@ import {
 
 import * as webhook from "../index";
 import { readConfig } from "../../config";
-import { parseLogFile, deriveActivity } from "../../log-parser";
+import { parseLogFile } from "../../log-parser";
 import { log } from "../../../utils/logger";
 
-setupWebhookTests(webhook, readConfig, parseLogFile, deriveActivity);
+setupWebhookTests(webhook, readConfig, parseLogFile);
 
 describe("buildSimpleWebhookPayload", () => {
   it("formats agentSpawn", () => {

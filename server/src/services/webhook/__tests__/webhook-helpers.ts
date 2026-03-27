@@ -3,10 +3,13 @@ import { DEFAULT_CONFIG } from "@weaver/shared/types";
 import type * as WebhookModule from "../index";
 
 vi.mock("../../config", () => ({ readConfig: vi.fn() }));
-vi.mock("../../log-parser", () => ({
-  parseLogFile: vi.fn(),
-  deriveActivity: vi.fn(),
-}));
+vi.mock("../../log-parser", async () => {
+  const actual = await vi.importActual("../../log-parser");
+  return {
+    ...actual,
+    parseLogFile: vi.fn(),
+  };
+});
 vi.mock("../../../utils/logger", () => ({ log: vi.fn() }));
 
 export const TEST_SESSION: Session = {
@@ -46,7 +49,6 @@ export function setupWebhookTests(
   webhook: typeof WebhookModule,
   readConfig: (...args: never[]) => unknown,
   parseLogFile: (...args: never[]) => unknown,
-  deriveActivity: (name: string) => string,
   format: "simple" | "advanced" = "simple",
 ) {
   beforeEach(() => {
@@ -57,18 +59,6 @@ export function setupWebhookTests(
       configWith("https://hooks.example.com", format),
     );
     vi.mocked(parseLogFile).mockResolvedValue([]);
-    vi.mocked(deriveActivity).mockImplementation((name: string) => {
-      if (name === "agentSpawn") {
-        return "starting";
-      }
-      if (name === "stop") {
-        return "idle";
-      }
-      if (name === "preToolUse") {
-        return "running_tool";
-      }
-      return "processing";
-    });
     webhook.stopWebhookTimers();
     webhook.setWebhookEnabled("sess-1", true);
   });

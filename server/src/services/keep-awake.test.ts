@@ -4,7 +4,6 @@ const {
   mockReadSessions,
   mockIsProcessRunning,
   mockGetLastEvent,
-  mockDeriveActivity,
   mockLog,
   mockExecFile,
 } = vi.hoisted(() => ({
@@ -12,7 +11,6 @@ const {
   mockIsProcessRunning: vi.fn<(pid: number) => boolean>(),
   mockGetLastEvent:
     vi.fn<() => Promise<{ name: string; timestamp: string } | null>>(),
-  mockDeriveActivity: vi.fn<(name: string) => string>(),
   mockLog: vi.fn(),
   mockExecFile: vi.fn(),
 }));
@@ -22,10 +20,13 @@ vi.mock("./storage/index", () => ({
   isProcessRunning: mockIsProcessRunning,
 }));
 
-vi.mock("./log-parser/index", () => ({
-  getLastEvent: mockGetLastEvent,
-  deriveActivity: mockDeriveActivity,
-}));
+vi.mock("./log-parser/index", async () => {
+  const actual = await vi.importActual("./log-parser/index");
+  return {
+    ...actual,
+    getLastEvent: mockGetLastEvent,
+  };
+});
 
 vi.mock("../utils/logger", () => ({ log: mockLog }));
 
@@ -76,7 +77,6 @@ describe("startKeepAwake", () => {
       name: "preToolUse",
       timestamp: new Date().toISOString(),
     });
-    mockDeriveActivity.mockReturnValue("running_tool");
 
     startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
@@ -92,7 +92,6 @@ describe("startKeepAwake", () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
     mockIsProcessRunning.mockReturnValue(true);
     mockGetLastEvent.mockResolvedValue({ name: "stop", timestamp: "" });
-    mockDeriveActivity.mockReturnValue("idle");
 
     startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
@@ -129,7 +128,6 @@ describe("startKeepAwake", () => {
       name: "userPromptSubmit",
       timestamp: "",
     });
-    mockDeriveActivity.mockReturnValue("processing");
     mockExecFile.mockImplementation((...args: unknown[]) => {
       const cb = args[2] as (err: Error | null) => void;
       cb(new Error("script failed"));

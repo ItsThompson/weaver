@@ -1,10 +1,6 @@
 import "../../__tests__/mocks/fs";
 import "../../__tests__/mocks/logger";
 
-vi.mock("../log-parser/index", () => ({
-  groupEventsByTurn: vi.fn().mockReturnValue([]),
-}));
-
 vi.mock("../file-cache/index", async () => {
   const actual = await vi.importActual<typeof import("../file-cache/index")>(
     "../file-cache/index",
