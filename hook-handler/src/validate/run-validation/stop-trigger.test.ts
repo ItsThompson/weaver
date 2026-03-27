@@ -1,8 +1,23 @@
 import "../../__test-helpers__/mock-fs";
 import "../../__test-helpers__/mock-child-process";
-import "../__test-helpers__/mock-validate-deps";
 
-import type { SpawnSyncReturns } from "node:child_process";
+vi.mock("../../config/index", () => ({
+  readProjectConfig: vi.fn(),
+  resolveTestRunners: vi.fn<() => string[]>(),
+  findNearestConfig: vi.fn(),
+  groupFilesByConfig: vi.fn(),
+}));
+
+vi.mock("../../session-analysis", () => ({
+  extractChangedFiles: vi.fn<() => string[]>(),
+  extractAgentTestedDirs: vi.fn<() => string[]>(),
+  isWithinDir: vi.fn<() => boolean>(),
+}));
+
+vi.mock("../../scope/index", () => ({
+  resolveTestDirs: vi.fn<() => string[]>(),
+}));
+
 import { spawnSync } from "node:child_process";
 import { appendFileSync, writeFileSync } from "node:fs";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
@@ -12,6 +27,7 @@ import {
   extractChangedFiles,
   extractAgentTestedDirs,
 } from "../../session-analysis";
+import { spawnResult } from "../../__test-helpers__/spawn";
 import { runStopTrigger } from "./stop-trigger";
 
 let mockFetch: ReturnType<typeof vi.fn>;
@@ -23,21 +39,6 @@ beforeEach(() => {
   vi.mocked(resolveTestRunners).mockReturnValue(["jest"]);
   vi.mocked(extractAgentTestedDirs).mockReturnValue([]);
 });
-
-function spawnResult(
-  overrides: Partial<SpawnSyncReturns<string>> = {},
-): SpawnSyncReturns<string> {
-  return {
-    pid: 1,
-    output: [],
-    stdout: "",
-    stderr: "",
-    status: 0,
-    signal: null,
-    error: undefined,
-    ...overrides,
-  } as SpawnSyncReturns<string>;
-}
 
 function makeGroups(
   entries: [string, { config: WeaverProjectConfig; files: string[] }][],

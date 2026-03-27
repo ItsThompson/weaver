@@ -1,12 +1,28 @@
 import "../../__test-helpers__/mock-fs";
 import "../../__test-helpers__/mock-child-process";
-import "../__test-helpers__/mock-validate-deps";
 
-import type { SpawnSyncReturns } from "node:child_process";
+vi.mock("../../config/index", () => ({
+  readProjectConfig: vi.fn(),
+  resolveTestRunners: vi.fn<() => string[]>(),
+  findNearestConfig: vi.fn(),
+  groupFilesByConfig: vi.fn(),
+}));
+
+vi.mock("../../session-analysis", () => ({
+  extractChangedFiles: vi.fn<() => string[]>(),
+  extractAgentTestedDirs: vi.fn<() => string[]>(),
+  isWithinDir: vi.fn<() => boolean>(),
+}));
+
+vi.mock("../../scope/index", () => ({
+  resolveTestDirs: vi.fn<() => string[]>(),
+}));
+
 import { spawnSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
 import type { ValidateArgs } from "./parse-args";
 import { findNearestConfig } from "../../config/index";
+import { spawnResult } from "../../__test-helpers__/spawn";
 import { runPostToolUseTrigger } from "./post-tool-use-trigger";
 
 let mockFetch: ReturnType<typeof vi.fn>;
@@ -16,21 +32,6 @@ beforeEach(() => {
   mockFetch = vi.fn().mockResolvedValue(new Response());
   globalThis.fetch = mockFetch as typeof globalThis.fetch;
 });
-
-function spawnResult(
-  overrides: Partial<SpawnSyncReturns<string>> = {},
-): SpawnSyncReturns<string> {
-  return {
-    pid: 1,
-    output: [],
-    stdout: "",
-    stderr: "",
-    status: 0,
-    signal: null,
-    error: undefined,
-    ...overrides,
-  } as SpawnSyncReturns<string>;
-}
 
 const args: ValidateArgs = {
   sessionId: "sess-1",
