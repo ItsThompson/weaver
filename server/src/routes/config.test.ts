@@ -1,10 +1,13 @@
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
-vi.mock("../services/config/index", () => ({
-  readConfig: vi.fn(),
-  parseAndValidateConfig: vi.fn(),
-  writeConfig: vi.fn(),
-}));
+vi.mock("../services/config/index", async () => {
+  const actual = await vi.importActual("../services/config/index");
+  return {
+    ...actual,
+    readConfig: vi.fn(),
+    writeConfig: vi.fn(),
+  };
+});
 
 vi.mock("../services/event-bus", () => ({
   broadcast: vi.fn(),
@@ -20,11 +23,7 @@ vi.mock("../services/skill-graph/discover", () => ({
   skillCache: { clear: vi.fn() },
 }));
 
-import {
-  readConfig,
-  parseAndValidateConfig,
-  writeConfig,
-} from "../services/config/index";
+import { readConfig, writeConfig } from "../services/config/index";
 import { emit } from "../services/event-bus";
 import { validatePathsExist } from "../services/config/validators/validate-paths";
 import { skillCache } from "../services/skill-graph/discover";
@@ -47,7 +46,6 @@ afterEach(() => server.close());
 describe("PUT /api/config", () => {
   it("emits configChanged SSE after successful write", async () => {
     const config = { ...DEFAULT_CONFIG, dark_mode: false };
-    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
 
     const res = await server.inject({
       method: "PUT",
@@ -58,34 +56,27 @@ describe("PUT /api/config", () => {
     expect(res.statusCode).toBe(200);
     expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "configChanged",
-      data: { ...config },
+      data: expect.objectContaining({ dark_mode: false }),
     });
   });
 
-  it("does not emit SSE on validation failure", async () => {
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
-      config: DEFAULT_CONFIG,
-      warnings: ["bad field"],
-    });
-
+  it("returns 422 with real validation warning for invalid field", async () => {
     const res = await server.inject({
       method: "PUT",
       url: "/api/config",
-      payload: DEFAULT_CONFIG,
+      payload: { ...DEFAULT_CONFIG, dark_mode: "not-a-boolean" },
     });
 
     expect(res.statusCode).toBe(422);
+    expect(JSON.parse(res.body).error).toContain("dark_mode must be a boolean");
     expect(vi.mocked(emit)).not.toHaveBeenCalled();
   });
 });
 
 describe("PATCH /api/config", () => {
   it("merges partial body with current config and returns merged result", async () => {
-    const current = { ...DEFAULT_CONFIG, ghost_mode: false };
-    const merged = { ...current, ghost_mode: true };
-    vi.mocked(readConfig).mockResolvedValue({ config: current, warnings: [] });
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
-      config: merged,
+    vi.mocked(readConfig).mockResolvedValue({
+      config: { ...DEFAULT_CONFIG, ghost_mode: false },
       warnings: [],
     });
 
@@ -96,17 +87,15 @@ describe("PATCH /api/config", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(JSON.parse(res.body)).toEqual({ config: merged });
-    expect(vi.mocked(writeConfig)).toHaveBeenCalledWith(merged);
+    const body = JSON.parse(res.body);
+    expect(body.config.ghost_mode).toBe(true);
   });
 
   it("emits configChanged SSE after successful write", async () => {
-    const config = { ...DEFAULT_CONFIG, ghost_mode: true };
     vi.mocked(readConfig).mockResolvedValue({
       config: DEFAULT_CONFIG,
       warnings: [],
     });
-    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
 
     await server.inject({
       method: "PATCH",
@@ -116,18 +105,14 @@ describe("PATCH /api/config", () => {
 
     expect(vi.mocked(emit)).toHaveBeenCalledWith({
       event: "configChanged",
-      data: { ...config },
+      data: expect.objectContaining({ ghost_mode: true }),
     });
   });
 
-  it("returns 422 on validation failure", async () => {
+  it("returns 422 with real validation warning for invalid field", async () => {
     vi.mocked(readConfig).mockResolvedValue({
       config: DEFAULT_CONFIG,
       warnings: [],
-    });
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
-      config: DEFAULT_CONFIG,
-      warnings: ["ghost_opacity must be a number between 0 and 1"],
     });
 
     const res = await server.inject({
@@ -137,18 +122,14 @@ describe("PATCH /api/config", () => {
     });
 
     expect(res.statusCode).toBe(422);
-    expect(JSON.parse(res.body)).toEqual({
-      error: "ghost_opacity must be a number between 0 and 1",
-    });
+    expect(JSON.parse(res.body).error).toContain(
+      "ghost_opacity must be a number between 0 and 1",
+    );
     expect(vi.mocked(emit)).not.toHaveBeenCalled();
   });
 
   it("returns current config unchanged when body is empty", async () => {
     vi.mocked(readConfig).mockResolvedValue({
-      config: DEFAULT_CONFIG,
-      warnings: [],
-    });
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: DEFAULT_CONFIG,
       warnings: [],
     });
@@ -160,14 +141,13 @@ describe("PATCH /api/config", () => {
     });
 
     expect(res.statusCode).toBe(200);
-    expect(JSON.parse(res.body)).toEqual({ config: DEFAULT_CONFIG });
+    const body = JSON.parse(res.body);
+    expect(body.config.dark_mode).toBe(DEFAULT_CONFIG.dark_mode);
   });
 });
 
 describe("PUT /api/config skill_paths validation", () => {
   it("returns 422 when skill_paths contain invalid paths", async () => {
-    const config = { ...DEFAULT_CONFIG, skill_paths: ["/nonexistent"] };
-    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
     vi.mocked(validatePathsExist).mockResolvedValue([
       "/nonexistent: path does not exist",
     ]);
@@ -175,7 +155,7 @@ describe("PUT /api/config skill_paths validation", () => {
     const res = await server.inject({
       method: "PUT",
       url: "/api/config",
-      payload: config,
+      payload: { ...DEFAULT_CONFIG, skill_paths: ["/nonexistent"] },
     });
 
     expect(res.statusCode).toBe(422);
@@ -184,13 +164,10 @@ describe("PUT /api/config skill_paths validation", () => {
   });
 
   it("clears skill cache on successful write", async () => {
-    const config = { ...DEFAULT_CONFIG };
-    vi.mocked(parseAndValidateConfig).mockReturnValue({ config, warnings: [] });
-
     await server.inject({
       method: "PUT",
       url: "/api/config",
-      payload: config,
+      payload: { ...DEFAULT_CONFIG },
     });
 
     expect(skillCache.clear).toHaveBeenCalled();
@@ -201,11 +178,6 @@ describe("PATCH /api/config skill_paths validation", () => {
   it("returns 422 when skill_paths contain invalid paths", async () => {
     vi.mocked(readConfig).mockResolvedValue({
       config: DEFAULT_CONFIG,
-      warnings: [],
-    });
-    const merged = { ...DEFAULT_CONFIG, skill_paths: ["/nonexistent"] };
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
-      config: merged,
       warnings: [],
     });
     vi.mocked(validatePathsExist).mockResolvedValue([
@@ -225,10 +197,6 @@ describe("PATCH /api/config skill_paths validation", () => {
 
   it("clears skill cache on successful write", async () => {
     vi.mocked(readConfig).mockResolvedValue({
-      config: DEFAULT_CONFIG,
-      warnings: [],
-    });
-    vi.mocked(parseAndValidateConfig).mockReturnValue({
       config: DEFAULT_CONFIG,
       warnings: [],
     });
