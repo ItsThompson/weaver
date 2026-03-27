@@ -12,16 +12,16 @@ export function createPendingTracker(): PendingTracker {
   const timers = new Map<string, NodeJS.Timeout>();
   return {
     schedule(sessionId, delayMs, callback) {
-      this.cancel(sessionId);
+      const existing = timers.get(sessionId);
+      if (existing) {
+        clearTimeout(existing);
+        timers.delete(sessionId);
+      }
       timers.set(
         sessionId,
         setTimeout(async () => {
           timers.delete(sessionId);
-          try {
-            await callback();
-          } catch {
-            /* logged by caller */
-          }
+          await callback();
         }, delayMs),
       );
     },

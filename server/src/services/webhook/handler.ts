@@ -78,21 +78,29 @@ export async function handleWebhookEvent(
       sessionId,
       PENDING_APPROVAL_THRESHOLD_MS,
       async () => {
-        const { config: freshConfig } = await readConfig();
-        if (!freshConfig.webhook_url) {
-          return;
+        try {
+          const { config: freshConfig } = await readConfig();
+          if (!freshConfig.webhook_url) {
+            return;
+          }
+          const freshEvents = await parseLogFile(sessionId);
+          const pendingPayload = buildPayloadForFormat(
+            freshConfig.webhook_format,
+            sessionId,
+            eventName,
+            "pending_approval",
+            sessionName,
+            session,
+            freshEvents,
+          );
+          dispatchWebhook(freshConfig.webhook_url, pendingPayload);
+        } catch (err) {
+          log({
+            timestamp: new Date().toISOString(),
+            event: "webhook_pending_error",
+            error: String(err),
+          });
         }
-        const freshEvents = await parseLogFile(sessionId);
-        const pendingPayload = buildPayloadForFormat(
-          freshConfig.webhook_format,
-          sessionId,
-          eventName,
-          "pending_approval",
-          sessionName,
-          session,
-          freshEvents,
-        );
-        dispatchWebhook(freshConfig.webhook_url, pendingPayload);
       },
     );
   }

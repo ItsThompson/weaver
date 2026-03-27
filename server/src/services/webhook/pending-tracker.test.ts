@@ -48,11 +48,4 @@ describe("pending-tracker", () => {
     expect(cb1).not.toHaveBeenCalled();
     expect(cb2).not.toHaveBeenCalled();
   });
-
-  it("swallows callback errors", async () => {
-    const tracker = createPendingTracker();
-    const cb = vi.fn().mockRejectedValue(new Error("boom"));
-    tracker.schedule("s1", 1000, cb);
-    await expect(vi.advanceTimersByTimeAsync(1000)).resolves.not.toThrow();
-  });
 });

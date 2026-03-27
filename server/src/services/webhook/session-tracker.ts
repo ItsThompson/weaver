@@ -4,7 +4,11 @@ export const isWebhookEnabled = (sessionId: string) =>
   enabledSessions.has(sessionId);
 
 export const setWebhookEnabled = (sessionId: string, enabled: boolean) => {
-  enabled ? enabledSessions.add(sessionId) : enabledSessions.delete(sessionId);
+  if (enabled) {
+    enabledSessions.add(sessionId);
+  } else {
+    enabledSessions.delete(sessionId);
+  }
 };
 
 export const clearAll = () => enabledSessions.clear();
