@@ -8,8 +8,10 @@ import { appendFileSync, writeFileSync } from "node:fs";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
 import { groupFilesByConfig, resolveTestRunners } from "../../config/index";
-import { extractChangedFiles } from "../../changed-files/index";
-import { extractAgentTestedDirs } from "../../agent-tests/index";
+import {
+  extractChangedFiles,
+  extractAgentTestedDirs,
+} from "../../session-analysis";
 import { runStopTrigger } from "./stop-trigger";
 
 let mockFetch: ReturnType<typeof vi.fn>;

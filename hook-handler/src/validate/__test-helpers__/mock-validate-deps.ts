@@ -5,12 +5,10 @@ vi.mock("../../config/index", () => ({
   groupFilesByConfig: vi.fn(),
 }));
 
-vi.mock("../../changed-files/index", () => ({
+vi.mock("../../session-analysis", () => ({
   extractChangedFiles: vi.fn<() => string[]>(),
-}));
-
-vi.mock("../../agent-tests/index", () => ({
   extractAgentTestedDirs: vi.fn<() => string[]>(),
+  isWithinDir: vi.fn<() => boolean>(),
 }));
 
 vi.mock("../../scope/index", () => ({

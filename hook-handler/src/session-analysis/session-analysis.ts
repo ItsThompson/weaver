@@ -1,5 +1,58 @@
-import { resolve, relative } from "node:path";
-import { getCurrentTurnEvents } from "../turn-boundary/index";
+import { readFileSync, existsSync } from "node:fs";
+import { resolve, relative, isAbsolute } from "node:path";
+import type { HookEvent } from "@weaver/shared/types";
+
+function getCurrentTurnEvents(sessionLogPath: string): HookEvent[] {
+  if (!existsSync(sessionLogPath)) {
+    return [];
+  }
+
+  let raw: string;
+  try {
+    raw = readFileSync(sessionLogPath, "utf-8");
+  } catch {
+    return [];
+  }
+
+  const events: HookEvent[] = raw
+    .split("\n")
+    .filter((l) => l.trim())
+    .flatMap((line) => {
+      try {
+        return [JSON.parse(line) as HookEvent];
+      } catch {
+        return [];
+      }
+    });
+
+  if (events.length === 0) {
+    return [];
+  }
+
+  const boundaryIndex = events.findLastIndex(
+    (e) =>
+      e.event.hook_event_name === "userPromptSubmit" ||
+      e.event.hook_event_name === "agentSpawn",
+  );
+
+  return boundaryIndex === -1 ? events : events.slice(boundaryIndex);
+}
+
+export function extractChangedFiles(sessionLogPath: string): string[] {
+  const events = getCurrentTurnEvents(sessionLogPath);
+  const files = events.reduce((acc, e) => {
+    if (
+      e.event.hook_event_name === "postToolUse" &&
+      e.event.tool_name === "fs_write" &&
+      typeof e.event.tool_input?.path === "string"
+    ) {
+      acc.add(e.event.tool_input.path);
+    }
+    return acc;
+  }, new Set<string>());
+
+  return [...files];
+}
 
 /** Whitespace-bounded match — stricter than \b so "pytest" won't match inside "my-pytest-wrapper". */
 function findRunner(command: string, runner: string): number {
@@ -68,4 +121,9 @@ function extractDirArg(args: string): string {
   }, "");
 
   return dir || ".";
+}
+
+export function isWithinDir(filePath: string, dir: string): boolean {
+  const rel = relative(dir, resolve(filePath));
+  return !rel.startsWith("..") && !isAbsolute(rel);
 }

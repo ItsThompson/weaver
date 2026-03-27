@@ -12,8 +12,10 @@ import {
   groupFilesByConfig,
   resolveTestRunners,
 } from "../../config/index";
-import { extractChangedFiles } from "../../changed-files/index";
-import { extractAgentTestedDirs } from "../../agent-tests/index";
+import {
+  extractChangedFiles,
+  extractAgentTestedDirs,
+} from "../../session-analysis";
 import { runValidation } from "./run-validation";
 
 let mockFetch: ReturnType<typeof vi.fn>;
