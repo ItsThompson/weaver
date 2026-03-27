@@ -49,11 +49,17 @@ describe("pending-tracker", () => {
     expect(cb2).not.toHaveBeenCalled();
   });
 
-  it("schedule swallows callback rejections to prevent unhandled rejections", async () => {
+  it("schedule logs and swallows callback rejections to prevent unhandled rejections", async () => {
+    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const tracker = createPendingTracker();
     const cb = vi.fn().mockRejectedValue(new Error("boom"));
     tracker.schedule("s1", 1000, cb);
     await expect(vi.advanceTimersByTimeAsync(1000)).resolves.not.toThrow();
     expect(cb).toHaveBeenCalledOnce();
+    expect(consoleSpy).toHaveBeenCalledWith(
+      "PendingTracker: unhandled callback error",
+      expect.any(Error),
+    );
+    consoleSpy.mockRestore();
   });
 });

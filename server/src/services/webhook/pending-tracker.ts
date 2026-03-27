@@ -12,20 +12,18 @@ export function createPendingTracker(): PendingTracker {
   const timers = new Map<string, NodeJS.Timeout>();
   return {
     schedule(sessionId, delayMs, callback) {
-      const existing = timers.get(sessionId);
-      if (existing) {
-        clearTimeout(existing);
-        timers.delete(sessionId);
-      }
+      this.cancel(sessionId);
       timers.set(
         sessionId,
         setTimeout(async () => {
           timers.delete(sessionId);
           try {
             await callback();
-          } catch {
-            // Caller is responsible for error handling within the callback.
-            // This catch prevents unhandled rejections from setTimeout's async wrapper.
+          } catch (err) {
+            // Safety net: prevents unhandled rejections from setTimeout's async wrapper.
+            // Callers should handle errors within their callback, but if they don't,
+            // this ensures failures are visible rather than silently swallowed.
+            console.error("PendingTracker: unhandled callback error", err);
           }
         }, delayMs),
       );

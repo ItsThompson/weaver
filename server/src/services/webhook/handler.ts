@@ -69,6 +69,8 @@ export async function handleWebhookEvent(
     session,
     events,
   );
+  // Fire-and-forget: webhook delivery should not block the event response.
+  // dispatchWebhook logs its own errors internally.
   void dispatchWebhook(config.webhook_url, payload);
 
   if (eventName === "postToolUse" || eventName === "stop") {
@@ -93,7 +95,7 @@ export async function handleWebhookEvent(
             session,
             freshEvents,
           );
-          void dispatchWebhook(freshConfig.webhook_url, pendingPayload);
+          void dispatchWebhook(freshConfig.webhook_url, pendingPayload); // fire-and-forget
         } catch (err) {
           log({
             timestamp: new Date().toISOString(),
