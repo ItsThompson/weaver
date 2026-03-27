@@ -70,7 +70,8 @@ export async function handleWebhookEvent(
     events,
   );
   // Fire-and-forget: webhook delivery should not block the event response.
-  // dispatchWebhook logs its own errors internally.
+  // DispatchResult intentionally ignored here: dispatchWebhook logs its own errors.
+  // The return value exists for callers that need delivery status (e.g., retry logic).
   void dispatchWebhook(config.webhook_url, payload);
 
   if (eventName === "postToolUse" || eventName === "stop") {

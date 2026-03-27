@@ -140,6 +140,57 @@ describe("runStopTrigger (boundary)", () => {
     );
   });
 
+  it("runs each config group independently", () => {
+    setupFs(
+      [
+        makeEvent("userPromptSubmit", { prompt: "fix" }),
+        makeEvent("postToolUse", {
+          tool_name: "fs_write",
+          tool_input: { path: "/mono/pkg-a/x.ts" },
+        }),
+        makeEvent("postToolUse", {
+          tool_name: "fs_write",
+          tool_input: { path: "/mono/pkg-b/y.ts" },
+        }),
+      ],
+      {
+        "/mono/pkg-a": {
+          validation: {
+            stop: [{ name: "lint-a", command: "eslint ." }],
+          },
+        },
+        "/mono/pkg-b": {
+          validation: {
+            stop: [{ name: "lint-b", command: "eslint ." }],
+          },
+        },
+      },
+    );
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
+
+    runStopTrigger({ ...args, cwd: "/mono" }, SESSION_LOG);
+    expect(spawnSync).toHaveBeenCalledTimes(2);
+  });
+
+  it("skips config groups with no stop hooks", () => {
+    setupFs(
+      [
+        makeEvent("userPromptSubmit", { prompt: "fix" }),
+        makeEvent("postToolUse", {
+          tool_name: "fs_write",
+          tool_input: { path: "/project/a.ts" },
+        }),
+      ],
+      {
+        "/project": { validation: {} },
+      },
+    );
+
+    const result = runStopTrigger(args, SESSION_LOG);
+    expect(result.exitCode).toBe(0);
+    expect(spawnSync).not.toHaveBeenCalled();
+  });
+
   it("exits 0 when session log has no changed files", () => {
     setupFs([
       makeEvent("userPromptSubmit", { prompt: "explain" }),

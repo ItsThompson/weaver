@@ -12,9 +12,9 @@ export interface PendingTracker {
 
 export function createPendingTracker(): PendingTracker {
   const timers = new Map<string, NodeJS.Timeout>();
-  return {
+  const tracker: PendingTracker = {
     schedule(sessionId, delayMs, callback) {
-      this.cancel(sessionId);
+      tracker.cancel(sessionId);
       timers.set(
         sessionId,
         setTimeout(async () => {
@@ -46,4 +46,5 @@ export function createPendingTracker(): PendingTracker {
       timers.clear();
     },
   };
+  return tracker;
 }

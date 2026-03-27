@@ -105,6 +105,33 @@ describe("runPostToolUseTrigger (boundary)", () => {
     expect(spawnSync).not.toHaveBeenCalled();
   });
 
+  it("falls back to args.cwd when toolPath is empty", () => {
+    setupFs({
+      "/project": {
+        validation: {
+          postToolUse: [
+            { matcher: "fs_write", name: "fmt", command: "echo hi" },
+          ],
+        },
+      },
+    });
+    vi.mocked(spawnSync).mockReturnValue(spawnResult());
+
+    const args: ValidateArgs = {
+      sessionId: "sess-1",
+      cwd: "/project",
+      trigger: "postToolUse",
+      toolName: "fs_write",
+      toolPath: "",
+    };
+    const result = runPostToolUseTrigger(args, SESSION_LOG);
+    expect(result.exitCode).toBe(0);
+    expect(spawnSync).toHaveBeenCalledWith(
+      "echo hi",
+      expect.objectContaining({ cwd: "/project" }),
+    );
+  });
+
   it("returns failure when hook command fails", () => {
     setupFs({
       "/project": {
