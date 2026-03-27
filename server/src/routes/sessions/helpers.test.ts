@@ -1,13 +1,14 @@
 import "../../__tests__/mocks/services";
 
 import type { Session } from "@weaver/shared/types";
+import { SKILL_READ_EVENTS } from "../../__tests__/fixtures/events";
 import {
   toSessionWithStatus,
   safeActiveSkills,
   safeConfiguredSkills,
 } from "./helpers";
 
-import { extractActiveSkillPaths } from "../../services/log-parser/index";
+import { skillNameFromPath } from "../../services/skill-resolver/index";
 import { resolveConfiguredSkills } from "../../services/skill-resolver/index";
 
 beforeEach(() => vi.clearAllMocks());
@@ -38,18 +39,15 @@ describe("toSessionWithStatus", () => {
 
 describe("safeActiveSkills", () => {
   it("returns mapped skill names", () => {
-    vi.mocked(extractActiveSkillPaths).mockReturnValue([
-      "/home/.kiro/skills/coding-practices/SKILL.md",
-    ]);
-    const result = safeActiveSkills([]);
+    const result = safeActiveSkills(SKILL_READ_EVENTS);
     expect(result).toEqual(["coding-practices"]);
   });
 
   it("returns empty array on error", () => {
-    vi.mocked(extractActiveSkillPaths).mockImplementation(() => {
+    vi.mocked(skillNameFromPath).mockImplementation(() => {
       throw new Error("fail");
     });
-    expect(safeActiveSkills([])).toEqual([]);
+    expect(safeActiveSkills(SKILL_READ_EVENTS)).toEqual([]);
   });
 });
 
