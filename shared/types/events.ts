@@ -1,8 +1,16 @@
 import type { ValidationResult } from "./validation";
 
+export type HookEventName =
+  | "agentSpawn"
+  | "stop"
+  | "preToolUse"
+  | "postToolUse"
+  | "userPromptSubmit"
+  | "validation";
+
 // Raw hook event as received from kiro-cli via STDIN
 export interface HookEventData {
-  hook_event_name: string;
+  hook_event_name: HookEventName;
   cwd: string;
   prompt?: string;
   tool_name?: string;

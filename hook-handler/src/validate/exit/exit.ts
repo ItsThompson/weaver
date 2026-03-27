@@ -1,6 +1,5 @@
 import { writeFileSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
+import { pendingPath } from "@weaver/shared/paths";
 import type { ValidationResult } from "@weaver/shared/types";
 
 export interface ValidateResult {
@@ -16,16 +15,11 @@ export function handleExitLogic(
   const total = results.filter((r) => !r.skipped_reason).length;
 
   if (failed.length > 0) {
-    const pendingPath = join(
-      homedir(),
-      ".weaver",
-      "logs",
-      `${sessionId}.pending`,
-    );
+    const path = pendingPath(sessionId);
     try {
-      writeFileSync(pendingPath, JSON.stringify({ results }));
+      writeFileSync(path, JSON.stringify({ results }));
     } catch (e) {
-      console.error("Failed to write pending file:", pendingPath, e);
+      console.error("Failed to write pending file:", path, e);
     }
     const names = failed.map((r) => r.name).join(", ");
     return {

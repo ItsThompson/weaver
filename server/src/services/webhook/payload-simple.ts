@@ -1,9 +1,13 @@
-import type { ActivityStatus, HookEvent } from "@weaver/shared/types";
+import type {
+  ActivityStatus,
+  HookEvent,
+  HookEventName,
+} from "@weaver/shared/types";
 import type { SimpleWebhookPayload, EventContext } from "./types";
 import { extractContext } from "./context";
 
 export function buildSimpleWebhookPayload(
-  eventName: string,
+  eventName: HookEventName,
   activity: ActivityStatus,
   sessionName: string,
   events: HookEvent[],
@@ -13,7 +17,7 @@ export function buildSimpleWebhookPayload(
 }
 
 function formatText(
-  eventName: string,
+  eventName: HookEventName,
   activity: ActivityStatus,
   name: string,
   ctx: EventContext | null,

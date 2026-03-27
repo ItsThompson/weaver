@@ -1,5 +1,7 @@
+import type { HookEventName } from "@weaver/shared/types";
+
 export function makeEvent(
-  hook_event_name: string,
+  hook_event_name: HookEventName,
   extra: Record<string, unknown> = {},
 ) {
   return JSON.stringify({

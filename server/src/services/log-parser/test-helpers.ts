@@ -1,7 +1,7 @@
-import type { HookEvent } from "@weaver/shared/types";
+import type { HookEvent, HookEventName } from "@weaver/shared/types";
 
 export function makeEvent(
-  name: string,
+  name: HookEventName,
   extra: Record<string, unknown> = {},
 ): HookEvent {
   return {
@@ -11,7 +11,7 @@ export function makeEvent(
 }
 
 export function makeTimedEvent(
-  name: string,
+  name: HookEventName,
   ms: number,
   extra: Record<string, unknown> = {},
 ): HookEvent {
@@ -23,7 +23,7 @@ export function makeTimedEvent(
 
 export function makeOrphanEvent(
   pid: number,
-  name = "userPromptSubmit",
+  name: HookEventName = "userPromptSubmit",
 ): HookEvent {
   return {
     timestamp: "2026-01-01T00:00:00Z",

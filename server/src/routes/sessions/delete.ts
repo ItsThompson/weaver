@@ -1,8 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import type { ApiError } from "@weaver/shared/types";
 import { unlink } from "node:fs/promises";
-import { join } from "node:path";
-import { homedir } from "node:os";
+import { sessionLogPath, sessionMarkerPath } from "@weaver/shared/paths";
 import { readSessions, writeSessions } from "../../services/storage/index";
 import { broadcast } from "../../services/event-bus";
 import { log } from "../../utils/logger";
@@ -19,11 +18,10 @@ export function registerDeleteRoute(server: FastifyInstance): void {
       }
 
       const session = sessions[index];
-      const dataDir = join(homedir(), ".weaver");
 
       // Remove log file
       try {
-        await unlink(join(dataDir, "logs", `${id}.jsonl`));
+        await unlink(sessionLogPath(id));
       } catch (e) {
         log({
           timestamp: new Date().toISOString(),
@@ -35,7 +33,7 @@ export function registerDeleteRoute(server: FastifyInstance): void {
 
       // Remove session marker if present
       try {
-        await unlink(join(dataDir, `.current-session-${session.pid}`));
+        await unlink(sessionMarkerPath(session.pid));
       } catch (e) {
         log({
           timestamp: new Date().toISOString(),

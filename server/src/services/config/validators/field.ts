@@ -1,5 +1,42 @@
-import type { ValidatorResult } from "./types";
+import {
+  VALID_OPEN_DISPLAY_OPTIONS,
+  VALID_CLOSE_DISPLAY_OPTIONS,
+} from "@weaver/shared/types";
 import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+
+export type ValidatorResult = { value?: unknown; warning?: string };
+export type FieldValidator = (value: unknown) => ValidatorResult;
+
+function validateBoolean(field: string): FieldValidator {
+  return (value) => {
+    if (typeof value !== "boolean") {
+      return { warning: `${field} must be a boolean` };
+    }
+    return { value };
+  };
+}
+
+function validateDisplayOptions(
+  field: string,
+  valid: readonly string[],
+): FieldValidator {
+  return (value) => {
+    if (!Array.isArray(value)) {
+      return { warning: `${field} must be an array of strings` };
+    }
+    if (!value.every((v) => typeof v === "string")) {
+      return { warning: `${field} must contain only strings` };
+    }
+
+    const invalid = value.filter((v: string) => !valid.includes(v));
+    if (invalid.length > 0) {
+      return {
+        warning: `${field} contains invalid options: ${invalid.join(", ")}`,
+      };
+    }
+    return { value: value as string[] };
+  };
+}
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 
@@ -182,3 +219,24 @@ export function validateSkillPaths(value: unknown): ValidatorResult {
   }
   return { value: trimmed };
 }
+
+export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
+  enable_notification_sounds: validateBoolean("enable_notification_sounds"),
+  dark_mode: validateBoolean("dark_mode"),
+  ghost_mode: validateBoolean("ghost_mode"),
+  ghost_opacity: validateGhostOpacity,
+  page_size: validatePageSize,
+  open_display_options: validateDisplayOptions(
+    "open_display_options",
+    VALID_OPEN_DISPLAY_OPTIONS,
+  ),
+  close_display_options: validateDisplayOptions(
+    "close_display_options",
+    VALID_CLOSE_DISPLAY_OPTIONS,
+  ),
+  webhook_url: validateWebhookUrl,
+  webhook_format: validateWebhookFormat,
+  test_runners: validateTestRunners,
+  skill_graph: validateSkillGraph,
+  skill_paths: validateSkillPaths,
+};

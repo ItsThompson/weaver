@@ -1,7 +1,11 @@
-import type { HookEventData, ValidationResult } from "@weaver/shared/types";
+import type {
+  HookEventData,
+  HookEventName,
+  ValidationResult,
+} from "@weaver/shared/types";
 
 export interface LastEvent {
-  name: string;
+  name: HookEventName;
   timestamp: string;
 }
 

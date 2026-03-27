@@ -1,22 +1,19 @@
 import { readFile } from "node:fs/promises";
 import { join, resolve, basename } from "node:path";
-import { homedir } from "node:os";
 import { listSkillDirNames } from "../skill-resolver/list-skill-dirs";
 import { FileCache } from "../file-cache/file-cache";
 import { parseSkillFile } from "./parse-skill";
 import { log } from "../../utils/logger";
-import { expandHome } from "../../utils/path-utils";
+import { globalSkillsPath, expandHome } from "@weaver/shared/paths";
 import type { ParsedSkill, SkillEntry } from "./types";
 
 const skillCache = new FileCache<ParsedSkill>();
 
 export { skillCache };
 
-const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
-
 export function deriveProject(skillDirPath: string): string | null {
   const normalized = resolve(expandHome(skillDirPath));
-  if (normalized === GLOBAL_SKILLS_PATH()) {
+  if (normalized === globalSkillsPath()) {
     return null;
   }
   const suffix = `${join(".kiro", "skills")}`;
@@ -40,7 +37,7 @@ export async function discoverSkills(
       };
     }),
     {
-      dirPath: GLOBAL_SKILLS_PATH(),
+      dirPath: globalSkillsPath(),
       source: "global" as const,
       project: null as string | null,
     },

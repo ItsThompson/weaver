@@ -1,8 +1,8 @@
-import type { HookEvent } from "@weaver/shared/types";
+import type { HookEvent, HookEventName } from "@weaver/shared/types";
 import type { EventContext } from "./types";
 
 export function extractContext(
-  eventName: string,
+  eventName: HookEventName,
   events: HookEvent[],
 ): EventContext | null {
   if (eventName === "agentSpawn" || eventName === "stop") {
@@ -30,7 +30,7 @@ export function extractContext(
 
 function findLastByName(
   events: HookEvent[],
-  name: string,
+  name: HookEventName,
 ): HookEvent | undefined {
   return events.findLast((e) => e.event.hook_event_name === name);
 }

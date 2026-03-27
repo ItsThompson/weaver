@@ -1,17 +1,14 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
+import { configPath } from "@weaver/shared/paths";
 import { FIELD_VALIDATORS } from "./validators";
-
-const CONFIG_PATH = () => join(homedir(), ".weaver", "config.json");
 
 export async function readConfig(): Promise<{
   config: WeaverConfig;
   warnings: string[];
 }> {
-  const filePath = CONFIG_PATH();
+  const filePath = configPath();
   if (!existsSync(filePath)) {
     await writeConfig(DEFAULT_CONFIG);
     return { config: { ...DEFAULT_CONFIG }, warnings: [] };
@@ -67,7 +64,7 @@ export function parseAndValidateConfig(raw: string): {
 
 export async function writeConfig(config: WeaverConfig): Promise<void> {
   await writeFile(
-    CONFIG_PATH(),
+    configPath(),
     JSON.stringify(config, null, 2) + "\n",
     "utf-8",
   );

@@ -1,9 +1,8 @@
 import { readFile, appendFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { join } from "node:path";
+import { sessionLogPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { NotFoundError } from "./errors";
-import { LOGS_DIR } from "./paths";
 import { requireOrphanFile, partitionByPid, writeRemaining } from "./helpers";
 
 export async function assignOrphanEvents(
@@ -11,7 +10,7 @@ export async function assignOrphanEvents(
   pid: number,
 ): Promise<{ movedCount: number }> {
   const filePath = requireOrphanFile();
-  const targetLog = join(LOGS_DIR(), `${targetSessionId}.jsonl`);
+  const targetLog = sessionLogPath(targetSessionId);
 
   if (!existsSync(targetLog)) {
     throw new NotFoundError("Target session log not found");
