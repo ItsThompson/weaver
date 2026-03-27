@@ -19,6 +19,12 @@ export interface SimpleWebhookPayload {
   text: string;
 }
 
+export interface DispatchResult {
+  ok: boolean;
+  status?: number;
+  error?: string;
+}
+
 export interface EventContext {
   prompt: string | null;
   tool_name: string | null;

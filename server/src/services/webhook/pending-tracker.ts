@@ -21,7 +21,12 @@ export function createPendingTracker(): PendingTracker {
         sessionId,
         setTimeout(async () => {
           timers.delete(sessionId);
-          await callback();
+          try {
+            await callback();
+          } catch {
+            // Caller is responsible for error handling within the callback.
+            // This catch prevents unhandled rejections from setTimeout's async wrapper.
+          }
         }, delayMs),
       );
     },

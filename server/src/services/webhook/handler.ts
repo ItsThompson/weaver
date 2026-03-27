@@ -69,7 +69,7 @@ export async function handleWebhookEvent(
     session,
     events,
   );
-  dispatchWebhook(config.webhook_url, payload);
+  void dispatchWebhook(config.webhook_url, payload);
 
   if (eventName === "postToolUse" || eventName === "stop") {
     pendingTracker.cancel(sessionId);
@@ -93,7 +93,7 @@ export async function handleWebhookEvent(
             session,
             freshEvents,
           );
-          dispatchWebhook(freshConfig.webhook_url, pendingPayload);
+          void dispatchWebhook(freshConfig.webhook_url, pendingPayload);
         } catch (err) {
           log({
             timestamp: new Date().toISOString(),
