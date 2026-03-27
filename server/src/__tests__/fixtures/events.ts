@@ -15,7 +15,7 @@ function evt(
   return { timestamp, event: { hook_event_name, cwd: "/tmp", ...extra } };
 }
 
-/** Two turns: agentSpawn, then userPrompt → preToolUse → postToolUse → stop */
+/** Three turns: agentSpawn, stop flush, then userPrompt → preToolUse → postToolUse → stop */
 export const MULTI_TURN_EVENTS: HookEvent[] = [
   evt(T0, "agentSpawn"),
   evt(T1, "stop"),

@@ -1,4 +1,7 @@
 import { createPendingTracker } from "./pending-tracker";
+import { log } from "../../utils/logger";
+
+vi.mock("../../utils/logger", () => ({ log: vi.fn() }));
 
 describe("pending-tracker", () => {
   beforeEach(() => vi.useFakeTimers());
@@ -50,16 +53,16 @@ describe("pending-tracker", () => {
   });
 
   it("schedule logs and swallows callback rejections to prevent unhandled rejections", async () => {
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
     const tracker = createPendingTracker();
     const cb = vi.fn().mockRejectedValue(new Error("boom"));
     tracker.schedule("s1", 1000, cb);
     await expect(vi.advanceTimersByTimeAsync(1000)).resolves.not.toThrow();
     expect(cb).toHaveBeenCalledOnce();
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "PendingTracker: unhandled callback error",
-      expect.any(Error),
+    expect(log).toHaveBeenCalledWith(
+      expect.objectContaining({
+        event: "pending_tracker_callback_error",
+        error: "Error: boom",
+      }),
     );
-    consoleSpy.mockRestore();
   });
 });
