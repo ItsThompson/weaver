@@ -1,4 +1,4 @@
-import type { ActivityStatus } from "@weaver/shared/types";
+import type { ActivityStatus, HookEventName } from "@weaver/shared/types";
 
 const ACTIVITY_LABELS: Record<string, string> = {
   starting: "Starting",
@@ -8,7 +8,7 @@ const ACTIVITY_LABELS: Record<string, string> = {
   pending_approval: "Pending approval",
 };
 
-export function deriveActivity(eventName: string): ActivityStatus {
+export function deriveActivity(eventName: HookEventName): ActivityStatus {
   switch (eventName) {
     case "agentSpawn":
       return "starting";
@@ -26,7 +26,7 @@ export function deriveActivity(eventName: string): ActivityStatus {
  */
 export function resolveNotification(
   sessionId: string,
-  eventName: string,
+  eventName: HookEventName,
   sessionName: string | undefined,
   lastActivity: Map<string, string>,
 ): string | null {

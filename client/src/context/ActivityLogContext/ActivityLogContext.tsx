@@ -11,7 +11,7 @@ import {
   deriveActivity,
   resolveNotification,
 } from "../../hooks/notifications/notificationUtils";
-import type { ActivityStatus } from "@weaver/shared/types";
+import type { ActivityStatus, HookEventName } from "@weaver/shared/types";
 import { NOTIFICATION_AUTO_DISMISS_MS } from "../../constants";
 
 const MAX_ENTRIES = 10;
@@ -49,7 +49,7 @@ export function ActivityLogProvider({ children }: { children: ReactNode }) {
           event.data,
         ) as {
           sessionId: string;
-          eventName?: string;
+          eventName?: HookEventName;
           sessionName?: string;
         };
         if (!eventName) {
