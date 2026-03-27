@@ -2,10 +2,10 @@ import type { HookEvent, OrphanGroup } from "@weaver/shared/types";
 import { groupEventsByTurn } from "../log-parser/index";
 import { parseJsonlFile } from "../file-cache/index";
 import { log } from "../../utils/logger";
-import { ORPHAN_PATH } from "./paths";
+import { orphanPath } from "@weaver/shared/paths";
 
 export async function readOrphanEvents(): Promise<HookEvent[]> {
-  return parseJsonlFile<HookEvent>(ORPHAN_PATH(), (line) =>
+  return parseJsonlFile<HookEvent>(orphanPath(), (line) =>
     log({
       timestamp: new Date().toISOString(),
       event: "orphan_parse_error",

@@ -1,6 +1,5 @@
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { homedir } from "node:os";
 import type {
   SkillDetail,
   SkillGraphCategoryConfig,
@@ -8,13 +7,11 @@ import type {
 import { parseSkillFile } from "./parse-skill";
 import { categorizeSkill } from "./category";
 import { log } from "../../utils/logger";
-import { expandHome } from "../../utils/path-utils";
+import { globalSkillsPath, expandHome } from "@weaver/shared/paths";
 import { skillCache } from "./discover";
 import { deriveProject } from "./discover";
 import { isEnoent } from "./utils";
 import { VALID_SKILL_NAME } from "./constants";
-
-const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
 
 interface CandidatePath {
   dirPath: string;
@@ -43,7 +40,7 @@ export async function getSkillDetail(
       };
     }),
     {
-      dirPath: GLOBAL_SKILLS_PATH(),
+      dirPath: globalSkillsPath(),
       source: "global" as const,
       project: null,
     },

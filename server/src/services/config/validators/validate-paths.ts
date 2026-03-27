@@ -1,15 +1,12 @@
 import { stat } from "node:fs/promises";
-import { resolve, join } from "node:path";
-import { homedir } from "node:os";
-import { expandHome } from "../../../utils/path-utils";
-
-const GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"));
+import { resolve } from "node:path";
+import { globalSkillsPath, expandHome } from "@weaver/shared/paths";
 
 export async function validatePathsExist(paths: string[]): Promise<string[]> {
   const resolved = paths.map((p) => resolve(expandHome(p)));
   const errors: string[] = [];
 
-  const globalPath = GLOBAL_SKILLS_PATH();
+  const globalPath = globalSkillsPath();
   resolved.forEach((resolvedPath, i) => {
     if (resolvedPath === globalPath) {
       errors.push(

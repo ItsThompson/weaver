@@ -1,7 +1,6 @@
 import { join, resolve } from "node:path";
-import { homedir } from "node:os";
 import { listSkillDirNames } from "./list-skill-dirs";
-import { expandHome } from "../../utils/path-utils";
+import { expandHome } from "@weaver/shared/paths";
 
 /**
  * Resolves a `skill://` URI to a list of skill directory names.

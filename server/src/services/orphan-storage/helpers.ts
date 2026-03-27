@@ -3,7 +3,7 @@ import { existsSync } from "node:fs";
 import type { HookEvent } from "@weaver/shared/types";
 import { log } from "../../utils/logger";
 import { NotFoundError } from "./errors";
-import { ORPHAN_PATH } from "./paths";
+import { orphanPath } from "@weaver/shared/paths";
 
 export interface PartitionResult {
   matched: HookEvent[];
@@ -43,7 +43,7 @@ export function partitionByPid(
 }
 
 export function requireOrphanFile(): string {
-  const filePath = ORPHAN_PATH();
+  const filePath = orphanPath();
   if (!existsSync(filePath)) {
     throw new NotFoundError("No orphan log found");
   }

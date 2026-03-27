@@ -1,12 +1,10 @@
 import { readdir, unlink } from "node:fs/promises";
 import { execFileSync } from "node:child_process";
 import { join } from "node:path";
-import { homedir } from "node:os";
 import type { Session } from "@weaver/shared/types";
+import { weaverDir } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { readSessions } from "./sessions";
-
-const DATA_DIR = () => join(homedir(), ".weaver");
 
 const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const PID_POLL_INTERVAL_MS = 30 * 1000;
@@ -33,7 +31,7 @@ export function isProcessRunning(pid: number): boolean {
 }
 
 export async function cleanStaleSessions(): Promise<void> {
-  const dataDir = DATA_DIR();
+  const dataDir = weaverDir();
   let entries: string[];
   try {
     entries = await readdir(dataDir);
