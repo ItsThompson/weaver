@@ -1,6 +1,6 @@
 import { readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { homedir } from "node:os";
+import { globalKiroDir } from "../paths";
 import { readProjectConfig } from "./project-config";
 import {
   calculateStopTimeout,
@@ -39,7 +39,7 @@ export function syncAgentTimeouts(
 
   const agentDirs = [
     join(cwd, ".kiro", "agents"),
-    join(homedir(), ".kiro", "agents"),
+    join(globalKiroDir(), "agents"),
   ];
 
   agentDirs.forEach((dir) => {

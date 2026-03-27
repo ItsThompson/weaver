@@ -1,6 +1,5 @@
 import { readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { homedir } from "node:os";
+import { configPath } from "@weaver/shared/paths";
 import type { WeaverConfig, WeaverProjectConfig } from "@weaver/shared/types";
 import { DEFAULT_TEST_RUNNERS } from "@weaver/shared/types";
 
@@ -20,13 +19,13 @@ export function resolveTestRunners(
 }
 
 function readGlobalTestRunners(): string[] {
-  const configPath = join(homedir(), ".weaver", "config.json");
-  if (!existsSync(configPath)) {
+  const path = configPath();
+  if (!existsSync(path)) {
     return [];
   }
   try {
     const parsed = JSON.parse(
-      readFileSync(configPath, "utf-8"),
+      readFileSync(path, "utf-8"),
     ) as Partial<WeaverConfig>;
     if (Array.isArray(parsed.test_runners)) {
       return parsed.test_runners.filter(

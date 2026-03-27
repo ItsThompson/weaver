@@ -1,5 +1,4 @@
-import { join } from "node:path";
-import { homedir } from "node:os";
+import { sessionLogPath } from "@weaver/shared/paths";
 import type { ValidateResult } from "../exit";
 import type { ValidateArgs } from "./parse-args";
 import { runStopTrigger } from "./stop-trigger";
@@ -14,18 +13,13 @@ export function runValidation(args: ValidateArgs): ValidateResult {
     };
   }
 
-  const sessionLogPath = join(
-    homedir(),
-    ".weaver",
-    "logs",
-    `${args.sessionId}.jsonl`,
-  );
+  const logPath = sessionLogPath(args.sessionId);
 
   if (args.trigger === "stop") {
-    return runStopTrigger(args, sessionLogPath);
+    return runStopTrigger(args, logPath);
   }
   if (args.trigger === "postToolUse") {
-    return runPostToolUseTrigger(args, sessionLogPath);
+    return runPostToolUseTrigger(args, logPath);
   }
 
   return { exitCode: 0 };
