@@ -1,0 +1,880 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","./audit-reports/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.33 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+Let me start by reading the brief.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/prompts/prompt-03-anti-patterns.md[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m7452 bytes[0m from /Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/prompts/prompt-03-anti-patterns.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: This is a comprehensive audit brief. Let me systematically explore the codebase following the guidance. I'll start by getting an overview of the project structure, then dive into the specific files and patterns mentioned.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver[0m[38;5;244m (using tool: read, max depth: 2, max entries: 1000, excluding: defaults)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver[0m [38;5;244m(showing 1000 of 1675 entries, offset: 0)[0m
+[38;5;244m - Completed in 0.64s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: The directory listing is mostly turbo cache. Let me focus on the actual source files. I need to read the key files mentioned in the brief. Let me start with the most important ones in parallel.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the key files mentioned in the brief:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/index.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/dispatch.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3471 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1183 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2597 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m570 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/dispatch.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/config.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/App.tsx[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/utils/logger.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3046 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1897 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3799 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/App.tsx
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m179 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/utils/logger.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/main.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m247 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2425 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/main.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m883 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m[1mTool validation failed: [0m
+[38;5;9mFailed to validate tool parameters: '/Users/thompsnt/Documents/weaver/server/src/services/config/validators.ts' does not exist
+[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mSearching for files: [38;5;141mserver/src/services/**/*.ts[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m85 files[0m under current directory
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-graph/discover.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/paths.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/validators/registry.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2448 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-graph/discover.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1665 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m222 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/paths.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1118 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/validators/registry.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the test mocks and the event bus references:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for files: [38;5;141mserver/src/__tests__/**/*.ts[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m7 files[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.09 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-helpers.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-advanced.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1846 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2134 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-helpers.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4259 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-advanced.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the event bus references and the [38;5;10mhomedir()[0m usage pattern:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141mfrom.*event-bus[0m in [38;5;141m/Users/thompsnt/Documents/weaver/server/src[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m11 matches[0m in [38;5;244m10 files[0m under /Users/thompsnt/Documents/weaver/server/src
+[38;5;244m - Completed in 0.16s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141mhomedir\(\)[0m in [38;5;141m/Users/thompsnt/Documents/weaver[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m47 matches[0m in [38;5;244m24 files[0m under /Users/thompsnt/Documents/weaver (result is truncated)
+[38;5;244m - Completed in 0.152s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/events/events.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/config.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4679 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2094 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/events/events.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2085 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/config.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the nested conditionals and guard clause violations:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141m} else \{[0m in [38;5;141m/Users/thompsnt/Documents/weaver/server/src[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m4 matches[0m in [38;5;244m3 files[0m under /Users/thompsnt/Documents/weaver/server/src
+[38;5;244m - Completed in 0.41s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/validators/field.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/helpers.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4950 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/validators/field.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1452 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/helpers.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the hook-handler validation logging and the stringly-typed APIs:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/stop-trigger.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/post-tool-use-trigger.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/exit/exit.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1932 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/stop-trigger.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1476 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/post-tool-use-trigger.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1014 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/exit/exit.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/logging/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/payload-simple.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/payload-advanced.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m49 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/logging/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1369 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1874 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/payload-simple.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m912 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/payload-advanced.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/logging/logging.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/types.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/events.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/config.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1149 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/logging/logging.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m646 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/types.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1044 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/events.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1403 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/config.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the stringly-typed event names and the route handlers for nested conditionals:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/context.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/delete.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/keep-awake.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1029 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/context.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1743 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/delete.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1682 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/keep-awake.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the shared types index and the hook-handler config:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/session.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/validation.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/config/test-runners/test-runners.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m134 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m862 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/session.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1416 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/validation.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1282 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/config/test-runners/test-runners.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the inject module and the storage index:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/index.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/inject/run-inject/run-inject.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/index.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m260 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m347 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1228 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/inject/run-inject/run-inject.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m25 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the event bus test and the config test to understand testing patterns:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/config.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3648 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5414 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/config.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the route tests to understand the mock pattern:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.test.ts[0m, from line [38;5;141m1[0m to [38;5;141m50[0m
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/events/events.test.ts[0m, from line [38;5;141m1[0m to [38;5;141m50[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1593 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1407 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/events/events.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the desktop main.ts more carefully and the hook-handler structure:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.09 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/window.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3917 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/window.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1100 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the [38;5;10m} else {[0m patterns in the hook-handler:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141m} else \{[0m in [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m2 matches[0m in [38;5;244m2 files[0m under /Users/thompsnt/Documents/weaver/hook-handler/src
+[38;5;244m - Completed in 0.18s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/inject/formatting.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/config/find-config/find-config.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1584 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/inject/formatting.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1138 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/config/find-config/find-config.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the stringly-typed event names more carefully:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141m"agentSpawn"|"preToolUse"|"postToolUse"|"userPromptSubmit"|"stop"[0m in [38;5;141m/Users/thompsnt/Documents/weaver[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m304 matches[0m in [38;5;244m47 files[0m under /Users/thompsnt/Documents/weaver (result is truncated)
+[38;5;244m - Completed in 0.188s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a comprehensive picture of the codebase. Let me organize my findings:
+
+1. **God file: webhook/handler.ts** - Reads config, parses logs, derives activity, builds payloads, dispatches webhooks, manages timers, tracks enabled sessions. At least 5 responsibilities.
+
+2. **Module-level mutable state** - Multiple files use module-level mutable state:
+   - `webhook/handler.ts`: `pendingTimers` Map, `enabledSessions` Set
+   - `storage/lifecycle.ts`: `cleanupInterval`, `pidPollInterval`, `openPids` Set
+   - `desktop/src/window.ts`: `win`, `miniMode`, `visible`, `ghostEnabled`, `ghostOpacityValue`
+   - `keep-awake.ts`: `interval`
+   - `event-bus.ts`: `listeners` Set
+
+3. **Hardcoded `homedir()` everywhere** - At least 12 production files call `homedir()` directly to construct paths. Each is a hardcoded dependency that makes testing require mocking `node:os`. Files include:
+   - `server/src/services/config/config.ts` - CONFIG_PATH
+   - `server/src/services/storage/sessions.ts` - DATA_DIR, LOGS_DIR, SESSIONS_FILE
+   - `server/src/services/storage/lifecycle.ts` - DATA_DIR
+   - `server/src/services/log-parser/parse.ts` - LOGS_DIR
+   - `server/src/services/orphan-storage/paths.ts` - ORPHAN_PATH, LOGS_DIR
+   - `server/src/services/skill-graph/discover.ts` - GLOBAL_SKILLS_PATH
+   - `server/src/services/skill-graph/get-skill-detail.ts` - GLOBAL_SKILLS_PATH
+   - `server/src/services/config/validators/validate-paths.ts` - GLOBAL_SKILLS_PATH
+   - `server/src/services/skill-resolver/kiro-paths.ts`
+   - `hook-handler/src/validate/run-validation/run-validation.ts`
+   - `hook-handler/src/validate/exit/exit.ts`
+   - `hook-handler/src/inject/run-inject/run-inject.ts`
+   - `hook-handler/src/config/test-runners/test-runners.ts`
+   - `server/src/routes/sessions/delete.ts`
+
+4. **Stringly-typed event names** - `hook_event_name` is typed as `string` in `HookEventData`, but the codebase uses a fixed set of event names: "agentSpawn", "stop", "preToolUse", "postToolUse", "userPromptSubmit", "validation". These are compared with string literals throughout the codebase (304 matches across 47 files). No union type or enum exists.
+
+5. **Side-effect-heavy functions**:
+   - `dispatchWebhook` swallows errors silently - logs but doesn't propagate. Caller has no way to know if webhook succeeded.
+   - `writeValidationEvent` in hook-handler does file I/O AND a fire-and-forget HTTP call to the server. Two side effects in one function.
+   - `broadcast`/`emit` in event-bus are fire-and-forget with no return value.
+
+6. **Mega mock file** - `server/src/__tests__/mocks/services.ts` mocks 8 modules at once. This is imported by route tests as a side-effect import (`import "../../__tests__/mocks/services"`). This is a symptom of tight coupling.
+
+7. **Event bus as hidden coupling vector** - The event bus is imported by 7 production modules (index.ts, sessions.ts, delete.ts, config.ts, events.ts). It creates hidden dependencies between routes and the SSE system.
+
+8. **Duplicated path construction** - `DATA_DIR = () => join(homedir(), ".weaver")` is defined independently in at least 3 files: sessions.ts, lifecycle.ts, and orphan-storage/paths.ts. Same for LOGS_DIR.
+
+9. **handleWebhookEvent doesn't await dispatchWebhook** - In handler.ts line 73, `dispatchWebhook(config.webhook_url, payload)` is called without `await`. The function is async but the dispatch is fire-and-forget. This means the Promise returned by `handleWebhookEvent` resolves before the webhook is actually sent.
+
+10. **Desktop window.ts module-level state** - 5 mutable variables at module level (`win`, `miniMode`, `visible`, `ghostEnabled`, `ghostOpacityValue`). All exported functions mutate this shared state. Not injectable, not testable without the `_getTestState` escape hatch.
+
+11. **Desktop main.ts inline callbacks** - The tray creation call passes 6 inline closures that capture `currentConfig` by reference. This creates tight coupling between the tray, window, and config state.
+
+Let me also check for the `handleWebhookEvent` not awaiting dispatch more carefully.
+
+Looking at handler.ts again:
+```
+dispatchWebhook(config.webhook_url, payload);
+```
+Line 73 - no await. And dispatchWebhook is async. So the error handling in dispatchWebhook's catch block will fire, but the caller won't know.
+
+Also in events.ts:
+```
+handleWebhookEvent(sessionId, eventName, sessionName, session);
+```
+Line 27 - no await either. So the route handler returns before the webhook is dispatched.
+
+Let me count files examined and organize findings by severity.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mLet me check a few more things to round out the findings:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-graph/get-skill-detail.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/index.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2749 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-graph/get-skill-detail.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m274 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141mhandleWebhookEvent\([0m in [38;5;141m/Users/thompsnt/Documents/weaver/server/src[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m13 matches[0m in [38;5;244m4 files[0m under /Users/thompsnt/Documents/weaver/server/src (result is truncated)
+[38;5;244m - Completed in 0.16s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I can see that in `events.ts` line 24, `handleWebhookEvent` is called without `await`. This is a fire-and-forget call to an async function. Any errors thrown by `handleWebhookEvent` will become unhandled promise rejections.
+
+Also in `handler.ts` line 73, `dispatchWebhook` is called without `await` - same pattern.
+
+Let me also check the `shared/sync/sync.ts` for the homedir usage and any other patterns.
+
+Let me now compile my findings and write the report. I have enough data.
+
+Files examined:
+1. server/src/services/webhook/handler.ts
+2. server/src/services/event-bus.ts
+3. server/src/index.ts
+4. server/src/services/webhook/dispatch.ts
+5. server/src/services/storage/lifecycle.ts
+6. server/src/services/config/config.ts
+7. client/src/App.tsx
+8. server/src/utils/logger.ts
+9. hook-handler/src/validate/validate.ts
+10. desktop/src/main.ts
+11. hook-handler/src/validate/run-validation/run-validation.ts
+12. server/src/services/skill-graph/discover.ts
+13. server/src/services/storage/sessions.ts
+14. server/src/services/orphan-storage/paths.ts
+15. server/src/services/config/validators/registry.ts
+16. server/src/__tests__/mocks/services.ts
+17. server/src/services/webhook/__tests__/webhook-helpers.ts
+18. server/src/services/webhook/__tests__/webhook-advanced.test.ts
+19. server/src/services/config/validators/field.ts
+20. server/src/services/orphan-storage/helpers.ts
+21. hook-handler/src/validate/run-validation/stop-trigger.ts
+22. hook-handler/src/validate/run-validation/post-tool-use-trigger.ts
+23. hook-handler/src/validate/exit/exit.ts
+24. hook-handler/src/validate/logging/logging.ts
+25. server/src/services/webhook/types.ts
+26. shared/types/events.ts
+27. shared/types/config.ts
+28. server/src/services/webhook/context.ts
+29. server/src/routes/sessions/delete.ts
+30. server/src/services/keep-awake.ts
+31. server/src/services/webhook/payload-simple.ts
+32. server/src/services/webhook/payload-advanced.ts
+33. server/src/routes/sessions/sessions.ts
+34. server/src/routes/events/events.ts
+35. server/src/routes/config.ts
+36. server/src/services/event-bus.test.ts
+37. server/src/services/config/config.test.ts
+38. server/src/routes/sessions/sessions.test.ts
+39. server/src/routes/events/events.test.ts
+40. desktop/src/window.ts
+41. server/src/services/log-parser/parse.ts
+42. hook-handler/src/inject/formatting.ts
+43. hook-handler/src/config/find-config/find-config.ts
+44. shared/types/session.ts
+45. shared/types/validation.ts
+46. hook-handler/src/config/test-runners/test-runners.ts
+47. server/src/services/skill-graph/get-skill-detail.ts
+48. server/src/services/log-parser/index.ts
+49. server/src/services/storage/index.ts
+50. server/src/services/webhook/index.ts
+51. hook-handler/src/inject/run-inject/run-inject.ts
+52. server/src/services/config/index.ts
+53. hook-handler/src/validate/logging/index.ts
+54. server/src/services/log-parser/activity.ts
+55. shared/types/index.ts
+56. shared/utils/index.ts
+
+That's about 56 files examined.
+
+Now let me organize findings by severity:
+
+HIGH:
+1. Stringly-typed event names (correctness risk)
+2. Unhandled async calls (correctness risk)
+3. God file: webhook/handler.ts (maintainability)
+
+MEDIUM:
+4. Pervasive hardcoded homedir() (testability)
+5. Module-level mutable state across multiple modules (coupling, testability)
+6. Mega mock file as coupling symptom (testability)
+7. dispatchWebhook swallows errors silently (observability)
+8. writeValidationEvent dual side effects (SRP)
+9. Duplicated path construction (DRY)
+
+LOW:
+10. Desktop window.ts module-level state (testability)
+11. Desktop main.ts inline closures (coupling)
+12. Event bus as hidden coupling vector (coupling)
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-03-anti-patterns.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+      1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAnti-Patterns and Code Smells — Audit Report[K
+[0m[48;2;40;67;43m[39m+      2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+      4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThe codebase has a pervasive pattern of hardcoded [38;2;163;190;140m`[38;2;163;190;140mhomedir()[38;2;163;190;140m`[38;2;192;197;206m calls scattered across 12+ production files, creating an untestable dependency on the filesystem layout. The webhook handler is a god file with 5+ responsibilities and module-level mutable state. Event names flow through the system as bare strings despite being a closed set of 6 values, creating a correctness risk that the type system could prevent for free.[K
+[0m[48;2;40;67;43m[39m+      6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+      8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      9[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     10[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mshared/types/events.ts[38;2;163;190;140m`[38;2;191;97;106m, and 47+ consumer files across [38;2;163;190;140m`[38;2;163;190;140mserver/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mclient/[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook_event_name[38;2;163;190;140m`[38;2;191;97;106m is typed as [38;2;163;190;140m`[38;2;163;190;140mstring[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mHookEventData[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // shared/types/events.ts[K
+[0m[48;2;40;67;43m[39m+     15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export interface HookEventData {[K
+[0m[48;2;40;67;43m[39m+     16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    hook_event_name: string;[K
+[0m[48;2;40;67;43m[39m+     17[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    // ...[K
+[0m[48;2;40;67;43m[39m+     18[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+     19[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     20[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe actual values are a closed set: [38;2;163;190;140m`[38;2;163;190;140m"agentSpawn"[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m"stop"[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m"preToolUse"[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m"postToolUse"[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m"userPromptSubmit"[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m"validation"[38;2;163;190;140m`[38;2;191;97;106m. These string literals appear 304 times across 47 files in switch statements, equality checks, and test assertions. For example in [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/activity.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export function deriveActivity(eventName: string, ...): ActivityStatus {[K
+[0m[48;2;40;67;43m[39m+     23[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    switch (eventName) {[K
+[0m[48;2;40;67;43m[39m+     24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      case "agentSpawn": return "starting";[K
+[0m[48;2;40;67;43m[39m+     25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      case "stop": return "idle";[K
+[0m[48;2;40;67;43m[39m+     26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      case "preToolUse": { ... }[K
+[0m[48;2;40;67;43m[39m+     27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      default: return "processing";[K
+[0m[48;2;40;67;43m[39m+     28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    }[K
+[0m[48;2;40;67;43m[39m+     29[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+     30[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     31[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mAnd in [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  if (eventName === "postToolUse" || eventName === "stop") {[K
+[0m[48;2;40;67;43m[39m+     34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    clearPendingTimer(sessionId);[K
+[0m[48;2;40;67;43m[39m+     35[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  } else if (eventName === "preToolUse") {[K
+[0m[48;2;40;67;43m[39m+     36[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mA typo in any of these 304 occurrences would silently fall through to a default case. The compiler cannot help.[K
+[0m[48;2;40;67;43m[39m+     38[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: A misspelled event name compiles fine but produces wrong behavior at runtime. Every new event name requires a manual grep to find all switch/if sites. The [38;2;163;190;140m`[38;2;163;190;140mdefault[38;2;163;190;140m`[38;2;191;97;106m branch in [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m silently absorbs unknown events as [38;2;163;190;140m`[38;2;163;190;140m"processing"[38;2;163;190;140m`[38;2;191;97;106m — a bug would look like normal operation.[K
+[0m[48;2;40;67;43m[39m+     39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Define [38;2;163;190;140m`[38;2;163;190;140mtype HookEventName = "agentSpawn" | "stop" | "preToolUse" | "postToolUse" | "userPromptSubmit" | "validation"[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mshared/types/events.ts[38;2;163;190;140m`[38;2;191;97;106m and use it for [38;2;163;190;140m`[38;2;163;190;140mhook_event_name[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140meventName[38;2;163;190;140m`[38;2;191;97;106m parameters in [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mextractContext[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mbuildPayloadForFormat[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m. The compiler will then flag typos and incomplete switch statements.[K
+[0m[48;2;40;67;43m[39m+     40[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     41[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     42[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     43[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     44[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/events/events.ts[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/dispatch.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: There is a chain of unawaited async calls. In [38;2;163;190;140m`[38;2;163;190;140mevents.ts[38;2;163;190;140m`[38;2;191;97;106m line 24:[K
+[0m[48;2;40;67;43m[39m+     46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // server/src/routes/events/events.ts[K
+[0m[48;2;40;67;43m[39m+     48[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  broadcast(sessionId, eventName, sessionName);[K
+[0m[48;2;40;67;43m[39m+     49[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  handleWebhookEvent(sessionId, eventName, sessionName, session);[K
+[0m[48;2;40;67;43m[39m+     50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  return { ok: true };[K
+[0m[48;2;40;67;43m[39m+     51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m is [38;2;163;190;140m`[38;2;163;190;140masync[38;2;163;190;140m`[38;2;191;97;106m but is called without [38;2;163;190;140m`[38;2;163;190;140mawait[38;2;163;190;140m`[38;2;191;97;106m. Inside [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m line 73, the same pattern repeats:[K
+[0m[48;2;40;67;43m[39m+     53[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     54[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // server/src/services/webhook/handler.ts[K
+[0m[48;2;40;67;43m[39m+     55[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  dispatchWebhook(config.webhook_url, payload);[K
+[0m[48;2;40;67;43m[39m+     56[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     57[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m is [38;2;163;190;140m`[38;2;163;190;140masync[38;2;163;190;140m`[38;2;191;97;106m but called without [38;2;163;190;140m`[38;2;163;190;140mawait[38;2;163;190;140m`[38;2;191;97;106m. Any rejection from [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m becomes an unhandled promise rejection. The [38;2;163;190;140m`[38;2;163;190;140msetTimeout[38;2;163;190;140m`[38;2;191;97;106m callback inside [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m (lines 78–99) does [38;2;163;190;140m`[38;2;163;190;140mawait readConfig()[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mawait parseLogFile()[38;2;163;190;140m`[38;2;191;97;106m inside a timer — if these throw, the [38;2;163;190;140m`[38;2;163;190;140mcatch[38;2;163;190;140m`[38;2;191;97;106m block logs but the outer [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m promise has already resolved.[K
+[0m[48;2;40;67;43m[39m+     58[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Unhandled promise rejections can crash the Node.js process (depending on [38;2;163;190;140m`[38;2;163;190;140m--unhandled-rejections[38;2;163;190;140m`[38;2;191;97;106m mode). The route handler returns [38;2;163;190;140m`[38;2;163;190;140m{ ok: true }[38;2;163;190;140m`[38;2;191;97;106m before the webhook is sent, so the caller has no way to know if the webhook failed. In tests, [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m is properly awaited ([38;2;163;190;140m`[38;2;163;190;140mawait webhook.handleWebhookEvent(...)[38;2;163;190;140m`[38;2;191;97;106m) which masks this production bug.[K
+[0m[48;2;40;67;43m[39m+     59[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Either [38;2;163;190;140m`[38;2;163;190;140mawait handleWebhookEvent(...)[38;2;163;190;140m`[38;2;191;97;106m in the route handler (if webhook delivery should block the response), or explicitly handle the returned promise with [38;2;163;190;140m`[38;2;163;190;140m.catch()[38;2;163;190;140m`[38;2;191;97;106m and document the fire-and-forget intent. Same for [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m inside [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     61[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     62[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     63[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     65[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: This 113-line file has at least 5 distinct responsibilities:[K
+[0m[48;2;40;67;43m[39m+     66[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSession tracking[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140menabledSessions[38;2;163;190;140m`[38;2;191;97;106m Set, [38;2;163;190;140m`[38;2;163;190;140misWebhookEnabled()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msetWebhookEnabled()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mConfig reading[38;2;235;203;139m**[38;2;191;97;106m: calls [38;2;163;190;140m`[38;2;163;190;140mreadConfig()[38;2;163;190;140m`[38;2;191;97;106m to get webhook URL and format[K
+[0m[48;2;40;67;43m[39m+     68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m3[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mLog parsing[38;2;235;203;139m**[38;2;191;97;106m: calls [38;2;163;190;140m`[38;2;163;190;140mparseLogFile()[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mderiveActivity()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m4[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mPayload construction[38;2;235;203;139m**[38;2;191;97;106m: delegates to [38;2;163;190;140m`[38;2;163;190;140mbuildPayloadForFormat()[38;2;163;190;140m`[38;2;191;97;106m which selects between simple/advanced[K
+[0m[48;2;40;67;43m[39m+     70[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m5[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTimer management[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mpendingTimers[38;2;163;190;140m`[38;2;191;97;106m Map, [38;2;163;190;140m`[38;2;163;190;140mclearPendingTimer()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstopWebhookTimers()[38;2;163;190;140m`[38;2;191;97;106m, the [38;2;163;190;140m`[38;2;163;190;140msetTimeout[38;2;163;190;140m`[38;2;191;97;106m logic for pending approval detection[K
+[0m[48;2;40;67;43m[39m+     71[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     72[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m function (lines 53–104) orchestrates all five concerns in a single function body, including a nested [38;2;163;190;140m`[38;2;163;190;140msetTimeout[38;2;163;190;140m`[38;2;191;97;106m callback that re-reads config and re-parses logs.[K
+[0m[48;2;40;67;43m[39m+     73[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Any change to timer logic, payload format selection, or session tracking requires modifying this file. The timer management is tightly coupled to the webhook dispatch — you cannot test "does the pending timer fire correctly?" without also mocking config reading and log parsing. The module-level [38;2;163;190;140m`[38;2;163;190;140mpendingTimers[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140menabledSessions[38;2;163;190;140m`[38;2;191;97;106m make it impossible to run parallel tests or reset state cleanly without calling [38;2;163;190;140m`[38;2;163;190;140mstopWebhookTimers()[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     74[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Extract session tracking ([38;2;163;190;140m`[38;2;163;190;140menabledSessions[38;2;163;190;140m`[38;2;191;97;106m) into its own module. Extract timer management into a [38;2;163;190;140m`[38;2;163;190;140mPendingApprovalTracker[38;2;163;190;140m`[38;2;191;97;106m that accepts a callback for "what to do when the timer fires." The handler becomes a thin orchestrator that wires these together.[K
+[0m[48;2;40;67;43m[39m+     75[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     76[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     77[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     78[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     79[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: 12+ production files across [38;2;163;190;140m`[38;2;163;190;140mserver/src/[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     80[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhomedir()[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140mnode:os[38;2;163;190;140m`[38;2;191;97;106m is called directly to construct file paths in at least these production files:[K
+[0m[48;2;40;67;43m[39m+     81[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/config/config.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst CONFIG_PATH = () => join(homedir(), ".weaver", "config.json")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     82[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst DATA_DIR = () => join(homedir(), ".weaver")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst DATA_DIR = () => join(homedir(), ".weaver")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     84[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/parse.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst LOGS_DIR = () => join(homedir(), ".weaver", "logs")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     85[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/orphan-storage/paths.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mexport const ORPHAN_PATH = () => join(homedir(), ".weaver", "logs", "orphan.jsonl")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     86[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/skill-graph/discover.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"))[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     87[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/skill-graph/get-skill-detail.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"))[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     88[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/config/validators/validate-paths.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst GLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"))[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     89[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/delete.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst dataDir = join(homedir(), ".weaver")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     90[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/run-validation/run-validation.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mjoin(homedir(), ".weaver", "logs", ...)[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     91[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/exit/exit.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mjoin(homedir(), ".weaver", "logs", ...)[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     92[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/inject/run-inject/run-inject.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mjoin(homedir(), ".weaver", "logs", ...)[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     93[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/test-runners/test-runners.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mjoin(homedir(), ".weaver", "config.json")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     94[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     95[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mEach file independently constructs the same base paths. The pattern [38;2;163;190;140m`[38;2;163;190;140m() => join(homedir(), ".weaver")[38;2;163;190;140m`[38;2;191;97;106m appears as a module-level thunk in 3 separate files.[K
+[0m[48;2;40;67;43m[39m+     96[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Testing any of these modules requires either mocking [38;2;163;190;140m`[38;2;163;190;140mnode:os[38;2;163;190;140m`[38;2;191;97;106m (which the test files do via [38;2;163;190;140m`[38;2;163;190;140mvi.mock[38;2;163;190;140m`[38;2;191;97;106m) or accepting that tests hit the real filesystem. The duplicated path construction means a change to the data directory layout requires updating 12+ files. The thunk pattern [38;2;163;190;140m`[38;2;163;190;140mconst DATA_DIR = () => ...[38;2;163;190;140m`[38;2;191;97;106m was adopted to avoid import-time evaluation, but it's repeated independently in each file rather than centralized.[K
+[0m[48;2;40;67;43m[39m+     97[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Create a single [38;2;163;190;140m`[38;2;163;190;140mpaths.ts[38;2;163;190;140m`[38;2;191;97;106m module (e.g., [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/paths.ts[38;2;163;190;140m`[38;2;191;97;106m) that exports all path constructors: [38;2;163;190;140m`[38;2;163;190;140mweaverDir()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlogsDir()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconfigPath()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msessionsFile()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140morphanPath()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mglobalSkillsPath()[38;2;163;190;140m`[38;2;191;97;106m. All other modules import from this single source. For the hook-handler, accept the base directory as a parameter rather than computing it internally.[K
+[0m[48;2;40;67;43m[39m+     98[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+     99[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    100[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    101[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    102[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/keep-awake.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/window.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    103[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: Multiple modules maintain mutable state at module scope:[K
+[0m[48;2;40;67;43m[39m+    104[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst pendingTimers = new Map<string, NodeJS.Timeout>()[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mconst enabledSessions = new Set<string>()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    105[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mlet cleanupInterval[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlet pidPollInterval[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconst openPids = new Set<number>()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    106[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mkeep-awake.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mlet interval: ReturnType<typeof setInterval> | null = null[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    107[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mevent-bus.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst listeners = new Set<Listener>()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    108[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mwindow.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mlet win[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlet miniMode[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlet visible[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlet ghostEnabled[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlet ghostOpacityValue[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    109[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    110[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThese are all singletons by virtue of module caching. The state is manipulated by exported functions and cannot be reset without calling specific cleanup functions (e.g., [38;2;163;190;140m`[38;2;163;190;140mstopWebhookTimers()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstopStaleSessionCleanup()[38;2;163;190;140m`[38;2;191;97;106m).[K
+[0m[48;2;40;67;43m[39m+    111[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Tests must carefully call cleanup functions between test cases or risk state leaking. Parallel test execution is impossible for any module that touches this state. The webhook test helpers demonstrate this: [38;2;163;190;140m`[38;2;163;190;140mafterEach(() => { webhook.stopWebhookTimers(); })[38;2;163;190;140m`[38;2;191;97;106m is required in every test file. If a new module-level state variable is added, every test file that imports the module must be updated.[K
+[0m[48;2;40;67;43m[39m+    112[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: For server-side modules, encapsulate state in a class or factory function that returns an instance. For example, [38;2;163;190;140m`[38;2;163;190;140mcreateWebhookHandler({ readConfig, parseLogFile, dispatch })[38;2;163;190;140m`[38;2;191;97;106m returns an object with [38;2;163;190;140m`[38;2;163;190;140mhandleEvent[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140misEnabled[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msetEnabled[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstop[38;2;163;190;140m`[38;2;191;97;106m methods. The server entry point creates one instance; tests create fresh instances per test.[K
+[0m[48;2;40;67;43m[39m+    113[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    114[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    115[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    116[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    117[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/mocks/services.ts[38;2;163;190;140m`[38;2;191;97;106m, consumed by [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/events/events.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/delete.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/config.test.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    118[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: A single mock file mocks 8 modules simultaneously:[K
+[0m[48;2;40;67;43m[39m+    119[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    120[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/storage/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    121[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/log-parser/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    122[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/orphan-storage/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    123[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/skill-resolver/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    124[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/event-bus", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    125[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/webhook/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    126[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/skill-graph/index", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    127[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../utils/logger", () => ({ ... }));[K
+[0m[48;2;40;67;43m[39m+    128[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    129[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mRoute test files import this as a side-effect: [38;2;163;190;140m`[38;2;163;190;140mimport "../../__tests__/mocks/services"[38;2;163;190;140m`[38;2;191;97;106m. Every route test gets all 8 mocks regardless of which services it actually uses.[K
+[0m[48;2;40;67;43m[39m+    130[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: This is a symptom of the route handlers directly importing 4–6 service modules each. The mock file couples all route tests to the same set of service interfaces — adding a new export to any mocked module requires updating this file, which breaks all route tests until fixed. A route test for [38;2;163;190;140m`[38;2;163;190;140m/api/config[38;2;163;190;140m`[38;2;191;97;106m doesn't need [38;2;163;190;140m`[38;2;163;190;140morphan-storage[38;2;163;190;140m`[38;2;191;97;106m mocks, but gets them anyway.[K
+[0m[48;2;40;67;43m[39m+    131[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: The root cause is that route handlers reach directly into service modules. If route handlers accepted their dependencies (e.g., via a context object or Fastify decorators), each test could provide only the dependencies it needs. Short-term, split the mega mock into per-service mock files.[K
+[0m[48;2;40;67;43m[39m+    132[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    133[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    134[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    135[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    136[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/dispatch.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    137[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m catches all errors and logs them, returning nothing:[K
+[0m[48;2;40;67;43m[39m+    138[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    139[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export async function dispatchWebhook([K
+[0m[48;2;40;67;43m[39m+    140[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    url: string,[K
+[0m[48;2;40;67;43m[39m+    141[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    payload: WebhookPayload | SimpleWebhookPayload,[K
+[0m[48;2;40;67;43m[39m+    142[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ): Promise<void> {[K
+[0m[48;2;40;67;43m[39m+    143[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    try {[K
+[0m[48;2;40;67;43m[39m+    144[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      await fetch(url, { ... });[K
+[0m[48;2;40;67;43m[39m+    145[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    } catch (err) {[K
+[0m[48;2;40;67;43m[39m+    146[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      log({ timestamp: new Date().toISOString(), event: "webhook_error", error: String(err) });[K
+[0m[48;2;40;67;43m[39m+    147[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    }[K
+[0m[48;2;40;67;43m[39m+    148[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    149[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    150[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe function doesn't check the HTTP status code. A 500 response from the webhook endpoint is treated as success. The caller ([38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m) has no way to know if the webhook was delivered, failed, or returned an error status.[K
+[0m[48;2;40;67;43m[39m+    151[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Webhook delivery failures are invisible to the system. There's no retry logic, no error propagation, and no way for the UI to show "webhook failed." The [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m response is discarded entirely — not even the status code is logged.[K
+[0m[48;2;40;67;43m[39m+    152[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Return a result object [38;2;163;190;140m`[38;2;163;190;140m{ ok: boolean; status?: number; error?: string }[38;2;163;190;140m`[38;2;191;97;106m so callers can decide how to handle failures. Log the HTTP status code on non-2xx responses. Consider adding the response status to the existing log entry.[K
+[0m[48;2;40;67;43m[39m+    153[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    154[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    155[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    156[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    157[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/logging/logging.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    158[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mwriteValidationEvent[38;2;163;190;140m`[38;2;191;97;106m performs two unrelated side effects in one function:[K
+[0m[48;2;40;67;43m[39m+    159[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    160[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export function writeValidationEvent(...): void {[K
+[0m[48;2;40;67;43m[39m+    161[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    // Side effect 1: synchronous file append[K
+[0m[48;2;40;67;43m[39m+    162[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    mkdirSync(dirname(sessionLogPath), { recursive: true });[K
+[0m[48;2;40;67;43m[39m+    163[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    appendFileSync(sessionLogPath, JSON.stringify(logEntry) + "\n");[K
+[0m[48;2;40;67;43m[39m+    164[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    165[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    // Side effect 2: fire-and-forget HTTP POST[K
+[0m[48;2;40;67;43m[39m+    166[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    fetch("http://localhost:8143/api/notify", {[K
+[0m[48;2;40;67;43m[39m+    167[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      method: "POST",[K
+[0m[48;2;40;67;43m[39m+    168[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      headers: { "Content-Type": "application/json" },[K
+[0m[48;2;40;67;43m[39m+    169[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      body: JSON.stringify({ sessionId, eventName: "validation" }),[K
+[0m[48;2;40;67;43m[39m+    170[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      signal: AbortSignal.timeout(1000),[K
+[0m[48;2;40;67;43m[39m+    171[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    }).catch(() => {});[K
+[0m[48;2;40;67;43m[39m+    172[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    173[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    174[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe function writes to the filesystem AND notifies the server. The server URL [38;2;163;190;140m`[38;2;163;190;140mhttp://localhost:8143[38;2;163;190;140m`[38;2;191;97;106m is hardcoded. The [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m error is silently swallowed with [38;2;163;190;140m`[38;2;163;190;140m.catch(() => {})[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    175[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: You cannot test "did the validation event get written correctly?" without also triggering an HTTP call (or mocking [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m). The hardcoded URL means this code breaks if the server port changes. The two side effects have different failure modes (sync file I/O vs async HTTP) but are bundled together.[K
+[0m[48;2;40;67;43m[39m+    176[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Split into two functions: [38;2;163;190;140m`[38;2;163;190;140mwriteValidationEvent[38;2;163;190;140m`[38;2;191;97;106m (file I/O only, returns the written event) and [38;2;163;190;140m`[38;2;163;190;140mnotifyServer[38;2;163;190;140m`[38;2;191;97;106m (HTTP call). Let the caller compose them. Accept the server URL as a parameter or read it from config.[K
+[0m[48;2;40;67;43m[39m+    177[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    178[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    179[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    180[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    181[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/orphan-storage/paths.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/parse.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    182[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The path [38;2;163;190;140m`[38;2;163;190;140mjoin(homedir(), ".weaver")[38;2;163;190;140m`[38;2;191;97;106m is independently constructed in at least 4 files:[K
+[0m[48;2;40;67;43m[39m+    183[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140msessions.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst DATA_DIR = () => join(homedir(), ".weaver")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    184[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst DATA_DIR = () => join(homedir(), ".weaver")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    185[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mpaths.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mexport const ORPHAN_PATH = () => join(homedir(), ".weaver", "logs", "orphan.jsonl")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    186[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mparse.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mconst LOGS_DIR = () => join(homedir(), ".weaver", "logs")[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    187[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    188[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mSimilarly, [38;2;163;190;140m`[38;2;163;190;140mGLOBAL_SKILLS_PATH = () => resolve(join(homedir(), ".kiro", "skills"))[38;2;163;190;140m`[38;2;191;97;106m is defined independently in both [38;2;163;190;140m`[38;2;163;190;140mdiscover.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mget-skill-detail.ts[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    189[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: If the data directory name changes from [38;2;163;190;140m`[38;2;163;190;140m.weaver[38;2;163;190;140m`[38;2;191;97;106m to something else, 4+ files need updating. The duplication is a maintenance hazard and makes it easy to introduce inconsistencies (e.g., one file using [38;2;163;190;140m`[38;2;163;190;140m.weaver[38;2;163;190;140m`[38;2;191;97;106m and another using [38;2;163;190;140m`[38;2;163;190;140m.weaver-data[38;2;163;190;140m`[38;2;191;97;106m).[K
+[0m[48;2;40;67;43m[39m+    190[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Centralize all path definitions in a single module. The [38;2;163;190;140m`[38;2;163;190;140morphan-storage/paths.ts[38;2;163;190;140m`[38;2;191;97;106m file already exists as a partial solution but only covers orphan paths.[K
+[0m[48;2;40;67;43m[39m+    191[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    192[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    193[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    194[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    195[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/window.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    196[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: Five mutable variables at module scope control all window behavior:[K
+[0m[48;2;40;67;43m[39m+    197[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    198[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  let win: BrowserWindow | null = null;[K
+[0m[48;2;40;67;43m[39m+    199[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  let miniMode = false;[K
+[0m[48;2;40;67;43m[39m+    200[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  let visible = false;[K
+[0m[48;2;40;67;43m[39m+    201[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  let ghostEnabled = false;[K
+[0m[48;2;40;67;43m[39m+    202[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  let ghostOpacityValue = 1;[K
+[0m[48;2;40;67;43m[39m+    203[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    204[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mAll exported functions ([38;2;163;190;140m`[38;2;163;190;140mcreateWindow[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtoggleWindow[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mshowWindow[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msetGhostMode[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140misMiniMode[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140misWindowVisible[38;2;163;190;140m`[38;2;191;97;106m) read and mutate this shared state. A [38;2;163;190;140m`[38;2;163;190;140m_getTestState()[38;2;163;190;140m`[38;2;191;97;106m function was added specifically to expose internal state for testing:[K
+[0m[48;2;40;67;43m[39m+    205[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    206[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export function _getTestState() {[K
+[0m[48;2;40;67;43m[39m+    207[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    return { visible, ghostEnabled, ghostOpacityValue, miniMode };[K
+[0m[48;2;40;67;43m[39m+    208[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    209[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    210[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140m_getTestState[38;2;163;190;140m`[38;2;191;97;106m escape hatch is a code smell — it exists because the module's interface doesn't expose enough information for tests to assert on. The module cannot be instantiated twice (e.g., for testing different configurations). All functions are coupled through shared mutable variables rather than explicit data flow.[K
+[0m[48;2;40;67;43m[39m+    211[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Wrap the state and functions in a [38;2;163;190;140m`[38;2;163;190;140mcreateWindowManager(config)[38;2;163;190;140m`[38;2;191;97;106m factory. The factory returns an object with all the current exported functions plus a [38;2;163;190;140m`[38;2;163;190;140mgetState()[38;2;163;190;140m`[38;2;191;97;106m method. The [38;2;163;190;140m`[38;2;163;190;140m_getTestState[38;2;163;190;140m`[38;2;191;97;106m hack becomes unnecessary.[K
+[0m[48;2;40;67;43m[39m+    212[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    213[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    214[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    215[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    216[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/main.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    217[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mapp.on("ready")[38;2;163;190;140m`[38;2;191;97;106m handler passes 6 inline closures to [38;2;163;190;140m`[38;2;163;190;140mcreateTray[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+    218[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    219[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  createTray([K
+[0m[48;2;40;67;43m[39m+    220[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    toggleWindow,[K
+[0m[48;2;40;67;43m[39m+    221[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    isWindowVisible,[K
+[0m[48;2;40;67;43m[39m+    222[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    () => {[K
+[0m[48;2;40;67;43m[39m+    223[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      currentConfig.ghost_mode = !currentConfig.ghost_mode;[K
+[0m[48;2;40;67;43m[39m+    224[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      setGhostMode(currentConfig.ghost_mode, currentConfig.ghost_opacity);[K
+[0m[48;2;40;67;43m[39m+    225[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      putConfig(server.SERVER_URL, currentConfig);[K
+[0m[48;2;40;67;43m[39m+    226[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      return currentConfig.ghost_mode;[K
+[0m[48;2;40;67;43m[39m+    227[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    },[K
+[0m[48;2;40;67;43m[39m+    228[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    () => currentConfig.ghost_mode,[K
+[0m[48;2;40;67;43m[39m+    229[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    () => {[K
+[0m[48;2;40;67;43m[39m+    230[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      if (isMiniMode()) { navigateToMain(server.SERVER_URL); }[K
+[0m[48;2;40;67;43m[39m+    231[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      else { navigateToMini(server.SERVER_URL); }[K
+[0m[48;2;40;67;43m[39m+    232[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    },[K
+[0m[48;2;40;67;43m[39m+    233[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    isMiniMode,[K
+[0m[48;2;40;67;43m[39m+    234[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  );[K
+[0m[48;2;40;67;43m[39m+    235[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    236[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe ghost toggle closure captures [38;2;163;190;140m`[38;2;163;190;140mcurrentConfig[38;2;163;190;140m`[38;2;191;97;106m by reference and mutates it, then persists it via [38;2;163;190;140m`[38;2;163;190;140mputConfig[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140mcurrentConfig[38;2;163;190;140m`[38;2;191;97;106m variable is also mutated by the SSE listener (line 56–60). Two separate code paths mutate the same object.[K
+[0m[48;2;40;67;43m[39m+    237[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The tray's ghost toggle and the SSE config listener both mutate [38;2;163;190;140m`[38;2;163;190;140mcurrentConfig[38;2;163;190;140m`[38;2;191;97;106m without coordination. If an SSE [38;2;163;190;140m`[38;2;163;190;140mconfigChanged[38;2;163;190;140m`[38;2;191;97;106m event arrives while the user is toggling ghost mode via the tray, the mutations race. The 6-closure signature of [38;2;163;190;140m`[38;2;163;190;140mcreateTray[38;2;163;190;140m`[38;2;191;97;106m is hard to read and impossible to type-check for correctness at the call site.[K
+[0m[48;2;40;67;43m[39m+    238[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Define a [38;2;163;190;140m`[38;2;163;190;140mTrayActions[38;2;163;190;140m`[38;2;191;97;106m interface with named methods. Have [38;2;163;190;140m`[38;2;163;190;140mcreateTray[38;2;163;190;140m`[38;2;191;97;106m accept a single [38;2;163;190;140m`[38;2;163;190;140mTrayActions[38;2;163;190;140m`[38;2;191;97;106m object. Centralize config mutation in a single function that both the tray and SSE listener call.[K
+[0m[48;2;40;67;43m[39m+    239[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    240[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    241[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    242[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    243[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m, consumed by 7 production modules[K
+[0m[48;2;40;67;43m[39m+    244[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The event bus uses a [38;2;163;190;140m`[38;2;163;190;140mSet<Listener>[38;2;163;190;140m`[38;2;191;97;106m at module scope and provides [38;2;163;190;140m`[38;2;163;190;140msubscribe[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140memit[38;2;163;190;140m`[38;2;191;97;106m functions. It is imported by:[K
+[0m[48;2;40;67;43m[39m+    245[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m (PID polling callback)[K
+[0m[48;2;40;67;43m[39m+    246[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m (rename broadcast)[K
+[0m[48;2;40;67;43m[39m+    247[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/delete.ts[38;2;163;190;140m`[38;2;191;97;106m (delete broadcast)[K
+[0m[48;2;40;67;43m[39m+    248[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/config.ts[38;2;163;190;140m`[38;2;191;97;106m (config change emit)[K
+[0m[48;2;40;67;43m[39m+    249[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/events/events.ts[38;2;163;190;140m`[38;2;191;97;106m (notify broadcast, navigate emit, SSE reply)[K
+[0m[48;2;40;67;43m[39m+    250[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    251[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe bus carries two distinct message types: [38;2;163;190;140m`[38;2;163;190;140m"update"[38;2;163;190;140m`[38;2;191;97;106m (session changes) and [38;2;163;190;140m`[38;2;163;190;140m"configChanged"[38;2;163;190;140m`[38;2;191;97;106m / [38;2;163;190;140m`[38;2;163;190;140m"navigate"[38;2;163;190;140m`[38;2;191;97;106m (app-level events). These are distinguished only by the [38;2;163;190;140m`[38;2;163;190;140mevent[38;2;163;190;140m`[38;2;191;97;106m string field in [38;2;163;190;140m`[38;2;163;190;140mSSEMessage[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    252[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The event bus creates hidden dependencies between modules. The config route emits [38;2;163;190;140m`[38;2;163;190;140m"configChanged"[38;2;163;190;140m`[38;2;191;97;106m which the desktop SSE listener consumes — but this dependency is invisible in the import graph. The [38;2;163;190;140m`[38;2;163;190;140mSSEMessage[38;2;163;190;140m`[38;2;191;97;106m type uses [38;2;163;190;140m`[38;2;163;190;140mevent: string[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mdata: Record<string, unknown>[38;2;163;190;140m`[38;2;191;97;106m, so there's no type safety on what events exist or what data they carry. A consumer could listen for [38;2;163;190;140m`[38;2;163;190;140m"configChagned"[38;2;163;190;140m`[38;2;191;97;106m (typo) and never receive messages.[K
+[0m[48;2;40;67;43m[39m+    253[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Type the event bus with a discriminated union of message types: [38;2;163;190;140m`[38;2;163;190;140mtype BusMessage = { event: "update"; data: { sessionId: string; ... } } | { event: "configChanged"; data: WeaverConfig } | { event: "navigate"; data: { sessionId?: string; page?: string } }[38;2;163;190;140m`[38;2;191;97;106m. This makes the coupling explicit and type-checked.[K
+[0m[48;2;40;67;43m[39m+    254[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    255[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    256[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    257[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    258[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/orphan-storage/paths.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/parse.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    259[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: All four modules independently construct paths from [38;2;163;190;140m`[38;2;163;190;140mhomedir()[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140m".weaver"[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m imports [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140msessions.ts[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140mparse.ts[38;2;163;190;140m`[38;2;191;97;106m constructs [38;2;163;190;140m`[38;2;163;190;140mLOGS_DIR[38;2;163;190;140m`[38;2;191;97;106m identically to [38;2;163;190;140m`[38;2;163;190;140mpaths.ts[38;2;163;190;140m`[38;2;191;97;106m. They co-own the concept of "where Weaver data lives on disk."[K
+[0m[48;2;40;67;43m[39m+    260[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: Local-substitutable (filesystem paths)[K
+[0m[48;2;40;67;43m[39m+    261[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: The 4 separate [38;2;163;190;140m`[38;2;163;190;140mvi.mock("node:os")[38;2;163;190;140m`[38;2;191;97;106m setups across test files would be replaced by a single mock of the centralized paths module. Tests for [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140msessions.ts[38;2;163;190;140m`[38;2;191;97;106m currently both mock [38;2;163;190;140m`[38;2;163;190;140mhomedir()[38;2;163;190;140m`[38;2;191;97;106m independently.[K
+[0m[48;2;40;67;43m[39m+    262[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    263[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    264[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    265[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/dispatch.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/payload-simple.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/payload-advanced.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/context.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/types.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    266[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m orchestrates all other webhook modules. It calls [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m, selects between [38;2;163;190;140m`[38;2;163;190;140mpayload-simple.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mpayload-advanced.ts[38;2;163;190;140m`[38;2;191;97;106m via [38;2;163;190;140m`[38;2;163;190;140mbuildPayloadForFormat[38;2;163;190;140m`[38;2;191;97;106m, and both payload builders call [38;2;163;190;140m`[38;2;163;190;140mcontext.ts[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m file defines interfaces used by all of them. The module boundary between handler and dispatch is nearly transparent — [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m is 15 lines that wrap [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    267[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process[K
+[0m[48;2;40;67;43m[39m+    268[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: The webhook test files ([38;2;163;190;140m`[38;2;163;190;140mwebhook-simple.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mwebhook-advanced.test.ts[38;2;163;190;140m`[38;2;191;97;106m) already test through the [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m entry point. The separate [38;2;163;190;140m`[38;2;163;190;140mcontext.test.ts[38;2;163;190;140m`[38;2;191;97;106m tests pure functions that could remain as unit tests. [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m is so thin that its test value comes only from the integration with [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m. Merging handler + dispatch and extracting session tracking would reduce the mock surface.[K
+[0m[48;2;40;67;43m[39m+    269[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    270[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    271[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    272[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/skill-graph/discover.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/skill-graph/get-skill-detail.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    273[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Both define [38;2;163;190;140m`[38;2;163;190;140mGLOBAL_SKILLS_PATH[38;2;163;190;140m`[38;2;191;97;106m independently. Both construct the same candidate path list pattern (workspace paths + global path). [38;2;163;190;140m`[38;2;163;190;140mget-skill-detail.ts[38;2;163;190;140m`[38;2;191;97;106m imports [38;2;163;190;140m`[38;2;163;190;140mskillCache[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mderiveProject[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140mdiscover.ts[38;2;163;190;140m`[38;2;191;97;106m. They co-own the concept of "where to find skills."[K
+[0m[48;2;40;67;43m[39m+    274[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process[K
+[0m[48;2;40;67;43m[39m+    275[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: Both test files ([38;2;163;190;140m`[38;2;163;190;140mdiscover.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mget-skill-detail.test.ts[38;2;163;190;140m`[38;2;191;97;106m) mock [38;2;163;190;140m`[38;2;163;190;140mhomedir()[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mlistSkillDirNames[38;2;163;190;140m`[38;2;191;97;106m independently. A unified skill path resolver would consolidate these mocks.[K
+[0m[48;2;40;67;43m[39m+    276[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    277[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    278[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    279[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: 56[K
+[0m[48;2;40;67;43m[39m+    280[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: 12 (3 high, 5 medium, 4 low)[K
+[0m[48;2;40;67;43m[39m+    281[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: 3[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-03-anti-patterns.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.23 s
+[0m[?25l[0m[38;5;141m> [0mReport written to [38;5;10m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-03-anti-patterns.md[0m. [0m[0m
+[0m[0m
+12 findings across 56 files examined: 3 high severity (stringly-typed event names, unawaited async chains, webhook handler god file), 5 medium (pervasive hardcoded [38;5;10mhomedir()[0m, module-level mutable state, mega mock file, silent error swallowing in dispatch, dual side effects in validation logging), and 4 low (duplicated path construction, desktop window state, inline tray closures, untyped event bus). 3 deepening candidates identified for the storage/paths cluster, webhook module cluster, and skill-graph discovery cluster.[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m1.16 s
+[0m[38;5;8m
+ ▸ Credits: 10.77 • Time: 6m 3s
+
+[0m[1G[0m[0m[?25h

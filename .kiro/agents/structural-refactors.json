@@ -1,0 +1,102 @@
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "structural-refactors",
+  "description": "structural-refactors implementation agent for the Ralph Wiggum Loop. Executes one step per session.",
+  "prompt": "file://./structural-refactors-prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_fetch"
+  ],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "web_fetch"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**", "~/Desktop/structural-refactors/**"]
+    },
+    "fs_write": {
+      "allowedPaths": [
+        "./server/src/__tests__/**",
+        "./server/src/routes/**",
+        "./server/src/services/webhook/**",
+        "./server/src/services/keep-awake.test.ts",
+        "./server/src/services/orphan-storage/**",
+        "./hook-handler/src/session-analysis/**",
+        "./hook-handler/src/validate/**",
+        "./hook-handler/src/scope/**",
+        "./hook-handler/src/__test-helpers__/**",
+        "./hook-handler/src/path-utils/**",
+        "./hook-handler/src/changed-files/**",
+        "./hook-handler/src/turn-boundary/**",
+        "./hook-handler/src/agent-tests/**",
+        "~/Desktop/structural-refactors/progress.md"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "npm install *",
+        "npm test *",
+        "npm run *",
+        "npx tsc *",
+        "npx vitest *",
+        "node *",
+        "turbo *",
+        "git add *",
+        "git commit *",
+        "git status *",
+        "git diff *",
+        "mkdir *",
+        "rm *",
+        "cat *",
+        "ls *"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file:///Users/thompsnt/Desktop/structural-refactors/current-step.md",
+    "file:///Users/thompsnt/Desktop/structural-refactors/progress.md",
+    "file://README.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log agent spawn event"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log user prompt submission"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log pre-tool-use for all tools"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log post-tool-use for all tools",
+        "timeout_ms": 35000
+      }
+    ],
+    "stop": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 165000
+      }
+    ]
+  },
+  "useLegacyMcpJson": false
+}

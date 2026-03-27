@@ -1,0 +1,109 @@
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "type-safety-foundations",
+  "description": "type-safety-foundations implementation agent for the Ralph Wiggum Loop. Executes one step per session.",
+  "prompt": "file://./type-safety-foundations-prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_fetch"
+  ],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "web_fetch"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**", "~/Desktop/type-safety-foundations/**"]
+    },
+    "fs_write": {
+      "allowedPaths": [
+        "./shared/types/**",
+        "./shared/paths/**",
+        "./shared/sync/**",
+        "./shared/package.json",
+        "./shared/tsconfig.json",
+        "./server/src/services/log-parser/**",
+        "./server/src/services/event-bus.ts",
+        "./server/src/services/webhook/**",
+        "./server/src/services/storage/**",
+        "./server/src/services/config/**",
+        "./server/src/services/orphan-storage/**",
+        "./server/src/services/skill-graph/**",
+        "./server/src/services/skill-resolver/**",
+        "./server/src/routes/events/**",
+        "./server/src/routes/sessions/**",
+        "./server/src/utils/**",
+        "./hook-handler/src/**",
+        "./client/src/hooks/notifications/**",
+        "./client/src/context/ActivityLogContext/**",
+        "./e2e/fixtures/**",
+        "~/Desktop/type-safety-foundations/progress.md"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "npm install *",
+        "npm test *",
+        "npm run *",
+        "npx tsc *",
+        "npx vitest *",
+        "node *",
+        "turbo *",
+        "git add *",
+        "git commit *",
+        "git status *",
+        "git diff *",
+        "mkdir *",
+        "rm *",
+        "cat *",
+        "ls *"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file:///Users/thompsnt/Desktop/type-safety-foundations/current-step.md",
+    "file:///Users/thompsnt/Desktop/type-safety-foundations/progress.md",
+    "file://README.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log agent spawn event"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log user prompt submission"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log pre-tool-use for all tools"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log post-tool-use for all tools",
+        "timeout_ms": 35000
+      }
+    ],
+    "stop": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 165000
+      }
+    ]
+  },
+  "useLegacyMcpJson": false
+}

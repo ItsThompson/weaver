@@ -1,0 +1,890 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","./audit-reports/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+Let me start by reading the brief.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/prompts/prompt-04-test-quality.md[0m, all lines[38;5;244m (using tool: read)[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m8664 bytes[0m from /Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/prompts/prompt-04-test-quality.md
+[38;5;244m - Completed in 0.1s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: This is a comprehensive test quality audit. Let me plan my exploration:
+
+1. First, get an overview of the codebase structure
+2. Examine test files package by package
+3. Look at mock infrastructure
+4. Check coverage gaps
+5. Evaluate assertion quality
+6. Check E2E tests
+7. Write the report
+
+Let me start by exploring the directory structure and then dive into specific test files.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver[0m[38;5;244m (using tool: read, max depth: 2, max entries: 1000, excluding: defaults)[0mSearching for files: [38;5;141m**/*.test.ts[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver[0m [38;5;244m(showing 1000 of 1675 entries, offset: 0)[0m
+[38;5;244m - Completed in 0.25s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m69 files[0m under current directory
+[38;5;244m - Completed in 0.31s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[0m[0m⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: I have the test file list and directory structure. Now I need to dive deep into specific test files to evaluate quality. Let me start by examining the mock infrastructure, then key test files across packages. I'll focus on:
+
+1. Server mock infrastructure and how route tests use it
+2. Server service tests (log-parser should be pure, webhook is critical)
+3. Hook-handler test quality
+4. Client test quality
+5. CLI test coverage
+6. Desktop (no tests)
+7. E2E tests
+8. Shared tests
+
+Let me read several key files in parallel.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me examine the mock infrastructure and key test files across packages.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.test.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-simple.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5841 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1893 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m7089 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-simple.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/fs.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/logger.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1846 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m592 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/fs.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m59 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/logger.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/group-turns.test.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1100 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m6733 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/group-turns.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4353 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts[0m, from line [38;5;141m1[0m to [38;5;141m10[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2100 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m333 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src/commands.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3471 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m10768 bytes[0m from /Users/thompsnt/Documents/weaver/cli/src/commands.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.ts[0m, from line [38;5;141m1[0m to [38;5;141m30[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m8588 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m855 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/run-validation.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/__test-helpers__/mock-validate-deps.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/__test-helpers__/mock-fs.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m470 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/__test-helpers__/mock-validate-deps.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m255 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/__test-helpers__/mock-fs.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the client tests and the webhook handler test:[0m[0m
+[?25l[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for files: [38;5;141mclient/src/**/*.test.{ts,tsx}[0m[38;5;244m (using tool: glob)[0mSearching for files: [38;5;141mclient/src/__tests__/**/*.test.{ts,tsx}[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m30 files[0m under current directory
+[38;5;244m - Completed in 0.2s[0m
+
+
+[38;5;9m ❗ [0mNo files found matching pattern: [38;5;244mclient/src/__tests__/**/*.test.{ts,tsx}[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m[1mTool validation failed: [0m
+[38;5;9mFailed to validate tool parameters: '/Users/thompsnt/Documents/weaver/client/__tests__/mocks/queries.ts' does not exist
+[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver/client/__tests__/mocks[0m[38;5;244m (using tool: read, max depth: 1, max entries: 1000, excluding: defaults)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/client/__tests__/mocks[0m [38;5;244m(8 entries)[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/SessionsPage/SessionsPage.test.tsx[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/__tests__/mocks/cloudscape-table.tsx[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/__tests__/setup.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2050 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/pages/SessionsPage/SessionsPage.test.tsx
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m473 bytes[0m from /Users/thompsnt/Documents/weaver/client/__tests__/mocks/cloudscape-table.tsx
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m669 bytes[0m from /Users/thompsnt/Documents/weaver/client/__tests__/setup.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/utils/prune-conversation.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/notifications/notificationUtils.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4445 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/utils/prune-conversation.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3122 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/notifications/notificationUtils.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the E2E tests and the webhook handler test, plus check for untested source files:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/tests/sessions.spec.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/tests/smoke.spec.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/tests/config.spec.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3901 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/tests/sessions.spec.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m221 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/tests/smoke.spec.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2610 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/tests/config.spec.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the webhook handler test and the [38;5;10m_logCache[0m access in parse.test.ts, and look at the desktop source files:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-advanced.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/context.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4259 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-advanced.test.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3843 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/context.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[?25l[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for files: [38;5;141mdesktop/src/**/*.ts[0m[38;5;244m (using tool: glob)[0mSearching for files: [38;5;141mclient/src/context/**/*.{ts,tsx}[0m[38;5;244m (using tool: glob)[0mSearching for files: [38;5;141mclient/src/hooks/**/*.{ts,tsx}[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m8 files[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m6 files[0m under current directory
+[38;5;244m - Completed in 0.1s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m14 files[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-helpers.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/inject/run-inject/run-inject.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2134 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/__tests__/webhook-helpers.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4391 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/inject/run-inject/run-inject.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the hook-handler orchestrators and look at what's untested:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/inject/inject.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m247 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m417 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/inject/inject.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/config.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/validators/field.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5414 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/config.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m6636 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/validators/field.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the [38;5;10m_logCache[0m export and how it's used in tests, plus look at the shared tests and client mock patterns:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/sync.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/SettingsPage/SettingsPage.test.tsx[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5842 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/sync.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4414 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/pages/SettingsPage/SettingsPage.test.tsx
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the client API mock and look at a few more areas:[0m[0m
+[?25l[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for files: [38;5;141mclient/src/__tests__/mocks/api.ts[0m[38;5;244m (using tool: glob)[0mSearching for files: [38;5;141mclient/src/__tests__/**/*[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m1 files[0m under current directory
+[38;5;244m - Completed in 0.39s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m5 files[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/__tests__/mocks/api.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/__tests__/mocks/queries.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/OrphansPage/hooks/useOrphansPage.test.tsx[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m872 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/__tests__/mocks/api.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m417 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/__tests__/mocks/queries.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5055 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/pages/OrphansPage/hooks/useOrphansPage.test.tsx
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the server index.ts (untested orchestrator) and the event-bus test:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.09 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/index.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3648 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2597 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mLet me check a few more areas - the skill-graph tests and the file-cache test:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-graph/build-graph.test.ts[0m, from line [38;5;141m1[0m to [38;5;141m60[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4393 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.test.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1762 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-graph/build-graph.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mLet me check the E2E fixture and a few more test files to understand the E2E infrastructure:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/fixtures/app.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/tests/ghost-mode.spec.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2335 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/fixtures/app.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3608 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/tests/ghost-mode.spec.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the [38;5;10m_logCache[0m export pattern and look at the hook-handler scope test:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/scope/scope.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/keep-awake.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4082 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/scope/scope.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4448 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/keep-awake.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the client hooks that lack tests:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/useSessionEvents/useSessionEvents.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/useSessionNotifications/useSessionNotifications.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/useNavigateOnView/useNavigateOnView.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1142 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/useSessionEvents/useSessionEvents.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1020 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/useSessionNotifications/useSessionNotifications.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1116 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/useNavigateOnView/useNavigateOnView.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the client [38;5;10museWindowList[0m hook and the [38;5;10msoundUtils[0m:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/useWindowList/useWindowList.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/notifications/soundUtils.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2490 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/useWindowList/useWindowList.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2399 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/notifications/soundUtils.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a comprehensive picture of the test landscape. Let me synthesize my findings:
+
+## Key Findings:
+
+### 1. parse.test.ts accesses internal `_logCache` 
+The test imports `_logCache` from `./parse` and calls `_logCache.clear()` in `beforeEach`. This is an internal implementation detail — the underscore prefix convention signals it's private. The test reaches into the module's internal cache state to reset it between tests.
+
+### 2. Server route tests mock ALL internal services
+The `server/src/__tests__/mocks/services.ts` file mocks every service module. Route tests import this file and then mock every collaborator. This means route tests are purely solitary — they never exercise real service code. The route tests verify HTTP status codes and response shapes, but the actual business logic (parsing, storage, etc.) is completely mocked out.
+
+### 3. parse.test.ts mocks fs AND accesses internal cache
+The log-parser `parse.test.ts` mocks `node:fs` and `node:fs/promises` (legitimate external deps), but also imports and manipulates `_logCache` (internal state). The `parseLogFile` function delegates to `FileCache.get()` which delegates to `parseJsonlFile()`. The test mocks `readFile` and `existsSync` but the real `FileCache` logic is not exercised because the test also clears the cache between tests. Actually wait — the test does use the real FileCache since it doesn't mock `../file-cache/index`. So it IS sociable with FileCache. But it accesses `_logCache.clear()` which is internal state.
+
+### 4. group-turns.test.ts and activity.test.ts are pure/sociable — good
+These test pure functions with real implementations. No mocks. This is exactly what the testing standard calls for.
+
+### 5. context.test.ts is pure — good
+Tests `extractContext` with no mocks, just input/output.
+
+### 6. Webhook tests mock config, log-parser, and logger
+The webhook tests mock `readConfig`, `parseLogFile`, `deriveActivity`, and `logger`. These are legitimate mocks for the most part (config is I/O, log-parser involves file I/O). But `deriveActivity` is a pure function that could use the real implementation.
+
+### 7. Desktop: 8 source files, 0 unit tests
+Complete coverage gap. The E2E tests cover some desktop behavior (ghost mode, tray menu, window toggle) but there are no unit tests for any desktop module.
+
+### 8. CLI: 6 command files, 1 test file
+The single `commands.test.ts` covers all 6 commands, but it mocks `./utils` (the HTTP client) entirely. Every test is solitary. The actual HTTP request logic in `utils.ts` is never tested.
+
+### 9. Client hooks without tests
+- `useSessionEvents` — SSE event handling with debounce, no test
+- `useSessionNotifications` — notification dispatch, no test  
+- `useNavigateOnView` — SSE-driven navigation, no test
+- `useWindowList` — no test
+- `soundUtils` — audio generation, no test
+
+### 10. Client context providers without tests
+- `WindowContext` — no test
+- `NotificationContext` — no test
+- `ActivityLogContext` — no test
+
+### 11. Client tests mock Cloudscape components
+The client tests mock 8 Cloudscape UI components with simplified implementations. This is a reasonable approach for testing behavior without the full component library, but it means the tests don't verify actual rendering behavior.
+
+### 12. hook-handler orchestrators are thin wrappers
+`validate.ts` and `inject.ts` are just CLI entry points that parse args and call the real functions. The real logic is in `run-validation.ts` and `run-inject.ts`, which ARE tested. This is actually good design — the untested files are trivially thin.
+
+### 13. run-validation.test.ts mocks internal collaborators
+The test mocks `config/index`, `changed-files/index`, `agent-tests/index`, and `scope/index`. These are all within the hook-handler package. According to the project's testing standard, "sibling modules that are part of the same bounded context" should NOT be mocked. This is a violation.
+
+### 14. server/src/index.ts is untested
+The server entry point orchestrates startup, route registration, static file serving, and shutdown. No unit test. The E2E tests exercise it indirectly.
+
+### 15. Test organization is inconsistent
+- Server: tests co-located with source (e.g., `parse.test.ts` next to `parse.ts`), except webhook which uses `__tests__/` subdirectory
+- Hook-handler: tests co-located
+- Client: tests co-located
+- Shared: tests co-located
+- Server mocks: centralized in `__tests__/mocks/`
+- Hook-handler mocks: in `__test-helpers__/`
+- Client mocks: in `__tests__/mocks/` (root level) AND `src/__tests__/mocks/`
+
+### 16. Assertion quality is generally good
+Most tests assert on specific values, not just "defined" or "truthy". The `test.each` pattern is used well in CLI tests and validator tests. The webhook tests check specific payload structures.
+
+### 17. E2E tests cover core flows but miss cherrypick and webhooks
+E2E covers: navigation, smoke, tray-menu, ghost-mode, sessions, seed, window-toggle, app-lifecycle, config, mini-mode. Missing: cherrypick, webhooks, validation hooks.
+
+### 18. FileCache test is well-structured
+Tests the cache hit/miss/invalidation behavior thoroughly. Mocks only `node:fs/promises` (external). Good example of testing through the public interface.
+
+### 19. keep-awake.test.ts uses vi.hoisted() pattern
+Uses `vi.hoisted()` to create mock functions before module loading, then uses `vi.mock()` with those hoisted mocks. This is a valid pattern but creates tight coupling between test setup and module internals.
+
+### 20. Shared sync tests mock fs
+The sync tests mock `node:fs` and `node:os` (legitimate external deps) and use helper functions to set up filesystem state. Good pattern.
+
+### 21. _logCache export is an internal leak
+The `parse.ts` file exports `_logCache` with an underscore prefix, signaling it's internal. But the test imports it to call `.clear()`. This is a test reaching into internals. The proper approach would be to either:
+- Not export it and let the FileCache handle its own lifecycle
+- Provide a public `clearCache()` function
+
+Let me now count files examined and organize findings by severity.
+
+### Deepening candidates:
+1. hook-handler config + changed-files + scope + agent-tests — these are all mocked in run-validation tests but are internal collaborators
+2. server webhook handler + payload-simple + payload-advanced + dispatch + context — split across many files but tested as a unit through the handler
+
+Let me write the report now.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mLet me check one more thing — the [38;5;10mrun-validation[0m source to understand the collaborator relationships:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/stop-trigger.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/post-tool-use-trigger.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4882 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/stop-trigger.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4517 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/run-validation/post-tool-use-trigger.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow I have enough data. Let me also quickly check the [38;5;10mspawnResult[0m helper duplication:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141mfunction spawnResult[0m ([38;5;141m*.test.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m5 matches[0m in [38;5;244m5 files[0m under current directory
+[38;5;244m - Completed in 0.154s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141mfunction makeGroups[0m ([38;5;141m*.test.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m2 matches[0m in [38;5;244m2 files[0m under current directory
+[38;5;244m - Completed in 0.150s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141mfunction makeEvent[0m ([38;5;141m*.test.ts[0m)[38;5;244m (using tool: grep)[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m1 matches[0m in [38;5;244m1 files[0m under current directory
+[38;5;244m - Completed in 0.141s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141mexport function makeEvent[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m3 matches[0m in [38;5;244m3 files[0m under current directory
+[38;5;244m - Completed in 0.168s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mLet me check the [38;5;10mmakeEvent[0m implementations to see if they're duplicated:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/test-helpers.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/__test-helpers__/events.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/e2e/fixtures/seed.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m721 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/test-helpers.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m228 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/__test-helpers__/events.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1934 bytes[0m from /Users/thompsnt/Documents/weaver/e2e/fixtures/seed.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow I have a thorough understanding. Let me write the report.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-04-test-quality.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+      1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Report: Test Quality and Architecture[K
+[0m[48;2;40;67;43m[39m+      2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+      4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThe codebase has 69 unit test files and 10 E2E specs, with generally strong assertion quality and good coverage of pure logic modules. However, the testing strategy is overwhelmingly solitary: nearly every test file mocks all internal collaborators, violating the project's own "sociable tests by default" standard. Critical coverage gaps exist in the desktop package (0 tests), client hooks/context providers (0 tests for 7 modules), and the server entry point. The [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;192;197;206m validation tests mock 4 sibling modules within the same bounded context, meaning the integration seams where bugs actually hide are never exercised.[K
+[0m[48;2;40;67;43m[39m+      6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+      8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      9[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     10[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/run-validation/[38;2;163;190;140m`[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mrun-validation.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstop-trigger.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpost-tool-use-trigger.test.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: All three test files import [38;2;163;190;140m`[38;2;163;190;140m../../../__test-helpers__/mock-validate-deps.ts[38;2;163;190;140m`[38;2;191;97;106m, which mocks four internal collaborators:[K
+[0m[48;2;40;67;43m[39m+     13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // mock-validate-deps.ts[K
+[0m[48;2;40;67;43m[39m+     15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../config/index", () => ({[K
+[0m[48;2;40;67;43m[39m+     16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    readProjectConfig: vi.fn(),[K
+[0m[48;2;40;67;43m[39m+     17[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    resolveTestRunners: vi.fn<() => string[]>(),[K
+[0m[48;2;40;67;43m[39m+     18[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    findNearestConfig: vi.fn(),[K
+[0m[48;2;40;67;43m[39m+     19[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    groupFilesByConfig: vi.fn(),[K
+[0m[48;2;40;67;43m[39m+     20[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }));[K
+[0m[48;2;40;67;43m[39m+     21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../changed-files/index", ...);[K
+[0m[48;2;40;67;43m[39m+     22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../agent-tests/index", ...);[K
+[0m[48;2;40;67;43m[39m+     23[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../scope/index", ...);[K
+[0m[48;2;40;67;43m[39m+     24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThese are all sibling modules within the [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m package — the same bounded context. The project's testing standard explicitly says: "What should NOT be mocked: Sibling modules that are part of the same bounded context." The only legitimate mocks here are [38;2;163;190;140m`[38;2;163;190;140mnode:child_process[38;2;163;190;140m`[38;2;191;97;106m (spawnSync) and [38;2;163;190;140m`[38;2;163;190;140mnode:fs[38;2;163;190;140m`[38;2;191;97;106m. The real [38;2;163;190;140m`[38;2;163;190;140mextractChangedFiles[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mgroupFilesByConfig[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfindNearestConfig[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mresolveTestRunners[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mextractAgentTestedDirs[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mresolveTestDirs[38;2;163;190;140m`[38;2;191;97;106m are never exercised together in any test.[K
+[0m[48;2;40;67;43m[39m+     26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The integration between config resolution, file grouping, changed-file extraction, and validation execution is completely untested. A bug in how [38;2;163;190;140m`[38;2;163;190;140mgroupFilesByConfig[38;2;163;190;140m`[38;2;191;97;106m interacts with [38;2;163;190;140m`[38;2;163;190;140mextractChangedFiles[38;2;163;190;140m`[38;2;191;97;106m would not be caught. These are the seams where real bugs hide — the individual functions are simple, but their composition is where complexity lives.[K
+[0m[48;2;40;67;43m[39m+     27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Write sociable tests for [38;2;163;190;140m`[38;2;163;190;140mrunStopTrigger[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mrunPostToolUseTrigger[38;2;163;190;140m`[38;2;191;97;106m that use real implementations of [38;2;163;190;140m`[38;2;163;190;140mextractChangedFiles[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mgroupFilesByConfig[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfindNearestConfig[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mresolveTestRunners[38;2;163;190;140m`[38;2;191;97;106m. Mock only [38;2;163;190;140m`[38;2;163;190;140mspawnSync[38;2;163;190;140m`[38;2;191;97;106m (external process) and [38;2;163;190;140m`[38;2;163;190;140mnode:fs[38;2;163;190;140m`[38;2;191;97;106m (filesystem). This may require creating a test fixture directory structure.[K
+[0m[48;2;40;67;43m[39m+     28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     29[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     30[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     31[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/[38;2;163;190;140m`[38;2;191;97;106m — all 7 route test files[K
+[0m[48;2;40;67;43m[39m+     33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: Every route test imports [38;2;163;190;140m`[38;2;163;190;140m../../__tests__/mocks/services.ts[38;2;163;190;140m`[38;2;191;97;106m, which blanket-mocks 8 service modules with 30+ mock functions:[K
+[0m[48;2;40;67;43m[39m+     34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     35[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // services.ts[K
+[0m[48;2;40;67;43m[39m+     36[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/storage/index", () => ({[K
+[0m[48;2;40;67;43m[39m+     37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    readSessions: vi.fn(), writeSessions: vi.fn(), isProcessRunning: vi.fn(), ...[K
+[0m[48;2;40;67;43m[39m+     38[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }));[K
+[0m[48;2;40;67;43m[39m+     39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/log-parser/index", () => ({[K
+[0m[48;2;40;67;43m[39m+     40[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    parseLogFile: vi.fn(), groupEventsByTurn: vi.fn(), ...[K
+[0m[48;2;40;67;43m[39m+     41[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }));[K
+[0m[48;2;40;67;43m[39m+     42[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/orphan-storage/index", ...);[K
+[0m[48;2;40;67;43m[39m+     43[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/skill-resolver/index", ...);[K
+[0m[48;2;40;67;43m[39m+     44[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/event-bus", ...);[K
+[0m[48;2;40;67;43m[39m+     45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/webhook/index", ...);[K
+[0m[48;2;40;67;43m[39m+     46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../services/skill-graph/index", ...);[K
+[0m[48;2;40;67;43m[39m+     47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../utils/logger", ...);[K
+[0m[48;2;40;67;43m[39m+     48[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     49[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mRoute tests then assert on HTTP status codes and response shapes, but the actual service logic is never exercised. For example, [38;2;163;190;140m`[38;2;163;190;140msessions.test.ts[38;2;163;190;140m`[38;2;191;97;106m mocks [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mparseLogFile[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mgroupEventsByTurn[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mextractActiveSkillPaths[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mresolveConfiguredSkills[38;2;163;190;140m`[38;2;191;97;106m — all internal collaborators.[K
+[0m[48;2;40;67;43m[39m+     50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Route tests verify only the HTTP layer (status codes, JSON shape, parameter validation). A refactor of how [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m returns data or how [38;2;163;190;140m`[38;2;163;190;140mgroupEventsByTurn[38;2;163;190;140m`[38;2;191;97;106m structures turns would not be caught by these tests. The route handlers are thin, so the real value would be in testing the route + service integration.[K
+[0m[48;2;40;67;43m[39m+     51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: For the most critical routes (GET [38;2;163;190;140m`[38;2;163;190;140m/api/sessions/:id[38;2;163;190;140m`[38;2;191;97;106m, POST [38;2;163;190;140m`[38;2;163;190;140m/api/rename[38;2;163;190;140m`[38;2;191;97;106m), write a small number of integration tests that use real service implementations with a mocked filesystem. The route tests can remain as-is for HTTP contract testing, but they shouldn't be the only coverage.[K
+[0m[48;2;40;67;43m[39m+     52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     53[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     54[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     55[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     56[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/[38;2;163;190;140m`[38;2;191;97;106m — 8 source files, 0 test files[K
+[0m[48;2;40;67;43m[39m+     57[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The desktop package contains [38;2;163;190;140m`[38;2;163;190;140mmain.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mwindow.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtray.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msse.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140minstall-cli.ts[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mpreload.ts[38;2;163;190;140m`[38;2;191;97;106m. None have unit tests. The E2E tests cover some behavior (ghost mode, tray menu, window toggle) via [38;2;163;190;140m`[38;2;163;190;140melectronApp.evaluate()[38;2;163;190;140m`[38;2;191;97;106m, but the individual modules are untested. For example, [38;2;163;190;140m`[38;2;163;190;140mserver.ts[38;2;163;190;140m`[38;2;191;97;106m (2145 bytes) manages the embedded server lifecycle, and [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m (1009 bytes) handles config-driven initialization — both have non-trivial logic.[K
+[0m[48;2;40;67;43m[39m+     58[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Any refactoring of desktop modules has no safety net beyond E2E tests, which are slow and coarse-grained. The [38;2;163;190;140m`[38;2;163;190;140minstall-cli.ts[38;2;163;190;140m`[38;2;191;97;106m module (1437 bytes) handles symlink creation and PATH detection — logic that could easily regress.[K
+[0m[48;2;40;67;43m[39m+     59[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Extract pure logic from desktop modules (e.g., config parsing, path resolution in [38;2;163;190;140m`[38;2;163;190;140minstall-cli.ts[38;2;163;190;140m`[38;2;191;97;106m) into testable functions. The Electron-specific code can remain untested at the unit level since E2E covers it.[K
+[0m[48;2;40;67;43m[39m+     60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     61[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     62[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     63[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mclient/src/hooks/[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mclient/src/context/[38;2;163;190;140m`[38;2;191;97;106m — 7 modules with 0 tests[K
+[0m[48;2;40;67;43m[39m+     65[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The following hooks and context providers have no test files:[K
+[0m[48;2;40;67;43m[39m+     66[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140museSessionEvents[38;2;163;190;140m`[38;2;191;97;106m (SSE event handling with debounce logic)[K
+[0m[48;2;40;67;43m[39m+     67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140museSessionNotifications[38;2;163;190;140m`[38;2;191;97;106m (notification dispatch based on activity changes)[K
+[0m[48;2;40;67;43m[39m+     68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140museNavigateOnView[38;2;163;190;140m`[38;2;191;97;106m (SSE-driven navigation with route mapping)[K
+[0m[48;2;40;67;43m[39m+     69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140museWindowList[38;2;163;190;140m`[38;2;191;97;106m (derives command palette entries from sessions + skills)[K
+[0m[48;2;40;67;43m[39m+     70[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mWindowContext[38;2;163;190;140m`[38;2;191;97;106m (window state management)[K
+[0m[48;2;40;67;43m[39m+     71[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mNotificationContext[38;2;163;190;140m`[38;2;191;97;106m (notification queue management)[K
+[0m[48;2;40;67;43m[39m+     72[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mActivityLogContext[38;2;163;190;140m`[38;2;191;97;106m (activity log state)[K
+[0m[48;2;40;67;43m[39m+     73[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     74[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140museSessionEvents[38;2;163;190;140m`[38;2;191;97;106m hook contains debounce logic with [38;2;163;190;140m`[38;2;163;190;140msetTimeout[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mMap[38;2;163;190;140m`[38;2;191;97;106m-based pending state — exactly the kind of stateful logic that benefits from unit tests. The [38;2;163;190;140m`[38;2;163;190;140museNavigateOnView[38;2;163;190;140m`[38;2;191;97;106m hook has route mapping logic ([38;2;163;190;140m`[38;2;163;190;140mPAGE_ROUTES[38;2;163;190;140m`[38;2;191;97;106m) and conditional navigation that could regress.[K
+[0m[48;2;40;67;43m[39m+     75[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: These hooks orchestrate core UI behavior (real-time updates, notifications, navigation). Bugs in debounce timing, notification deduplication, or route mapping would only be caught by manual testing or E2E.[K
+[0m[48;2;40;67;43m[39m+     76[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Test [38;2;163;190;140m`[38;2;163;190;140museSessionEvents[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140museNavigateOnView[38;2;163;190;140m`[38;2;191;97;106m with [38;2;163;190;140m`[38;2;163;190;140mrenderHook[38;2;163;190;140m`[38;2;191;97;106m and the [38;2;163;190;140m`[38;2;163;190;140mMockEventSource[38;2;163;190;140m`[38;2;191;97;106m already defined in [38;2;163;190;140m`[38;2;163;190;140mclient/__tests__/setup.ts[38;2;163;190;140m`[38;2;191;97;106m. Test [38;2;163;190;140m`[38;2;163;190;140museWindowList[38;2;163;190;140m`[38;2;191;97;106m as a pure derivation (it's essentially a [38;2;163;190;140m`[38;2;163;190;140museMemo[38;2;163;190;140m`[38;2;191;97;106m over query data). Context providers can be tested through the hooks that consume them.[K
+[0m[48;2;40;67;43m[39m+     77[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+     78[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     79[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     80[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     81[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/parse.test.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     82[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The test imports and manipulates an internal export:[K
+[0m[48;2;40;67;43m[39m+     83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     84[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  import { parseLogFile, getLastEvent, _logCache } from "./parse";[K
+[0m[48;2;40;67;43m[39m+     85[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [K
+[0m[48;2;40;67;43m[39m+     86[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  beforeEach(() => {[K
+[0m[48;2;40;67;43m[39m+     87[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    vi.clearAllMocks();[K
+[0m[48;2;40;67;43m[39m+     88[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    _logCache.clear();[K
+[0m[48;2;40;67;43m[39m+     89[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  });[K
+[0m[48;2;40;67;43m[39m+     90[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     91[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140m_logCache[38;2;163;190;140m`[38;2;191;97;106m is exported from [38;2;163;190;140m`[38;2;163;190;140mparse.ts[38;2;163;190;140m`[38;2;191;97;106m with an underscore prefix (signaling it's internal), and the test reaches into it to reset cache state between tests. The source file exports it explicitly: [38;2;163;190;140m`[38;2;163;190;140mexport const _logCache = logCache;[38;2;163;190;140m`[38;2;191;97;106m. This couples the test to the internal caching implementation.[K
+[0m[48;2;40;67;43m[39m+     92[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: If the caching strategy changes (e.g., switching from [38;2;163;190;140m`[38;2;163;190;140mFileCache[38;2;163;190;140m`[38;2;191;97;106m to an LRU cache, or removing caching entirely), the test would break even though the public behavior is unchanged. The test is testing implementation, not behavior.[K
+[0m[48;2;40;67;43m[39m+     93[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Either expose a public [38;2;163;190;140m`[38;2;163;190;140mclearLogCache()[38;2;163;190;140m`[38;2;191;97;106m function for test use, or restructure the test to not depend on cache state (e.g., by using unique session IDs per test so cache hits don't occur).[K
+[0m[48;2;40;67;43m[39m+     94[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+     95[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     96[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     97[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     98[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/__tests__/webhook-simple.test.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mwebhook-advanced.test.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     99[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The webhook tests mock [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m (a pure function from [38;2;163;190;140m`[38;2;163;190;140mlog-parser[38;2;163;190;140m`[38;2;191;97;106m):[K
+[0m[48;2;40;67;43m[39m+    100[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    101[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // webhook-helpers.ts[K
+[0m[48;2;40;67;43m[39m+    102[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mock("../../log-parser", () => ({[K
+[0m[48;2;40;67;43m[39m+    103[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    parseLogFile: vi.fn(),[K
+[0m[48;2;40;67;43m[39m+    104[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    deriveActivity: vi.fn(),[K
+[0m[48;2;40;67;43m[39m+    105[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }));[K
+[0m[48;2;40;67;43m[39m+    106[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    107[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThen in [38;2;163;190;140m`[38;2;163;190;140msetupWebhookTests[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+    108[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    109[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  vi.mocked(deriveActivity).mockImplementation((name: string) => {[K
+[0m[48;2;40;67;43m[39m+    110[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    if (name === "agentSpawn") return "starting";[K
+[0m[48;2;40;67;43m[39m+    111[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    if (name === "stop") return "idle";[K
+[0m[48;2;40;67;43m[39m+    112[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    if (name === "preToolUse") return "running_tool";[K
+[0m[48;2;40;67;43m[39m+    113[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    return "processing";[K
+[0m[48;2;40;67;43m[39m+    114[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  });[K
+[0m[48;2;40;67;43m[39m+    115[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    116[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m is a pure function with no I/O — it maps event names to activity statuses. The mock reimplements the same logic. Mocking [38;2;163;190;140m`[38;2;163;190;140mparseLogFile[38;2;163;190;140m`[38;2;191;97;106m is legitimate (it does file I/O), but [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m should use the real implementation.[K
+[0m[48;2;40;67;43m[39m+    117[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: If [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m adds a new mapping (e.g., a new event type), the webhook tests would silently use stale mock behavior instead of catching the integration.[K
+[0m[48;2;40;67;43m[39m+    118[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Remove the [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m mock and use the real implementation. It's a pure function with no side effects.[K
+[0m[48;2;40;67;43m[39m+    119[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    120[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    121[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    122[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    123[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/[38;2;163;190;140m`[38;2;191;97;106m — 5 test files with duplicated [38;2;163;190;140m`[38;2;163;190;140mspawnResult[38;2;163;190;140m`[38;2;191;97;106m helper[K
+[0m[48;2;40;67;43m[39m+    124[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mspawnResult()[38;2;163;190;140m`[38;2;191;97;106m helper function is copy-pasted across 5 test files:[K
+[0m[48;2;40;67;43m[39m+    125[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mrun-validation/run-validation.test.ts[38;2;163;190;140m`[38;2;191;97;106m (line 29)[K
+[0m[48;2;40;67;43m[39m+    126[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mrun-validation/stop-trigger.test.ts[38;2;163;190;140m`[38;2;191;97;106m (line 25)[K
+[0m[48;2;40;67;43m[39m+    127[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mrun-validation/post-tool-use-trigger.test.ts[38;2;163;190;140m`[38;2;191;97;106m (line 20)[K
+[0m[48;2;40;67;43m[39m+    128[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mstop-hook/stop-hook.test.ts[38;2;163;190;140m`[38;2;191;97;106m (line 13)[K
+[0m[48;2;40;67;43m[39m+    129[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mcommands/commands.test.ts[38;2;163;190;140m`[38;2;191;97;106m (line 11)[K
+[0m[48;2;40;67;43m[39m+    130[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    131[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mSimilarly, [38;2;163;190;140m`[38;2;163;190;140mmakeGroups()[38;2;163;190;140m`[38;2;191;97;106m is duplicated in [38;2;163;190;140m`[38;2;163;190;140mrun-validation.test.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mstop-trigger.test.ts[38;2;163;190;140m`[38;2;191;97;106m. Each copy is identical:[K
+[0m[48;2;40;67;43m[39m+    132[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    133[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  function spawnResult(overrides: Partial<SpawnSyncReturns<string>> = {}): SpawnSyncReturns<string> {[K
+[0m[48;2;40;67;43m[39m+    134[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    return { pid: 1, output: [], stdout: "", stderr: "", status: 0, signal: null, error: undefined, ...overrides };[K
+[0m[48;2;40;67;43m[39m+    135[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    136[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    137[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: When the helper needs to change (e.g., adding a new default field), all 5 copies must be updated. This is a maintenance burden and a source of subtle inconsistencies.[K
+[0m[48;2;40;67;43m[39m+    138[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Extract [38;2;163;190;140m`[38;2;163;190;140mspawnResult[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mmakeGroups[38;2;163;190;140m`[38;2;191;97;106m into [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/__test-helpers__/spawn.ts[38;2;163;190;140m`[38;2;191;97;106m and import from there, following the existing [38;2;163;190;140m`[38;2;163;190;140m__test-helpers__[38;2;163;190;140m`[38;2;191;97;106m pattern.[K
+[0m[48;2;40;67;43m[39m+    139[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    140[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    141[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    142[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    143[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/context.test.ts[38;2;163;190;140m`[38;2;191;97;106m vs [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/test-helpers.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    144[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mcontext.test.ts[38;2;163;190;140m`[38;2;191;97;106m defines its own local [38;2;163;190;140m`[38;2;163;190;140mmakeEvent[38;2;163;190;140m`[38;2;191;97;106m function:[K
+[0m[48;2;40;67;43m[39m+    145[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    146[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  function makeEvent(name: string, extra: Record<string, unknown> = {}): HookEvent {[K
+[0m[48;2;40;67;43m[39m+    147[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    return { timestamp: "2026-01-01T00:00:00Z", event: { hook_event_name: name, cwd: "/tmp", ...extra } };[K
+[0m[48;2;40;67;43m[39m+    148[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    149[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    150[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis is nearly identical to the shared [38;2;163;190;140m`[38;2;163;190;140mmakeEvent[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mlog-parser/test-helpers.ts[38;2;163;190;140m`[38;2;191;97;106m (which uses [38;2;163;190;140m`[38;2;163;190;140mnew Date().toISOString()[38;2;163;190;140m`[38;2;191;97;106m instead of a fixed timestamp) and the one in [38;2;163;190;140m`[38;2;163;190;140mwebhook-helpers.ts[38;2;163;190;140m`[38;2;191;97;106m. Three separate [38;2;163;190;140m`[38;2;163;190;140mmakeEvent[38;2;163;190;140m`[38;2;191;97;106m implementations exist in the server package alone, plus one in [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/__test-helpers__/events.ts[38;2;163;190;140m`[38;2;191;97;106m and one in [38;2;163;190;140m`[38;2;163;190;140me2e/fixtures/seed.ts[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    151[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Minor inconsistency. The [38;2;163;190;140m`[38;2;163;190;140mcontext.test.ts[38;2;163;190;140m`[38;2;191;97;106m version uses a fixed timestamp while others use dynamic timestamps. This doesn't cause bugs but adds cognitive overhead when reading tests.[K
+[0m[48;2;40;67;43m[39m+    152[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Consolidate into a single [38;2;163;190;140m`[38;2;163;190;140mmakeEvent[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/fixtures/events.ts[38;2;163;190;140m`[38;2;191;97;106m with an optional timestamp parameter.[K
+[0m[48;2;40;67;43m[39m+    153[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    154[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    155[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    156[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    157[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: E2E test coverage gaps[K
+[0m[48;2;40;67;43m[39m+    158[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The 10 E2E spec files cover: smoke, navigation, sessions CRUD, config lifecycle, ghost mode, tray menu, window toggle, app lifecycle, mini mode, and seed utilities. Missing from E2E coverage:[K
+[0m[48;2;40;67;43m[39m+    159[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCherrypick[38;2;235;203;139m**[38;2;191;97;106m: No E2E test for the conversation pruning flow[K
+[0m[48;2;40;67;43m[39m+    160[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWebhooks[38;2;235;203;139m**[38;2;191;97;106m: No E2E test for webhook dispatch (would require a mock HTTP server)[K
+[0m[48;2;40;67;43m[39m+    161[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mValidation hooks[38;2;235;203;139m**[38;2;191;97;106m: No E2E test for the validation → inject cycle[K
+[0m[48;2;40;67;43m[39m+    162[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mOrphan management[38;2;235;203;139m**[38;2;191;97;106m: No E2E test for orphan assignment/deletion (only unit-tested via [38;2;163;190;140m`[38;2;163;190;140museOrphansPage.test.tsx[38;2;163;190;140m`[38;2;191;97;106m)[K
+[0m[48;2;40;67;43m[39m+    163[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSkill graph[38;2;235;203;139m**[38;2;191;97;106m: No E2E test for skill graph rendering or navigation[K
+[0m[48;2;40;67;43m[39m+    164[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The most complex user-facing features (cherrypick, validation hooks) are only tested at the unit level with mocked dependencies. The end-to-end integration of these features is unverified.[K
+[0m[48;2;40;67;43m[39m+    165[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Prioritize E2E coverage for the validation hook cycle (it involves shell scripts, file I/O, server notification, and UI rendering) since it spans the most packages.[K
+[0m[48;2;40;67;43m[39m+    166[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    167[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    168[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    169[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    170[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m — server entry point[K
+[0m[48;2;40;67;43m[39m+    171[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The server entry point (2598 bytes) orchestrates Fastify setup, route registration, static file serving, stale session cleanup, PID polling, keep-awake, and graceful shutdown. It has no unit test. The E2E tests exercise it indirectly by launching the full Electron app.[K
+[0m[48;2;40;67;43m[39m+    172[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The startup sequence, error handler registration, and shutdown logic are untested at the unit level. The error handler ([38;2;163;190;140m`[38;2;163;190;140mserver.setErrorHandler[38;2;163;190;140m`[38;2;191;97;106m) logs and formats errors — this behavior is not verified anywhere.[K
+[0m[48;2;40;67;43m[39m+    173[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: The entry point is mostly wiring code, so the lack of unit tests is acceptable if E2E covers the critical paths. However, the [38;2;163;190;140m`[38;2;163;190;140msetErrorHandler[38;2;163;190;140m`[38;2;191;97;106m callback could be extracted and unit-tested.[K
+[0m[48;2;40;67;43m[39m+    174[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    175[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    176[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    177[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    178[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Test organization inconsistency[K
+[0m[48;2;40;67;43m[39m+    179[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The codebase uses two patterns for test file placement:[K
+[0m[48;2;40;67;43m[39m+    180[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCo-located[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mparse.test.ts[38;2;163;190;140m`[38;2;191;97;106m next to [38;2;163;190;140m`[38;2;163;190;140mparse.ts[38;2;163;190;140m`[38;2;191;97;106m (used by most modules)[K
+[0m[48;2;40;67;43m[39m+    181[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;163;190;140m`[38;2;163;190;140m__tests__/[38;2;163;190;140m`[38;2;235;203;139m subdirectory[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mwebhook/__tests__/webhook-simple.test.ts[38;2;163;190;140m`[38;2;191;97;106m (used only by webhook)[K
+[0m[48;2;40;67;43m[39m+    182[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    183[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mMock infrastructure also varies:[K
+[0m[48;2;40;67;43m[39m+    184[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Server: [38;2;163;190;140m`[38;2;163;190;140msrc/__tests__/mocks/[38;2;163;190;140m`[38;2;191;97;106m (centralized)[K
+[0m[48;2;40;67;43m[39m+    185[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Hook-handler: [38;2;163;190;140m`[38;2;163;190;140msrc/__test-helpers__/[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140msrc/validate/__test-helpers__/[38;2;163;190;140m`[38;2;191;97;106m (nested)[K
+[0m[48;2;40;67;43m[39m+    186[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Client: [38;2;163;190;140m`[38;2;163;190;140m__tests__/mocks/[38;2;163;190;140m`[38;2;191;97;106m (root level) and [38;2;163;190;140m`[38;2;163;190;140msrc/__tests__/mocks/[38;2;163;190;140m`[38;2;191;97;106m (src level)[K
+[0m[48;2;40;67;43m[39m+    187[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    188[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mNaming conventions are consistent ([38;2;163;190;140m`[38;2;163;190;140m.test.ts[38;2;163;190;140m`[38;2;191;97;106m suffix), but the structural inconsistency adds friction when navigating the test infrastructure.[K
+[0m[48;2;40;67;43m[39m+    189[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: A developer looking for test helpers must check multiple locations. The webhook tests being in [38;2;163;190;140m`[38;2;163;190;140m__tests__/[38;2;163;190;140m`[38;2;191;97;106m while all other service tests are co-located is surprising.[K
+[0m[48;2;40;67;43m[39m+    190[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Standardize on co-located tests with a single [38;2;163;190;140m`[38;2;163;190;140m__test-helpers__/[38;2;163;190;140m`[38;2;191;97;106m directory per package for shared mock infrastructure.[K
+[0m[48;2;40;67;43m[39m+    191[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    192[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    193[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    194[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    195[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Client Cloudscape component mocks[K
+[0m[48;2;40;67;43m[39m+    196[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The client tests mock 8 Cloudscape Design System components in [38;2;163;190;140m`[38;2;163;190;140mclient/__tests__/mocks/[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+    197[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[K
+[0m[48;2;40;67;43m[39m+    198[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  cloudscape-table.tsx, cloudscape-tabs.tsx, cloudscape-header.tsx,[K
+[0m[48;2;40;67;43m[39m+    199[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  cloudscape-text-filter.tsx, cloudscape-passthrough.tsx,[K
+[0m[48;2;40;67;43m[39m+    200[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  cloudscape-expandable-section.tsx, cloudscape-button.tsx, cloudscape-flashbar.tsx[K
+[0m[48;2;40;67;43m[39m+    201[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    202[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mEach mock renders a simplified DOM structure. For example, [38;2;163;190;140m`[38;2;163;190;140mcloudscape-table.tsx[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+    203[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mtsx[K
+[0m[48;2;40;67;43m[39m+    204[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const Table = ({ items, columnDefinitions, empty, filter }: any) =>[K
+[0m[48;2;40;67;43m[39m+    205[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    React.createElement("div", {},[K
+[0m[48;2;40;67;43m[39m+    206[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      filter,[K
+[0m[48;2;40;67;43m[39m+    207[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      items?.length === 0 ? empty : null,[K
+[0m[48;2;40;67;43m[39m+    208[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      items?.map((item: any, i: number) =>[K
+[0m[48;2;40;67;43m[39m+    209[0m:[39m[48;2;24;38;30m [38;2;191;97;106m        React.createElement("div", { key: item.id ?? i },[K
+[0m[48;2;40;67;43m[39m+    210[0m:[39m[48;2;24;38;30m [38;2;191;97;106m          columnDefinitions?.map((col: any) =>[K
+[0m[48;2;40;67;43m[39m+    211[0m:[39m[48;2;24;38;30m [38;2;191;97;106m            React.createElement("span", { key: col.id }, col.cell(item))[K
+[0m[48;2;40;67;43m[39m+    212[0m:[39m[48;2;24;38;30m [38;2;191;97;106m          )[K
+[0m[48;2;40;67;43m[39m+    213[0m:[39m[48;2;24;38;30m [38;2;191;97;106m        )[K
+[0m[48;2;40;67;43m[39m+    214[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      )[K
+[0m[48;2;40;67;43m[39m+    215[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    );[K
+[0m[48;2;40;67;43m[39m+    216[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    217[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis is a reasonable approach — it avoids the overhead of the full Cloudscape library in tests while preserving the ability to test data flow and user interactions.[K
+[0m[48;2;40;67;43m[39m+    218[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The mocks are well-maintained and cover the components actually used in tests. The risk is that Cloudscape API changes could break production code while tests still pass against the mocks.[K
+[0m[48;2;40;67;43m[39m+    219[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: This is an acceptable trade-off. No change needed, but consider adding a comment in the mock directory explaining the rationale.[K
+[0m[48;2;40;67;43m[39m+    220[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    221[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    222[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    223[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    224[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/run-validation/[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/changed-files/[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/agent-tests/[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/scope/[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    225[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mrunStopTrigger[38;2;163;190;140m`[38;2;191;97;106m calls [38;2;163;190;140m`[38;2;163;190;140mextractChangedFiles[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mgroupFilesByConfig[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mresolveTestRunners[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mextractAgentTestedDirs[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mresolveTestDirs[38;2;163;190;140m`[38;2;191;97;106m in sequence. These modules share the [38;2;163;190;140m`[38;2;163;190;140mWeaverProjectConfig[38;2;163;190;140m`[38;2;191;97;106m type and the concept of "which files changed and what validation to run on them." The config module reads [38;2;163;190;140m`[38;2;163;190;140m.weaver.json[38;2;163;190;140m`[38;2;191;97;106m, the changed-files module reads git state, and the scope module resolves test directories — all feeding into the validation orchestrator.[K
+[0m[48;2;40;67;43m[39m+    226[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process (all pure functions or synchronous I/O within the same Node.js process)[K
+[0m[48;2;40;67;43m[39m+    227[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: The 4 mock declarations in [38;2;163;190;140m`[38;2;163;190;140mmock-validate-deps.ts[38;2;163;190;140m`[38;2;191;97;106m would be eliminated. The existing tests for individual modules ([38;2;163;190;140m`[38;2;163;190;140mchanged-files.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mscope.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfind-config.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtest-runners.test.ts[38;2;163;190;140m`[38;2;191;97;106m) would be replaced by boundary tests on [38;2;163;190;140m`[38;2;163;190;140mrunStopTrigger[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mrunPostToolUseTrigger[38;2;163;190;140m`[38;2;191;97;106m that use real implementations with a fixture filesystem. Only [38;2;163;190;140m`[38;2;163;190;140mspawnSync[38;2;163;190;140m`[38;2;191;97;106m (external process execution) and [38;2;163;190;140m`[38;2;163;190;140mnode:fs[38;2;163;190;140m`[38;2;191;97;106m (filesystem) would remain mocked.[K
+[0m[48;2;40;67;43m[39m+    228[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    229[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    230[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    231[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mpayload-simple.ts[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mpayload-advanced.ts[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mcontext.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    232[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m calls [38;2;163;190;140m`[38;2;163;190;140mreadConfig[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mparseLogFile[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mbuildPayloadForFormat[38;2;163;190;140m`[38;2;191;97;106m (which delegates to either [38;2;163;190;140m`[38;2;163;190;140mbuildSimpleWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mbuildWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m) → [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140mcontext.ts[38;2;163;190;140m`[38;2;191;97;106m module is called by both payload builders. All 5 files share the [38;2;163;190;140m`[38;2;163;190;140mHookEvent[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mSimpleWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m types.[K
+[0m[48;2;40;67;43m[39m+    233[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process for payload building and context extraction; Remote-but-owned for [38;2;163;190;140m`[38;2;163;190;140mdispatchWebhook[38;2;163;190;140m`[38;2;191;97;106m (HTTP POST to user-configured URL); Local-substitutable for [38;2;163;190;140m`[38;2;163;190;140mreadConfig[38;2;163;190;140m`[38;2;191;97;106m (filesystem) and [38;2;163;190;140m`[38;2;163;190;140mparseLogFile[38;2;163;190;140m`[38;2;191;97;106m (filesystem + cache)[K
+[0m[48;2;40;67;43m[39m+    234[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: The current test structure already tests through [38;2;163;190;140m`[38;2;163;190;140mhandleWebhookEvent[38;2;163;190;140m`[38;2;191;97;106m (the public interface), which is good. The [38;2;163;190;140m`[38;2;163;190;140mcontext.test.ts[38;2;163;190;140m`[38;2;191;97;106m tests pure logic independently, which is also good. The main improvement would be using the real [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m instead of mocking it, and potentially using the real [38;2;163;190;140m`[38;2;163;190;140mbuildSimpleWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140mbuildWebhookPayload[38;2;163;190;140m`[38;2;191;97;106m in the handler tests instead of verifying them separately.[K
+[0m[48;2;40;67;43m[39m+    235[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    236[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    237[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    238[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: 52[K
+[0m[48;2;40;67;43m[39m+    239[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: 12 (3 high, 4 medium, 5 low)[K
+[0m[48;2;40;67;43m[39m+    240[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: 2[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-04-test-quality.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.22 s
+[0m[?25l[0m[38;5;141m> [0mReport written to [38;5;10m/Users/thompsnt/Documents/weaver/audit-reports/20260327T155305/report-04-test-quality.md[0m. [0m[0m
+[0m[0m
+12 findings across 52 files examined. The three high-severity findings are:[0m[0m
+[0m[0m
+1. [1mhook-handler validation tests mock 4 internal sibling modules[22m — the integration seams between config resolution, file grouping, and validation execution are never tested together[0m[0m
+2. [1mServer route tests blanket-mock all 8 service modules[22m — route handlers are only tested at the HTTP contract level, never with real service logic[0m[0m
+3. [1mDesktop package has 8 source files and 0 tests[22m — no unit-level safety net for config, window management, or CLI installation logic[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m1.25 s
+[0m[38;5;8m
+ ▸ Credits: 13.76 • Time: 5m 54s
+
+[0m[1G[0m[0m[?25h

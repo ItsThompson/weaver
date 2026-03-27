@@ -1,0 +1,98 @@
+{
+  "$schema": "https://raw.githubusercontent.com/aws/amazon-q-developer-cli/refs/heads/main/schemas/agent-v1.json",
+  "name": "client-hooks-coverage",
+  "description": "client-hooks-coverage implementation agent for the Ralph Wiggum Loop. Executes one step per session.",
+  "prompt": "file://./client-hooks-coverage-prompt.md",
+  "tools": [
+    "fs_read",
+    "fs_write",
+    "execute_bash",
+    "grep",
+    "glob",
+    "code",
+    "thinking",
+    "web_fetch"
+  ],
+  "allowedTools": ["fs_read", "grep", "glob", "code", "thinking", "web_fetch"],
+  "toolsSettings": {
+    "fs_read": {
+      "allowedPaths": ["./**", "~/Desktop/client-hooks-coverage/**"]
+    },
+    "fs_write": {
+      "allowedPaths": [
+        "./client/src/hooks/useSessionEvents/**",
+        "./client/src/hooks/useNavigateOnView/**",
+        "./client/src/hooks/useWindowList/**",
+        "./client/src/hooks/useSessionNotifications/**",
+        "./client/src/context/ActivityLogContext/**",
+        "./client/src/context/NotificationContext/**",
+        "./client/src/context/WindowContext/**",
+        "./client/__tests__/**",
+        "./client/src/__tests__/helpers/**",
+        "~/Desktop/client-hooks-coverage/progress.md"
+      ]
+    },
+    "execute_bash": {
+      "allowedCommands": [
+        "npm install *",
+        "npm test *",
+        "npm run *",
+        "npx tsc *",
+        "npx vitest *",
+        "node *",
+        "turbo *",
+        "git add *",
+        "git commit *",
+        "git status *",
+        "git diff *",
+        "mkdir *",
+        "rm *",
+        "cat *",
+        "ls *"
+      ],
+      "autoAllowReadonly": true
+    }
+  },
+  "resources": [
+    "file:///Users/thompsnt/Desktop/client-hooks-coverage/current-step.md",
+    "file:///Users/thompsnt/Desktop/client-hooks-coverage/progress.md",
+    "file://README.md"
+  ],
+  "hooks": {
+    "agentSpawn": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log agent spawn event"
+      }
+    ],
+    "userPromptSubmit": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log user prompt submission"
+      }
+    ],
+    "preToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log pre-tool-use for all tools"
+      }
+    ],
+    "postToolUse": [
+      {
+        "matcher": "*",
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log post-tool-use for all tools",
+        "timeout_ms": 35000
+      }
+    ],
+    "stop": [
+      {
+        "command": "~/.config/amazonq/global/hooks/weaver-log.sh",
+        "description": "Weaver: log turn completion",
+        "timeout_ms": 165000
+      }
+    ]
+  },
+  "useLegacyMcpJson": false
+}
