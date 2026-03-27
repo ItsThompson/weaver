@@ -1,0 +1,40 @@
+export interface PendingTracker {
+  schedule(
+    sessionId: string,
+    delayMs: number,
+    callback: () => Promise<void>,
+  ): void;
+  cancel(sessionId: string): void;
+  stopAll(): void;
+}
+
+export function createPendingTracker(): PendingTracker {
+  const timers = new Map<string, NodeJS.Timeout>();
+  return {
+    schedule(sessionId, delayMs, callback) {
+      this.cancel(sessionId);
+      timers.set(
+        sessionId,
+        setTimeout(async () => {
+          timers.delete(sessionId);
+          try {
+            await callback();
+          } catch {
+            /* logged by caller */
+          }
+        }, delayMs),
+      );
+    },
+    cancel(sessionId) {
+      const timer = timers.get(sessionId);
+      if (timer) {
+        clearTimeout(timer);
+        timers.delete(sessionId);
+      }
+    },
+    stopAll() {
+      timers.forEach((timer) => clearTimeout(timer));
+      timers.clear();
+    },
+  };
+}

@@ -13,21 +13,10 @@ import { log } from "../../utils/logger";
 import { buildWebhookPayload } from "./payload-advanced";
 import { buildSimpleWebhookPayload } from "./payload-simple";
 import { dispatchWebhook } from "./dispatch";
+import { isWebhookEnabled } from "./session-tracker";
+import { createPendingTracker } from "./pending-tracker";
 
-const pendingTimers = new Map<string, NodeJS.Timeout>();
-const enabledSessions = new Set<string>();
-
-export function isWebhookEnabled(sessionId: string): boolean {
-  return enabledSessions.has(sessionId);
-}
-
-export function setWebhookEnabled(sessionId: string, enabled: boolean): void {
-  if (enabled) {
-    enabledSessions.add(sessionId);
-  } else {
-    enabledSessions.delete(sessionId);
-  }
-}
+const pendingTracker = createPendingTracker();
 
 function buildPayloadForFormat(
   format: WeaverConfig["webhook_format"],
@@ -65,7 +54,7 @@ export async function handleWebhookEvent(
   if (!config.webhook_url) {
     return;
   }
-  if (!enabledSessions.has(sessionId)) {
+  if (!isWebhookEnabled(sessionId)) {
     return;
   }
 
@@ -83,50 +72,30 @@ export async function handleWebhookEvent(
   dispatchWebhook(config.webhook_url, payload);
 
   if (eventName === "postToolUse" || eventName === "stop") {
-    clearPendingTimer(sessionId);
+    pendingTracker.cancel(sessionId);
   } else if (eventName === "preToolUse") {
-    clearPendingTimer(sessionId);
-    pendingTimers.set(
+    pendingTracker.schedule(
       sessionId,
-      setTimeout(async () => {
-        pendingTimers.delete(sessionId);
-        try {
-          const { config: freshConfig } = await readConfig();
-          if (!freshConfig.webhook_url) {
-            return;
-          }
-          const freshEvents = await parseLogFile(sessionId);
-          const pendingPayload = buildPayloadForFormat(
-            freshConfig.webhook_format,
-            sessionId,
-            eventName,
-            "pending_approval",
-            sessionName,
-            session,
-            freshEvents,
-          );
-          dispatchWebhook(freshConfig.webhook_url, pendingPayload);
-        } catch (err) {
-          log({
-            timestamp: new Date().toISOString(),
-            event: "webhook_pending_error",
-            error: String(err),
-          });
+      PENDING_APPROVAL_THRESHOLD_MS,
+      async () => {
+        const { config: freshConfig } = await readConfig();
+        if (!freshConfig.webhook_url) {
+          return;
         }
-      }, PENDING_APPROVAL_THRESHOLD_MS),
+        const freshEvents = await parseLogFile(sessionId);
+        const pendingPayload = buildPayloadForFormat(
+          freshConfig.webhook_format,
+          sessionId,
+          eventName,
+          "pending_approval",
+          sessionName,
+          session,
+          freshEvents,
+        );
+        dispatchWebhook(freshConfig.webhook_url, pendingPayload);
+      },
     );
   }
 }
 
-function clearPendingTimer(sessionId: string): void {
-  const timer = pendingTimers.get(sessionId);
-  if (timer) {
-    clearTimeout(timer);
-    pendingTimers.delete(sessionId);
-  }
-}
-
-export function stopWebhookTimers(): void {
-  pendingTimers.forEach((timer) => clearTimeout(timer));
-  pendingTimers.clear();
-}
+export const stopWebhookTimers = () => pendingTracker.stopAll();

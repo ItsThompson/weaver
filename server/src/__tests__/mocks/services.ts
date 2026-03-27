@@ -45,7 +45,7 @@ vi.mock("../../services/event-bus", () => ({
 }));
 
 vi.mock("../../services/webhook/index", () => ({
-  handleWebhookEvent: vi.fn(),
+  handleWebhookEvent: vi.fn().mockResolvedValue(undefined),
   isWebhookEnabled: vi.fn().mockReturnValue(false),
   setWebhookEnabled: vi.fn(),
   stopWebhookTimers: vi.fn(),

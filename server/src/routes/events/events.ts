@@ -3,6 +3,7 @@ import type { HookEventName } from "@weaver/shared/types";
 import { broadcast, emit, sseReply } from "../../services/event-bus";
 import { readSessions } from "../../services/storage/index";
 import { handleWebhookEvent } from "../../services/webhook/index";
+import { log } from "../../utils/logger";
 
 export function registerEventRoutes(server: FastifyInstance): void {
   // Body type uses HookEventName for developer-time safety; Fastify does not
@@ -24,7 +25,15 @@ export function registerEventRoutes(server: FastifyInstance): void {
         sessionId.slice(0, 8);
 
       broadcast(sessionId, eventName, sessionName);
-      handleWebhookEvent(sessionId, eventName, sessionName, session);
+      // Fire-and-forget: webhook delivery should not block the response
+      handleWebhookEvent(sessionId, eventName, sessionName, session).catch(
+        (err) =>
+          log({
+            timestamp: new Date().toISOString(),
+            event: "webhook_fire_and_forget_error",
+            error: String(err),
+          }),
+      );
       return { ok: true };
     },
   );
