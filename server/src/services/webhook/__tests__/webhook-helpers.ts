@@ -65,6 +65,5 @@ export function setupWebhookTests(
 
   afterEach(() => {
     vi.useRealTimers();
-    webhook.stopWebhookTimers();
   });
 }

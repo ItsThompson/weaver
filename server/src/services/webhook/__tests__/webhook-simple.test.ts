@@ -112,7 +112,10 @@ describe("buildSimpleWebhookPayload", () => {
 describe("dispatchWebhook", () => {
   it("sends POST with correct headers and body", async () => {
     const payload = { text: "test" };
-    await webhook.dispatchWebhook("https://hooks.example.com", payload);
+    const result = await webhook.dispatchWebhook(
+      "https://hooks.example.com",
+      payload,
+    );
     expect(mockFetch).toHaveBeenCalledWith(
       "https://hooks.example.com",
       expect.objectContaining({
@@ -121,16 +124,19 @@ describe("dispatchWebhook", () => {
         body: JSON.stringify(payload),
       }),
     );
+    expect(result.ok).toBe(true);
   });
 
   it("logs and swallows fetch errors", async () => {
     mockFetch.mockRejectedValue(new Error("network down"));
-    await webhook.dispatchWebhook("https://hooks.example.com", {
+    const result = await webhook.dispatchWebhook("https://hooks.example.com", {
       text: "test",
     });
     expect(vi.mocked(log)).toHaveBeenCalledWith(
       expect.objectContaining({ event: "webhook_error" }),
     );
+    expect(result.ok).toBe(false);
+    expect(result.error).toContain("network down");
   });
 });
 
