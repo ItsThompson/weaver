@@ -1,6 +1,6 @@
 import type { ActivityStatus, HookEventName } from "@weaver/shared/types";
 
-const ACTIVITY_LABELS: Record<string, string> = {
+const ACTIVITY_LABELS: Record<ActivityStatus, string> = {
   starting: "Starting",
   idle: "Idle",
   processing: "Processing",

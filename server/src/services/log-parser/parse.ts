@@ -25,6 +25,7 @@ export async function getLastEvent(
   sessionId: string,
 ): Promise<LastEvent | null> {
   const events = await parseLogFile(sessionId);
+  // hook_event_name may be absent at runtime despite the type (unvalidated JSON parse)
   const last = events.findLast((event) => event.event.hook_event_name);
   return last
     ? { name: last.event.hook_event_name, timestamp: last.timestamp }

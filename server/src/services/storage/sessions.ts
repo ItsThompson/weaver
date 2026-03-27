@@ -1,6 +1,6 @@
 import { mkdir, writeFile, appendFile } from "node:fs/promises";
 import type { Session } from "@weaver/shared/types";
-import { weaverDir, logsDir, sessionsFile } from "@weaver/shared/paths";
+import { weaverDir, logsDir, sessionsPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { FileCache, parseJsonlFile } from "../file-cache/index";
 
@@ -22,7 +22,7 @@ export async function ensureDataDir(): Promise<void> {
 }
 
 export async function readSessions(): Promise<Session[]> {
-  const filePath = sessionsFile();
+  const filePath = sessionsPath();
   return sessionCache.get(filePath, () =>
     parseJsonlFile<Session>(filePath, (line) =>
       log({
@@ -35,13 +35,13 @@ export async function readSessions(): Promise<Session[]> {
 }
 
 export async function appendSession(session: Session): Promise<void> {
-  await appendFile(sessionsFile(), JSON.stringify(session) + "\n", "utf-8");
-  sessionCache.invalidate(sessionsFile());
+  await appendFile(sessionsPath(), JSON.stringify(session) + "\n", "utf-8");
+  sessionCache.invalidate(sessionsPath());
 }
 
 export async function writeSessions(sessions: Session[]): Promise<void> {
   const content =
     sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
-  await writeFile(sessionsFile(), content, "utf-8");
-  sessionCache.invalidate(sessionsFile());
+  await writeFile(sessionsPath(), content, "utf-8");
+  sessionCache.invalidate(sessionsPath());
 }

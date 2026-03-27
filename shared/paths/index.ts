@@ -2,7 +2,7 @@ export {
   weaverDir,
   logsDir,
   configPath,
-  sessionsFile,
+  sessionsPath,
   sessionLogPath,
   pendingPath,
   sessionMarkerPath,
