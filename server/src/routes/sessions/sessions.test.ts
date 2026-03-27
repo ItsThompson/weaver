@@ -2,15 +2,15 @@ import "../../__tests__/mocks/services";
 
 import { SESSION_A, SESSION_B } from "../../__tests__/fixtures/sessions";
 import {
+  MULTI_TURN_EVENTS,
+  SKILL_READ_EVENTS,
+} from "../../__tests__/fixtures/events";
+import {
   readSessions,
   writeSessions,
   isProcessRunning,
 } from "../../services/storage/index";
-import {
-  parseLogFile,
-  groupEventsByTurn,
-  extractActiveSkillPaths,
-} from "../../services/log-parser/index";
+import { parseLogFile, getLastEvent } from "../../services/log-parser/index";
 import { resolveConfiguredSkills } from "../../services/skill-resolver/index";
 import { broadcast } from "../../services/event-bus";
 import Fastify from "fastify";
@@ -42,14 +42,27 @@ describe("GET /api/sessions", () => {
     expect(body[1].id).toBe("bbb");
     expect(body[1].status).toBe("closed");
   });
+
+  it("derives activity from getLastEvent for open sessions", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    vi.mocked(isProcessRunning).mockReturnValue(true);
+    vi.mocked(getLastEvent).mockResolvedValue({
+      name: "preToolUse",
+      timestamp: new Date().toISOString(),
+    });
+
+    const res = await server.inject({ method: "GET", url: "/api/sessions" });
+    const body = JSON.parse(res.body);
+
+    expect(body[0].activity).toBe("running_tool");
+  });
 });
 
 describe("GET /api/sessions/:id", () => {
-  it("returns session with turns", async () => {
+  it("returns grouped turns from real events", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
     vi.mocked(isProcessRunning).mockReturnValue(false);
-    vi.mocked(parseLogFile).mockResolvedValue([]);
-    vi.mocked(groupEventsByTurn).mockReturnValue([]);
+    vi.mocked(parseLogFile).mockResolvedValue(MULTI_TURN_EVENTS);
 
     const res = await server.inject({
       method: "GET",
@@ -60,19 +73,22 @@ describe("GET /api/sessions/:id", () => {
     expect(res.statusCode).toBe(200);
     expect(body.session.id).toBe("aaa");
     expect(body.session.status).toBe("closed");
-    expect(body.turns).toEqual([]);
-    expect(body.activeSkills).toEqual([]);
-    expect(body.configuredSkills).toEqual([]);
+    expect(body.turns).toHaveLength(3);
+    // Turn 0: agentSpawn marker
+    expect(body.turns[0].userPrompt).toBeNull();
+    expect(body.turns[0].toolCalls).toHaveLength(0);
+    // Turn 1: stop-only flush
+    expect(body.turns[1].userPrompt).toBeNull();
+    // Turn 2: user prompt with tool call
+    expect(body.turns[2].userPrompt).toBe("read the file");
+    expect(body.turns[2].toolCalls).toHaveLength(1);
+    expect(body.turns[2].toolCalls[0].toolName).toBe("fs_read");
   });
 
-  it("includes activeSkills and configuredSkills in response", async () => {
+  it("returns active skills from real events", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
     vi.mocked(isProcessRunning).mockReturnValue(false);
-    vi.mocked(parseLogFile).mockResolvedValue([]);
-    vi.mocked(groupEventsByTurn).mockReturnValue([]);
-    vi.mocked(extractActiveSkillPaths).mockReturnValue([
-      "/home/.kiro/skills/coding-practices/SKILL.md",
-    ]);
+    vi.mocked(parseLogFile).mockResolvedValue(SKILL_READ_EVENTS);
     vi.mocked(resolveConfiguredSkills).mockResolvedValue([
       "coding-practices",
       "testing",
@@ -86,6 +102,22 @@ describe("GET /api/sessions/:id", () => {
 
     expect(body.activeSkills).toEqual(["coding-practices"]);
     expect(body.configuredSkills).toEqual(["coding-practices", "testing"]);
+  });
+
+  it("returns empty turns and skills for empty session", async () => {
+    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+    vi.mocked(isProcessRunning).mockReturnValue(false);
+    vi.mocked(parseLogFile).mockResolvedValue([]);
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/sessions/aaa",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.turns).toEqual([]);
+    expect(body.activeSkills).toEqual([]);
   });
 
   it("returns 404 for unknown session", async () => {

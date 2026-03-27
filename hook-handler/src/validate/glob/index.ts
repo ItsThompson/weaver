@@ -1,1 +1,0 @@
-export { matchesExtensionGlob } from "./glob";

@@ -1,7 +1,7 @@
 import { realpathSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import type { StopValidationHook } from "@weaver/shared/types";
-import { isWithinDir } from "../path-utils";
+import { isWithinDir } from "../session-analysis";
 
 export function resolveTestDirs(
   changedFiles: string[],

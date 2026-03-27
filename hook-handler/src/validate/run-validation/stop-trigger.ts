@@ -1,14 +1,16 @@
 import { relative, resolve } from "node:path";
 import { groupFilesByConfig, resolveTestRunners } from "../../config/index";
-import { extractChangedFiles } from "../../changed-files/index";
-import { extractAgentTestedDirs } from "../../agent-tests/index";
+import {
+  extractChangedFiles,
+  extractAgentTestedDirs,
+  isWithinDir,
+} from "../../session-analysis";
 import { runStopHook } from "../stop-hook";
 import { writeValidationEvent } from "../logging";
 import { handleExitLogic } from "../exit";
 import type { ValidateResult } from "../exit";
 import type { ValidationResult } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
-import { isWithinDir } from "../../path-utils";
 
 export function runStopTrigger(
   args: ValidateArgs,

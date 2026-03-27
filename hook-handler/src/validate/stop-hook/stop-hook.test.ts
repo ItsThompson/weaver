@@ -1,29 +1,17 @@
 import "../../__test-helpers__/mock-child-process";
-import "../__test-helpers__/mock-validate-deps";
 
-import type { SpawnSyncReturns } from "node:child_process";
+vi.mock("../../scope/index", () => ({
+  resolveTestDirs: vi.fn<() => string[]>(),
+}));
+
 import { spawnSync } from "node:child_process";
 import { resolveTestDirs } from "../../scope/index";
+import { spawnResult } from "../../__test-helpers__/spawn";
 import { runStopHook } from "./stop-hook";
 
 beforeEach(() => {
   vi.clearAllMocks();
 });
-
-function spawnResult(
-  overrides: Partial<SpawnSyncReturns<string>> = {},
-): SpawnSyncReturns<string> {
-  return {
-    pid: 1,
-    output: [],
-    stdout: "",
-    stderr: "",
-    status: 0,
-    signal: null,
-    error: undefined,
-    ...overrides,
-  } as SpawnSyncReturns<string>;
-}
 
 describe("runStopHook", () => {
   it("substitutes {{files}} correctly", () => {

@@ -1,8 +1,8 @@
-import "../__test-helpers__/mock-fs";
+import "../../__test-helpers__/mock-fs";
 
 import { existsSync, readFileSync } from "node:fs";
-import { makeEvent } from "../__test-helpers__/index";
-import { extractAgentTestedDirs } from "./agent-tests";
+import { makeEvent } from "../../__test-helpers__/index";
+import { extractAgentTestedDirs } from "../session-analysis";
 
 const DEFAULT_RUNNERS = [
   "jest",

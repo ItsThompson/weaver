@@ -1,4 +1,4 @@
-import "../../__test-helpers__/mock-fs";
+import "../__test-helpers__/mock-fs";
 
 import { appendFileSync, mkdirSync } from "node:fs";
 import { writeValidationEvent } from "./logging";

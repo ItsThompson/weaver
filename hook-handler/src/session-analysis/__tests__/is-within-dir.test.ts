@@ -1,4 +1,4 @@
-import { isWithinDir } from "./path-utils";
+import { isWithinDir } from "../session-analysis";
 
 describe("isWithinDir", () => {
   it.each([

@@ -9,16 +9,16 @@ vi.mock("../../services/storage/index", () => ({
   cleanStaleSessions: vi.fn(),
 }));
 
-vi.mock("../../services/log-parser/index", () => ({
-  parseLogFile: vi.fn(),
-  groupEventsByTurn: vi.fn(),
-  matchToolCalls: vi.fn().mockReturnValue([]),
-  getLastEvent: vi
-    .fn<() => Promise<{ name: string; timestamp: string } | null>>()
-    .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
-  deriveActivity: vi.fn().mockReturnValue("idle"),
-  extractActiveSkillPaths: vi.fn().mockReturnValue([]),
-}));
+vi.mock("../../services/log-parser/index", async () => {
+  const actual = await vi.importActual("../../services/log-parser/index");
+  return {
+    ...actual,
+    parseLogFile: vi.fn(),
+    getLastEvent: vi
+      .fn<() => Promise<{ name: string; timestamp: string } | null>>()
+      .mockResolvedValue({ name: "stop", timestamp: new Date().toISOString() }),
+  };
+});
 
 vi.mock("../../services/orphan-storage/index", () => ({
   readOrphanEvents: vi.fn().mockResolvedValue([]),
@@ -45,7 +45,7 @@ vi.mock("../../services/event-bus", () => ({
 }));
 
 vi.mock("../../services/webhook/index", () => ({
-  handleWebhookEvent: vi.fn(),
+  handleWebhookEvent: vi.fn().mockResolvedValue(undefined),
   isWebhookEnabled: vi.fn().mockReturnValue(false),
   setWebhookEnabled: vi.fn(),
   stopWebhookTimers: vi.fn(),

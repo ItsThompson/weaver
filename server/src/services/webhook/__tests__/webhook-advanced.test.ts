@@ -8,15 +8,9 @@ import {
 
 import * as webhook from "../index";
 import { readConfig } from "../../config";
-import { parseLogFile, deriveActivity } from "../../log-parser";
+import { parseLogFile } from "../../log-parser";
 
-setupWebhookTests(
-  webhook,
-  readConfig,
-  parseLogFile,
-  deriveActivity,
-  "advanced",
-);
+setupWebhookTests(webhook, readConfig, parseLogFile, "advanced");
 
 describe("buildWebhookPayload (advanced)", () => {
   it("returns null fields for agentSpawn", () => {

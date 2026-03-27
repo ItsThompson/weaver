@@ -1,4 +1,4 @@
-import "../../__test-helpers__/mock-fs";
+import "../__test-helpers__/mock-fs";
 
 import { writeFileSync } from "node:fs";
 import { handleExitLogic } from "./exit";
