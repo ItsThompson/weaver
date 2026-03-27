@@ -1,4 +1,5 @@
 import {
+  FIELD_VALIDATORS,
   validatePageSize,
   validateGhostOpacity,
   validateWebhookUrl,
@@ -230,6 +231,75 @@ describe("validateSkillPaths", () => {
   it("rejects array with non-string elements", () => {
     expect(validateSkillPaths(["/path/a", 123])).toEqual({
       warning: "skill_paths must contain only strings",
+    });
+  });
+});
+
+describe("FIELD_VALIDATORS boolean fields", () => {
+  it.each(["dark_mode", "ghost_mode", "enable_notification_sounds"])(
+    "%s accepts true",
+    (field) => {
+      expect(FIELD_VALIDATORS[field](true)).toEqual({ value: true });
+    },
+  );
+
+  it.each(["dark_mode", "ghost_mode", "enable_notification_sounds"])(
+    "%s accepts false",
+    (field) => {
+      expect(FIELD_VALIDATORS[field](false)).toEqual({ value: false });
+    },
+  );
+
+  it.each(["yes", 1, null, undefined, []])(
+    "rejects non-boolean: %p",
+    (input) => {
+      expect(FIELD_VALIDATORS.dark_mode(input)).toEqual({
+        warning: "dark_mode must be a boolean",
+      });
+    },
+  );
+
+  it("includes field name in warning", () => {
+    expect(FIELD_VALIDATORS.enable_notification_sounds("yes")).toEqual({
+      warning: "enable_notification_sounds must be a boolean",
+    });
+  });
+});
+
+describe("FIELD_VALIDATORS display options", () => {
+  it("open_display_options accepts valid options", () => {
+    expect(FIELD_VALIDATORS.open_display_options(["pid", "activity"])).toEqual({
+      value: ["pid", "activity"],
+    });
+  });
+
+  it("close_display_options accepts valid options", () => {
+    expect(
+      FIELD_VALIDATORS.close_display_options(["customName", "cwd"]),
+    ).toEqual({ value: ["customName", "cwd"] });
+  });
+
+  it("accepts empty array", () => {
+    expect(FIELD_VALIDATORS.open_display_options([])).toEqual({ value: [] });
+  });
+
+  it("rejects non-array", () => {
+    expect(FIELD_VALIDATORS.open_display_options("pid")).toEqual({
+      warning: "open_display_options must be an array of strings",
+    });
+  });
+
+  it("rejects array with non-string elements", () => {
+    expect(FIELD_VALIDATORS.close_display_options(["customName", 123])).toEqual(
+      { warning: "close_display_options must contain only strings" },
+    );
+  });
+
+  it("rejects invalid option values", () => {
+    expect(
+      FIELD_VALIDATORS.open_display_options(["pid", "invalid", "fake"]),
+    ).toEqual({
+      warning: "open_display_options contains invalid options: invalid, fake",
     });
   });
 });

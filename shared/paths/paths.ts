@@ -12,7 +12,7 @@ export const pendingPath = (sessionId: string) =>
 export const sessionMarkerPath = (pid: number) =>
   join(weaverDir(), `.current-session-${pid}`);
 export const orphanPath = () => join(logsDir(), "orphan.jsonl");
-export const globalSkillsPath = () => join(homedir(), ".kiro", "skills");
+export const globalSkillsPath = () => join(globalKiroDir(), "skills");
 export const globalKiroDir = () => join(homedir(), ".kiro");
 
 export function expandHome(filePath: string): string {

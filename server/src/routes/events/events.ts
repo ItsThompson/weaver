@@ -5,6 +5,8 @@ import { readSessions } from "../../services/storage/index";
 import { handleWebhookEvent } from "../../services/webhook/index";
 
 export function registerEventRoutes(server: FastifyInstance): void {
+  // Body type uses HookEventName for developer-time safety; Fastify does not
+  // validate the incoming JSON against the union at runtime.
   server.post<{ Body: { sessionId: string; eventName?: HookEventName } }>(
     "/api/notify",
     async (request, reply) => {
