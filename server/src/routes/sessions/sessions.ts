@@ -27,6 +27,8 @@ import {
   safeConfiguredSkills,
 } from "./helpers";
 import { registerDeleteRoute } from "./delete";
+import { patchSessionBody, renameBody, webhookToggleBody } from "../schemas";
+import { zodBody } from "../schema-utils";
 
 export function registerSessionRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SessionWithStatus[] }>("/api/sessions", async () => {
@@ -87,37 +89,30 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     Params: { id: string };
     Body: { customName: string };
     Reply: Session | ApiError;
-  }>("/api/sessions/:id", async (request, reply) => {
-    const { id } = request.params;
-    const { customName } = request.body ?? {};
+  }>(
+    "/api/sessions/:id",
+    { schema: zodBody(patchSessionBody) },
+    async (request, reply) => {
+      const { id } = request.params;
+      const { customName } = request.body;
 
-    if (typeof customName !== "string") {
-      return reply.status(400).send({ error: "customName must be a string" });
-    }
+      const sessions = await readSessions();
+      const index = sessions.findIndex((s) => s.id === id);
+      if (index === -1) {
+        return reply.status(404).send({ error: "Session not found" });
+      }
 
-    const sessions = await readSessions();
-    const index = sessions.findIndex((s) => s.id === id);
-    if (index === -1) {
-      return reply.status(404).send({ error: "Session not found" });
-    }
-
-    sessions[index].customName = customName;
-    await writeSessions(sessions);
-    return sessions[index];
-  });
+      sessions[index].customName = customName;
+      await writeSessions(sessions);
+      return sessions[index];
+    },
+  );
 
   server.post<{
     Body: { pid: number; customName: string };
     Reply: Session | ApiError;
-  }>("/api/rename", async (request, reply) => {
-    const { pid, customName } = request.body ?? {};
-
-    if (typeof pid !== "number") {
-      return reply.status(400).send({ error: "pid required" });
-    }
-    if (typeof customName !== "string") {
-      return reply.status(400).send({ error: "customName required" });
-    }
+  }>("/api/rename", { schema: zodBody(renameBody) }, async (request, reply) => {
+    const { pid, customName } = request.body;
 
     const sessions = await readSessions();
     const index = sessions.findLastIndex((s) => s.pid === pid);
@@ -135,21 +130,22 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     Params: { id: string };
     Body: { enabled: boolean };
     Reply: { ok: true; enabled: boolean } | ApiError;
-  }>("/api/sessions/:id/webhook", async (request, reply) => {
-    const { id } = request.params;
-    const { enabled } = request.body ?? {};
-    if (typeof enabled !== "boolean") {
-      return reply.status(400).send({ error: "enabled must be a boolean" });
-    }
+  }>(
+    "/api/sessions/:id/webhook",
+    { schema: zodBody(webhookToggleBody) },
+    async (request, reply) => {
+      const { id } = request.params;
+      const { enabled } = request.body;
 
-    const sessions = await readSessions();
-    if (!sessions.some((s) => s.id === id)) {
-      return reply.status(404).send({ error: "Session not found" });
-    }
+      const sessions = await readSessions();
+      if (!sessions.some((s) => s.id === id)) {
+        return reply.status(404).send({ error: "Session not found" });
+      }
 
-    setWebhookEnabled(id, enabled);
-    return { ok: true as const, enabled };
-  });
+      setWebhookEnabled(id, enabled);
+      return { ok: true as const, enabled };
+    },
+  );
 
   registerDeleteRoute(server);
 }
