@@ -24,6 +24,7 @@ describe("deleteOrphanEvents", () => {
     expect(vi.mocked(writeFile)).toHaveBeenCalledWith(
       expect.stringContaining("orphan.jsonl"),
       expect.stringContaining('"pid":200'),
+      "utf-8",
     );
   });
 

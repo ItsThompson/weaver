@@ -8,6 +8,8 @@ import {
   deleteOrphanEvents,
   NotFoundError,
 } from "../../services/orphan-storage/index";
+import { assignOrphansBody } from "../schemas";
+import { zodBody } from "../schema-utils";
 
 export function registerOrphanRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { groups: OrphanGroup[] } }>("/api/orphans", async () => {
@@ -23,41 +25,40 @@ export function registerOrphanRoutes(server: FastifyInstance): void {
   server.post<{
     Body: { targetSessionId: string; pid: number };
     Reply: { ok: true } | ApiError;
-  }>("/api/orphans/assign", async (request, reply) => {
-    const { targetSessionId, pid } = request.body ?? {};
-    if (!targetSessionId || typeof pid !== "number") {
-      return reply
-        .status(400)
-        .send({ error: "targetSessionId and pid are required" });
-    }
+  }>(
+    "/api/orphans/assign",
+    { schema: zodBody(assignOrphansBody) },
+    async (request, reply) => {
+      const { targetSessionId, pid } = request.body;
 
-    const sessions = await readSessions();
-    const targetSession = sessions.find((s) => s.id === targetSessionId);
-    if (!targetSession) {
-      return reply.status(404).send({ error: "Target session not found" });
-    }
-
-    try {
-      await assignOrphanEvents(targetSessionId, pid);
-    } catch (e) {
-      if (e instanceof NotFoundError) {
-        return reply.status(404).send({ error: e.message });
+      const sessions = await readSessions();
+      const targetSession = sessions.find((s) => s.id === targetSessionId);
+      if (!targetSession) {
+        return reply.status(404).send({ error: "Target session not found" });
       }
-      throw e;
-    }
 
-    // Update the session's PID to the orphan group's PID since it's the current process
-    if (pid !== 0 && targetSession.pid !== pid) {
-      const allSessions = await readSessions();
-      const idx = allSessions.findIndex((s) => s.id === targetSessionId);
-      if (idx !== -1) {
-        allSessions[idx].pid = pid;
-        await writeSessions(allSessions);
+      try {
+        await assignOrphanEvents(targetSessionId, pid);
+      } catch (e) {
+        if (e instanceof NotFoundError) {
+          return reply.status(404).send({ error: e.message });
+        }
+        throw e;
       }
-    }
 
-    return { ok: true };
-  });
+      // Update the session's PID to the orphan group's PID since it's the current process
+      if (pid !== 0 && targetSession.pid !== pid) {
+        const allSessions = await readSessions();
+        const idx = allSessions.findIndex((s) => s.id === targetSessionId);
+        if (idx !== -1) {
+          allSessions[idx].pid = pid;
+          await writeSessions(allSessions);
+        }
+      }
+
+      return { ok: true };
+    },
+  );
 
   server.delete<{ Params: { pid: string }; Reply: { ok: true } | ApiError }>(
     "/api/orphans/:pid",

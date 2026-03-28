@@ -1,47 +1,72 @@
-import { mkdir, writeFile, appendFile } from "node:fs/promises";
+import { mkdir, appendFile } from "node:fs/promises";
+import { atomicWriteFile } from "../../utils/atomic-write";
 import type { Session } from "@weaver/shared/types";
 import { weaverDir, logsDir, sessionsPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { FileCache, parseJsonlFile } from "../file-cache/index";
 
-const sessionCache = new FileCache<Session[]>();
-export const _sessionCache = sessionCache;
-
-export async function ensureDataDir(): Promise<void> {
-  try {
-    await mkdir(weaverDir(), { recursive: true });
-    await mkdir(logsDir(), { recursive: true });
-  } catch (err) {
-    log({
-      timestamp: new Date().toISOString(),
-      event: "ensure_data_dir_failed",
-      error: String(err),
-    });
-    throw err;
-  }
+export interface SessionStore {
+  ensureDataDir(): Promise<void>;
+  readSessions(): Promise<Session[]>;
+  appendSession(session: Session): Promise<void>;
+  writeSessions(sessions: Session[]): Promise<void>;
+  _sessionCache: FileCache<Session[]>;
 }
 
-export async function readSessions(): Promise<Session[]> {
-  const filePath = sessionsPath();
-  return sessionCache.get(filePath, () =>
-    parseJsonlFile<Session>(filePath, (line) =>
-      log({
-        timestamp: new Date().toISOString(),
-        event: "malformed_session_line",
-        line,
-      }),
-    ),
-  );
+export function createSessionStore(): SessionStore {
+  const sessionCache = new FileCache<Session[]>();
+
+  const store: SessionStore = {
+    _sessionCache: sessionCache,
+
+    async ensureDataDir(): Promise<void> {
+      try {
+        await mkdir(weaverDir(), { recursive: true });
+        await mkdir(logsDir(), { recursive: true });
+      } catch (err) {
+        log({
+          timestamp: new Date().toISOString(),
+          event: "ensure_data_dir_failed",
+          error: String(err),
+        });
+        throw err;
+      }
+    },
+
+    async readSessions(): Promise<Session[]> {
+      const filePath = sessionsPath();
+      return sessionCache.get(filePath, () =>
+        parseJsonlFile<Session>(filePath, (line) =>
+          log({
+            timestamp: new Date().toISOString(),
+            event: "malformed_session_line",
+            line,
+          }),
+        ),
+      );
+    },
+
+    async appendSession(session: Session): Promise<void> {
+      await appendFile(sessionsPath(), JSON.stringify(session) + "\n", "utf-8");
+      sessionCache.invalidate(sessionsPath());
+    },
+
+    async writeSessions(sessions: Session[]): Promise<void> {
+      const content =
+        sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
+      await atomicWriteFile(sessionsPath(), content);
+      sessionCache.invalidate(sessionsPath());
+    },
+  };
+
+  return store;
 }
 
-export async function appendSession(session: Session): Promise<void> {
-  await appendFile(sessionsPath(), JSON.stringify(session) + "\n", "utf-8");
-  sessionCache.invalidate(sessionsPath());
-}
-
-export async function writeSessions(sessions: Session[]): Promise<void> {
-  const content =
-    sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
-  await writeFile(sessionsPath(), content, "utf-8");
-  sessionCache.invalidate(sessionsPath());
-}
+const defaultStore = createSessionStore();
+export const {
+  ensureDataDir,
+  readSessions,
+  appendSession,
+  writeSessions,
+  _sessionCache,
+} = defaultStore;

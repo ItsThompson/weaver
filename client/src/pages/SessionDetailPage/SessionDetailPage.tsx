@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Box from "@cloudscape-design/components/box";
@@ -7,89 +5,47 @@ import Spinner from "@cloudscape-design/components/spinner";
 import Badge from "@cloudscape-design/components/badge";
 import Button from "@cloudscape-design/components/button";
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
-import { updateSessionName, toggleSessionWebhook } from "../../utils/api";
-import { useSessionQuery } from "../../hooks/queries";
 import { ActivityIndicator } from "../../components/ActivityIndicator";
 import { SessionActions } from "./components/SessionActions";
 import { TurnContainer } from "./components/TurnContainer";
 import { SkillTags } from "./components/SkillTags";
+import { useSessionDetailPage } from "./hooks/useSessionDetailPage";
 
 export function SessionDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
-  const { data, error, isLoading, mutate } = useSessionQuery(id);
-  const [showTools, setShowTools] = useState(true);
-  const [expandedTurns, setExpandedTurns] = useState<Set<number>>(new Set());
-
-  const session = data?.session ?? null;
-  const turns = data?.turns ?? [];
-  const webhookEnabled = data?.webhookEnabled ?? false;
-  const activeSkills = data?.activeSkills ?? [];
-  const configuredSkills = data?.configuredSkills ?? [];
-
-  const handleRename = async (name: string) => {
-    if (!id || !data) {
-      return;
-    }
-    await updateSessionName(id, name);
-    mutate();
-  };
-
-  const handleToggleWebhook = async () => {
-    if (!id) {
-      return;
-    }
-    await toggleSessionWebhook(id, !webhookEnabled);
-    mutate();
-  };
-
-  const togglePageTools = () => {
-    setShowTools((prev) => !prev);
-    setExpandedTurns(new Set());
-  };
-
-  const toggleTurn = (turnId: number) => {
-    setExpandedTurns((prev) => {
-      const next = new Set(prev);
-      if (next.has(turnId)) {
-        next.delete(turnId);
-      } else {
-        next.add(turnId);
-      }
-      return next;
-    });
-  };
-
-  const displayName = session?.customName || `Session ${id?.slice(0, 8)}`;
+  const { state, actions } = useSessionDetailPage();
 
   return (
     <SpaceBetween size="l">
       <BreadcrumbGroup
         items={[
           { text: "Sessions", href: "/" },
-          { text: displayName, href: "#" },
+          { text: state.displayName, href: "#" },
         ]}
         onFollow={(e) => {
           e.preventDefault();
-          navigate(e.detail.href);
+          actions.navigate(e.detail.href);
         }}
       />
-      {isLoading && <Spinner size="large" />}
-      {error && <Box color="text-status-error">{error.message}</Box>}
-      {!isLoading && !error && session && (
+      {state.isLoading && <Spinner size="large" />}
+      {state.error && (
+        <Box color="text-status-error">{state.error.message}</Box>
+      )}
+      {!state.isLoading && !state.error && state.session && (
         <SpaceBetween size="m">
           <Header
             variant="h1"
             description={
               <SpaceBetween direction="horizontal" size="xs">
                 <span>
-                  {session.cwd} · PID {session.pid}
+                  {state.session.cwd} · PID {state.session.pid}
                 </span>
-                <Badge color={session.status === "open" ? "green" : "grey"}>
-                  {session.status}
+                <Badge
+                  color={state.session.status === "open" ? "green" : "grey"}
+                >
+                  {state.session.status}
                 </Badge>
-                {session.status === "open" && (
-                  <ActivityIndicator activity={session.activity} />
+                {state.session.status === "open" && (
+                  <ActivityIndicator activity={state.session.activity} />
                 )}
               </SpaceBetween>
             }
@@ -104,40 +60,44 @@ export function SessionDetailPage() {
               >
                 <Button
                   iconName="refresh"
-                  onClick={() => mutate()}
-                  loading={isLoading}
+                  onClick={() => actions.refresh()}
+                  loading={state.isLoading}
                 />
                 <SessionActions
-                  showTools={showTools}
-                  onToggleTools={togglePageTools}
-                  currentName={session.customName}
-                  sessionPid={session.pid}
-                  onRename={handleRename}
-                  webhookEnabled={webhookEnabled}
-                  onToggleWebhook={handleToggleWebhook}
+                  showTools={state.showTools}
+                  onToggleTools={actions.togglePageTools}
+                  currentName={state.session.customName}
+                  sessionPid={state.session.pid}
+                  onRename={actions.handleRename}
+                  webhookEnabled={state.webhookEnabled}
+                  onToggleWebhook={actions.handleToggleWebhook}
                 />
               </div>
             }
           >
-            {displayName}
+            {state.displayName}
           </Header>
           <SkillTags
-            activeSkills={activeSkills}
-            configuredSkills={configuredSkills}
+            activeSkills={state.activeSkills}
+            configuredSkills={state.configuredSkills}
           />
           <Box fontSize="body-s" color="text-body-secondary">
             Assistant responses are not available in this view. Use{" "}
             <a href="/cherrypick">Cherrypick</a> to export and analyze full
             conversations.
           </Box>
-          {[...turns].reverse().map((turn) => (
+          {[...state.turns].reverse().map((turn) => (
             <TurnContainer
               key={turn.id}
               turn={turn}
-              showTools={expandedTurns.has(turn.id) ? !showTools : showTools}
+              showTools={
+                state.expandedTurns.has(turn.id)
+                  ? !state.showTools
+                  : state.showTools
+              }
               onToggleTools={
                 turn.toolCalls.length > 0
-                  ? () => toggleTurn(turn.id)
+                  ? () => actions.toggleTurn(turn.id)
                   : undefined
               }
             />

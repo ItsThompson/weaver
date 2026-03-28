@@ -8,7 +8,7 @@ const {
   mockExecFile,
 } = vi.hoisted(() => ({
   mockReadSessions: vi.fn<() => Promise<Session[]>>(),
-  mockIsProcessRunning: vi.fn<(pid: number) => boolean>(),
+  mockIsProcessRunning: vi.fn<(pid: number) => Promise<boolean>>(),
   mockGetLastEvent:
     vi.fn<() => Promise<{ name: string; timestamp: string } | null>>(),
   mockLog: vi.fn(),
@@ -35,6 +35,8 @@ vi.mock("node:child_process", () => ({
 }));
 
 import { startKeepAwake, stopKeepAwake } from "./keep-awake";
+import { createKeepAwake } from "./keep-awake";
+import type { KeepAwakeDeps } from "./keep-awake";
 
 function makeSession(overrides: Partial<Session> = {}): Session {
   return {
@@ -72,7 +74,7 @@ describe("startKeepAwake", () => {
 
   it("runs the keep-awake script when an active session exists", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({
       name: "preToolUse",
       timestamp: new Date().toISOString(),
@@ -90,7 +92,7 @@ describe("startKeepAwake", () => {
 
   it("does not run the script when no sessions are active", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({ name: "stop", timestamp: "" });
 
     startKeepAwake(FAKE_SCRIPT);
@@ -101,7 +103,7 @@ describe("startKeepAwake", () => {
 
   it("skips sessions where the process is not running", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(false);
+    mockIsProcessRunning.mockResolvedValue(false);
 
     startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
@@ -123,7 +125,7 @@ describe("startKeepAwake", () => {
 
   it("logs execFile callback errors", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({
       name: "userPromptSubmit",
       timestamp: "",
@@ -156,5 +158,93 @@ describe("stopKeepAwake", () => {
 
   it("is safe to call when not started", () => {
     expect(() => stopKeepAwake()).not.toThrow();
+  });
+});
+
+describe("createKeepAwake (factory)", () => {
+  function makeDeps(overrides: Partial<KeepAwakeDeps> = {}): KeepAwakeDeps {
+    return {
+      readSessions: vi.fn<() => Promise<Session[]>>().mockResolvedValue([]),
+      isProcessRunning: vi
+        .fn<(pid: number) => Promise<boolean>>()
+        .mockResolvedValue(false),
+      getLastEvent: vi.fn().mockResolvedValue(null),
+      deriveActivity: vi.fn().mockReturnValue("idle"),
+      log: vi.fn(),
+      execFile: mockExecFile,
+      ...overrides,
+    };
+  }
+
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("executes script when active sessions exist", async () => {
+    const deps = makeDeps({
+      readSessions: vi.fn().mockResolvedValue([makeSession()]),
+      isProcessRunning: vi.fn().mockResolvedValue(true),
+      deriveActivity: vi.fn().mockReturnValue("processing"),
+    });
+    const ka = createKeepAwake(deps);
+
+    ka.startKeepAwake(FAKE_SCRIPT);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(deps.execFile).toHaveBeenCalledWith(
+      "bash",
+      [FAKE_SCRIPT],
+      expect.any(Function),
+    );
+    ka.stopKeepAwake();
+  });
+
+  it("does not execute script when no active sessions", async () => {
+    const deps = makeDeps({
+      readSessions: vi.fn().mockResolvedValue([makeSession()]),
+      isProcessRunning: vi.fn().mockResolvedValue(true),
+      deriveActivity: vi.fn().mockReturnValue("idle"),
+    });
+    const ka = createKeepAwake(deps);
+
+    ka.startKeepAwake(FAKE_SCRIPT);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(deps.execFile).not.toHaveBeenCalled();
+    ka.stopKeepAwake();
+  });
+
+  it("clears interval when stopKeepAwake is called", async () => {
+    const deps = makeDeps();
+    const ka = createKeepAwake(deps);
+
+    ka.startKeepAwake(FAKE_SCRIPT);
+    await vi.advanceTimersByTimeAsync(0);
+    vi.mocked(deps.readSessions).mockClear();
+
+    ka.stopKeepAwake();
+    await vi.advanceTimersByTimeAsync(120_000);
+
+    expect(deps.readSessions).not.toHaveBeenCalled();
+  });
+
+  it("returns isolated instances", async () => {
+    const depsA = makeDeps();
+    const depsB = makeDeps();
+    const kaA = createKeepAwake(depsA);
+    const kaB = createKeepAwake(depsB);
+
+    kaA.startKeepAwake(FAKE_SCRIPT);
+    await vi.advanceTimersByTimeAsync(0);
+
+    expect(depsA.readSessions).toHaveBeenCalled();
+    expect(depsB.readSessions).not.toHaveBeenCalled();
+
+    kaA.stopKeepAwake();
+    kaB.stopKeepAwake();
   });
 });

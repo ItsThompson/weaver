@@ -1,6 +1,7 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import type { ValidationEvent, ValidationResult } from "@weaver/shared/types";
+import { log } from "../utils/logger";
 
 export function writeValidationEvent(
   sessionLogPath: string,
@@ -22,7 +23,12 @@ export function writeValidationEvent(
     mkdirSync(dirname(sessionLogPath), { recursive: true });
     appendFileSync(sessionLogPath, JSON.stringify(logEntry) + "\n");
   } catch (e) {
-    console.error("Failed to write validation event:", sessionLogPath, e);
+    log({
+      timestamp: new Date().toISOString(),
+      event: "validation_event_write_error",
+      path: sessionLogPath,
+      error: String(e),
+    });
   }
 
   // Fire-and-forget server notification
@@ -31,5 +37,11 @@ export function writeValidationEvent(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sessionId, eventName: "validation" }),
     signal: AbortSignal.timeout(1000),
-  }).catch(() => {});
+  }).catch((err) =>
+    log({
+      timestamp: new Date().toISOString(),
+      event: "notify_server_error",
+      error: String(err),
+    }),
+  );
 }

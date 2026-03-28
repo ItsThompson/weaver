@@ -2,6 +2,7 @@ import { resolve } from "node:path";
 import { symlinkSync, readlinkSync, unlinkSync, existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 import { app } from "electron";
+import { log } from "./utils/logger";
 
 const LINK_PATH = "/usr/local/bin/weaver";
 
@@ -45,13 +46,28 @@ export function installCli(): void {
       unlinkSync(LINK_PATH);
     }
     symlinkSync(target, LINK_PATH);
-    console.log(`Symlinked ${LINK_PATH} → ${target}`);
+    log({
+      timestamp: new Date().toISOString(),
+      event: "cli_symlinked",
+      link: LINK_PATH,
+      target,
+    });
   } catch {
     try {
       linkWithElevation(target);
-      console.log(`Symlinked ${LINK_PATH} → ${target} (elevated)`);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "cli_symlinked",
+        link: LINK_PATH,
+        target,
+        elevated: true,
+      });
     } catch (error) {
-      console.warn(`CLI install skipped: ${error}`);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "cli_install_skipped",
+        error: String(error),
+      });
     }
   }
 }

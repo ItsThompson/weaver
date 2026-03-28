@@ -1,8 +1,9 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
 import { configPath } from "@weaver/shared/paths";
 import { FIELD_VALIDATORS } from "./validators";
+import { atomicWriteFile } from "../../utils/atomic-write";
 
 export async function readConfig(): Promise<{
   config: WeaverConfig;
@@ -63,9 +64,5 @@ export function parseAndValidateConfig(raw: string): {
 }
 
 export async function writeConfig(config: WeaverConfig): Promise<void> {
-  await writeFile(
-    configPath(),
-    JSON.stringify(config, null, 2) + "\n",
-    "utf-8",
-  );
+  await atomicWriteFile(configPath(), JSON.stringify(config, null, 2) + "\n");
 }

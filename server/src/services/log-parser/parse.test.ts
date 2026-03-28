@@ -2,8 +2,13 @@ import "../../__tests__/mocks/fs";
 import "../../__tests__/mocks/logger";
 
 import { existsSync } from "node:fs";
-import { readFile } from "node:fs/promises";
-import { parseLogFile, getLastEvent, _logCache } from "./parse";
+import { readFile, stat } from "node:fs/promises";
+import {
+  parseLogFile,
+  getLastEvent,
+  _logCache,
+  createLogParser,
+} from "./parse";
 import { makeEvent } from "./test-helpers";
 
 beforeEach(() => {
@@ -49,5 +54,29 @@ describe("getLastEvent", () => {
     );
     const result = await getLastEvent("test-id");
     expect(result).toEqual({ name: "stop", timestamp: expect.any(String) });
+  });
+});
+
+describe("createLogParser", () => {
+  it("returns isolated instances with separate caches", async () => {
+    const parserA = createLogParser();
+    const parserB = createLogParser();
+
+    vi.mocked(existsSync).mockReturnValue(true);
+    const event = makeEvent("agentSpawn");
+    vi.mocked(readFile).mockResolvedValue(JSON.stringify(event) + "\n");
+    vi.mocked(stat).mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
+
+    // Parse with A — caches the result
+    await parserA.parseLogFile("shared-id");
+    expect(readFile).toHaveBeenCalledTimes(1);
+
+    // Parse again with A — served from cache, no new readFile call
+    await parserA.parseLogFile("shared-id");
+    expect(readFile).toHaveBeenCalledTimes(1);
+
+    // Parse with B — must call readFile again (separate cache)
+    await parserB.parseLogFile("shared-id");
+    expect(readFile).toHaveBeenCalledTimes(2);
   });
 });

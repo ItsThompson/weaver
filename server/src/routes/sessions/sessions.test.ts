@@ -20,7 +20,7 @@ let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  server = Fastify();
+  server = Fastify({ ajv: { customOptions: { coerceTypes: false } } });
   registerSessionRoutes(server);
   await server.ready();
 });
@@ -30,7 +30,9 @@ afterEach(() => server.close());
 describe("GET /api/sessions", () => {
   it("returns sessions sorted by startTime descending with computed status", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_B, SESSION_A]);
-    vi.mocked(isProcessRunning).mockImplementation((pid) => pid === 100);
+    vi.mocked(isProcessRunning).mockImplementation((pid) =>
+      Promise.resolve(pid === 100),
+    );
 
     const res = await server.inject({ method: "GET", url: "/api/sessions" });
     const body = JSON.parse(res.body);
@@ -45,7 +47,7 @@ describe("GET /api/sessions", () => {
 
   it("derives activity from getLastEvent for open sessions", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(true);
+    vi.mocked(isProcessRunning).mockResolvedValue(true);
     vi.mocked(getLastEvent).mockResolvedValue({
       name: "preToolUse",
       timestamp: new Date().toISOString(),
@@ -61,7 +63,7 @@ describe("GET /api/sessions", () => {
 describe("GET /api/sessions/:id", () => {
   it("returns grouped turns from real events", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(false);
+    vi.mocked(isProcessRunning).mockResolvedValue(false);
     vi.mocked(parseLogFile).mockResolvedValue(MULTI_TURN_EVENTS);
 
     const res = await server.inject({
@@ -87,7 +89,7 @@ describe("GET /api/sessions/:id", () => {
 
   it("returns active skills from real events", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(false);
+    vi.mocked(isProcessRunning).mockResolvedValue(false);
     vi.mocked(parseLogFile).mockResolvedValue(SKILL_READ_EVENTS);
     vi.mocked(resolveConfiguredSkills).mockResolvedValue([
       "coding-practices",
@@ -106,7 +108,7 @@ describe("GET /api/sessions/:id", () => {
 
   it("returns empty turns and skills for empty session", async () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
-    vi.mocked(isProcessRunning).mockReturnValue(false);
+    vi.mocked(isProcessRunning).mockResolvedValue(false);
     vi.mocked(parseLogFile).mockResolvedValue([]);
 
     const res = await server.inject({
@@ -165,8 +167,7 @@ describe("PATCH /api/sessions/:id", () => {
     expect(res.statusCode).toBe(404);
   });
 
-  it("returns 400 when customName is not a string", async () => {
-    vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
+  it("rejects non-string customName with 400", async () => {
     const res = await server.inject({
       method: "PATCH",
       url: "/api/sessions/aaa",

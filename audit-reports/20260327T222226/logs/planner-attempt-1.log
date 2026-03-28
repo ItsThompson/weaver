@@ -1,0 +1,674 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","~/.config/amazonq/global/skills/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+Let me start by understanding the codebase structure and reading the relevant skills.[0m[0m
+[?25l[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver[0m[38;5;244m (using tool: read, max depth: 2, max entries: 200, excluding: defaults)[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/package.json[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver[0m [38;5;244m(showing 200 of 1847 entries, offset: 0)[0m
+[38;5;244m - Completed in 0.99s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m965 bytes[0m from /Users/thompsnt/Documents/weaver/package.json
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: This is a Turborepo monorepo with workspaces: shared, server, client, cli, hook-handler, desktop, e2e. It's a full-stack Electron app with React frontend. Let me explore the key packages to understand the architecture better.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m6[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/server/src[0m
+↱ Operation 2: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/client[0m
+↱ Operation 3: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src[0m
+↱ Operation 4: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/shared[0m
+↱ Operation 5: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/cli[0m
+↱ Operation 6: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/desktop[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/server/src[0m [38;5;244m(showing 100 of 127 entries, offset: 0)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/client[0m [38;5;244m(74 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src[0m [38;5;244m(65 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/shared[0m [38;5;244m(38 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/cli[0m [38;5;244m(20 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/desktop[0m [38;5;244m(22 entries)[0m
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 6 operations processed, 6 successful, 0 failed
+[38;5;244m - Completed in 0.13s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a good picture of the codebase. Let me read the key skills files and some key source files to understand the tech stack better before generating prompts.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the key skills and some important source files to understand the tech stack and standards.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m6[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/coding-practices/SKILL.md[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/typescript-standards/SKILL.md[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/frontend-coding-practices/SKILL.md[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/backend-coding-practices/SKILL.md[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/testing-practices/SKILL.md[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/.config/amazonq/global/skills/component-decomposition/SKILL.md[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5170 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/coding-practices/SKILL.md
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4823 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/typescript-standards/SKILL.md
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4502 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/frontend-coding-practices/SKILL.md
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3353 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/backend-coding-practices/SKILL.md
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m5828 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/testing-practices/SKILL.md
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3565 bytes[0m from /Users/thompsnt/.config/amazonq/global/skills/component-decomposition/SKILL.md
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 6 operations processed, 6 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m8[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/App.tsx[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/inject/inject.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/index.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/main.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src/index.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2597 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3799 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/App.tsx
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m247 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/validate/validate.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m417 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/inject/inject.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m134 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1250 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2425 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/main.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1577 bytes[0m from /Users/thompsnt/Documents/weaver/cli/src/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 8 operations processed, 8 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a thorough understanding of the codebase. Let me plan the 5 exploration prompts:
+
+This is a full-stack Electron app with:
+- **server**: Fastify backend (Node.js) with routes, services, SSE event bus, webhook handling, log parsing, skill graph, orphan storage, config management
+- **client**: React frontend using Cloudscape Design System, with pages (Sessions, SessionDetail, Cherrypick, Orphans, Settings, SkillGraph, SkillDetail, Mini), hooks, contexts, components
+- **hook-handler**: CLI tools for validation hooks and injection (validate + inject entry points), session analysis, scope management
+- **shared**: Shared types, paths, sync logic, validation types
+- **cli**: CLI commands (view, session, rename, toggle, config, sync)
+- **desktop**: Electron wrapper with window management, tray, ghost mode, SSE subscription
+- **e2e**: E2E tests
+
+Tech stack: TypeScript, Turborepo monorepo, Fastify, React, Cloudscape Design, Electron, Vitest
+
+Since no custom focus is provided, I'll use the default 5 lenses:
+1. Architectural depth and coupling (always)
+2. Testability gaps (always)
+3. Coding standards and best practices (always)
+4. React component decomposition (frontend exists)
+5. Backend patterns and anti-patterns (backend exists)
+
+Let me generate the 5 prompt files.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at a few more key files to give the auditors concrete starting points.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/sync.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/queries/index.ts[0m, from line [38;5;141m1[0m to [38;5;141m5[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3010 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4679 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1710 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/sync.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m74 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/queries/index.ts
+⢀⠀
+  ⋮ 
+[38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for files: [38;5;141m**/hooks/queries/*.ts[0m in [38;5;141m/Users/thompsnt/Documents/weaver/client[0m[38;5;244m (using tool: glob)[0mSearching for files: [38;5;141m**/*.test.ts[0m in [38;5;141m/Users/thompsnt/Documents/weaver[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m2 files[0m under /Users/thompsnt/Documents/weaver/client
+[38;5;244m - Completed in 0.4s[0m
+
+
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m73 files[0m under /Users/thompsnt/Documents/weaver
+[38;5;244m - Completed in 0.39s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Good. I now have a comprehensive picture:
+
+- 73 test files across the monorepo
+- server has extensive test coverage (41 test files)
+- hook-handler has good coverage (12 test files)
+- shared has 4 test files
+- cli has 1 test file
+- client has 10 test files (but many pages/components/hooks)
+- desktop has 0 test files
+- e2e has separate tests
+
+Key observations for the auditors:
+- Desktop package has NO unit tests
+- Client has relatively few tests compared to its component count
+- The server uses module-level mutable state (openPids Set, intervals) in lifecycle.ts
+- The event-bus uses module-level mutable state (listeners Set)
+- The server entry point (index.ts) creates the Fastify instance at module level
+- The shared/sync module uses synchronous fs operations (readdirSync, existsSync)
+
+Let me now generate the 5 prompt files. I need to embed the coding standards into prompt 3 since the explorer agents won't have access to the skills files.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow I have a complete picture. Let me generate all 5 prompt files.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-01-architectural-depth-and-coupling.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+     1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Brief: Architectural Depth and Coupling[K
+[0m[48;2;40;67;43m[39m+     2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mYour role[K
+[0m[48;2;40;67;43m[39m+     4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mYou are a codebase auditor focused on: evaluating module boundaries, dependency direction, interface depth, and coupling between the six workspace packages in this Turborepo monorepo.[K
+[0m[48;2;40;67;43m[39m+     6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mWhat to look for[K
+[0m[48;2;40;67;43m[39m+     8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     9[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCross-package coupling[38;2;235;203;139m**[38;2;191;97;106m: Trace how [38;2;163;190;140m`[38;2;163;190;140mserver[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mclient[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcli[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mdesktop[38;2;163;190;140m`[38;2;191;97;106m depend on [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m. Are there cases where packages import from each other outside of [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m? Does [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m contain logic that belongs in a specific package?[K
+[0m[48;2;40;67;43m[39m+    10[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mModule-level mutable state[38;2;235;203;139m**[38;2;191;97;106m: The server uses module-level [38;2;163;190;140m`[38;2;163;190;140mSet[38;2;163;190;140m`[38;2;191;97;106ms and [38;2;163;190;140m`[38;2;163;190;140msetInterval[38;2;163;190;140m`[38;2;191;97;106m handles in [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m. Assess whether this state creates hidden coupling between modules or makes testing harder.[K
+[0m[48;2;40;67;43m[39m+    11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mShallow vs deep modules[38;2;235;203;139m**[38;2;191;97;106m: Identify modules that expose many methods with little implementation behind them (shallow) vs modules with small interfaces hiding complex logic (deep). Pay special attention to barrel [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m files that re-export everything — are they creating a useful abstraction or just forwarding?[K
+[0m[48;2;40;67;43m[39m+    12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mServer entry point coupling[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m creates the Fastify instance at module level and wires all routes and services together. Evaluate whether this creates tight coupling that makes individual services hard to test or replace.[K
+[0m[48;2;40;67;43m[39m+    13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDesktop ↔ Server communication[38;2;235;203;139m**[38;2;191;97;106m: The desktop package ([38;2;163;190;140m`[38;2;163;190;140mdesktop/src/main.ts[38;2;163;190;140m`[38;2;191;97;106m) communicates with the server via HTTP and SSE. Assess whether this boundary is clean or if there are implicit contracts (e.g., hardcoded URLs, assumed response shapes) that could break silently.[K
+[0m[48;2;40;67;43m[39m+    14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSync logic placement[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;191;97;106m contains file-patching logic ([38;2;163;190;140m`[38;2;163;190;140mpatch-agent-config.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mproject-config.ts[38;2;163;190;140m`[38;2;191;97;106m) that reads/writes to disk. Evaluate whether this belongs in [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m or should live closer to its consumers ([38;2;163;190;140m`[38;2;163;190;140mcli[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m).[K
+[0m[48;2;40;67;43m[39m+    15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mEvent bus design[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m is a pub/sub system using a module-level [38;2;163;190;140m`[38;2;163;190;140mSet<Listener>[38;2;163;190;140m`[38;2;191;97;106m. Assess whether this is a deep module with a clean interface or a leaky abstraction.[K
+[0m[48;2;40;67;43m[39m+    16[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    17[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mExploration guidance[K
+[0m[48;2;40;67;43m[39m+    18[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    19[0m:[39m[48;2;24;38;30m [38;2;192;197;206mStart with the dependency graph:[K
+[0m[48;2;40;67;43m[39m+    20[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mRead [38;2;163;190;140m`[38;2;163;190;140mpackage.json[38;2;163;190;140m`[38;2;191;97;106m in each workspace ([38;2;163;190;140m`[38;2;163;190;140mserver/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mclient/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcli/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdesktop/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mshared/[38;2;163;190;140m`[38;2;191;97;106m) to map inter-package dependencies.[K
+[0m[48;2;40;67;43m[39m+    21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Read [38;2;163;190;140m`[38;2;163;190;140mshared/types/index.ts[38;2;163;190;140m`[38;2;191;97;106m and all files it re-exports ([38;2;163;190;140m`[38;2;163;190;140msession.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mevents.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mvalidation.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mskills.ts[38;2;163;190;140m`[38;2;191;97;106m) to understand the shared type surface.[K
+[0m[48;2;40;67;43m[39m+    22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Read [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;191;97;106m — this is the most logic-heavy part of [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m and the most likely coupling concern.[K
+[0m[48;2;40;67;43m[39m+    23[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    24[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen trace the server's internal architecture:[K
+[0m[48;2;40;67;43m[39m+    25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m — entry point, wires everything together.[K
+[0m[48;2;40;67;43m[39m+    26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m — the SSE pub/sub system.[K
+[0m[48;2;40;67;43m[39m+    27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m — module-level state, interval management, PID polling.[K
+[0m[48;2;40;67;43m[39m+    28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — session CRUD.[K
+[0m[48;2;40;67;43m[39m+    29[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — route handler that orchestrates multiple services.[K
+[0m[48;2;40;67;43m[39m+    30[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    31[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor desktop coupling:[K
+[0m[48;2;40;67;43m[39m+    32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/main.ts[38;2;163;190;140m`[38;2;191;97;106m — Electron entry, calls server APIs.[K
+[0m[48;2;40;67;43m[39m+    33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/config.ts[38;2;163;190;140m`[38;2;191;97;106m — fetches/puts config via HTTP.[K
+[0m[48;2;40;67;43m[39m+    34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/sse.ts[38;2;163;190;140m`[38;2;191;97;106m — subscribes to server SSE stream.[K
+[0m[48;2;40;67;43m[39m+    35[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    36[0m:[39m[48;2;24;38;30m [38;2;192;197;206mGrep for cross-package imports: [38;2;163;190;140m`[38;2;163;190;140mfrom "@weaver/[38;2;163;190;140m`[38;2;192;197;206m to see which packages import what.[K
+[0m[48;2;40;67;43m[39m+    37[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    38[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mReport format[K
+[0m[48;2;40;67;43m[39m+    39[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    40[0m:[39m[48;2;24;38;30m [38;2;192;197;206mWrite your report as a markdown file with this structure:[K
+[0m[48;2;40;67;43m[39m+    41[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    42[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+    43[0m:[39m[48;2;24;38;30m [38;2;192;197;206m2-3 sentence overview of what you found.[K
+[0m[48;2;40;67;43m[39m+    44[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    45[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+    46[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    47[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor each finding, include:[K
+[0m[48;2;40;67;43m[39m+    48[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    49[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Which modules/files are involved[K
+[0m[48;2;40;67;43m[39m+    50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: What you found (be specific: quote code, name files, show structure)[K
+[0m[48;2;40;67;43m[39m+    51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Why this matters (testability, maintainability, coupling, correctness)[K
+[0m[48;2;40;67;43m[39m+    52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: What could be improved (directional, not a full design)[K
+[0m[48;2;40;67;43m[39m+    53[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High / Medium / Low[K
+[0m[48;2;40;67;43m[39m+    54[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    55[0m:[39m[48;2;24;38;30m [38;2;192;197;206mOrder findings by severity (high first).[K
+[0m[48;2;40;67;43m[39m+    56[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    57[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    58[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    59[0m:[39m[48;2;24;38;30m [38;2;192;197;206mIf you identified modules that would benefit from deepening (merging shallow modules into a deep module with a small interface hiding complex implementation), list them here:[K
+[0m[48;2;40;67;43m[39m+    60[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    61[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: Which modules/concepts are involved[K
+[0m[48;2;40;67;43m[39m+    62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Shared types, call patterns, co-ownership of a concept[K
+[0m[48;2;40;67;43m[39m+    63[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process / Local-substitutable / Remote but owned / True external[K
+[0m[48;2;40;67;43m[39m+    64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: What existing tests would be replaced by boundary tests[K
+[0m[48;2;40;67;43m[39m+    65[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    66[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: N[K
+[0m[48;2;40;67;43m[39m+    68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: N (H high, M medium, L low)[K
+[0m[48;2;40;67;43m[39m+    69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: N[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-01-architectural-depth-and-coupling.md[0m
+[38;5;244m - Completed in 0.2s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.47 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-02-testability-gaps.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+     1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Brief: Testability Gaps[K
+[0m[48;2;40;67;43m[39m+     2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mYour role[K
+[0m[48;2;40;67;43m[39m+     4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mYou are a codebase auditor focused on: identifying untested code, weak tests, over-mocked tests, and modules whose design makes them hard to test.[K
+[0m[48;2;40;67;43m[39m+     6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mWhat to look for[K
+[0m[48;2;40;67;43m[39m+     8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     9[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mUntested packages[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mdesktop/[38;2;163;190;140m`[38;2;191;97;106m package has zero unit test files. Assess which modules in [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/[38;2;163;190;140m`[38;2;191;97;106m (window.ts, tray.ts, server.ts, sse.ts, config.ts, install-cli.ts) contain testable logic that should have tests vs pure Electron glue that's hard to unit test.[K
+[0m[48;2;40;67;43m[39m+    10[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mClient test coverage gaps[38;2;235;203;139m**[38;2;191;97;106m: The client has ~10 test files but many more components, pages, hooks, and contexts. Identify which client modules lack tests entirely. Pay special attention to: pages ([38;2;163;190;140m`[38;2;163;190;140mSessionsPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mSessionDetailPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mCherrypickPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mOrphansPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mMiniPage[38;2;163;190;140m`[38;2;191;97;106m), contexts ([38;2;163;190;140m`[38;2;163;190;140mWindowContext[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mNotificationContext[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mActivityLogContext[38;2;163;190;140m`[38;2;191;97;106m), and hooks ([38;2;163;190;140m`[38;2;163;190;140museSessionNotifications[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140museSessionEvents[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140museWindowList[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140museNavigateOnView[38;2;163;190;140m`[38;2;191;97;106m).[K
+[0m[48;2;40;67;43m[39m+    11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mOver-mocked tests[38;2;235;203;139m**[38;2;191;97;106m: Look for tests that mock internal collaborators instead of testing through the public interface. The testing standard is "sociable tests by default" — only mock truly external dependencies (network, filesystem, timers). Check whether server route tests mock internal services unnecessarily.[K
+[0m[48;2;40;67;43m[39m+    12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWeakened assertions[38;2;235;203;139m**[38;2;191;97;106m: Look for tests that assert only on trivial things (e.g., "component renders", "function was called") instead of meaningful behavior. Check if any tests were weakened to pass rather than fixing the underlying issue.[K
+[0m[48;2;40;67;43m[39m+    13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mModule-level state testability[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m uses module-level [38;2;163;190;140m`[38;2;163;190;140mSet[38;2;163;190;140m`[38;2;191;97;106ms and [38;2;163;190;140m`[38;2;163;190;140msetInterval[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m uses a module-level [38;2;163;190;140m`[38;2;163;190;140mSet<Listener>[38;2;163;190;140m`[38;2;191;97;106m. Assess whether these are tested properly and whether the module-level state leaks between tests.[K
+[0m[48;2;40;67;43m[39m+    14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCLI test coverage[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mcli/src/commands.test.ts[38;2;163;190;140m`[38;2;191;97;106m is the only test file for the CLI. Check whether it covers all 6 commands (view, session, rename, toggle, config, sync) and their edge cases.[K
+[0m[48;2;40;67;43m[39m+    15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mBoundary test gaps[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m has boundary tests ([38;2;163;190;140m`[38;2;163;190;140mstop-trigger.boundary.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpost-tool-use-trigger.boundary.test.ts[38;2;163;190;140m`[38;2;191;97;106m). Assess whether other integration boundaries (server routes ↔ services, shared/sync ↔ filesystem) have similar boundary tests.[K
+[0m[48;2;40;67;43m[39m+    16[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    17[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mExploration guidance[K
+[0m[48;2;40;67;43m[39m+    18[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    19[0m:[39m[48;2;24;38;30m [38;2;192;197;206mStart by mapping test coverage:[K
+[0m[48;2;40;67;43m[39m+    20[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mList all [38;2;163;190;140m`[38;2;163;190;140m.test.ts[38;2;163;190;140m`[38;2;191;97;106m files: there are 73 across the monorepo. Compare against source files to find gaps.[K
+[0m[48;2;40;67;43m[39m+    21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Key untested areas to check: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/[38;2;163;190;140m`[38;2;191;97;106m (0 tests), [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/[38;2;163;190;140m`[38;2;191;97;106m (check each page directory for test files), [38;2;163;190;140m`[38;2;163;190;140mclient/src/context/[38;2;163;190;140m`[38;2;191;97;106m (check each context), [38;2;163;190;140m`[38;2;163;190;140mclient/src/components/[38;2;163;190;140m`[38;2;191;97;106m (check each component).[K
+[0m[48;2;40;67;43m[39m+    22[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    23[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen assess test quality in existing tests:[K
+[0m[48;2;40;67;43m[39m+    24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.test.ts[38;2;163;190;140m`[38;2;191;97;106m — route-level tests, check mock depth.[K
+[0m[48;2;40;67;43m[39m+    25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/mocks/services.ts[38;2;163;190;140m`[38;2;191;97;106m — shared mock file, check what it mocks.[K
+[0m[48;2;40;67;43m[39m+    26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/__tests__/mocks/[38;2;163;190;140m`[38;2;191;97;106m — Cloudscape component mocks, check if they're adequate or if they hide real rendering issues.[K
+[0m[48;2;40;67;43m[39m+    27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/__tests__/setup.ts[38;2;163;190;140m`[38;2;191;97;106m — test setup, check what's globally mocked.[K
+[0m[48;2;40;67;43m[39m+    28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/__test-helpers__/[38;2;163;190;140m`[38;2;191;97;106m — shared test helpers, check quality.[K
+[0m[48;2;40;67;43m[39m+    29[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    30[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor module-level state testing:[K
+[0m[48;2;40;67;43m[39m+    31[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.test.ts[38;2;163;190;140m`[38;2;191;97;106m — does it clean up intervals?[K
+[0m[48;2;40;67;43m[39m+    32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.test.ts[38;2;163;190;140m`[38;2;191;97;106m — does it clean up listeners between tests?[K
+[0m[48;2;40;67;43m[39m+    33[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    34[0m:[39m[48;2;24;38;30m [38;2;192;197;206mGrep for patterns that indicate weak tests:[K
+[0m[48;2;40;67;43m[39m+    35[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mtoBeInTheDocument()[38;2;163;190;140m`[38;2;191;97;106m with only a heading or title text[K
+[0m[48;2;40;67;43m[39m+    36[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mtoHaveBeenCalled()[38;2;163;190;140m`[38;2;191;97;106m without checking arguments[K
+[0m[48;2;40;67;43m[39m+    37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mexpect(true)[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mexpect(result).toBeDefined()[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    38[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    39[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mReport format[K
+[0m[48;2;40;67;43m[39m+    40[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    41[0m:[39m[48;2;24;38;30m [38;2;192;197;206mWrite your report as a markdown file with this structure:[K
+[0m[48;2;40;67;43m[39m+    42[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    43[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+    44[0m:[39m[48;2;24;38;30m [38;2;192;197;206m2-3 sentence overview of what you found.[K
+[0m[48;2;40;67;43m[39m+    45[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    46[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+    47[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    48[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor each finding, include:[K
+[0m[48;2;40;67;43m[39m+    49[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Which modules/files are involved[K
+[0m[48;2;40;67;43m[39m+    51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: What you found (be specific: quote code, name files, show structure)[K
+[0m[48;2;40;67;43m[39m+    52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Why this matters (testability, maintainability, coupling, correctness)[K
+[0m[48;2;40;67;43m[39m+    53[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: What could be improved (directional, not a full design)[K
+[0m[48;2;40;67;43m[39m+    54[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High / Medium / Low[K
+[0m[48;2;40;67;43m[39m+    55[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    56[0m:[39m[48;2;24;38;30m [38;2;192;197;206mOrder findings by severity (high first).[K
+[0m[48;2;40;67;43m[39m+    57[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    58[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    59[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    60[0m:[39m[48;2;24;38;30m [38;2;192;197;206mIf you identified modules that would benefit from deepening (merging shallow modules into a deep module with a small interface hiding complex implementation), list them here:[K
+[0m[48;2;40;67;43m[39m+    61[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: Which modules/concepts are involved[K
+[0m[48;2;40;67;43m[39m+    63[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Shared types, call patterns, co-ownership of a concept[K
+[0m[48;2;40;67;43m[39m+    64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process / Local-substitutable / Remote but owned / True external[K
+[0m[48;2;40;67;43m[39m+    65[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: What existing tests would be replaced by boundary tests[K
+[0m[48;2;40;67;43m[39m+    66[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    67[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: N[K
+[0m[48;2;40;67;43m[39m+    69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: N (H high, M medium, L low)[K
+[0m[48;2;40;67;43m[39m+    70[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: N[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-02-testability-gaps.md[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠠ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.57 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-03-coding-standards.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+      1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Brief: Coding Standards and Best Practices[K
+[0m[48;2;40;67;43m[39m+      2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mYour role[K
+[0m[48;2;40;67;43m[39m+      4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mYou are a codebase auditor focused on: verifying adherence to the project's TypeScript, backend, and frontend coding standards across all workspace packages.[K
+[0m[48;2;40;67;43m[39m+      6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mWhat to look for[K
+[0m[48;2;40;67;43m[39m+      8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      9[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mFor-loop usage instead of functional iteration[38;2;235;203;139m**[38;2;191;97;106m: The standard requires [38;2;163;190;140m`[38;2;163;190;140mforEach[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mmap[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfilter[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mreduce[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mflatMap[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfind[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msome[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mevery[38;2;163;190;140m`[38;2;191;97;106m instead of [38;2;163;190;140m`[38;2;163;190;140mfor[38;2;163;190;140m`[38;2;191;97;106m loops. Also check for chained [38;2;163;190;140m`[38;2;163;190;140mfilter+map[38;2;163;190;140m`[38;2;191;97;106m that should be a single [38;2;163;190;140m`[38;2;163;190;140mreduce[38;2;163;190;140m`[38;2;191;97;106m. Scan all [38;2;163;190;140m`[38;2;163;190;140m.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140m.tsx[38;2;163;190;140m`[38;2;191;97;106m files.[K
+[0m[48;2;40;67;43m[39m+     10[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTerse variable names[38;2;235;203;139m**[38;2;191;97;106m: The standard requires descriptive names. Single-letter names (except [38;2;163;190;140m`[38;2;163;190;140mi[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140mj[38;2;163;190;140m`[38;2;191;97;106m for indices, [38;2;163;190;140m`[38;2;163;190;140m_[38;2;163;190;140m`[38;2;191;97;106m for unused, [38;2;163;190;140m`[38;2;163;190;140me[38;2;163;190;140m`[38;2;191;97;106m for event handlers) are violations. Check callbacks especially: [38;2;163;190;140m`[38;2;163;190;140m(c) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(r) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(w) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(s) =>[38;2;163;190;140m`[38;2;191;97;106m patterns.[K
+[0m[48;2;40;67;43m[39m+     11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mModule-level side effects[38;2;235;203;139m**[38;2;191;97;106m: The backend standard forbids reading [38;2;163;190;140m`[38;2;163;190;140mprocess.env[38;2;163;190;140m`[38;2;191;97;106m at module level (use lazy arrow functions) and instantiating clients at module level (use lazy singletons). Check [38;2;163;190;140m`[38;2;163;190;140mserver/src/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcli/src/[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/[38;2;163;190;140m`[38;2;191;97;106m for violations.[K
+[0m[48;2;40;67;43m[39m+     12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mStructured logging violations[38;2;235;203;139m**[38;2;191;97;106m: The backend standard requires a shared [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[38;2;191;97;106m function with structured JSON output. No ad-hoc [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m with string interpolation. Check all server-side code for raw [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m calls.[K
+[0m[48;2;40;67;43m[39m+     13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImport ordering[38;2;235;203;139m**[38;2;191;97;106m: The frontend standard requires: React → external libraries → internal modules → local files. Check [38;2;163;190;140m`[38;2;163;190;140mclient/src/[38;2;163;190;140m`[38;2;191;97;106m files.[K
+[0m[48;2;40;67;43m[39m+     14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDefault exports[38;2;235;203;139m**[38;2;191;97;106m: The frontend standard requires named exports only. Check all [38;2;163;190;140m`[38;2;163;190;140mclient/src/[38;2;163;190;140m`[38;2;191;97;106m files for [38;2;163;190;140m`[38;2;163;190;140mexport default[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mGuard clause violations[38;2;235;203;139m**[38;2;191;97;106m: The standard prefers early returns over nested [38;2;163;190;140m`[38;2;163;190;140mif/else[38;2;163;190;140m`[38;2;191;97;106m chains. Look for deeply nested conditionals (3+ levels) in any [38;2;163;190;140m`[38;2;163;190;140m.ts[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140m.tsx[38;2;163;190;140m`[38;2;191;97;106m file.[K
+[0m[48;2;40;67;43m[39m+     16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mType placement[38;2;235;203;139m**[38;2;191;97;106m: Types should be in dedicated [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mschemas.ts[38;2;163;190;140m`[38;2;191;97;106m files, not inline in implementation files. Check whether implementation files define their own interfaces/types that should be extracted.[K
+[0m[48;2;40;67;43m[39m+     17[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     18[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mEmbedded coding standards reference[K
+[0m[48;2;40;67;43m[39m+     19[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     20[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThe explorer agents do not have access to the skills files. Here are the specific rules to check against:[K
+[0m[48;2;40;67;43m[39m+     21[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     22[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mTypeScript Standards[K
+[0m[48;2;40;67;43m[39m+     23[0m:[39m[48;2;24;38;30m [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mFunctional iteration over for loops[38;2;235;203;139m**[38;2;191;97;106m: Use [38;2;163;190;140m`[38;2;163;190;140mforEach[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mmap[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfilter[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mreduce[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mflatMap[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mfind[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msome[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mevery[38;2;163;190;140m`[38;2;191;97;106m. Avoid [38;2;163;190;140m`[38;2;163;190;140mfor[38;2;163;190;140m`[38;2;191;97;106m loops entirely. Avoid chaining [38;2;163;190;140m`[38;2;163;190;140mfilter+map[38;2;163;190;140m`[38;2;191;97;106m — use [38;2;163;190;140m`[38;2;163;190;140mreduce[38;2;163;190;140m`[38;2;191;97;106m for single-pass.[K
+[0m[48;2;40;67;43m[39m+     24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mVerbose naming[38;2;235;203;139m**[38;2;191;97;106m: Descriptive variable names in all contexts. [38;2;163;190;140m`[38;2;163;190;140m(prev) =>[38;2;163;190;140m`[38;2;191;97;106m not [38;2;163;190;140m`[38;2;163;190;140m(c) =>[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140m(runner) =>[38;2;163;190;140m`[38;2;191;97;106m not [38;2;163;190;140m`[38;2;163;190;140m(r) =>[38;2;163;190;140m`[38;2;191;97;106m. Exceptions: [38;2;163;190;140m`[38;2;163;190;140mi[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140mj[38;2;163;190;140m`[38;2;191;97;106m for indices, [38;2;163;190;140m`[38;2;163;190;140m_[38;2;163;190;140m`[38;2;191;97;106m for unused, [38;2;163;190;140m`[38;2;163;190;140me[38;2;163;190;140m`[38;2;191;97;106m for inline event handlers.[K
+[0m[48;2;40;67;43m[39m+     25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m3[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTypes in dedicated files[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mschemas.ts[38;2;163;190;140m`[38;2;191;97;106m, separate from implementation.[K
+[0m[48;2;40;67;43m[39m+     26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m4[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mEnums over string literal unions[38;2;235;203;139m**[38;2;191;97;106m: For fixed sets used across multiple files. PascalCase name, UPPER_SNAKE_CASE keys.[K
+[0m[48;2;40;67;43m[39m+     27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m5[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mGuard clauses[38;2;235;203;139m**[38;2;191;97;106m: Early returns over nested conditionals. Refactor to factory/facade when accumulating nested branches.[K
+[0m[48;2;40;67;43m[39m+     28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m6[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSpecific imports[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mimport throttle from 'lodash/throttle'[38;2;163;190;140m`[38;2;191;97;106m not [38;2;163;190;140m`[38;2;163;190;140mimport { throttle } from 'lodash'[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     29[0m:[39m[48;2;24;38;30m [38;2;191;97;106m7[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mNo flat type intersections[38;2;235;203;139m**[38;2;191;97;106m: Split into structured types with named properties when combining data for different purposes.[K
+[0m[48;2;40;67;43m[39m+     30[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     31[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mBackend Standards[K
+[0m[48;2;40;67;43m[39m+     32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mStructured logging[38;2;235;203;139m**[38;2;191;97;106m: Use a shared [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[38;2;191;97;106m function outputting JSON with [38;2;163;190;140m`[38;2;163;190;140mtimestamp[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mevent[38;2;163;190;140m`[38;2;191;97;106m. No [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m with string interpolation.[K
+[0m[48;2;40;67;43m[39m+     33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mNo module-level SDK clients[38;2;235;203;139m**[38;2;191;97;106m: Use lazy singleton pattern.[K
+[0m[48;2;40;67;43m[39m+     34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m3[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mNo module-level [38;2;163;190;140m`[38;2;163;190;140mprocess.env[38;2;163;190;140m`[38;2;235;203;139m reads[38;2;235;203;139m**[38;2;191;97;106m: Use [38;2;163;190;140m`[38;2;163;190;140mconst VAR = () => process.env.VAR![38;2;163;190;140m`[38;2;191;97;106m pattern.[K
+[0m[48;2;40;67;43m[39m+     35[0m:[39m[48;2;24;38;30m [38;2;191;97;106m4[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mThin handlers[38;2;235;203;139m**[38;2;191;97;106m: Route handlers parse, log, delegate. No business logic beyond routing.[K
+[0m[48;2;40;67;43m[39m+     36[0m:[39m[48;2;24;38;30m [38;2;191;97;106m5[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mZod for external data validation[38;2;235;203;139m**[38;2;191;97;106m: Runtime validation of external inputs.[K
+[0m[48;2;40;67;43m[39m+     37[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     38[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFrontend Standards[K
+[0m[48;2;40;67;43m[39m+     39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mNamed exports only[38;2;235;203;139m**[38;2;191;97;106m: Never [38;2;163;190;140m`[38;2;163;190;140mexport default[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     40[0m:[39m[48;2;24;38;30m [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTheme values from design system[38;2;235;203;139m**[38;2;191;97;106m: No hardcoded colors/sizes.[K
+[0m[48;2;40;67;43m[39m+     41[0m:[39m[48;2;24;38;30m [38;2;191;97;106m3[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImport order[38;2;235;203;139m**[38;2;191;97;106m: React → external → internal → local.[K
+[0m[48;2;40;67;43m[39m+     42[0m:[39m[48;2;24;38;30m [38;2;191;97;106m4[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mActions over reactions[38;2;235;203;139m**[38;2;191;97;106m: Track behavior in click handlers, not [38;2;163;190;140m`[38;2;163;190;140museEffect[38;2;163;190;140m`[38;2;191;97;106m reactions.[K
+[0m[48;2;40;67;43m[39m+     43[0m:[39m[48;2;24;38;30m [38;2;191;97;106m5[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mLinks over navigation handlers[38;2;235;203;139m**[38;2;191;97;106m: Use [38;2;163;190;140m`[38;2;163;190;140m<a href>[38;2;163;190;140m`[38;2;191;97;106m when navigating, not [38;2;163;190;140m`[38;2;163;190;140monClick[38;2;163;190;140m`[38;2;191;97;106m + [38;2;163;190;140m`[38;2;163;190;140mwindow.location.href[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     44[0m:[39m[48;2;24;38;30m [38;2;191;97;106m6[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mThrottle cleanup[38;2;235;203;139m**[38;2;191;97;106m: Cancel throttled/debounced functions on unmount.[K
+[0m[48;2;40;67;43m[39m+     45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m7[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mGroup state that changes together[38;2;235;203;139m**[38;2;191;97;106m: Merge multiple [38;2;163;190;140m`[38;2;163;190;140museState[38;2;163;190;140m`[38;2;191;97;106m calls that are always set together.[K
+[0m[48;2;40;67;43m[39m+     46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m8[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mEliminate impossible states[38;2;235;203;139m**[38;2;191;97;106m: Collapse boolean+enum combinations into single status variables.[K
+[0m[48;2;40;67;43m[39m+     47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m9[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mError handling[38;2;235;203;139m**[38;2;191;97;106m: Combine user notifications with error tracking. Never silently swallow errors.[K
+[0m[48;2;40;67;43m[39m+     48[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     49[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mExploration guidance[K
+[0m[48;2;40;67;43m[39m+     50[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     51[0m:[39m[48;2;24;38;30m [38;2;192;197;206mStart with a broad scan:[K
+[0m[48;2;40;67;43m[39m+     52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mGrep for [38;2;163;190;140m`[38;2;163;190;140mfor ([38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mfor([38;2;163;190;140m`[38;2;191;97;106m across all [38;2;163;190;140m`[38;2;163;190;140m.ts[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140m.tsx[38;2;163;190;140m`[38;2;191;97;106m files to find for-loop violations.[K
+[0m[48;2;40;67;43m[39m+     53[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Grep for [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mserver/src/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcli/src/[38;2;163;190;140m`[38;2;191;97;106m to find logging violations.[K
+[0m[48;2;40;67;43m[39m+     54[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Grep for [38;2;163;190;140m`[38;2;163;190;140mexport default[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mclient/src/[38;2;163;190;140m`[38;2;191;97;106m to find default export violations.[K
+[0m[48;2;40;67;43m[39m+     55[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Grep for [38;2;163;190;140m`[38;2;163;190;140mprocess.env[38;2;163;190;140m`[38;2;191;97;106m at the top level of files in [38;2;163;190;140m`[38;2;163;190;140mserver/src/[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     56[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     57[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen do targeted file reviews:[K
+[0m[48;2;40;67;43m[39m+     58[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — large route file, check for thin handler pattern.[K
+[0m[48;2;40;67;43m[39m+     59[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m — uses [38;2;163;190;140m`[38;2;163;190;140mexecFileSync[38;2;163;190;140m`[38;2;191;97;106m, module-level state.[K
+[0m[48;2;40;67;43m[39m+     60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mshared/sync/sync.ts[38;2;163;190;140m`[38;2;191;97;106m — uses [38;2;163;190;140m`[38;2;163;190;140mreaddirSync[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mexistsSync[38;2;163;190;140m`[38;2;191;97;106m (synchronous fs in shared code).[K
+[0m[48;2;40;67;43m[39m+     61[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/App.tsx[38;2;163;190;140m`[38;2;191;97;106m — check import ordering, named exports, state structure.[K
+[0m[48;2;40;67;43m[39m+     62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/[38;2;163;190;140m`[38;2;191;97;106m — check each page for component standards.[K
+[0m[48;2;40;67;43m[39m+     63[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/[38;2;163;190;140m`[38;2;191;97;106m — check for guard clauses and naming.[K
+[0m[48;2;40;67;43m[39m+     64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/main.ts[38;2;163;190;140m`[38;2;191;97;106m — check for module-level state, logging patterns.[K
+[0m[48;2;40;67;43m[39m+     65[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     66[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor naming violations, grep for short callback patterns:[K
+[0m[48;2;40;67;43m[39m+     67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140m(s) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(c) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(r) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(w) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(f) =>[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m(e) =>[38;2;163;190;140m`[38;2;191;97;106m (excluding event handlers)[K
+[0m[48;2;40;67;43m[39m+     68[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     69[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mReport format[K
+[0m[48;2;40;67;43m[39m+     70[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     71[0m:[39m[48;2;24;38;30m [38;2;192;197;206mWrite your report as a markdown file with this structure:[K
+[0m[48;2;40;67;43m[39m+     72[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     73[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+     74[0m:[39m[48;2;24;38;30m [38;2;192;197;206m2-3 sentence overview of what you found.[K
+[0m[48;2;40;67;43m[39m+     75[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     76[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+     77[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     78[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor each finding, include:[K
+[0m[48;2;40;67;43m[39m+     79[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     80[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Which modules/files are involved[K
+[0m[48;2;40;67;43m[39m+     81[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: What you found (be specific: quote code, name files, show structure)[K
+[0m[48;2;40;67;43m[39m+     82[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Why this matters (testability, maintainability, coupling, correctness)[K
+[0m[48;2;40;67;43m[39m+     83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: What could be improved (directional, not a full design)[K
+[0m[48;2;40;67;43m[39m+     84[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High / Medium / Low[K
+[0m[48;2;40;67;43m[39m+     85[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     86[0m:[39m[48;2;24;38;30m [38;2;192;197;206mOrder findings by severity (high first).[K
+[0m[48;2;40;67;43m[39m+     87[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     88[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+     89[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     90[0m:[39m[48;2;24;38;30m [38;2;192;197;206mIf you identified modules that would benefit from deepening (merging shallow modules into a deep module with a small interface hiding complex implementation), list them here:[K
+[0m[48;2;40;67;43m[39m+     91[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     92[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: Which modules/concepts are involved[K
+[0m[48;2;40;67;43m[39m+     93[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Shared types, call patterns, co-ownership of a concept[K
+[0m[48;2;40;67;43m[39m+     94[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process / Local-substitutable / Remote but owned / True external[K
+[0m[48;2;40;67;43m[39m+     95[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: What existing tests would be replaced by boundary tests[K
+[0m[48;2;40;67;43m[39m+     96[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     97[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+     98[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: N[K
+[0m[48;2;40;67;43m[39m+     99[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: N (H high, M medium, L low)[K
+[0m[48;2;40;67;43m[39m+    100[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: N[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-03-coding-standards.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.31 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-04-react-component-decomposition.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+     1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Brief: React Component Decomposition[K
+[0m[48;2;40;67;43m[39m+     2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mYour role[K
+[0m[48;2;40;67;43m[39m+     4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mYou are a codebase auditor focused on: evaluating React component structure, hook extraction, state management patterns, and adherence to the orchestrator/presenter decomposition pattern in the client package.[K
+[0m[48;2;40;67;43m[39m+     6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mWhat to look for[K
+[0m[48;2;40;67;43m[39m+     8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     9[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mMonolithic page components[38;2;235;203;139m**[38;2;191;97;106m: Check whether page components mix state management with rendering. The standard requires: state + actions in a custom hook, a thin orchestrator component that composes hook + sub-components, and presentational sub-components that receive props. Pages to audit: [38;2;163;190;140m`[38;2;163;190;140mSessionsPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mSessionDetailPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mCherrypickPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mOrphansPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mSettingsPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mSkillGraphPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mSkillDetailPage[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mMiniPage[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    10[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mHook extraction quality[38;2;235;203;139m**[38;2;191;97;106m: Each page directory should have a [38;2;163;190;140m`[38;2;163;190;140mhooks/[38;2;163;190;140m`[38;2;191;97;106m subdirectory with a custom hook returning [38;2;163;190;140m`[38;2;163;190;140m{ state, actions }[38;2;163;190;140m`[38;2;191;97;106m. Check whether hooks properly separate state management from rendering concerns. Existing hooks to review: [38;2;163;190;140m`[38;2;163;190;140museSkillGraph[38;2;163;190;140m`[38;2;191;97;106m (in SkillGraphPage), plus the shared hooks in [38;2;163;190;140m`[38;2;163;190;140mclient/src/hooks/[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mState structure anti-patterns[38;2;235;203;139m**[38;2;191;97;106m: Look for multiple [38;2;163;190;140m`[38;2;163;190;140museState[38;2;163;190;140m`[38;2;191;97;106m calls that are always set together (should be grouped), boolean+enum combinations that create impossible states (should be collapsed), and state that could be derived from other state (should be computed).[K
+[0m[48;2;40;67;43m[39m+    12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mComponent size[38;2;235;203;139m**[38;2;191;97;106m: Components over ~150 lines of JSX need decomposition. Check each page's main component file for size.[K
+[0m[48;2;40;67;43m[39m+    13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mContext usage[38;2;235;203;139m**[38;2;191;97;106m: Three contexts exist: [38;2;163;190;140m`[38;2;163;190;140mWindowContext[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mNotificationContext[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mActivityLogContext[38;2;163;190;140m`[38;2;191;97;106m. Assess whether they follow the hook+provider pattern, whether they hold too much state, and whether any context is doing work that belongs in a hook or service.[K
+[0m[48;2;40;67;43m[39m+    14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mData fetching patterns[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mclient/src/hooks/queries/queries.ts[38;2;163;190;140m`[38;2;191;97;106m centralizes API queries. Check whether pages fetch data correctly (handling loading/error/success/empty states) and whether any pages do ad-hoc fetching outside the queries module.[K
+[0m[48;2;40;67;43m[39m+    15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mProp drilling vs context[38;2;235;203;139m**[38;2;191;97;106m: Look for cases where props are passed through multiple component layers when a context or hook would be cleaner.[K
+[0m[48;2;40;67;43m[39m+    16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDirectory structure compliance[38;2;235;203;139m**[38;2;191;97;106m: Complex features should follow the pattern: [38;2;163;190;140m`[38;2;163;190;140mFeatureName/index.ts[38;2;163;190;140m`[38;2;191;97;106m (barrel), [38;2;163;190;140m`[38;2;163;190;140mFeatureName.tsx[38;2;163;190;140m`[38;2;191;97;106m (orchestrator), [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mhooks/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcomponents/[38;2;163;190;140m`[38;2;191;97;106m. Check which pages follow this and which don't.[K
+[0m[48;2;40;67;43m[39m+    17[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    18[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mExploration guidance[K
+[0m[48;2;40;67;43m[39m+    19[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    20[0m:[39m[48;2;24;38;30m [38;2;192;197;206mStart with the page directory structure:[K
+[0m[48;2;40;67;43m[39m+    21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/SessionsPage/[38;2;163;190;140m`[38;2;191;97;106m — list all files, check for hook extraction and sub-components.[K
+[0m[48;2;40;67;43m[39m+    22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/SessionDetailPage/[38;2;163;190;140m`[38;2;191;97;106m — 8 entries, likely the most complex page. Check decomposition.[K
+[0m[48;2;40;67;43m[39m+    23[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/CherrypickPage/[38;2;163;190;140m`[38;2;191;97;106m — 7 entries, involves conversation pruning logic.[K
+[0m[48;2;40;67;43m[39m+    24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/OrphansPage/[38;2;163;190;140m`[38;2;191;97;106m — check structure.[K
+[0m[48;2;40;67;43m[39m+    25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/SettingsPage/[38;2;163;190;140m`[38;2;191;97;106m — 7 entries, has sub-components directory.[K
+[0m[48;2;40;67;43m[39m+    26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/SkillGraphPage/[38;2;163;190;140m`[38;2;191;97;106m — 7 entries, has hooks directory with [38;2;163;190;140m`[38;2;163;190;140museSkillGraph[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/SkillDetailPage/[38;2;163;190;140m`[38;2;191;97;106m — 8 entries, check decomposition.[K
+[0m[48;2;40;67;43m[39m+    28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/MiniPage/[38;2;163;190;140m`[38;2;191;97;106m — 7 entries, compact session list.[K
+[0m[48;2;40;67;43m[39m+    29[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    30[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen review shared UI infrastructure:[K
+[0m[48;2;40;67;43m[39m+    31[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/components/[38;2;163;190;140m`[38;2;191;97;106m — 10 component directories. Check which are presentational vs stateful.[K
+[0m[48;2;40;67;43m[39m+    32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/context/[38;2;163;190;140m`[38;2;191;97;106m — 3 context directories. Read each to assess state management.[K
+[0m[48;2;40;67;43m[39m+    33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/hooks/[38;2;163;190;140m`[38;2;191;97;106m — shared hooks. Check whether they return [38;2;163;190;140m`[38;2;163;190;140m{ state, actions }[38;2;163;190;140m`[38;2;191;97;106m or raw values.[K
+[0m[48;2;40;67;43m[39m+    34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/App.tsx[38;2;163;190;140m`[38;2;191;97;106m — the root component. Check whether it's a thin orchestrator or accumulates logic.[K
+[0m[48;2;40;67;43m[39m+    35[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    36[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor state anti-patterns, grep for:[K
+[0m[48;2;40;67;43m[39m+    37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mMultiple [38;2;163;190;140m`[38;2;163;190;140museState[38;2;163;190;140m`[38;2;191;97;106m calls in the same component/hook[K
+[0m[48;2;40;67;43m[39m+    38[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140museEffect[38;2;163;190;140m`[38;2;191;97;106m that sets state based on other state (derived state that should be computed)[K
+[0m[48;2;40;67;43m[39m+    39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140msetX(false); setY(value)[38;2;163;190;140m`[38;2;191;97;106m patterns (impossible state signals)[K
+[0m[48;2;40;67;43m[39m+    40[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    41[0m:[39m[48;2;24;38;30m [38;2;192;197;206mKey files to read first:[K
+[0m[48;2;40;67;43m[39m+    42[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/App.tsx[38;2;163;190;140m`[38;2;191;97;106m — already known to have inline styles and mixed concerns.[K
+[0m[48;2;40;67;43m[39m+    43[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/hooks/queries/queries.ts[38;2;163;190;140m`[38;2;191;97;106m — the data fetching layer.[K
+[0m[48;2;40;67;43m[39m+    44[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mclient/src/utils/api.ts[38;2;163;190;140m`[38;2;191;97;106m — the API client.[K
+[0m[48;2;40;67;43m[39m+    45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m One well-structured page (likely [38;2;163;190;140m`[38;2;163;190;140mSkillGraphPage[38;2;163;190;140m`[38;2;191;97;106m given it has hooks/) as a positive example.[K
+[0m[48;2;40;67;43m[39m+    46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m One potentially monolithic page (likely [38;2;163;190;140m`[38;2;163;190;140mSessionDetailPage[38;2;163;190;140m`[38;2;191;97;106m given its complexity) as a candidate for findings.[K
+[0m[48;2;40;67;43m[39m+    47[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    48[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mReport format[K
+[0m[48;2;40;67;43m[39m+    49[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    50[0m:[39m[48;2;24;38;30m [38;2;192;197;206mWrite your report as a markdown file with this structure:[K
+[0m[48;2;40;67;43m[39m+    51[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    52[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+    53[0m:[39m[48;2;24;38;30m [38;2;192;197;206m2-3 sentence overview of what you found.[K
+[0m[48;2;40;67;43m[39m+    54[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    55[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+    56[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    57[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor each finding, include:[K
+[0m[48;2;40;67;43m[39m+    58[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    59[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Which modules/files are involved[K
+[0m[48;2;40;67;43m[39m+    60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: What you found (be specific: quote code, name files, show structure)[K
+[0m[48;2;40;67;43m[39m+    61[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Why this matters (testability, maintainability, coupling, correctness)[K
+[0m[48;2;40;67;43m[39m+    62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: What could be improved (directional, not a full design)[K
+[0m[48;2;40;67;43m[39m+    63[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High / Medium / Low[K
+[0m[48;2;40;67;43m[39m+    64[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    65[0m:[39m[48;2;24;38;30m [38;2;192;197;206mOrder findings by severity (high first).[K
+[0m[48;2;40;67;43m[39m+    66[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    67[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    68[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    69[0m:[39m[48;2;24;38;30m [38;2;192;197;206mIf you identified modules that would benefit from deepening (merging shallow modules into a deep module with a small interface hiding complex implementation), list them here:[K
+[0m[48;2;40;67;43m[39m+    70[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    71[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: Which modules/concepts are involved[K
+[0m[48;2;40;67;43m[39m+    72[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Shared types, call patterns, co-ownership of a concept[K
+[0m[48;2;40;67;43m[39m+    73[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process / Local-substitutable / Remote but owned / True external[K
+[0m[48;2;40;67;43m[39m+    74[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: What existing tests would be replaced by boundary tests[K
+[0m[48;2;40;67;43m[39m+    75[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    76[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    77[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: N[K
+[0m[48;2;40;67;43m[39m+    78[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: N (H high, M medium, L low)[K
+[0m[48;2;40;67;43m[39m+    79[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: N[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-04-react-component-decomposition.md[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.09 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-05-backend-patterns.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+     1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Brief: Backend Patterns and Anti-Patterns[K
+[0m[48;2;40;67;43m[39m+     2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mYour role[K
+[0m[48;2;40;67;43m[39m+     4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mYou are a codebase auditor focused on: evaluating the server and hook-handler packages for backend design quality, including route handler thickness, service decomposition, error handling, data access patterns, and process management.[K
+[0m[48;2;40;67;43m[39m+     6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mWhat to look for[K
+[0m[48;2;40;67;43m[39m+     8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     9[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mRoute handler thickness[38;2;235;203;139m**[38;2;191;97;106m: The standard requires thin handlers that parse input, log, delegate to services, and handle errors. Check whether [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/[38;2;163;190;140m`[38;2;191;97;106m handlers contain business logic that should be in services. Key routes: [38;2;163;190;140m`[38;2;163;190;140msessions/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m (140+ lines, multiple endpoints), [38;2;163;190;140m`[38;2;163;190;140mevents/events.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140morphans/orphans.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mskills/skills.ts[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    10[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mError handling consistency[38;2;235;203;139m**[38;2;191;97;106m: Check whether all route handlers have consistent error responses. Look for: missing error handling in async operations, inconsistent error response shapes, swallowed errors (empty [38;2;163;190;140m`[38;2;163;190;140mcatch[38;2;163;190;140m`[38;2;191;97;106m blocks), and whether the global error handler in [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m catches everything.[K
+[0m[48;2;40;67;43m[39m+    11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mProcess management safety[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m uses [38;2;163;190;140m`[38;2;163;190;140mprocess.kill(pid, 0)[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mexecFileSync("ps", ...)[38;2;163;190;140m`[38;2;191;97;106m for PID checking. Assess: race conditions between check and action, error handling for edge cases (permission denied, zombie processes), and whether [38;2;163;190;140m`[38;2;163;190;140mexecFileSync[38;2;163;190;140m`[38;2;191;97;106m is safe (blocks the event loop).[K
+[0m[48;2;40;67;43m[39m+    12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mFilesystem access patterns[38;2;235;203;139m**[38;2;191;97;106m: Multiple modules read/write to [38;2;163;190;140m`[38;2;163;190;140m~/.weaver/[38;2;163;190;140m`[38;2;191;97;106m. Check for: race conditions in concurrent reads/writes to [38;2;163;190;140m`[38;2;163;190;140msessions.jsonl[38;2;163;190;140m`[38;2;191;97;106m, atomic write patterns (write-to-temp-then-rename vs direct write), and error handling for missing/corrupt files. Key files: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/orphan-storage/[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mshared/sync/patch-agent-config.ts[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    13[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWebhook system design[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/[38;2;163;190;140m`[38;2;191;97;106m has 8+ files (handler, dispatch, pending-tracker, session-tracker, context, payload-simple, payload-advanced, types). Assess whether this decomposition is appropriate or over-fragmented. Check the handler's error handling and retry logic.[K
+[0m[48;2;40;67;43m[39m+    14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mHook-handler CLI design[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/inject/[38;2;163;190;140m`[38;2;191;97;106m are CLI entry points that run as child processes. Check: exit code handling, stderr/stdout usage, argument parsing robustness, and whether they handle unexpected input gracefully.[K
+[0m[48;2;40;67;43m[39m+    15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSynchronous filesystem operations[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mshared/sync/sync.ts[38;2;163;190;140m`[38;2;191;97;106m uses [38;2;163;190;140m`[38;2;163;190;140mreaddirSync[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mexistsSync[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m uses [38;2;163;190;140m`[38;2;163;190;140mexecFileSync[38;2;163;190;140m`[38;2;191;97;106m. Assess whether synchronous operations block the event loop in contexts where async alternatives should be used.[K
+[0m[48;2;40;67;43m[39m+    16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mService initialization order[38;2;235;203;139m**[38;2;191;97;106m: The server starts multiple background services (stale session cleanup, PID polling, keep-awake). Check whether the startup order matters and whether failures in one service affect others.[K
+[0m[48;2;40;67;43m[39m+    17[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    18[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mExploration guidance[K
+[0m[48;2;40;67;43m[39m+    19[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    20[0m:[39m[48;2;24;38;30m [38;2;192;197;206mStart with the server's service layer:[K
+[0m[48;2;40;67;43m[39m+    21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m — PID management, interval timers, [38;2;163;190;140m`[38;2;163;190;140mexecFileSync[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — session CRUD, filesystem access.[K
+[0m[48;2;40;67;43m[39m+    23[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m — SSE pub/sub.[K
+[0m[48;2;40;67;43m[39m+    24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/keep-awake.ts[38;2;163;190;140m`[38;2;191;97;106m — background process management.[K
+[0m[48;2;40;67;43m[39m+    25[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m — webhook orchestration.[K
+[0m[48;2;40;67;43m[39m+    26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/dispatch.ts[38;2;163;190;140m`[38;2;191;97;106m — HTTP dispatch.[K
+[0m[48;2;40;67;43m[39m+    27[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/pending-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m — tracks pending webhooks.[K
+[0m[48;2;40;67;43m[39m+    28[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    29[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen review route handlers:[K
+[0m[48;2;40;67;43m[39m+    30[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — the largest route file, multiple endpoints.[K
+[0m[48;2;40;67;43m[39m+    31[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/events/events.ts[38;2;163;190;140m`[38;2;191;97;106m — event ingestion, likely the hottest path.[K
+[0m[48;2;40;67;43m[39m+    32[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/orphans/orphans.ts[38;2;163;190;140m`[38;2;191;97;106m — orphan event management.[K
+[0m[48;2;40;67;43m[39m+    33[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/config.ts[38;2;163;190;140m`[38;2;191;97;106m — config CRUD.[K
+[0m[48;2;40;67;43m[39m+    34[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    35[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThen review hook-handler:[K
+[0m[48;2;40;67;43m[39m+    36[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/run-validation/run-validation.ts[38;2;163;190;140m`[38;2;191;97;106m — validation orchestration.[K
+[0m[48;2;40;67;43m[39m+    37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/stop-hook/stop-hook.ts[38;2;163;190;140m`[38;2;191;97;106m — stop hook logic.[K
+[0m[48;2;40;67;43m[39m+    38[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/commands.ts[38;2;163;190;140m`[38;2;191;97;106m — command execution.[K
+[0m[48;2;40;67;43m[39m+    39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/validate/exit.ts[38;2;163;190;140m`[38;2;191;97;106m — exit code handling.[K
+[0m[48;2;40;67;43m[39m+    40[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/inject/run-inject/run-inject.ts[38;2;163;190;140m`[38;2;191;97;106m — injection logic.[K
+[0m[48;2;40;67;43m[39m+    41[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/session-analysis/session-analysis.ts[38;2;163;190;140m`[38;2;191;97;106m — session log analysis.[K
+[0m[48;2;40;67;43m[39m+    42[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/scope/scope.ts[38;2;163;190;140m`[38;2;191;97;106m — scope resolution.[K
+[0m[48;2;40;67;43m[39m+    43[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    44[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor filesystem safety, grep for:[K
+[0m[48;2;40;67;43m[39m+    45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mwriteFileSync[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mwriteFile[38;2;163;190;140m`[38;2;191;97;106m — check for atomic write patterns.[K
+[0m[48;2;40;67;43m[39m+    46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mreadFileSync[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mreadFile[38;2;163;190;140m`[38;2;191;97;106m — check for error handling on missing/corrupt files.[K
+[0m[48;2;40;67;43m[39m+    47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140munlinkSync[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140munlink[38;2;163;190;140m`[38;2;191;97;106m — check for TOCTOU race conditions.[K
+[0m[48;2;40;67;43m[39m+    48[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    49[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor error handling, grep for:[K
+[0m[48;2;40;67;43m[39m+    50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mEmpty [38;2;163;190;140m`[38;2;163;190;140mcatch[38;2;163;190;140m`[38;2;191;97;106m blocks: [38;2;163;190;140m`[38;2;163;190;140mcatch {[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mcatch ([38;2;163;190;140m`[38;2;191;97;106m followed by [38;2;163;190;140m`[38;2;163;190;140m}[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mcatch[38;2;163;190;140m`[38;2;191;97;106m blocks that only log but don't propagate or handle[K
+[0m[48;2;40;67;43m[39m+    52[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    53[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mReport format[K
+[0m[48;2;40;67;43m[39m+    54[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    55[0m:[39m[48;2;24;38;30m [38;2;192;197;206mWrite your report as a markdown file with this structure:[K
+[0m[48;2;40;67;43m[39m+    56[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    57[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+    58[0m:[39m[48;2;24;38;30m [38;2;192;197;206m2-3 sentence overview of what you found.[K
+[0m[48;2;40;67;43m[39m+    59[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    60[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+    61[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    62[0m:[39m[48;2;24;38;30m [38;2;192;197;206mFor each finding, include:[K
+[0m[48;2;40;67;43m[39m+    63[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Which modules/files are involved[K
+[0m[48;2;40;67;43m[39m+    65[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: What you found (be specific: quote code, name files, show structure)[K
+[0m[48;2;40;67;43m[39m+    66[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Why this matters (testability, maintainability, coupling, correctness)[K
+[0m[48;2;40;67;43m[39m+    67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: What could be improved (directional, not a full design)[K
+[0m[48;2;40;67;43m[39m+    68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High / Medium / Low[K
+[0m[48;2;40;67;43m[39m+    69[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    70[0m:[39m[48;2;24;38;30m [38;2;192;197;206mOrder findings by severity (high first).[K
+[0m[48;2;40;67;43m[39m+    71[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    72[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    73[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    74[0m:[39m[48;2;24;38;30m [38;2;192;197;206mIf you identified modules that would benefit from deepening (merging shallow modules into a deep module with a small interface hiding complex implementation), list them here:[K
+[0m[48;2;40;67;43m[39m+    75[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    76[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: Which modules/concepts are involved[K
+[0m[48;2;40;67;43m[39m+    77[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: Shared types, call patterns, co-ownership of a concept[K
+[0m[48;2;40;67;43m[39m+    78[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process / Local-substitutable / Remote but owned / True external[K
+[0m[48;2;40;67;43m[39m+    79[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: What existing tests would be replaced by boundary tests[K
+[0m[48;2;40;67;43m[39m+    80[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    81[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    82[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: N[K
+[0m[48;2;40;67;43m[39m+    83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: N (H high, M medium, L low)[K
+[0m[48;2;40;67;43m[39m+    84[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: N[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-05-backend-patterns.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.08 s
+[0m[?25l[0m[38;5;141m> [0mAll 5 prompts are generated. Let me verify they're all in place:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts[0m[38;5;244m (using tool: read, max depth: 0, max entries: 1000, excluding: defaults)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts[0m [38;5;244m(5 entries)[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mAll 5 exploration prompts are written to [38;5;10maudit-reports/20260327T222226/prompts/[0m:[0m[0m
+[0m[0m
+| File | Lens | Key focus areas |[0m[0m
+|------|------|-----------------|[0m[0m
+| [38;5;10mprompt-01-architectural-depth-and-coupling.md[0m | Architecture | Cross-package coupling, module-level mutable state, shallow vs deep modules, event bus design, shared/sync placement |[0m[0m
+| [38;5;10mprompt-02-testability-gaps.md[0m | Testability | Desktop (0 tests), client coverage gaps, over-mocked tests, weakened assertions, CLI coverage, boundary test gaps |[0m[0m
+| [38;5;10mprompt-03-coding-standards.md[0m | Standards | For-loop violations, terse naming, module-level side effects, logging, import order, default exports, guard clauses — embeds all TS/backend/frontend rules inline |[0m[0m
+| [38;5;10mprompt-04-react-component-decomposition.md[0m | React decomposition | Page component monoliths, hook extraction, state anti-patterns, context usage, directory structure compliance |[0m[0m
+| [38;5;10mprompt-05-backend-patterns.md[0m | Backend patterns | Route handler thickness, process management safety ([38;5;10mexecFileSync[0m, PID checks), filesystem race conditions, webhook decomposition, sync fs operations blocking event loop |[0m[0m
+[0m[0m
+Each prompt is self-contained with concrete file paths, grep suggestions, and the full report format. Prompt 03 embeds the complete coding standards since explorer agents won't have access to the skills files.[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m1.76 s
+[0m[38;5;8m
+ ▸ Credits: 2.95 • Time: 4m 18s
+
+[0m[1G[0m[0m[?25h

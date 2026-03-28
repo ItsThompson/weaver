@@ -4,17 +4,15 @@ import { broadcast, emit, sseReply } from "../../services/event-bus";
 import { readSessions } from "../../services/storage/index";
 import { handleWebhookEvent } from "../../services/webhook/index";
 import { log } from "../../utils/logger";
+import { notifyBody, viewBody, navigateBody } from "../schemas";
+import { zodBody } from "../schema-utils";
 
 export function registerEventRoutes(server: FastifyInstance): void {
-  // Body type uses HookEventName for developer-time safety; Fastify does not
-  // validate the incoming JSON against the union at runtime.
   server.post<{ Body: { sessionId: string; eventName?: HookEventName } }>(
     "/api/notify",
+    { schema: zodBody(notifyBody) },
     async (request, reply) => {
-      const { sessionId, eventName } = request.body ?? {};
-      if (typeof sessionId !== "string") {
-        return reply.status(400).send({ error: "sessionId required" });
-      }
+      const { sessionId, eventName } = request.body;
 
       // Enrich with session name for notifications
       const sessions = await readSessions();
@@ -40,11 +38,9 @@ export function registerEventRoutes(server: FastifyInstance): void {
 
   server.post<{ Body: { pid: number } }>(
     "/api/view",
+    { schema: zodBody(viewBody) },
     async (request, reply) => {
-      const { pid } = request.body ?? {};
-      if (typeof pid !== "number") {
-        return reply.status(400).send({ error: "pid required" });
-      }
+      const { pid } = request.body;
       const sessions = await readSessions();
       const session = sessions.filter((s) => s.pid === pid).pop();
       if (!session) {
@@ -57,11 +53,9 @@ export function registerEventRoutes(server: FastifyInstance): void {
 
   server.post<{ Body: { page: string } }>(
     "/api/navigate",
+    { schema: zodBody(navigateBody) },
     async (request, reply) => {
-      const { page } = request.body ?? {};
-      if (typeof page !== "string") {
-        return reply.status(400).send({ error: "page required" });
-      }
+      const { page } = request.body;
       emit({ event: "navigate", data: { page } });
       return { ok: true };
     },
