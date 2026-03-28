@@ -2,6 +2,7 @@ import { fork, execSync, ChildProcess } from "node:child_process";
 import { resolve } from "node:path";
 import http from "node:http";
 import { app } from "electron";
+import { log } from "./utils/logger";
 
 export const SERVER_PORT = 8143;
 export const SERVER_URL = `http://localhost:${SERVER_PORT}`;
@@ -20,7 +21,12 @@ export function killPortOccupant(): void {
     }).trim();
     if (pid) {
       process.kill(Number(pid), "SIGKILL");
-      console.log(`Killed orphaned process ${pid} on port ${SERVER_PORT}`);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "killed_orphaned_process",
+        pid: Number(pid),
+        port: SERVER_PORT,
+      });
     }
   } catch {
     // No process on port — nothing to clean up
@@ -36,7 +42,11 @@ export function start(): void {
   child = fork(serverEntry, [], { stdio: "inherit", env });
   child.on("exit", (code) => {
     if (code !== 0 && code !== null) {
-      console.error(`Server exited with code ${code}`);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "server_exited",
+        code,
+      });
     }
   });
 }

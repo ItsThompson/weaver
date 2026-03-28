@@ -1,4 +1,5 @@
 import http from "node:http";
+import { log } from "./utils/logger";
 
 type EventHandler = (event: string, data: unknown) => void;
 
@@ -20,7 +21,11 @@ export function subscribeSSE(baseUrl: string, onEvent: EventHandler): void {
               try {
                 onEvent(eventMatch[1], JSON.parse(dataMatch[1]));
               } catch (e) {
-                console.error("Failed to parse SSE data:", e);
+                log({
+                  timestamp: new Date().toISOString(),
+                  event: "sse_parse_error",
+                  error: String(e),
+                });
               }
             }
           });

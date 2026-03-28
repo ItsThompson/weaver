@@ -1,4 +1,5 @@
 import { post } from "../utils";
+import { print, printError } from "../utils/output";
 
 export function session(pid: number, args: string[]): void {
   const subcommand = args[0];
@@ -9,13 +10,13 @@ export function session(pid: number, args: string[]): void {
     const { ok, status } = post("/api/view", { pid: targetPid });
 
     if (status === 0) {
-      console.log("Weaver server not running");
+      print("Weaver server not running");
     } else if (ok) {
-      console.log(`Opening session for PID ${targetPid} in Weaver dashboard`);
+      print(`Opening session for PID ${targetPid} in Weaver dashboard`);
     } else if (status === 404) {
-      console.log(`No session found for PID ${targetPid}`);
+      print(`No session found for PID ${targetPid}`);
     } else {
-      console.log(`Weaver server error (${status})`);
+      print(`Weaver server error (${status})`);
     }
     return;
   }
@@ -25,16 +26,16 @@ export function session(pid: number, args: string[]): void {
     const { ok, status } = post("/api/navigate", { page: "sessions" });
 
     if (status === 0) {
-      console.log("Weaver server not running");
+      print("Weaver server not running");
     } else if (ok) {
-      console.log("Opening sessions list in Weaver dashboard");
+      print("Opening sessions list in Weaver dashboard");
     } else {
-      console.log(`Weaver server error (${status})`);
+      print(`Weaver server error (${status})`);
     }
     return;
   }
 
-  console.error(`Unknown session subcommand: ${subcommand}`);
-  console.error("Usage: weaver session [list | <PID>]");
+  printError(`Unknown session subcommand: ${subcommand}`);
+  printError("Usage: weaver session [list | <PID>]");
   process.exit(1);
 }

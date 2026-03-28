@@ -1,6 +1,7 @@
 import { writeFileSync } from "node:fs";
 import { pendingPath } from "@weaver/shared/paths";
 import type { ValidationResult } from "@weaver/shared/types";
+import { log } from "../utils/logger";
 
 export interface ValidateResult {
   exitCode: number;
@@ -19,7 +20,12 @@ export function handleExitLogic(
     try {
       writeFileSync(path, JSON.stringify({ results }));
     } catch (e) {
-      console.error("Failed to write pending file:", path, e);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "pending_write_error",
+        path,
+        error: String(e),
+      });
     }
     const names = failed.map((r) => r.name).join(", ");
     return {

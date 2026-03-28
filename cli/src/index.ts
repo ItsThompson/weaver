@@ -5,6 +5,7 @@ import { rename } from "./commands/rename";
 import { toggle } from "./commands/toggle";
 import { config } from "./commands/config";
 import { sync } from "./commands/sync";
+import { print, printError } from "./utils/output";
 
 // argv: [node, script, callerPid, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
@@ -21,7 +22,7 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
 };
 
 if (!command || command === "--help" || command === "-h") {
-  console.log(`Usage: weaver <command>
+  print(`Usage: weaver <command>
 
 Commands:
   view              Navigate dashboard to the current kiro-cli session
@@ -40,7 +41,7 @@ Commands:
 
 const handler = COMMANDS[command];
 if (!handler) {
-  console.error(`Unknown command: ${command}\nRun 'weaver --help' for usage.`);
+  printError(`Unknown command: ${command}\nRun 'weaver --help' for usage.`);
   process.exit(1);
 }
 

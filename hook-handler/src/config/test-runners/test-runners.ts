@@ -2,6 +2,7 @@ import { readFileSync, existsSync } from "node:fs";
 import { configPath } from "@weaver/shared/paths";
 import type { WeaverConfig, WeaverProjectConfig } from "@weaver/shared/types";
 import { DEFAULT_TEST_RUNNERS } from "@weaver/shared/types";
+import { log } from "../../utils/logger";
 
 export function resolveTestRunners(
   projectConfig: WeaverProjectConfig | null,
@@ -33,7 +34,12 @@ function readGlobalTestRunners(): string[] {
       );
     }
   } catch (e) {
-    console.error("Failed to parse ~/.weaver/config.json:", e);
+    log({
+      timestamp: new Date().toISOString(),
+      event: "config_parse_error",
+      path,
+      error: String(e),
+    });
   }
   return [];
 }

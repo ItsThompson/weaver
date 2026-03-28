@@ -16,6 +16,7 @@ import { createTray } from "./tray";
 import { fetchConfig, putConfig } from "./config";
 import { subscribeSSE } from "./sse";
 import { installCli } from "./install-cli";
+import { log } from "./utils/logger";
 
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
@@ -30,7 +31,10 @@ app.on("ready", async () => {
   try {
     await server.waitForReady();
   } catch {
-    console.error("Could not connect to server");
+    log({
+      timestamp: new Date().toISOString(),
+      event: "server_connect_failed",
+    });
     app.exit(1);
     return;
   }

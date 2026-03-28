@@ -1,13 +1,14 @@
 import { post } from "../utils";
+import { print } from "../utils/output";
 
 export function toggle(pid: number, _args: string[]): void {
   const { ok, status } = post("/api/navigate", { page: "toggle", pid });
 
   if (status === 0) {
-    console.log("Weaver server not running");
+    print("Weaver server not running");
   } else if (ok) {
-    console.log("Toggled Weaver mode");
+    print("Toggled Weaver mode");
   } else {
-    console.log(`Weaver server error (${status})`);
+    print(`Weaver server error (${status})`);
   }
 }

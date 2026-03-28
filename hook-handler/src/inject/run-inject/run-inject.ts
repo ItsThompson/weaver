@@ -2,6 +2,7 @@ import { readFileSync, unlinkSync, existsSync } from "node:fs";
 import { pendingPath } from "@weaver/shared/paths";
 import type { PendingFile } from "../formatting";
 import { formatPendingOutput } from "../formatting";
+import { log } from "../../utils/logger";
 
 export function runInject(sessionId: string): {
   stdout: string;
@@ -23,11 +24,21 @@ export function runInject(sessionId: string): {
       throw new Error("invalid");
     }
   } catch (e) {
-    console.error("Failed to parse pending file:", path, e);
+    log({
+      timestamp: new Date().toISOString(),
+      event: "pending_parse_error",
+      path,
+      error: String(e),
+    });
     try {
       unlinkSync(path);
     } catch (e) {
-      console.warn("Failed to clean up pending file:", path, e);
+      log({
+        timestamp: new Date().toISOString(),
+        event: "pending_cleanup_error",
+        path,
+        error: String(e),
+      });
     }
     return { stdout: "", exitCode: 0 };
   }
@@ -35,7 +46,12 @@ export function runInject(sessionId: string): {
   try {
     unlinkSync(path);
   } catch (e) {
-    console.warn("Failed to clean up pending file:", path, e);
+    log({
+      timestamp: new Date().toISOString(),
+      event: "pending_cleanup_error",
+      path,
+      error: String(e),
+    });
   }
 
   const stdout = formatPendingOutput(data.results);
