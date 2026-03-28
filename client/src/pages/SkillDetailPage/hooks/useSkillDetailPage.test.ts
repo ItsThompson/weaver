@@ -200,11 +200,11 @@ describe("useSkillDetailPage", () => {
       ]);
     });
 
-    it("includes project in queryString", () => {
+    it("includes project in breadcrumb hrefs", () => {
       mockSearchParams = new URLSearchParams("project=my-app");
 
       const { result } = renderHook(() => useSkillDetailPage());
-      expect(result.current.state.queryString).toBe("?project=my-app");
+      expect(result.current.state.breadcrumbs[1].href).toBe("#?project=my-app");
     });
   });
 

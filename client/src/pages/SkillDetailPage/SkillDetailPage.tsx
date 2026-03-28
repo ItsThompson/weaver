@@ -10,9 +10,7 @@ import Alert from "@cloudscape-design/components/alert";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { CreateCategoryModal } from "./components/CreateCategoryModal";
-import { useSkillDetailPage } from "./hooks/useSkillDetailPage";
-
-const UNCATEGORIZED = "__uncategorized__";
+import { useSkillDetailPage, UNCATEGORIZED } from "./hooks/useSkillDetailPage";
 
 export function SkillDetailPage() {
   const { state, actions } = useSkillDetailPage();

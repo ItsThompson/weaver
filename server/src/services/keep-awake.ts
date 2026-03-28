@@ -5,6 +5,7 @@ import { getLastEvent, deriveActivity } from "./log-parser/index";
 import { log as defaultLog } from "../utils/logger";
 import type { LogEntry } from "../utils/logger";
 import type { LastEvent } from "./log-parser/types";
+import type { HookEventName, ActivityStatus } from "@weaver/shared/types";
 
 const POLL_INTERVAL_MS = 60_000;
 const ACTIVE_STATES = new Set(["processing", "running_tool"]);
@@ -13,7 +14,10 @@ export interface KeepAwakeDeps {
   readSessions: () => Promise<Session[]>;
   isProcessRunning: (pid: number) => Promise<boolean>;
   getLastEvent: (sessionId: string) => Promise<LastEvent | null>;
-  deriveActivity: (eventName: string, timestamp?: string) => string;
+  deriveActivity: (
+    eventName: HookEventName,
+    timestamp?: string,
+  ) => ActivityStatus;
   log: (entry: LogEntry) => void;
 }
 

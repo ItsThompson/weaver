@@ -1,0 +1,778 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","./audit-reports/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.33 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+Let me start by reading the brief.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-01-architectural-depth-and-coupling.md[0m, all lines[38;5;244m (using tool: read)[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4474 bytes[0m from /Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/prompts/prompt-01-architectural-depth-and-coupling.md
+[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Let me start by exploring the codebase structure and then trace through the specific areas mentioned in the brief.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mNow let me explore the codebase structure and read the key files.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver[0m[38;5;244m (using tool: read, max depth: 2, max entries: 1000, excluding: defaults)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver[0m [38;5;244m(showing 1000 of 1847 entries, offset: 0)[0m
+[38;5;244m - Completed in 0.124s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mLet me now read the key source files in parallel. I'll start with the package.json files and the core source files mentioned in the brief.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m7[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/package.json[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/package.json[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/package.json[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/package.json[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/package.json[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/package.json[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/package.json[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m566 bytes[0m from /Users/thompsnt/Documents/weaver/server/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1053 bytes[0m from /Users/thompsnt/Documents/weaver/client/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m531 bytes[0m from /Users/thompsnt/Documents/weaver/cli/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m456 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1271 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1089 bytes[0m from /Users/thompsnt/Documents/weaver/shared/package.json
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m965 bytes[0m from /Users/thompsnt/Documents/weaver/package.json
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 7 operations processed, 7 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m10[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/session.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/events.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/config.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/validation.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/skills.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/index.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/utils/index.ts[0m, all lines
+↱ Operation 9: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/paths/index.ts[0m, all lines
+↱ Operation 10: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/paths/paths.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m134 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m862 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/session.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1184 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/events.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1403 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1416 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/validation.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m507 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/skills.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m256 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m25 bytes[0m from /Users/thompsnt/Documents/weaver/shared/utils/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m199 bytes[0m from /Users/thompsnt/Documents/weaver/shared/paths/index.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m966 bytes[0m from /Users/thompsnt/Documents/weaver/shared/paths/paths.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 10 operations processed, 10 successful, 0 failed
+[38;5;244m - Completed in 0.2s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the server entry point, event bus, lifecycle, sessions, and routes:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m9[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/sync.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/patch-agent-config.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/project-config.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/types.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/schemas.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/validation.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/timeout-calc.ts[0m, all lines
+↱ Operation 9: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/utils/fs.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2597 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1710 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/sync.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2466 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/patch-agent-config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1668 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/project-config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m220 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/types.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m510 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/schemas.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1005 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/validation.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1261 bytes[0m from /Users/thompsnt/Documents/weaver/shared/sync/timeout-calc.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m784 bytes[0m from /Users/thompsnt/Documents/weaver/shared/utils/fs.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 9 operations processed, 9 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the server services:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services[0m
+↱ Operation 2: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services[0m [38;5;244m(95 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes[0m [38;5;244m(23 entries)[0m
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.11s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m8[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/index.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/helpers.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/sessions/delete.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1250 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3010 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1499 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m260 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m4679 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m51 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m891 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/helpers.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1662 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/sessions/delete.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 8 operations processed, 8 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the desktop files and the events route:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m4[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/main.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/events/events.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/events/index.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/keep-awake.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2425 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/main.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2610 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/events/events.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m25 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/events/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1682 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/keep-awake.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 4 operations processed, 4 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the desktop config, SSE, server, window, and tray files:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mReading directory: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src[0m[38;5;244m (using tool: read, max depth: 0, max entries: 1000, excluding: defaults)[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src[0m [38;5;244m(8 entries)[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m7[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/config.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/sse.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/server.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/window.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/tray.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/install-cli.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/desktop/src/preload.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1008 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1053 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/sse.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2144 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/server.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3917 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/window.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1417 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/tray.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1436 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/install-cli.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m243 bytes[0m from /Users/thompsnt/Documents/weaver/desktop/src/preload.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 7 operations processed, 7 successful, 0 failed
+[38;5;244m - Completed in 0.2s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the hook-handler and CLI to understand cross-package imports:[0m[0m
+[?25l[0m[0m[1mTool validation failed: [0m
+[38;5;9mFailed to validate tool parameters: '/Users/thompsnt/Documents/weaver/hook-handler/src/sync/index.ts' does not exist
+[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src[0m
+↱ Operation 2: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src[0m
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src[0m [38;5;244m(65 entries)[0m
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/cli/src[0m [38;5;244m(10 entries)[0m
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.9s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141mfrom "@weaver/[0m ([38;5;141m*.ts[0m)[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m106 matches[0m in [38;5;244m87 files[0m under current directory
+[38;5;244m - Completed in 0.192s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Good. Now I have a comprehensive picture. Let me also check for cross-package imports that go between non-shared packages (e.g., server importing from cli, or hook-handler importing from server).
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mAll imports from [38;5;10m@weaver/[0m go to [38;5;10m@weaver/shared[0m. Let me now read a few more key files to complete the picture:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m7[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/sync/sync-entry.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/config/project-config/index.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/config/index.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/hook-handler/src/config/find-config/find-config.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src/commands/sync.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src/index.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/cli/src/utils.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m203 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/sync/sync-entry.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m56 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/config/project-config/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m227 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/config/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1138 bytes[0m from /Users/thompsnt/Documents/weaver/hook-handler/src/config/find-config/find-config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m535 bytes[0m from /Users/thompsnt/Documents/weaver/cli/src/commands/sync.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1577 bytes[0m from /Users/thompsnt/Documents/weaver/cli/src/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1176 bytes[0m from /Users/thompsnt/Documents/weaver/cli/src/utils.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 7 operations processed, 7 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the remaining key files - the event bus test, lifecycle test, webhook handler, and some barrel files:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m8[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/index.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/dispatch.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/session-tracker.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/types.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3648 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2100 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m374 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3227 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/handler.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m723 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/dispatch.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m375 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/session-tracker.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1404 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m757 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/types.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 8 operations processed, 8 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the remaining barrel files and some key index files:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m8[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/index.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-graph/index.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-resolver/index.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/index.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/file-cache/index.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/index.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/routes/config.ts[0m, all lines
+↱ Operation 8: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/config/config.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m274 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m101 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-graph/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m113 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-resolver/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m25 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m29 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/file-cache/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m190 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/index.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2085 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/routes/config.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1807 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/config/config.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 8 operations processed, 8 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at the file-cache and the log-parser to understand the deeper modules:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m7[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/group-turns.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/tool-calls.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/log-parser/types.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/utils/logger.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1482 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1100 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/parse.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2199 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/group-turns.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1398 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/activity.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1182 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/tool-calls.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m562 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/log-parser/types.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m179 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/utils/logger.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 7 operations processed, 7 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the shared/utils/format.ts and the skill-graph discover module:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for files: [38;5;141mshared/utils/*.ts[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m3 files[0m under current directory
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m7[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/utils/format.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/skill-graph/discover.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/read.ts[0m, all lines
+↱ Operation 4: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/helpers.ts[0m, all lines
+↱ Operation 5: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/assign.ts[0m, all lines
+↱ Operation 6: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/delete.ts[0m, all lines
+↱ Operation 7: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/errors.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m93 bytes[0m from /Users/thompsnt/Documents/weaver/shared/utils/format.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2346 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/skill-graph/discover.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1072 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/read.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1463 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/helpers.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1329 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/assign.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m835 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/delete.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m134 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/orphan-storage/errors.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 7 operations processed, 7 successful, 0 failed
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the shared sync test helpers and the client API layer:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/utils/api.ts[0m, all lines
+↱ Operation 2: Reading directory: [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/__test-helpers__[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3102 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/utils/api.ts
+
+[38;5;10m ✓ [0mSuccessfully read directory [38;5;141m/Users/thompsnt/Documents/weaver/shared/sync/__test-helpers__[0m [38;5;244m(3 entries)[0m
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: I now have a comprehensive picture of the codebase. Let me synthesize my findings for the report.
+
+Key findings:
+
+1. **Cross-package coupling**: All packages only import from `@weaver/shared`. No cross-package imports between server, client, cli, hook-handler, desktop. This is clean. However, `shared/sync/` contains disk I/O logic (readFileSync, writeFileSync) that's more than just types/utilities.
+
+2. **Module-level mutable state**: 
+   - `server/src/services/event-bus.ts`: module-level `const listeners = new Set<Listener>()`
+   - `server/src/services/storage/lifecycle.ts`: module-level `cleanupInterval`, `pidPollInterval`, `openPids = new Set<number>()`
+   - `server/src/services/webhook/session-tracker.ts`: module-level `enabledSessions = new Set<string>()`
+   - `server/src/services/keep-awake.ts`: module-level `interval`
+   - `server/src/services/log-parser/parse.ts`: module-level `logCache`
+   - `server/src/services/storage/sessions.ts`: module-level `sessionCache`
+   - `server/src/services/skill-graph/discover.ts`: module-level `skillCache`
+
+3. **Shallow vs deep modules**:
+   - Barrel files: Most are thin re-exports. `shared/types/index.ts` re-exports everything from 5 files. `server/src/services/storage/index.ts` re-exports from sessions and lifecycle. These are just forwarding, not abstracting.
+   - `server/src/services/log-parser/index.ts` exports 5 things from 4 files - it's a reasonable facade.
+   - `hook-handler/src/config/project-config/index.ts` is a single re-export of `readProjectConfig` from `@weaver/shared/sync` - extremely shallow.
+   - `server/src/services/config/index.ts` is just `export * from "./config"` - adds nothing.
+
+4. **Server entry point coupling**: `server/src/index.ts` creates Fastify at module level, registers all routes, starts all services. The `start()` function wires everything together. This is a composition root pattern - acceptable, but the module-level `server` instance means you can't create isolated instances for testing.
+
+5. **Desktop ↔ Server communication**: 
+   - Hardcoded port 8143 in both `desktop/src/server.ts` (`SERVER_PORT = 8143`) and `server/src/index.ts` (`PORT = 8143`)
+   - Desktop uses raw `http` module for config fetch/put and SSE, not shared API types
+   - `desktop/src/config.ts` manually parses `(JSON.parse(body) as { config: WeaverConfig }).config` - implicit contract
+   - `desktop/src/sse.ts` manually parses SSE format with regex - no shared protocol
+   - `desktop/src/window.ts` uses `fetch()` for navigate API - inconsistent with `http` module usage elsewhere
+   - `cli/src/utils.ts` uses `curl` via `execSync` for HTTP - yet another HTTP approach
+
+6. **Sync logic placement**: `shared/sync/` contains `readFileSync`, `writeFileSync`, `readdirSync`, `existsSync` - real filesystem I/O. It reads `.weaver.json`, parses it, calculates timeouts, and patches agent config files. This is consumed by `cli/src/commands/sync.ts` and `hook-handler/src/sync/sync-entry.ts`. The logic is more than "shared types" - it's a full feature implementation in the shared package.
+
+7. **Event bus design**: Clean interface (subscribe, broadcast, emit, sseReply) with a module-level `Set<Listener>`. It's a reasonably deep module - small interface hiding the SSE formatting and listener management. But the module-level state means there's exactly one event bus per process, which is fine for this use case but makes testing require careful cleanup.
+
+8. **Three different HTTP client approaches**: 
+   - Desktop uses Node.js `http` module
+   - Desktop `window.ts` uses global `fetch()`
+   - CLI uses `curl` via `execSync`
+   - Client uses browser `fetch()`
+
+Let me also note the `hook-handler/src/config/project-config/index.ts` which is just a re-export wrapper around `@weaver/shared/sync`.
+
+Now let me write the report.
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/report-01-architectural-depth-and-coupling.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+      1[0m:[39m[48;2;24;38;30m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mAudit Report: Architectural Depth and Coupling[K
+[0m[48;2;40;67;43m[39m+      2[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      3[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mSummary[K
+[0m[48;2;40;67;43m[39m+      4[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      5[0m:[39m[48;2;24;38;30m [38;2;192;197;206mThe monorepo's inter-package dependency graph is clean — every package imports only from [38;2;163;190;140m`[38;2;163;190;140m@weaver/shared[38;2;163;190;140m`[38;2;192;197;206m, with no lateral imports between [38;2;163;190;140m`[38;2;163;190;140mserver[38;2;163;190;140m`[38;2;192;197;206m, [38;2;163;190;140m`[38;2;163;190;140mclient[38;2;163;190;140m`[38;2;192;197;206m, [38;2;163;190;140m`[38;2;163;190;140mcli[38;2;163;190;140m`[38;2;192;197;206m, [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;192;197;206m, or [38;2;163;190;140m`[38;2;163;190;140mdesktop[38;2;163;190;140m`[38;2;192;197;206m. However, [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;192;197;206m contains a full feature implementation (filesystem I/O, config parsing, file patching) that belongs closer to its two consumers. The server's internal architecture relies heavily on module-level mutable state (seven distinct module-level [38;2;163;190;140m`[38;2;163;190;140mSet[38;2;163;190;140m`[38;2;192;197;206m/[38;2;163;190;140m`[38;2;163;190;140mMap[38;2;163;190;140m`[38;2;192;197;206m/interval handles across six files), creating hidden coupling between services that makes isolated testing impossible without process-level isolation. The desktop ↔ server boundary uses three different HTTP client strategies with no shared contract, making it fragile to API changes.[K
+[0m[48;2;40;67;43m[39m+      6[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      7[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mFindings[K
+[0m[48;2;40;67;43m[39m+      8[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+      9[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 1: [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;143;161;179m contains feature-level filesystem I/O, not shared utilities[K
+[0m[48;2;40;67;43m[39m+     10[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     11[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mshared/sync/sync.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mshared/sync/patch-agent-config.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mshared/sync/project-config.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     12[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m package is positioned as types, paths, and utilities. But [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;191;97;106m performs real filesystem operations: [38;2;163;190;140m`[38;2;163;190;140mreadFileSync[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mwriteFileSync[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mreaddirSync[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mexistsSync[38;2;163;190;140m`[38;2;191;97;106m. It reads [38;2;163;190;140m`[38;2;163;190;140m.weaver.json[38;2;163;190;140m`[38;2;191;97;106m from disk, parses and validates it with Zod schemas, calculates timeout values, scans two directories for agent config files, and patches them in-place. This is a complete feature — "sync validation timeouts to agent configs" — living in the shared layer.[K
+[0m[48;2;40;67;43m[39m+     13[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     14[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe two consumers are:[K
+[0m[48;2;40;67;43m[39m+     15[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mcli/src/commands/sync.ts[38;2;163;190;140m`[38;2;191;97;106m: calls [38;2;163;190;140m`[38;2;163;190;140msyncAgentTimeouts(process.cwd(), { dryRun })[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     16[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/sync/sync-entry.ts[38;2;163;190;140m`[38;2;191;97;106m: calls [38;2;163;190;140m`[38;2;163;190;140msyncAgentTimeouts(cwd)[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     17[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     18[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mAdditionally, [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/project-config/index.ts[38;2;163;190;140m`[38;2;191;97;106m is a single-line re-export:[K
+[0m[48;2;40;67;43m[39m+     19[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     20[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export { readProjectConfig } from "@weaver/shared/sync";[K
+[0m[48;2;40;67;43m[39m+     21[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     22[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis creates a wrapper module whose entire implementation is a forwarding import.[K
+[0m[48;2;40;67;43m[39m+     23[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     24[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m package now has a [38;2;163;190;140m`[38;2;163;190;140mzod[38;2;163;190;140m`[38;2;191;97;106m dependency and performs disk writes. Any consumer that depends on [38;2;163;190;140m`[38;2;163;190;140m@weaver/shared/sync[38;2;163;190;140m`[38;2;191;97;106m gets filesystem side effects. The [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m package can no longer be treated as a pure types+utilities layer. Changes to the sync logic require rebuilding [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m, which triggers rebuilds of all six downstream packages via Turborepo.[K
+[0m[48;2;40;67;43m[39m+     25[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     26[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Move [38;2;163;190;140m`[38;2;163;190;140mshared/sync/[38;2;163;190;140m`[38;2;191;97;106m into [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m (its primary consumer) and have [38;2;163;190;140m`[38;2;163;190;140mcli[38;2;163;190;140m`[38;2;191;97;106m import from [38;2;163;190;140m`[38;2;163;190;140mhook-handler[38;2;163;190;140m`[38;2;191;97;106m or extract a small [38;2;163;190;140m`[38;2;163;190;140msync[38;2;163;190;140m`[38;2;191;97;106m workspace package. Keep [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m limited to types, path helpers, and pure utilities. Remove the [38;2;163;190;140m`[38;2;163;190;140mzod[38;2;163;190;140m`[38;2;191;97;106m dependency from [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m if possible (the schemas in [38;2;163;190;140m`[38;2;163;190;140mshared/sync/schemas.ts[38;2;163;190;140m`[38;2;191;97;106m are the only consumer).[K
+[0m[48;2;40;67;43m[39m+     27[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     28[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     29[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     30[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     31[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     32[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 2: Seven module-level mutable singletons across the server create hidden inter-service coupling[K
+[0m[48;2;40;67;43m[39m+     33[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     34[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Multiple files in [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     35[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The server uses module-level mutable state in at least seven locations:[K
+[0m[48;2;40;67;43m[39m+     36[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     37[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| File | State | Type |[K
+[0m[48;2;40;67;43m[39m+     38[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m|------|-------|------|[K
+[0m[48;2;40;67;43m[39m+     39[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mlisteners[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mSet<Listener>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     40[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mcleanupInterval[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mNodeJS.Timeout \| null[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     41[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mpidPollInterval[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mNodeJS.Timeout \| null[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     42[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mopenPids[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mSet<number>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     43[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140msessionCache[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mFileCache<Session[]>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     44[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/log-parser/parse.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mlogCache[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mFileCache<HookEvent[]>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/skill-graph/discover.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mskillCache[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mFileCache<ParsedSkill>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/webhook/session-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140menabledSessions[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mSet<string>[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mpendingTracker[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mPendingTracker[38;2;163;190;140m`[38;2;191;97;106m (wraps [38;2;163;190;140m`[38;2;163;190;140mMap<string, Timeout>[38;2;163;190;140m`[38;2;191;97;106m) |[K
+[0m[48;2;40;67;43m[39m+     48[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mservices/keep-awake.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140minterval[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mNodeJS.Timeout \| null[38;2;163;190;140m`[38;2;191;97;106m |[K
+[0m[48;2;40;67;43m[39m+     49[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThese singletons are wired together implicitly. For example, [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m calls:[K
+[0m[48;2;40;67;43m[39m+     51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     52[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  startPidPolling((sessionId) => broadcast(sessionId));[K
+[0m[48;2;40;67;43m[39m+     53[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     54[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis passes the event bus's [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m function as a callback to the lifecycle module, creating a runtime dependency that isn't visible in the import graph. The lifecycle module's [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m reads sessions (touching [38;2;163;190;140m`[38;2;163;190;140msessionCache[38;2;163;190;140m`[38;2;191;97;106m), checks PIDs, and calls back into the event bus — three singletons involved in one operation.[K
+[0m[48;2;40;67;43m[39m+     55[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     56[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140mkeep-awake.ts[38;2;163;190;140m`[38;2;191;97;106m module similarly reaches across boundaries: it imports [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;191;97;106m from storage, and [38;2;163;190;140m`[38;2;163;190;140mgetLastEvent[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mderiveActivity[38;2;163;190;140m`[38;2;191;97;106m from log-parser, combining four module-level caches in a single polling loop.[K
+[0m[48;2;40;67;43m[39m+     57[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     58[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Tests must mock at the [38;2;163;190;140m`[38;2;163;190;140mvi.mock()[38;2;163;190;140m`[38;2;191;97;106m module level (as seen in [38;2;163;190;140m`[38;2;163;190;140mlifecycle.test.ts[38;2;163;190;140m`[38;2;191;97;106m which imports three mock setup files). You cannot create two independent server instances in the same process. The shutdown sequence in [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m must manually call [38;2;163;190;140m`[38;2;163;190;140mstopWebhookTimers()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstopStaleSessionCleanup()[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mstopKeepAwake()[38;2;163;190;140m`[38;2;191;97;106m — if a new interval-based service is added and the shutdown call is forgotten, it leaks.[K
+[0m[48;2;40;67;43m[39m+     59[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Introduce a [38;2;163;190;140m`[38;2;163;190;140mServerContext[38;2;163;190;140m`[38;2;191;97;106m or dependency container that holds the caches, event bus, and interval handles. Pass it through route registration and service functions. This makes the dependency graph explicit and allows tests to create isolated contexts. The [38;2;163;190;140m`[38;2;163;190;140mPendingTracker[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mwebhook/pending-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m already demonstrates this pattern — it's a factory function ([38;2;163;190;140m`[38;2;163;190;140mcreatePendingTracker()[38;2;163;190;140m`[38;2;191;97;106m) rather than a module-level singleton.[K
+[0m[48;2;40;67;43m[39m+     61[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: High[K
+[0m[48;2;40;67;43m[39m+     63[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     64[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+     65[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     66[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 3: Three different HTTP client strategies across desktop and CLI with no shared contract[K
+[0m[48;2;40;67;43m[39m+     67[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/config.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/sse.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/server.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/window.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcli/src/utils.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The codebase uses four distinct approaches to communicate with the same server API:[K
+[0m[48;2;40;67;43m[39m+     70[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     71[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m1[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mNode.js [38;2;163;190;140m`[38;2;163;190;140mhttp[38;2;163;190;140m`[38;2;235;203;139m module[38;2;235;203;139m**[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/config.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/sse.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     72[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     73[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     http.get(`${baseUrl}/api/config`, (res) => { ... })[K
+[0m[48;2;40;67;43m[39m+     74[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m   ```[K
+[0m[48;2;40;67;43m[39m+     75[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m2[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mGlobal [38;2;163;190;140m`[38;2;163;190;140mfetch()[38;2;163;190;140m`[38;2;235;203;139m**[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/window.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     76[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     77[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     await fetch(`${serverUrl}/api/navigate`, { method: "POST", ... })[K
+[0m[48;2;40;67;43m[39m+     78[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m   ```[K
+[0m[48;2;40;67;43m[39m+     79[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m3[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;235;203;139m via [38;2;163;190;140m`[38;2;163;190;140mexecSync[38;2;163;190;140m`[38;2;235;203;139m**[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mcli/src/utils.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     80[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     81[0m:[39m[48;2;24;38;30m [38;2;191;97;106m     execSync(`curl -s --max-time 3 -w "\\n%{http_code}" ${args}`, ...)[K
+[0m[48;2;40;67;43m[39m+     82[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m   ```[K
+[0m[48;2;40;67;43m[39m+     83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m4[38;2;191;97;106m.[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mBrowser [38;2;163;190;140m`[38;2;163;190;140mfetch()[38;2;163;190;140m`[38;2;235;203;139m**[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mclient/src/utils/api.ts[38;2;163;190;140m`[38;2;191;97;106m (expected, this is the React app)[K
+[0m[48;2;40;67;43m[39m+     84[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     85[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe desktop [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m manually casts the response:[K
+[0m[48;2;40;67;43m[39m+     86[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+     87[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  resolve((JSON.parse(body) as { config: WeaverConfig }).config);[K
+[0m[48;2;40;67;43m[39m+     88[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+     89[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis is an implicit contract — if the server changes the response shape from [38;2;163;190;140m`[38;2;163;190;140m{ config: WeaverConfig }[38;2;163;190;140m`[38;2;191;97;106m to something else, this breaks silently at runtime with no type error.[K
+[0m[48;2;40;67;43m[39m+     90[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     91[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe port [38;2;163;190;140m`[38;2;163;190;140m8143[38;2;163;190;140m`[38;2;191;97;106m is hardcoded in both [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m ([38;2;163;190;140m`[38;2;163;190;140mconst PORT = 8143[38;2;163;190;140m`[38;2;191;97;106m) and [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/server.ts[38;2;163;190;140m`[38;2;191;97;106m ([38;2;163;190;140m`[38;2;163;190;140mexport const SERVER_PORT = 8143[38;2;163;190;140m`[38;2;191;97;106m). These are independent constants that must be kept in sync manually.[K
+[0m[48;2;40;67;43m[39m+     92[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     93[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: API changes require updating response parsing in multiple files using different HTTP libraries. The [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;191;97;106m-based approach in the CLI means HTTP errors are swallowed into a generic [38;2;163;190;140m`[38;2;163;190;140m{ ok: false, status: 0, data: null }[38;2;163;190;140m`[38;2;191;97;106m shape. The port duplication is a correctness risk if either side changes independently.[K
+[0m[48;2;40;67;43m[39m+     94[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     95[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Extract the port constant into [38;2;163;190;140m`[38;2;163;190;140m@weaver/shared/paths[38;2;163;190;140m`[38;2;191;97;106m (or a new [38;2;163;190;140m`[38;2;163;190;140mshared/constants[38;2;163;190;140m`[38;2;191;97;106m). For the desktop package, standardize on one HTTP approach (Node.js [38;2;163;190;140m`[38;2;163;190;140mhttp[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m — Electron supports both). Consider a thin typed API client in [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m that both desktop and CLI can use, or at minimum share the response type assertions.[K
+[0m[48;2;40;67;43m[39m+     96[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     97[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+     98[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+     99[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    100[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    101[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 4: Server entry point creates Fastify instance at module level[K
+[0m[48;2;40;67;43m[39m+    102[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    103[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    104[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The server entry point creates the Fastify instance at module scope:[K
+[0m[48;2;40;67;43m[39m+    105[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    106[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const server = Fastify();[K
+[0m[48;2;40;67;43m[39m+    107[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // ... register routes ...[K
+[0m[48;2;40;67;43m[39m+    108[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  registerHealthRoute(server);[K
+[0m[48;2;40;67;43m[39m+    109[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  registerSessionRoutes(server);[K
+[0m[48;2;40;67;43m[39m+    110[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // ...[K
+[0m[48;2;40;67;43m[39m+    111[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    112[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThen [38;2;163;190;140m`[38;2;163;190;140mstart()[38;2;163;190;140m`[38;2;191;97;106m calls [38;2;163;190;140m`[38;2;163;190;140mserver.listen()[38;2;163;190;140m`[38;2;191;97;106m. This means importing [38;2;163;190;140m`[38;2;163;190;140mserver/src/index.ts[38;2;163;190;140m`[38;2;191;97;106m (even in tests) immediately creates a Fastify instance and registers all routes. The route registration functions take a [38;2;163;190;140m`[38;2;163;190;140mFastifyInstance[38;2;163;190;140m`[38;2;191;97;106m parameter, which is good — but they're called unconditionally at import time.[K
+[0m[48;2;40;67;43m[39m+    113[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    114[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe route handlers themselves reach directly into module-level service singletons:[K
+[0m[48;2;40;67;43m[39m+    115[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    116[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  // sessions.ts route handler[K
+[0m[48;2;40;67;43m[39m+    117[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const sessions = await readSessions();  // touches sessionCache singleton[K
+[0m[48;2;40;67;43m[39m+    118[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const isOpen = isProcessRunning(s.pid); // touches lifecycle module state[K
+[0m[48;2;40;67;43m[39m+    119[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  broadcast(sessionId);                   // touches event bus singleton[K
+[0m[48;2;40;67;43m[39m+    120[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    121[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    122[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: You cannot import the server module without triggering side effects. Integration tests must either mock the entire module or spin up a real server. The route handlers are tightly coupled to the service singletons — you can't test a route handler with a different storage backend without module-level mocking.[K
+[0m[48;2;40;67;43m[39m+    123[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    124[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Export a [38;2;163;190;140m`[38;2;163;190;140mcreateServer()[38;2;163;190;140m`[38;2;191;97;106m factory function that accepts dependencies (or at minimum, creates the Fastify instance inside the function). This is a common Fastify pattern. The current [38;2;163;190;140m`[38;2;163;190;140mstart()[38;2;163;190;140m`[38;2;191;97;106m function is close — it just needs the Fastify creation and route registration moved inside it.[K
+[0m[48;2;40;67;43m[39m+    125[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    126[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    127[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    128[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    129[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    130[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 5: Excessive barrel file indirection with zero-value re-export layers[K
+[0m[48;2;40;67;43m[39m+    131[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    132[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: Multiple [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m files across the codebase[K
+[0m[48;2;40;67;43m[39m+    133[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: Several barrel files add an indirection layer with no abstraction value:[K
+[0m[48;2;40;67;43m[39m+    134[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    135[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| File | Content | Value |[K
+[0m[48;2;40;67;43m[39m+    136[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m|------|---------|-------|[K
+[0m[48;2;40;67;43m[39m+    137[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/config/index.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mexport * from "./config"[38;2;163;190;140m`[38;2;191;97;106m | Zero — single file re-export |[K
+[0m[48;2;40;67;43m[39m+    138[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/file-cache/index.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mexport * from "./file-cache"[38;2;163;190;140m`[38;2;191;97;106m | Zero — single file re-export |[K
+[0m[48;2;40;67;43m[39m+    139[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/events/index.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mexport * from "./events"[38;2;163;190;140m`[38;2;191;97;106m | Zero — single file re-export |[K
+[0m[48;2;40;67;43m[39m+    140[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/sessions/index.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mexport { registerSessionRoutes } from "./sessions"[38;2;163;190;140m`[38;2;191;97;106m | Zero — single symbol |[K
+[0m[48;2;40;67;43m[39m+    141[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mserver/src/routes/orphans/index.ts[38;2;163;190;140m`[38;2;191;97;106m | Single re-export (27 bytes) | Zero |[K
+[0m[48;2;40;67;43m[39m+    142[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m| [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/project-config/index.ts[38;2;163;190;140m`[38;2;191;97;106m | [38;2;163;190;140m`[38;2;163;190;140mexport { readProjectConfig } from "@weaver/shared/sync"[38;2;163;190;140m`[38;2;191;97;106m | Negative — adds indirection to an external import |[K
+[0m[48;2;40;67;43m[39m+    143[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    144[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/project-config/index.ts[38;2;163;190;140m`[38;2;191;97;106m case is particularly notable: it's a directory containing a single [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m that re-exports one symbol from another package. The consumer [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/find-config/find-config.ts[38;2;163;190;140m`[38;2;191;97;106m imports from [38;2;163;190;140m`[38;2;163;190;140m"../project-config"[38;2;163;190;140m`[38;2;191;97;106m instead of directly from [38;2;163;190;140m`[38;2;163;190;140m"@weaver/shared/sync"[38;2;163;190;140m`[38;2;191;97;106m, adding a hop that obscures the true dependency.[K
+[0m[48;2;40;67;43m[39m+    145[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    146[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: Each barrel file is a file that must be maintained, appears in stack traces, and adds cognitive overhead when navigating the codebase. The [38;2;163;190;140m`[38;2;163;190;140mproject-config/index.ts[38;2;163;190;140m`[38;2;191;97;106m wrapper actively hides the fact that [38;2;163;190;140m`[38;2;163;190;140mreadProjectConfig[38;2;163;190;140m`[38;2;191;97;106m comes from [38;2;163;190;140m`[38;2;163;190;140mshared[38;2;163;190;140m`[38;2;191;97;106m, making dependency analysis harder.[K
+[0m[48;2;40;67;43m[39m+    147[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    148[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Remove zero-value barrel files. Import directly from the implementation file. For [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/config/project-config/[38;2;163;190;140m`[38;2;191;97;106m, delete the directory and import [38;2;163;190;140m`[38;2;163;190;140mreadProjectConfig[38;2;163;190;140m`[38;2;191;97;106m directly from [38;2;163;190;140m`[38;2;163;190;140m@weaver/shared/sync[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mfind-config.ts[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    149[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    150[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    151[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    152[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    153[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    154[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 6: Event bus is a clean deep module but lacks backpressure and error isolation[K
+[0m[48;2;40;67;43m[39m+    155[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    156[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    157[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The event bus has a small, clean interface — 4 exported functions ([38;2;163;190;140m`[38;2;163;190;140msubscribe[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140memit[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[38;2;191;97;106m) hiding listener management and SSE formatting. This is a good deep module. The test file ([38;2;163;190;140m`[38;2;163;190;140mevent-bus.test.ts[38;2;163;190;140m`[38;2;191;97;106m) covers all four functions thoroughly.[K
+[0m[48;2;40;67;43m[39m+    158[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    159[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mHowever, [38;2;163;190;140m`[38;2;163;190;140memit[38;2;163;190;140m`[38;2;191;97;106m calls every listener synchronously with no error isolation:[K
+[0m[48;2;40;67;43m[39m+    160[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    161[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  export function emit(msg: SSEMessage): void {[K
+[0m[48;2;40;67;43m[39m+    162[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    listeners.forEach((listener) => listener(msg));[K
+[0m[48;2;40;67;43m[39m+    163[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  }[K
+[0m[48;2;40;67;43m[39m+    164[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    165[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mIf a listener throws, subsequent listeners won't receive the message. The [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[38;2;191;97;106m function's listener calls [38;2;163;190;140m`[38;2;163;190;140mreply.raw.write()[38;2;163;190;140m`[38;2;191;97;106m which can fail if the connection is broken between the [38;2;163;190;140m`[38;2;163;190;140mclose[38;2;163;190;140m`[38;2;191;97;106m event and the write attempt.[K
+[0m[48;2;40;67;43m[39m+    166[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    167[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m function is used as a callback from [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m in [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m, creating a cross-module dependency that's invisible in the import graph of [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m (it receives [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m as a parameter, not an import).[K
+[0m[48;2;40;67;43m[39m+    168[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    169[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: A single broken SSE connection could prevent other listeners from receiving updates if [38;2;163;190;140m`[38;2;163;190;140mwrite()[38;2;163;190;140m`[38;2;191;97;106m throws synchronously. In practice this is unlikely (Node streams buffer writes), but the lack of try/catch means it's a latent risk. The callback-based wiring between lifecycle and event-bus is actually a good pattern (dependency injection), but it's the only service that uses it — the rest use direct imports.[K
+[0m[48;2;40;67;43m[39m+    170[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    171[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Wrap each listener call in a try/catch within [38;2;163;190;140m`[38;2;163;190;140memit()[38;2;163;190;140m`[38;2;191;97;106m. This is a one-line fix that prevents cascading failures. The callback injection pattern used for [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m is good — consider extending it to other cross-service dependencies.[K
+[0m[48;2;40;67;43m[39m+    172[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    173[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    174[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    175[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    176[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    177[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 7: Desktop SSE client manually parses the SSE protocol with regex[K
+[0m[48;2;40;67;43m[39m+    178[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    179[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/sse.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    180[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The SSE client in the desktop package manually parses the SSE wire format:[K
+[0m[48;2;40;67;43m[39m+    181[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    182[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const eventMatch = part.match(/^event: (.+)$/m);[K
+[0m[48;2;40;67;43m[39m+    183[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  const dataMatch = part.match(/^data: (.+)$/m);[K
+[0m[48;2;40;67;43m[39m+    184[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    185[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis handles the happy path but doesn't account for multi-line [38;2;163;190;140m`[38;2;163;190;140mdata:[38;2;163;190;140m`[38;2;191;97;106m fields, [38;2;163;190;140m`[38;2;163;190;140mid:[38;2;163;190;140m`[38;2;191;97;106m fields, or [38;2;163;190;140m`[38;2;163;190;140mretry:[38;2;163;190;140m`[38;2;191;97;106m directives that are part of the SSE spec. The server's [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[38;2;191;97;106m function formats messages as:[K
+[0m[48;2;40;67;43m[39m+    186[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    187[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`[K
+[0m[48;2;40;67;43m[39m+    188[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    189[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mSo the current format is always single-line data, making the regex sufficient today. But if the server ever sends multi-line data or adds SSE features, the desktop client will silently drop or mangle messages.[K
+[0m[48;2;40;67;43m[39m+    190[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    191[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe reconnection logic is a simple [38;2;163;190;140m`[38;2;163;190;140msetTimeout(connect, 1000)[38;2;163;190;140m`[38;2;191;97;106m with no backoff, which could hammer the server during extended outages.[K
+[0m[48;2;40;67;43m[39m+    192[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    193[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The implicit contract between [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[38;2;191;97;106m's output format and [38;2;163;190;140m`[38;2;163;190;140msubscribeSSE[38;2;163;190;140m`[38;2;191;97;106m's parsing regex is fragile. Changes to the server's SSE formatting could break the desktop client with no compile-time warning.[K
+[0m[48;2;40;67;43m[39m+    194[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    195[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Use the [38;2;163;190;140m`[38;2;163;190;140mEventSource[38;2;163;190;140m`[38;2;191;97;106m API if available in the Electron renderer, or use a minimal SSE parser library. If keeping the manual parser, add a comment documenting the assumed format and link it to the server's [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[38;2;191;97;106m function.[K
+[0m[48;2;40;67;43m[39m+    196[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    197[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Low[K
+[0m[48;2;40;67;43m[39m+    198[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    199[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    200[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    201[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mFinding 8: CLI uses [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;143;161;179m via [38;2;163;190;140m`[38;2;163;190;140mexecSync[38;2;163;190;140m`[38;2;143;161;179m for HTTP requests[K
+[0m[48;2;40;67;43m[39m+    202[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    203[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mArea[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mcli/src/utils.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    204[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mObservation[38;2;235;203;139m**[38;2;191;97;106m: The CLI package shells out to [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;191;97;106m for all HTTP communication:[K
+[0m[48;2;40;67;43m[39m+    205[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    206[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  function curl(args: string): HttpResult {[K
+[0m[48;2;40;67;43m[39m+    207[0m:[39m[48;2;24;38;30m [38;2;191;97;106m    try {[K
+[0m[48;2;40;67;43m[39m+    208[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      const result = execSync([K
+[0m[48;2;40;67;43m[39m+    209[0m:[39m[48;2;24;38;30m [38;2;191;97;106m        `curl -s --max-time 3 -w "\\n%{http_code}" ${args}`,[K
+[0m[48;2;40;67;43m[39m+    210[0m:[39m[48;2;24;38;30m [38;2;191;97;106m        { encoding: "utf-8" },[K
+[0m[48;2;40;67;43m[39m+    211[0m:[39m[48;2;24;38;30m [38;2;191;97;106m      );[K
+[0m[48;2;40;67;43m[39m+    212[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    213[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThis means the CLI requires [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;191;97;106m to be installed on the system. On macOS this is always available, but it's an unusual choice when Node.js has built-in [38;2;163;190;140m`[38;2;163;190;140mhttp[38;2;163;190;140m`[38;2;191;97;106m/[38;2;163;190;140m`[38;2;163;190;140mhttps[38;2;163;190;140m`[38;2;191;97;106m modules and global [38;2;163;190;140m`[38;2;163;190;140mfetch()[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140mexecSync[38;2;163;190;140m`[38;2;191;97;106m call blocks the event loop and the error handling collapses all failures (network errors, timeouts, malformed JSON) into [38;2;163;190;140m`[38;2;163;190;140m{ ok: false, status: 0, data: null }[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+    214[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    215[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mThe [38;2;163;190;140m`[38;2;163;190;140mpost[38;2;163;190;140m`[38;2;191;97;106m function constructs the curl command with string interpolation:[K
+[0m[48;2;40;67;43m[39m+    216[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m```[38;2;208;135;112mts[K
+[0m[48;2;40;67;43m[39m+    217[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  `-d '${JSON.stringify(body)}'`[K
+[0m[48;2;40;67;43m[39m+    218[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  ```[K
+[0m[48;2;40;67;43m[39m+    219[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106mIf [38;2;163;190;140m`[38;2;163;190;140mbody[38;2;163;190;140m`[38;2;191;97;106m contains single quotes, this will produce a malformed shell command.[K
+[0m[48;2;40;67;43m[39m+    220[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    221[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mImpact[38;2;235;203;139m**[38;2;191;97;106m: The [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;191;97;106m dependency is implicit and undocumented. The string interpolation in shell commands is a correctness risk for payloads containing special characters. The synchronous execution blocks the CLI process during the HTTP request.[K
+[0m[48;2;40;67;43m[39m+    222[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    223[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSuggestion[38;2;235;203;139m**[38;2;191;97;106m: Replace [38;2;163;190;140m`[38;2;163;190;140mcurl[38;2;163;190;140m`[38;2;191;97;106m with Node.js [38;2;163;190;140m`[38;2;163;190;140mfetch()[38;2;163;190;140m`[38;2;191;97;106m (available since Node 18) or the [38;2;163;190;140m`[38;2;163;190;140mhttp[38;2;163;190;140m`[38;2;191;97;106m module. This removes the external dependency, fixes the shell injection risk, and allows async execution.[K
+[0m[48;2;40;67;43m[39m+    224[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    225[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSeverity[38;2;235;203;139m**[38;2;191;97;106m: Medium[K
+[0m[48;2;40;67;43m[39m+    226[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    227[0m:[39m[48;2;24;38;30m [38;2;192;197;206m---[K
+[0m[48;2;40;67;43m[39m+    228[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    229[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mDeepening Candidates[K
+[0m[48;2;40;67;43m[39m+    230[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    231[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mCandidate 1: Storage + Lifecycle → SessionManager[K
+[0m[48;2;40;67;43m[39m+    232[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    233[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/index.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    234[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m imports [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140msessions.ts[38;2;163;190;140m`[38;2;191;97;106m. Both share the concept of "session state" — sessions manages the JSONL persistence and cache, lifecycle manages PID polling and stale cleanup. The [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m barrel re-exports everything from both, treating them as one unit. The [38;2;163;190;140m`[38;2;163;190;140mopenPids[38;2;163;190;140m`[38;2;191;97;106m set in lifecycle is conceptually part of session state.[K
+[0m[48;2;40;67;43m[39m+    235[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process[K
+[0m[48;2;40;67;43m[39m+    236[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mlifecycle.test.ts[38;2;163;190;140m`[38;2;191;97;106m already mocks [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m. A merged [38;2;163;190;140m`[38;2;163;190;140mSessionManager[38;2;163;190;140m`[38;2;191;97;106m class could be tested with a real in-memory implementation, replacing the module-level mocks with constructor injection. The existing [38;2;163;190;140m`[38;2;163;190;140msessions.test.ts[38;2;163;190;140m`[38;2;191;97;106m tests would become internal implementation tests of the manager.[K
+[0m[48;2;40;67;43m[39m+    237[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    238[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mCandidate 2: Log Parser modules → single deep module[K
+[0m[48;2;40;67;43m[39m+    239[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    240[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/log-parser/parse.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mgroup-turns.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtool-calls.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mactivity.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    241[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mgroup-turns.ts[38;2;163;190;140m`[38;2;191;97;106m imports [38;2;163;190;140m`[38;2;163;190;140mmatchToolCalls[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140mtool-calls.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140misValidationEvent[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m. [38;2;163;190;140m`[38;2;163;190;140mparse.ts[38;2;163;190;140m`[38;2;191;97;106m provides the raw events that all other modules consume. The barrel [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m exports 5 symbols from 4 files. These modules collectively implement "parse a session log into structured turns" — a single concept split across 5 files.[K
+[0m[48;2;40;67;43m[39m+    242[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process[K
+[0m[48;2;40;67;43m[39m+    243[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: Each file has its own test file. A merged module would consolidate these into boundary tests: "given raw JSONL, produce TurnGroup[]". The internal [38;2;163;190;140m`[38;2;163;190;140mmatchToolCalls[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140misValidationEvent[38;2;163;190;140m`[38;2;191;97;106m functions would become private implementation details, reducing the public API surface.[K
+[0m[48;2;40;67;43m[39m+    244[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    245[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mCandidate 3: Webhook subsystem consolidation[K
+[0m[48;2;40;67;43m[39m+    246[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    247[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mCluster[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/webhook/handler.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msession-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpending-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcontext.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpayload-simple.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpayload-advanced.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+    248[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mWhy they're coupled[38;2;235;203;139m**[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mhandler.ts[38;2;163;190;140m`[38;2;191;97;106m imports from [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msession-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpending-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpayload-simple.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpayload-advanced.ts[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mtypes.ts[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140msession-tracker.ts[38;2;163;190;140m`[38;2;191;97;106m is a 12-line file with a module-level [38;2;163;190;140m`[38;2;163;190;140mSet[38;2;163;190;140m`[38;2;191;97;106m. The [38;2;163;190;140m`[38;2;163;190;140mdispatch.ts[38;2;163;190;140m`[38;2;191;97;106m is a single [38;2;163;190;140m`[38;2;163;190;140mfetch[38;2;163;190;140m`[38;2;191;97;106m call. These are all implementation details of "deliver webhook notifications" — a single feature spread across 9 files.[K
+[0m[48;2;40;67;43m[39m+    249[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDependency category[38;2;235;203;139m**[38;2;191;97;106m: In-process (with one remote call to the webhook URL)[K
+[0m[48;2;40;67;43m[39m+    250[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mTest impact[38;2;235;203;139m**[38;2;191;97;106m: The existing tests in [38;2;163;190;140m`[38;2;163;190;140m__tests__/webhook-simple.test.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mwebhook-advanced.test.ts[38;2;163;190;140m`[38;2;191;97;106m already test the integrated behavior. The unit tests for [38;2;163;190;140m`[38;2;163;190;140mdispatch.test.ts[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msession-tracker.test.ts[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mpending-tracker.test.ts[38;2;163;190;140m`[38;2;191;97;106m test trivial implementations. A consolidated module would keep the integration tests and drop the unit tests for the trivial pieces.[K
+[0m[48;2;40;67;43m[39m+    251[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    252[0m:[39m[48;2;24;38;30m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mMetrics[K
+[0m[48;2;40;67;43m[39m+    253[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;40;67;43m[39m+    254[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mFiles examined: 72[K
+[0m[48;2;40;67;43m[39m+    255[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Findings: 8 (2 high, 3 medium, 3 low)[K
+[0m[48;2;40;67;43m[39m+    256[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Deepening candidates: 3[K
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/report-01-architectural-depth-and-coupling.md[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.21 s
+[0m[?25l[0m[38;5;141m> [0mReport written to [38;5;10m/Users/thompsnt/Documents/weaver/audit-reports/20260327T222226/report-01-architectural-depth-and-coupling.md[0m. [0m[0m
+[0m[0m
+8 findings (2 high, 3 medium, 3 low) and 3 deepening candidates, covering cross-package coupling, module-level mutable state, HTTP client fragmentation, server entry point design, barrel file indirection, event bus design, SSE protocol parsing, and CLI shell-out patterns.[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m1.23 s
+[0m[38;5;8m
+ ▸ Credits: 8.11 • Time: 4m 35s
+
+[0m[1G[0m[0m[?25h

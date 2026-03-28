@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useParams,
   useNavigate,
@@ -18,7 +18,7 @@ import { patchConfig } from "../../../utils/api";
 import { buildUpdatedCategories } from "../utils";
 
 const CREATE_NEW = "__create_new__";
-const UNCATEGORIZED = "__uncategorized__";
+export const UNCATEGORIZED = "__uncategorized__";
 
 export interface SkillDetailState {
   skillName: string | undefined;
@@ -31,7 +31,6 @@ export interface SkillDetailState {
   selectedCategory: string;
   showCreateModal: boolean;
   breadcrumbs: Array<{ text: string; href: string }>;
-  queryString: string;
   redirecting: boolean;
 }
 
@@ -84,9 +83,12 @@ export function useSkillDetailPage(): {
   };
 
   const redirecting = !!error?.message?.includes("not found");
-  if (redirecting) {
-    nav("/skills", { replace: true });
-  }
+
+  useEffect(() => {
+    if (redirecting) {
+      nav("/skills", { replace: true });
+    }
+  }, [redirecting, nav]);
 
   const handleCategoryChange = async (newValue: string) => {
     if (newValue === CREATE_NEW) {
@@ -157,7 +159,6 @@ export function useSkillDetailPage(): {
       selectedCategory,
       showCreateModal,
       breadcrumbs,
-      queryString,
       redirecting,
     },
     actions: {

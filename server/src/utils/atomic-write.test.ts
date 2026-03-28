@@ -3,9 +3,10 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 vi.mock("node:fs/promises", () => ({
   writeFile: vi.fn().mockResolvedValue(undefined),
   rename: vi.fn().mockResolvedValue(undefined),
+  unlink: vi.fn().mockResolvedValue(undefined),
 }));
 
-import { writeFile, rename } from "node:fs/promises";
+import { writeFile, rename, unlink } from "node:fs/promises";
 import { atomicWriteFile } from "./atomic-write";
 
 beforeEach(() => {
@@ -50,12 +51,13 @@ describe("atomicWriteFile", () => {
     expect(rename).not.toHaveBeenCalled();
   });
 
-  it("propagates rename errors", async () => {
+  it("propagates rename errors and cleans up tmp file", async () => {
     vi.mocked(writeFile).mockResolvedValue(undefined);
     vi.mocked(rename).mockRejectedValue(new Error("permission denied"));
 
     await expect(atomicWriteFile("/data/file.json", "x")).rejects.toThrow(
       "permission denied",
     );
+    expect(unlink).toHaveBeenCalledWith("/data/file.json.tmp");
   });
 });

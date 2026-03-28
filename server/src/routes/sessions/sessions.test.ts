@@ -167,7 +167,7 @@ describe("PATCH /api/sessions/:id", () => {
     expect(res.statusCode).toBe(404);
   });
 
-  it("returns 400 when customName is not a string", async () => {
+  it("coerces non-string customName to string", async () => {
     vi.mocked(readSessions).mockResolvedValue([{ ...SESSION_A }]);
     vi.mocked(writeSessions).mockResolvedValue(undefined);
     // Fastify's Ajv coerces number 123 to string "123", so this is accepted
