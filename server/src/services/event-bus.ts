@@ -15,38 +15,61 @@ interface SSEMessage {
 
 type Listener = (msg: SSEMessage) => void;
 
-const listeners = new Set<Listener>();
-
-export function subscribe(listener: Listener): () => void {
-  listeners.add(listener);
-  return () => listeners.delete(listener);
+export interface EventBus {
+  subscribe(listener: Listener): () => void;
+  broadcast(
+    sessionId: string,
+    eventName?: HookEventName,
+    sessionName?: string,
+  ): void;
+  emit(msg: SSEMessage): void;
+  sseReply(reply: SSETarget): () => void;
 }
 
-export function broadcast(
-  sessionId: string,
-  eventName?: HookEventName,
-  sessionName?: string,
-): void {
-  emit({ event: "update", data: { sessionId, eventName, sessionName } });
+export function createEventBus(): EventBus {
+  const listeners = new Set<Listener>();
+
+  const bus: EventBus = {
+    subscribe(listener) {
+      listeners.add(listener);
+      return () => listeners.delete(listener);
+    },
+    broadcast(sessionId, eventName?, sessionName?) {
+      bus.emit({
+        event: "update",
+        data: { sessionId, eventName, sessionName },
+      });
+    },
+    emit(msg) {
+      listeners.forEach((listener) => {
+        try {
+          listener(msg);
+        } catch {
+          /* prevent one broken listener from blocking others */
+        }
+      });
+    },
+    sseReply(reply) {
+      reply.raw.writeHead(200, {
+        "Content-Type": "text/event-stream",
+        "Cache-Control": "no-cache",
+        Connection: "keep-alive",
+      });
+
+      const unsubscribe = bus.subscribe((msg) => {
+        reply.raw.write(
+          `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`,
+        );
+      });
+
+      reply.raw.on("close", unsubscribe);
+      return unsubscribe;
+    },
+  };
+
+  return bus;
 }
 
-export function emit(msg: SSEMessage): void {
-  listeners.forEach((listener) => listener(msg));
-}
+const defaultBus = createEventBus();
 
-export function sseReply(reply: SSETarget): () => void {
-  reply.raw.writeHead(200, {
-    "Content-Type": "text/event-stream",
-    "Cache-Control": "no-cache",
-    Connection: "keep-alive",
-  });
-
-  const unsubscribe = subscribe((msg) => {
-    reply.raw.write(
-      `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`,
-    );
-  });
-
-  reply.raw.on("close", unsubscribe);
-  return unsubscribe;
-}
+export const { subscribe, broadcast, emit, sseReply } = defaultBus;

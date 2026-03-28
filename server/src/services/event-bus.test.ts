@@ -1,4 +1,10 @@
-import { subscribe, broadcast, emit, sseReply } from "./event-bus";
+import {
+  subscribe,
+  broadcast,
+  emit,
+  sseReply,
+  createEventBus,
+} from "./event-bus";
 import type { SSETarget } from "./event-bus";
 
 beforeEach(() => {
@@ -133,5 +139,49 @@ describe("sseReply", () => {
 
     emit({ event: "update", data: { sessionId: "s1" } });
     expect(reply.raw.write).not.toHaveBeenCalled();
+  });
+});
+
+describe("createEventBus", () => {
+  it("returns isolated instances with separate listener sets", () => {
+    const busA = createEventBus();
+    const busB = createEventBus();
+    const listenerA = vi.fn();
+    const listenerB = vi.fn();
+
+    busA.subscribe(listenerA);
+    busB.subscribe(listenerB);
+
+    busB.emit({ event: "test", data: {} });
+
+    expect(listenerA).not.toHaveBeenCalled();
+    expect(listenerB).toHaveBeenCalledTimes(1);
+  });
+
+  it("removes listener when unsubscribe is called", () => {
+    const bus = createEventBus();
+    const listener = vi.fn();
+    const unsub = bus.subscribe(listener);
+
+    unsub();
+    bus.emit({ event: "test", data: {} });
+
+    expect(listener).not.toHaveBeenCalled();
+  });
+
+  it("delivers to remaining listeners when one throws", () => {
+    const bus = createEventBus();
+    const throwing = vi.fn(() => {
+      throw new Error("boom");
+    });
+    const healthy = vi.fn();
+
+    bus.subscribe(throwing);
+    bus.subscribe(healthy);
+
+    bus.emit({ event: "test", data: { x: 1 } });
+
+    expect(throwing).toHaveBeenCalledTimes(1);
+    expect(healthy).toHaveBeenCalledWith({ event: "test", data: { x: 1 } });
   });
 });
