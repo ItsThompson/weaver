@@ -1,9 +1,9 @@
-import { writeFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import type { HookEvent } from "@weaver/shared/types";
 import { log } from "../../utils/logger";
 import { NotFoundError } from "./errors";
 import { orphanPath } from "@weaver/shared/paths";
+import { atomicWriteFile } from "../../utils/atomic-write";
 
 export interface PartitionResult {
   matched: HookEvent[];
@@ -54,5 +54,8 @@ export function writeRemaining(
   filePath: string,
   lines: string[],
 ): Promise<void> {
-  return writeFile(filePath, lines.length > 0 ? lines.join("\n") + "\n" : "");
+  return atomicWriteFile(
+    filePath,
+    lines.length > 0 ? lines.join("\n") + "\n" : "",
+  );
 }

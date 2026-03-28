@@ -5,6 +5,7 @@ vi.mock("node:fs/promises", () => ({
   mkdir: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
   readdir: vi.fn<() => Promise<string[]>>(),
   unlink: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
+  rename: vi.fn<() => Promise<void>>().mockResolvedValue(undefined),
   stat: vi
     .fn<() => Promise<{ mtimeMs: number }>>()
     .mockRejectedValue(new Error("no stat mock")),

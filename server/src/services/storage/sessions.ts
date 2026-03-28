@@ -1,4 +1,5 @@
-import { mkdir, writeFile, appendFile } from "node:fs/promises";
+import { mkdir, appendFile } from "node:fs/promises";
+import { atomicWriteFile } from "../../utils/atomic-write";
 import type { Session } from "@weaver/shared/types";
 import { weaverDir, logsDir, sessionsPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
@@ -42,6 +43,6 @@ export async function appendSession(session: Session): Promise<void> {
 export async function writeSessions(sessions: Session[]): Promise<void> {
   const content =
     sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
-  await writeFile(sessionsPath(), content, "utf-8");
+  await atomicWriteFile(sessionsPath(), content);
   sessionCache.invalidate(sessionsPath());
 }
