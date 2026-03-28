@@ -1,6 +1,6 @@
 {
   "name": "weaver",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "private": true,
   "workspaces": [
     "shared",
@@ -14,12 +14,13 @@
   "scripts": {
     "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
     "app": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm start --prefix desktop",
-    "dist": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm run dist --prefix desktop",
+    "dist": "npm run version:sync && turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm run dist --prefix desktop",
     "build": "turbo build",
     "start": "turbo build && node server/dist/index.js",
     "lint": "eslint '**/*.{ts,tsx}' --ignore-pattern '**/dist/**'",
     "test": "turbo test",
-    "test:e2e": "npm test --prefix e2e"
+    "test:e2e": "npm test --prefix e2e",
+    "version:sync": "npm version from-git --workspaces --include-workspace-root --no-git-tag-version --allow-same-version"
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
