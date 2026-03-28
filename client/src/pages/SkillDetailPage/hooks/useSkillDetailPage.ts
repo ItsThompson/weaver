@@ -37,7 +37,8 @@ export interface SkillDetailState {
 export interface SkillDetailActions {
   handleCategoryChange: (newValue: string) => Promise<void>;
   handleCreateCategory: (name: string, color?: string) => Promise<void>;
-  setShowCreateModal: (visible: boolean) => void;
+  openCreateModal: () => void;
+  dismissCreateModal: () => void;
   navigate: (href: string) => void;
 }
 
@@ -164,7 +165,8 @@ export function useSkillDetailPage(): {
     actions: {
       handleCategoryChange,
       handleCreateCategory,
-      setShowCreateModal,
+      openCreateModal: () => setShowCreateModal(true),
+      dismissCreateModal: () => setShowCreateModal(false),
       navigate: nav,
     },
   };

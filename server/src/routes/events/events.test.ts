@@ -11,7 +11,7 @@ let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  server = Fastify();
+  server = Fastify({ ajv: { customOptions: { coerceTypes: false } } });
   registerEventRoutes(server);
   await server.ready();
 });

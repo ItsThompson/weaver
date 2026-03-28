@@ -17,7 +17,7 @@ let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  server = Fastify();
+  server = Fastify({ ajv: { customOptions: { coerceTypes: false } } });
   registerOrphanRoutes(server);
   await server.ready();
 });

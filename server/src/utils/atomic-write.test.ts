@@ -13,19 +13,19 @@ beforeEach(() => {
   vi.clearAllMocks();
 });
 
+const tmpPattern = /^\/data\/sessions\.jsonl\.\d+\.\d+\.tmp$/;
+
 describe("atomicWriteFile", () => {
-  it("writes to a .tmp file then renames to the target path", async () => {
+  it("writes to a unique .tmp file then renames to the target path", async () => {
     await atomicWriteFile("/data/sessions.jsonl", "content");
 
     expect(writeFile).toHaveBeenCalledWith(
-      "/data/sessions.jsonl.tmp",
+      expect.stringMatching(tmpPattern),
       "content",
       "utf-8",
     );
-    expect(rename).toHaveBeenCalledWith(
-      "/data/sessions.jsonl.tmp",
-      "/data/sessions.jsonl",
-    );
+    const tmpPath = vi.mocked(writeFile).mock.calls[0][0];
+    expect(rename).toHaveBeenCalledWith(tmpPath, "/data/sessions.jsonl");
   });
 
   it("calls writeFile before rename", async () => {
@@ -58,6 +58,7 @@ describe("atomicWriteFile", () => {
     await expect(atomicWriteFile("/data/file.json", "x")).rejects.toThrow(
       "permission denied",
     );
-    expect(unlink).toHaveBeenCalledWith("/data/file.json.tmp");
+    const tmpPath = vi.mocked(writeFile).mock.calls[0][0];
+    expect(unlink).toHaveBeenCalledWith(tmpPath);
   });
 });

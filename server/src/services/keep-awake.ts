@@ -1,4 +1,4 @@
-import { execFile } from "node:child_process";
+import { execFile as defaultExecFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
 import { readSessions, isProcessRunning } from "./storage/index";
 import { getLastEvent, deriveActivity } from "./log-parser/index";
@@ -19,6 +19,7 @@ export interface KeepAwakeDeps {
     timestamp?: string,
   ) => ActivityStatus;
   log: (entry: LogEntry) => void;
+  execFile: typeof defaultExecFile;
 }
 
 export interface KeepAwake {
@@ -58,7 +59,7 @@ export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
             active,
           });
           if (active) {
-            execFile("bash", [scriptPath], (err) => {
+            deps.execFile("bash", [scriptPath], (err) => {
               if (err) {
                 deps.log({
                   timestamp: new Date().toISOString(),
@@ -96,5 +97,6 @@ const defaultKeepAwake = createKeepAwake({
   getLastEvent,
   deriveActivity,
   log: defaultLog,
+  execFile: defaultExecFile,
 });
 export const { startKeepAwake, stopKeepAwake } = defaultKeepAwake;

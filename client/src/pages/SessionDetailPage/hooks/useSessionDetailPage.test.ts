@@ -2,6 +2,14 @@ import { renderHook, act } from "@testing-library/react";
 import { useSessionDetailPage } from "./useSessionDetailPage";
 import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
 
+interface SessionQueryData {
+  session: SessionWithStatus;
+  turns: TurnGroup[];
+  webhookEnabled: boolean;
+  activeSkills: string[];
+  configuredSkills: string[];
+}
+
 const mockNavigate = vi.fn();
 let mockParams: Record<string, string> = { id: "abc12345-def6-7890" };
 
@@ -12,7 +20,7 @@ vi.mock("react-router-dom", () => ({
 
 const mockMutate = vi.fn();
 let mockSessionQuery: {
-  data: any;
+  data: SessionQueryData | undefined;
   error: Error | undefined;
   isLoading: boolean;
   mutate: ReturnType<typeof vi.fn>;

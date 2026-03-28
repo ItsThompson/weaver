@@ -20,7 +20,7 @@ let server: ReturnType<typeof Fastify>;
 
 beforeEach(async () => {
   vi.clearAllMocks();
-  server = Fastify();
+  server = Fastify({ ajv: { customOptions: { coerceTypes: false } } });
   registerSessionRoutes(server);
   await server.ready();
 });
@@ -167,17 +167,13 @@ describe("PATCH /api/sessions/:id", () => {
     expect(res.statusCode).toBe(404);
   });
 
-  it("coerces non-string customName to string", async () => {
-    vi.mocked(readSessions).mockResolvedValue([{ ...SESSION_A }]);
-    vi.mocked(writeSessions).mockResolvedValue(undefined);
-    // Fastify's Ajv coerces number 123 to string "123", so this is accepted
+  it("rejects non-string customName with 400", async () => {
     const res = await server.inject({
       method: "PATCH",
       url: "/api/sessions/aaa",
       payload: { customName: 123 },
     });
-    expect(res.statusCode).toBe(200);
-    expect(JSON.parse(res.body).customName).toBe("123");
+    expect(res.statusCode).toBe(400);
   });
 });
 

@@ -1,13 +1,7 @@
 import { z } from "zod";
+import { HOOK_EVENT_NAMES } from "@weaver/shared/types";
 
-const hookEventName = z.enum([
-  "agentSpawn",
-  "stop",
-  "preToolUse",
-  "postToolUse",
-  "userPromptSubmit",
-  "validation",
-]);
+const hookEventName = z.enum(HOOK_EVENT_NAMES);
 
 export const notifyBody = z.object({
   sessionId: z.string(),

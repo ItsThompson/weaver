@@ -24,7 +24,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const PORT = 8143;
 
-const server = Fastify();
+const server = Fastify({
+  ajv: { customOptions: { coerceTypes: false } },
+});
 
 server.setErrorHandler((error: FastifyError, _request, reply) => {
   const statusCode = error.statusCode ?? 500;

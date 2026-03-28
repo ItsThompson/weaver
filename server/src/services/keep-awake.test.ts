@@ -171,6 +171,7 @@ describe("createKeepAwake (factory)", () => {
       getLastEvent: vi.fn().mockResolvedValue(null),
       deriveActivity: vi.fn().mockReturnValue("idle"),
       log: vi.fn(),
+      execFile: mockExecFile,
       ...overrides,
     };
   }
@@ -194,7 +195,7 @@ describe("createKeepAwake (factory)", () => {
     ka.startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
-    expect(mockExecFile).toHaveBeenCalledWith(
+    expect(deps.execFile).toHaveBeenCalledWith(
       "bash",
       [FAKE_SCRIPT],
       expect.any(Function),
@@ -213,7 +214,7 @@ describe("createKeepAwake (factory)", () => {
     ka.startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
 
-    expect(mockExecFile).not.toHaveBeenCalled();
+    expect(deps.execFile).not.toHaveBeenCalled();
     ka.stopKeepAwake();
   });
 

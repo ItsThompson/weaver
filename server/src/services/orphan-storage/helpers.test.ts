@@ -76,7 +76,7 @@ describe("writeRemaining", () => {
   it("writes lines joined with newlines", async () => {
     await writeRemaining("/tmp/test.jsonl", ["line1", "line2"]);
     expect(vi.mocked(writeFile)).toHaveBeenCalledWith(
-      "/tmp/test.jsonl.tmp",
+      expect.stringMatching(/^\/tmp\/test\.jsonl\.\d+\.\d+\.tmp$/),
       "line1\nline2\n",
       "utf-8",
     );
@@ -85,7 +85,7 @@ describe("writeRemaining", () => {
   it("writes empty string when no lines remain", async () => {
     await writeRemaining("/tmp/test.jsonl", []);
     expect(vi.mocked(writeFile)).toHaveBeenCalledWith(
-      "/tmp/test.jsonl.tmp",
+      expect.stringMatching(/^\/tmp\/test\.jsonl\.\d+\.\d+\.tmp$/),
       "",
       "utf-8",
     );

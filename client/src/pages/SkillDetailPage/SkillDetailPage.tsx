@@ -90,7 +90,7 @@ export function SkillDetailPage() {
       <CreateCategoryModal
         visible={showCreateModal}
         existingNames={categoryNames}
-        onDismiss={() => actions.setShowCreateModal(false)}
+        onDismiss={() => actions.dismissCreateModal()}
         onCreate={actions.handleCreateCategory}
       />
     </SpaceBetween>
