@@ -8,7 +8,7 @@ const {
   mockExecFile,
 } = vi.hoisted(() => ({
   mockReadSessions: vi.fn<() => Promise<Session[]>>(),
-  mockIsProcessRunning: vi.fn<(pid: number) => boolean>(),
+  mockIsProcessRunning: vi.fn<(pid: number) => Promise<boolean>>(),
   mockGetLastEvent:
     vi.fn<() => Promise<{ name: string; timestamp: string } | null>>(),
   mockLog: vi.fn(),
@@ -72,7 +72,7 @@ describe("startKeepAwake", () => {
 
   it("runs the keep-awake script when an active session exists", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({
       name: "preToolUse",
       timestamp: new Date().toISOString(),
@@ -90,7 +90,7 @@ describe("startKeepAwake", () => {
 
   it("does not run the script when no sessions are active", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({ name: "stop", timestamp: "" });
 
     startKeepAwake(FAKE_SCRIPT);
@@ -101,7 +101,7 @@ describe("startKeepAwake", () => {
 
   it("skips sessions where the process is not running", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(false);
+    mockIsProcessRunning.mockResolvedValue(false);
 
     startKeepAwake(FAKE_SCRIPT);
     await vi.advanceTimersByTimeAsync(0);
@@ -123,7 +123,7 @@ describe("startKeepAwake", () => {
 
   it("logs execFile callback errors", async () => {
     mockReadSessions.mockResolvedValue([makeSession()]);
-    mockIsProcessRunning.mockReturnValue(true);
+    mockIsProcessRunning.mockResolvedValue(true);
     mockGetLastEvent.mockResolvedValue({
       name: "userPromptSubmit",
       timestamp: "",

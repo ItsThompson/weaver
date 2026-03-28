@@ -1,3 +1,3 @@
 vi.mock("node:child_process", () => ({
-  execFileSync: vi.fn<() => string>(),
+  execFile: vi.fn<() => void>(),
 }));

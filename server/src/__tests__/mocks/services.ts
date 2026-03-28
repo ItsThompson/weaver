@@ -1,7 +1,7 @@
 vi.mock("../../services/storage/index", () => ({
   readSessions: vi.fn(),
   writeSessions: vi.fn(),
-  isProcessRunning: vi.fn(),
+  isProcessRunning: vi.fn().mockResolvedValue(false),
   ensureDataDir: vi.fn(),
   appendSession: vi.fn(),
   startStaleSessionCleanup: vi.fn(),

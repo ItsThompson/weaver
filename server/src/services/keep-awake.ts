@@ -11,7 +11,7 @@ let interval: ReturnType<typeof setInterval> | null = null;
 async function hasActiveSessions(): Promise<boolean> {
   const sessions = await readSessions();
   for (const s of sessions) {
-    if (!isProcessRunning(s.pid)) {
+    if (!(await isProcessRunning(s.pid))) {
       continue;
     }
     const last = await getLastEvent(s.id);
