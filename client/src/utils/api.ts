@@ -6,6 +6,7 @@ import type {
   WeaverConfig,
   SkillGraph,
   SkillDetail,
+  Snippet,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -112,3 +113,24 @@ export const getSkillDetail = (
     queryString ? `/skills/${name}?${queryString}` : `/skills/${name}`,
   );
 };
+
+export const getSnippets = () => apiFetch<{ snippets: Snippet[] }>("/snippets");
+
+export const createSnippet = (trigger: string, expansion: string) =>
+  apiFetch<{ snippet: Snippet }>("/snippets", {
+    method: "POST",
+    body: JSON.stringify({ trigger, expansion }),
+  });
+
+export const updateSnippet = (id: string, trigger: string, expansion: string) =>
+  apiFetch<{ snippet: Snippet }>(`/snippets/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ trigger, expansion }),
+  });
+
+export const deleteSnippetApi = (id: string) =>
+  fetch(`${API_BASE}/snippets/${id}`, { method: "DELETE" }).then((r) => {
+    if (!r.ok) {
+      throw new Error(`Delete failed: ${r.status}`);
+    }
+  });
