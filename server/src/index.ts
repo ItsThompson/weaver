@@ -20,6 +20,7 @@ import {
 import { broadcast } from "./services/event-bus";
 import { startKeepAwake, stopKeepAwake } from "./services/keep-awake";
 import { stopWebhookTimers } from "./services/webhook/index";
+import { stopOllamaServer } from "./services/dictation/index";
 import { log } from "./utils/logger";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -75,6 +76,7 @@ async function start(): Promise<void> {
     stopWebhookTimers();
     stopStaleSessionCleanup();
     stopKeepAwake();
+    stopOllamaServer();
     await server.close();
     process.exit(0);
   };

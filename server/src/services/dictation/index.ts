@@ -3,10 +3,13 @@ export {
   startWhisperServer,
   stopWhisperServer,
   isWhisperServerRunning,
+  waitForWhisperReady,
   touchWhisperActivity,
 } from "./whisper-server";
 
 export { checkOllamaHealth, generateText } from "./ollama-client";
+
+export { ensureOllamaRunning, stopOllamaServer } from "./ollama-server";
 
 export { logDictation } from "./history";
 
