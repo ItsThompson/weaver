@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { MemoryRouter } from "react-router-dom";
 import type { SessionWithStatus } from "@weaver/shared/types";
@@ -82,37 +83,37 @@ describe("SessionTable", () => {
     expect(screen.getByText("/projects/backend")).toBeInTheDocument();
   });
 
-  it("filters by custom name", () => {
+  it("filters by custom name", async () => {
+    const user = userEvent.setup();
     renderTable();
-    const filter = screen.getByRole("searchbox");
-    fireEvent.change(filter, { target: { value: "Frontend" } });
+    await user.type(screen.getByRole("searchbox"), "Frontend");
 
     expect(screen.getByText("Frontend App")).toBeInTheDocument();
     expect(screen.queryByText("/projects/backend")).not.toBeInTheDocument();
   });
 
-  it("filters by cwd", () => {
+  it("filters by cwd", async () => {
+    const user = userEvent.setup();
     renderTable();
-    const filter = screen.getByRole("searchbox");
-    fireEvent.change(filter, { target: { value: "backend" } });
+    await user.type(screen.getByRole("searchbox"), "backend");
 
     expect(screen.queryByText("Frontend App")).not.toBeInTheDocument();
     expect(screen.getByText("/projects/backend")).toBeInTheDocument();
   });
 
-  it("filters by session id", () => {
+  it("filters by session id", async () => {
+    const user = userEvent.setup();
     renderTable();
-    const filter = screen.getByRole("searchbox");
-    fireEvent.change(filter, { target: { value: "session-1" } });
+    await user.type(screen.getByRole("searchbox"), "session-1");
 
     expect(screen.getByText("Frontend App")).toBeInTheDocument();
     expect(screen.queryByText("/projects/backend")).not.toBeInTheDocument();
   });
 
-  it("shows empty state when no sessions match filter", () => {
+  it("shows empty state when no sessions match filter", async () => {
+    const user = userEvent.setup();
     renderTable();
-    const filter = screen.getByRole("searchbox");
-    fireEvent.change(filter, { target: { value: "nonexistent" } });
+    await user.type(screen.getByRole("searchbox"), "nonexistent");
 
     expect(screen.getByText("No matching sessions")).toBeInTheDocument();
   });

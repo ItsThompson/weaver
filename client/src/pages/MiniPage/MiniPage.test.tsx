@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { SWRConfig } from "swr";
 import type { SessionWithStatus } from "@weaver/shared/types";
 
@@ -94,12 +95,13 @@ describe("MiniPage", () => {
   });
 
   it("navigates to session detail on click", async () => {
+    const user = userEvent.setup();
     mockGetSessions.mockResolvedValue([openSession]);
     renderPage();
     await vi.waitFor(() => {
       expect(screen.getByText("My Project")).toBeInTheDocument();
     });
-    fireEvent.click(screen.getByText("My Project"));
+    await user.click(screen.getByText("My Project"));
     expect(mockNavigate).toHaveBeenCalledWith("/sessions/sess-1");
   });
 

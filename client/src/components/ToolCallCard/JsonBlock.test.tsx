@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { JsonBlock, TRUNCATE_LENGTH } from "./JsonBlock";
 
 describe("JsonBlock", () => {
@@ -26,12 +27,12 @@ describe("JsonBlock", () => {
     expect(content).toBeInTheDocument();
   });
 
-  it("expands content when button clicked", () => {
+  it("expands content when button clicked", async () => {
+    const user = userEvent.setup();
     const longData = { data: "x".repeat(TRUNCATE_LENGTH + 100) };
     render(<JsonBlock data={longData} label="Test" />);
 
-    const expandButton = screen.getByText("Show full response");
-    fireEvent.click(expandButton);
+    await user.click(screen.getByText("Show full response"));
     expect(screen.getByText("Show less")).toBeInTheDocument();
   });
 

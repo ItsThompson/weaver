@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import createWrapper from "@cloudscape-design/components/test-utils/dom";
 import { SWRConfig } from "swr";
 
@@ -52,30 +53,33 @@ describe("CommandPalette", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("opens on Cmd+K", () => {
+  it("opens on Cmd+K", async () => {
+    const user = userEvent.setup();
     renderPalette();
-    fireEvent.keyDown(document, { key: "k", metaKey: true });
+    await user.keyboard("{Meta>}k{/Meta}");
     expect(
       screen.getByPlaceholderText("Search pages and sessions..."),
     ).toBeInTheDocument();
   });
 
-  it("closes on Escape", () => {
+  it("closes on Escape", async () => {
+    const user = userEvent.setup();
     renderPalette();
-    fireEvent.keyDown(document, { key: "k", metaKey: true });
+    await user.keyboard("{Meta>}k{/Meta}");
     expect(
       screen.getByPlaceholderText("Search pages and sessions..."),
     ).toBeInTheDocument();
 
-    fireEvent.keyDown(document, { key: "Escape" });
+    await user.keyboard("{Escape}");
     expect(
       screen.queryByPlaceholderText("Search pages and sessions..."),
     ).not.toBeInTheDocument();
   });
 
-  it("closes when clicking the overlay backdrop", () => {
+  it("closes when clicking the overlay backdrop", async () => {
+    const user = userEvent.setup();
     const { container } = renderPalette();
-    fireEvent.keyDown(document, { key: "k", metaKey: true });
+    await user.keyboard("{Meta>}k{/Meta}");
     expect(
       screen.getByPlaceholderText("Search pages and sessions..."),
     ).toBeInTheDocument();
@@ -84,15 +88,16 @@ describe("CommandPalette", () => {
     const overlay = container.querySelector<HTMLElement>(
       "div[style*='position: fixed'][style*='inset']",
     )!;
-    fireEvent.click(overlay);
+    await user.click(overlay);
     expect(
       screen.queryByPlaceholderText("Search pages and sessions..."),
     ).not.toBeInTheDocument();
   });
 
-  it("renders autosuggest options from window list", () => {
+  it("renders autosuggest options from window list", async () => {
+    const user = userEvent.setup();
     const { wrapper } = renderPalette();
-    fireEvent.keyDown(document, { key: "k", metaKey: true });
+    await user.keyboard("{Meta>}k{/Meta}");
 
     const autosuggest = wrapper.findAutosuggest()!;
     expect(autosuggest).toBeTruthy();

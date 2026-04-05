@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, act, fireEvent } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { SWRConfig } from "swr";
 
 import "../../__tests__/mocks/api";
@@ -59,37 +60,33 @@ describe("SnippetsPage", () => {
   });
 
   it("opens add form when Add Snippet is clicked", async () => {
+    const user = userEvent.setup();
     mockGetSnippets.mockResolvedValue({ snippets: [] });
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Add Snippet"));
-    });
+    await user.click(screen.getByText("Add Snippet"));
 
     expect(screen.getByText("Trigger phrase")).toBeInTheDocument();
     expect(screen.getByText("Expansion")).toBeInTheDocument();
   });
 
   it("shows validation error for empty trigger", async () => {
+    const user = userEvent.setup();
     mockGetSnippets.mockResolvedValue({ snippets: [] });
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Add Snippet"));
-    });
-
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Add Snippet"));
+    await user.click(screen.getByText("Save"));
 
     expect(screen.getByText("Trigger is required")).toBeInTheDocument();
   });
 
   it("creates snippet via form", async () => {
+    const user = userEvent.setup();
     mockGetSnippets.mockResolvedValue({ snippets: [] });
     mockCreateSnippet.mockResolvedValue({
       snippet: { id: "1", trigger: "sig", expansion: "Best regards" },
@@ -98,24 +95,19 @@ describe("SnippetsPage", () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Add Snippet"));
-    });
+    await user.click(screen.getByText("Add Snippet"));
 
     const inputs = screen.getAllByRole("textbox");
-    await act(async () => {
-      fireEvent.change(inputs[0], { target: { value: "sig" } });
-      fireEvent.change(inputs[1], { target: { value: "Best regards" } });
-    });
+    await user.type(inputs[0], "sig");
+    await user.type(inputs[1], "Best regards");
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Save"));
 
     expect(mockCreateSnippet).toHaveBeenCalledWith("sig", "Best regards");
   });
 
   it("deletes snippet when Delete is clicked", async () => {
+    const user = userEvent.setup();
     mockGetSnippets.mockResolvedValue({
       snippets: [{ id: "1", trigger: "sig", expansion: "Best regards" }],
     });
@@ -124,14 +116,13 @@ describe("SnippetsPage", () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Delete"));
-    });
+    await user.click(screen.getByText("Delete"));
 
     expect(mockDeleteSnippetApi).toHaveBeenCalledWith("1");
   });
 
   it("opens edit form pre-populated when Edit is clicked", async () => {
+    const user = userEvent.setup();
     mockGetSnippets.mockResolvedValue({
       snippets: [{ id: "1", trigger: "sig", expansion: "Best regards" }],
     });
@@ -139,9 +130,7 @@ describe("SnippetsPage", () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Edit"));
-    });
+    await user.click(screen.getByText("Edit"));
 
     expect(screen.getByText("Trigger phrase")).toBeInTheDocument();
     // The form should be pre-populated with existing values

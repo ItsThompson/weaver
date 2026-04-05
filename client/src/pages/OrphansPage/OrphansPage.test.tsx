@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, act, fireEvent } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
@@ -58,6 +59,7 @@ describe("OrphansPage", () => {
   });
 
   it("delete action calls API and refreshes", async () => {
+    const user = userEvent.setup();
     mockGetOrphans.mockResolvedValue({
       groups: [
         {
@@ -79,15 +81,11 @@ describe("OrphansPage", () => {
 
     // Click Delete on the group
     const deleteBtns = screen.getAllByText("Delete");
-    await act(async () => {
-      fireEvent.click(deleteBtns[0]);
-    });
+    await user.click(deleteBtns[0]);
 
     // Confirm in the modal
     const confirmBtns = screen.getAllByText("Delete");
-    await act(async () => {
-      fireEvent.click(confirmBtns[confirmBtns.length - 1]);
-    });
+    await user.click(confirmBtns[confirmBtns.length - 1]);
 
     expect(mockDeleteOrphans).toHaveBeenCalledWith(100);
   });

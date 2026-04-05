@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import type { OrphanGroup } from "@weaver/shared/types";
 import { OrphanGroupCard } from "./OrphanGroupCard";
 
@@ -67,7 +68,8 @@ describe("OrphanGroupCard", () => {
     expect(screen.getByTestId("turn-0")).toBeInTheDocument();
   });
 
-  it("calls onAssign with PID when Assign is clicked", () => {
+  it("calls onAssign with PID when Assign is clicked", async () => {
+    const user = userEvent.setup();
     render(
       <OrphanGroupCard
         group={group}
@@ -79,7 +81,7 @@ describe("OrphanGroupCard", () => {
         onDelete={onDelete}
       />,
     );
-    fireEvent.click(screen.getByText("Assign"));
+    await user.click(screen.getByText("Assign"));
     expect(onAssign).toHaveBeenCalledWith(100);
   });
 
@@ -99,7 +101,8 @@ describe("OrphanGroupCard", () => {
     expect(assignButton).toBeDisabled();
   });
 
-  it("calls onDelete with target when Delete is clicked", () => {
+  it("calls onDelete with target when Delete is clicked", async () => {
+    const user = userEvent.setup();
     render(
       <OrphanGroupCard
         group={group}
@@ -111,7 +114,7 @@ describe("OrphanGroupCard", () => {
         onDelete={onDelete}
       />,
     );
-    fireEvent.click(screen.getByText("Delete"));
+    await user.click(screen.getByText("Delete"));
     expect(onDelete).toHaveBeenCalledWith({ pid: 100, eventCount: 3 });
   });
 });

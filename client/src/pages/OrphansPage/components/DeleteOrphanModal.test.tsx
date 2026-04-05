@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { DeleteOrphanModal } from "./DeleteOrphanModal";
 
 describe("DeleteOrphanModal", () => {
@@ -35,7 +36,8 @@ describe("DeleteOrphanModal", () => {
     expect(container.querySelector("[class*='modal']")).toBeNull();
   });
 
-  it("calls onConfirm when Delete is clicked", () => {
+  it("calls onConfirm when Delete is clicked", async () => {
+    const user = userEvent.setup();
     render(
       <DeleteOrphanModal
         target={{ pid: 100, eventCount: 5 }}
@@ -44,11 +46,12 @@ describe("DeleteOrphanModal", () => {
         onConfirm={onConfirm}
       />,
     );
-    fireEvent.click(screen.getByText("Delete"));
+    await user.click(screen.getByText("Delete"));
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  it("calls onDismiss when Cancel is clicked", () => {
+  it("calls onDismiss when Cancel is clicked", async () => {
+    const user = userEvent.setup();
     render(
       <DeleteOrphanModal
         target={{ pid: 100, eventCount: 5 }}
@@ -57,7 +60,7 @@ describe("DeleteOrphanModal", () => {
         onConfirm={onConfirm}
       />,
     );
-    fireEvent.click(screen.getByText("Cancel"));
+    await user.click(screen.getByText("Cancel"));
     expect(onDismiss).toHaveBeenCalledTimes(1);
   });
 });

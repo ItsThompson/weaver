@@ -1,5 +1,6 @@
 import React from "react";
-import { render, screen, act, fireEvent } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
@@ -60,44 +61,40 @@ describe("SettingsPage", () => {
   });
 
   it("save button calls updateConfig", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
 
-    const saveBtn = screen.getByText("Save");
-    await act(async () => {
-      fireEvent.click(saveBtn);
-    });
+    await user.click(screen.getByText("Save"));
 
     expect(mockUpdateConfig).toHaveBeenCalled();
   });
 
   it("shows success toast after saving", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Save"));
 
     expect(screen.getByText("Settings saved")).toBeInTheDocument();
   });
 
   it("shows error toast when save fails", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockRejectedValue(new Error("Network error"));
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Save"));
 
     expect(screen.getByText("Network error")).toBeInTheDocument();
   });
@@ -126,16 +123,14 @@ describe("SettingsPage", () => {
   });
 
   it("saves config with test_runners", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
 
-    const saveBtn = screen.getByText("Save");
-    await act(async () => {
-      fireEvent.click(saveBtn);
-    });
+    await user.click(screen.getByText("Save"));
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
     expect(savedConfig.test_runners).toEqual(DEFAULT_CONFIG.test_runners);
@@ -203,6 +198,7 @@ describe("SettingsPage dictation section", () => {
   });
 
   it("Test Connection shows success when Ollama is reachable", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockGetDictationStatus.mockResolvedValue({
       whisper: true,
@@ -215,14 +211,13 @@ describe("SettingsPage dictation section", () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Test Connection" }));
-    });
+    await user.click(screen.getByRole("button", { name: "Test Connection" }));
 
     expect(screen.getByText("Ollama is reachable")).toBeInTheDocument();
   });
 
   it("Test Connection shows failure when Ollama is unreachable", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockGetDictationStatus.mockResolvedValue({
       whisper: false,
@@ -235,37 +230,33 @@ describe("SettingsPage dictation section", () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Test Connection" }));
-    });
+    await user.click(screen.getByRole("button", { name: "Test Connection" }));
 
     expect(screen.getByText("Cannot reach Ollama")).toBeInTheDocument();
   });
 
   it("Test Connection shows failure when API call throws", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockGetDictationStatus.mockRejectedValue(new Error("Network error"));
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Test Connection" }));
-    });
+    await user.click(screen.getByRole("button", { name: "Test Connection" }));
 
     expect(screen.getByText("Cannot reach Ollama")).toBeInTheDocument();
   });
 
   it("saves dictation config values", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Save"));
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
     expect(savedConfig.dictation).toEqual(DEFAULT_CONFIG.dictation);
@@ -292,15 +283,14 @@ describe("SettingsPage dictation section", () => {
   });
 
   it("saves microphone_device_id with config", async () => {
+    const user = userEvent.setup();
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
     mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
 
-    await act(async () => {
-      fireEvent.click(screen.getByText("Save"));
-    });
+    await user.click(screen.getByText("Save"));
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
     expect(savedConfig.dictation.microphone_device_id).toBe("");
