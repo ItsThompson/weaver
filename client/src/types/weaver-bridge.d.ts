@@ -6,6 +6,8 @@ export interface WeaverBridge {
   onDictationCommand(callback: (event: unknown, command: string) => void): void;
   copyToClipboard(text: string): void;
   showNotification(title: string, body: string): void;
+  sendDictationComplete(text: string): void;
+  sendDictationError(message: string): void;
 }
 
 /**

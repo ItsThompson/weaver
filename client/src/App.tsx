@@ -23,11 +23,16 @@ import { NotificationBar } from "./components/NotificationBar";
 import { CommandPalette } from "./components/CommandPalette";
 import { COMMAND_PALETTE_OPEN_EVENT } from "./constants";
 import { isElectron } from "./utils/isElectron";
+import {
+  useHotkeyDictation,
+  HotkeyDictationContext,
+} from "./hooks/useHotkeyDictation";
 
 export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
+  const { active: hotkeyDictationActive } = useHotkeyDictation();
   const { data } = useConfigQuery();
   useNavigateOnView();
   useSessionNotifications();
@@ -71,15 +76,15 @@ export function App() {
 
   if (isMini) {
     return (
-      <>
+      <HotkeyDictationContext.Provider value={hotkeyDictationActive}>
         <MiniPage />
         <CommandPalette />
-      </>
+      </HotkeyDictationContext.Provider>
     );
   }
 
   return (
-    <>
+    <HotkeyDictationContext.Provider value={hotkeyDictationActive}>
       <div
         style={
           {
@@ -127,6 +132,6 @@ export function App() {
       />
       <NotificationBar />
       <CommandPalette />
-    </>
+    </HotkeyDictationContext.Provider>
   );
 }
