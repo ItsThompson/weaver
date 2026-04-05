@@ -1,4 +1,9 @@
-export type NotificationSound = "beep" | "chime";
+export type NotificationSound =
+  | "beep"
+  | "chime"
+  | "dictation-start"
+  | "dictation-stop"
+  | "dictation-done";
 
 const SAMPLE_RATE = 44100;
 
@@ -13,6 +18,23 @@ function generateTone(
     const t = i / SAMPLE_RATE;
     const envelope = volume * Math.pow(0.001 / volume, t / duration);
     samples[i] = Math.sin(2 * Math.PI * frequency * t) * envelope;
+  }
+  return samples;
+}
+
+function generateSweep(
+  startFreq: number,
+  endFreq: number,
+  duration: number,
+  volume = 0.15,
+): Float32Array {
+  const length = Math.floor(SAMPLE_RATE * duration);
+  const samples = new Float32Array(length);
+  for (let i = 0; i < length; i++) {
+    const t = i / SAMPLE_RATE;
+    const freq = startFreq + (endFreq - startFreq) * (t / duration);
+    const envelope = volume * Math.pow(0.001 / volume, t / duration);
+    samples[i] = Math.sin(2 * Math.PI * freq * t) * envelope;
   }
   return samples;
 }
@@ -74,6 +96,17 @@ const SOUND_URLS: Record<NotificationSound, string> = {
       {
         samples: generateTone(659, 0.3),
         offsetSamples: Math.floor(SAMPLE_RATE * 0.15),
+      },
+    ),
+  ),
+  "dictation-start": samplesToWavUrl(generateSweep(440, 660, 0.15)),
+  "dictation-stop": samplesToWavUrl(generateSweep(660, 440, 0.15)),
+  "dictation-done": samplesToWavUrl(
+    mixSamples(
+      { samples: generateTone(523, 0.2), offsetSamples: 0 },
+      {
+        samples: generateTone(784, 0.3),
+        offsetSamples: Math.floor(SAMPLE_RATE * 0.12),
       },
     ),
   ),
