@@ -36,6 +36,9 @@ export function killPortOccupant(): void {
 export function start(): void {
   const serverEntry = resolve(resourcesPath, "dist/index.mjs");
   const env = { ...process.env };
+  env.WEAVER_WHISPER_BIN = isPacked
+    ? resolve(process.resourcesPath, "whisper-server")
+    : resolve(__dirname, "../resources/whisper-server");
   if (isPacked) {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, "client/dist");
   }
