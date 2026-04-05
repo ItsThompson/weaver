@@ -256,9 +256,6 @@ describe("SettingsPage dictation section", () => {
     });
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
-    expect(savedConfig.dictation).toEqual({
-      ollama_url: "http://localhost:11434",
-      ollama_model: "phi4-mini",
-    });
+    expect(savedConfig.dictation).toEqual(DEFAULT_CONFIG.dictation);
   });
 });

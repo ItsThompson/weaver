@@ -176,6 +176,26 @@ export function SettingsPage() {
               <>
                 <Header variant="h3">Dictation</Header>
                 <FormField
+                  label="LLM Cleanup"
+                  description="Use Ollama to remove filler words and fix grammar. Disable for lower latency (whisper already adds punctuation)."
+                >
+                  <Toggle
+                    checked={config.dictation.llm_cleanup}
+                    onChange={({ detail }) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        dictation: {
+                          ...prev.dictation,
+                          llm_cleanup: detail.checked,
+                        },
+                      }))
+                    }
+                    disabled={hasWarnings}
+                  >
+                    {config.dictation.llm_cleanup ? "Enabled" : "Disabled"}
+                  </Toggle>
+                </FormField>
+                <FormField
                   label="Ollama URL"
                   description="URL of the Ollama server for LLM post-processing"
                 >
