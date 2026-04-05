@@ -7,6 +7,7 @@ import type {
   SkillGraph,
   SkillDetail,
   Snippet,
+  WhisperModel,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -134,3 +135,33 @@ export const deleteSnippetApi = (id: string) =>
       throw new Error(`Delete failed: ${r.status}`);
     }
   });
+
+export const getDictationStatus = () =>
+  apiFetch<{ whisper: boolean; ollama: boolean; model: string | null }>(
+    "/dictation/status",
+  );
+
+export const transcribeAudio = (blob: Blob) =>
+  fetch(`${API_BASE}/dictation/transcribe`, {
+    method: "POST",
+    headers: { "Content-Type": "application/octet-stream" },
+    body: blob,
+  }).then(async (r) => {
+    if (!r.ok) {
+      const body = await r.json().catch(() => ({ error: r.statusText }));
+      throw new Error(body.error ?? `Transcribe failed: ${r.status}`);
+    }
+    return r.json() as Promise<{ text: string }>;
+  });
+
+export const processTranscript = (transcript: string, snippets: Snippet[]) =>
+  apiFetch<{ processedText: string; snippetUsed: string | null }>(
+    "/dictation/process",
+    {
+      method: "POST",
+      body: JSON.stringify({ transcript, snippets }),
+    },
+  );
+
+export const getModels = () =>
+  apiFetch<{ available: WhisperModel[]; local: string[] }>("/dictation/models");
