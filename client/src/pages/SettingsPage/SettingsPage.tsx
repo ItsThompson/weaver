@@ -1,3 +1,4 @@
+import { useState } from "react";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Container from "@cloudscape-design/components/container";
@@ -9,7 +10,10 @@ import Input from "@cloudscape-design/components/input";
 import Button from "@cloudscape-design/components/button";
 import Alert from "@cloudscape-design/components/alert";
 import Spinner from "@cloudscape-design/components/spinner";
+import Box from "@cloudscape-design/components/box";
+import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import { isElectron } from "../../utils/isElectron";
+import { getDictationStatus } from "../../utils/api";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
 import { TestRunnersField } from "./components/TestRunnersField";
@@ -21,6 +25,23 @@ export function SettingsPage() {
   const { state, actions } = useSettings(addNotification);
   const { config, saving, isLoading, warnings, hasWarnings } = state;
   const { setConfig, handleSave } = actions;
+  const [testingConnection, setTestingConnection] = useState(false);
+  const [connectionResult, setConnectionResult] = useState<{
+    ollama: boolean;
+  } | null>(null);
+
+  const handleTestConnection = async () => {
+    setTestingConnection(true);
+    setConnectionResult(null);
+    try {
+      const status = await getDictationStatus();
+      setConnectionResult({ ollama: status.ollama });
+    } catch {
+      setConnectionResult({ ollama: false });
+    } finally {
+      setTestingConnection(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -151,6 +172,71 @@ export function SettingsPage() {
               setConfig={setConfig}
               disabled={hasWarnings}
             />
+            {isElectron() && (
+              <>
+                <Header variant="h3">Dictation</Header>
+                <FormField
+                  label="Ollama URL"
+                  description="URL of the Ollama server for LLM post-processing"
+                >
+                  <SpaceBetween direction="horizontal" size="xs">
+                    <Box>
+                      <Input
+                        value={config.dictation.ollama_url}
+                        onChange={({ detail }) =>
+                          setConfig((prev) => ({
+                            ...prev,
+                            dictation: {
+                              ...prev.dictation,
+                              ollama_url: detail.value,
+                            },
+                          }))
+                        }
+                        disabled={hasWarnings}
+                        placeholder="http://localhost:11434"
+                      />
+                    </Box>
+                    <Button
+                      onClick={handleTestConnection}
+                      loading={testingConnection}
+                      disabled={hasWarnings}
+                    >
+                      Test Connection
+                    </Button>
+                  </SpaceBetween>
+                  {connectionResult && (
+                    <Box margin={{ top: "xs" }}>
+                      <StatusIndicator
+                        type={connectionResult.ollama ? "success" : "error"}
+                      >
+                        {connectionResult.ollama
+                          ? "Ollama is reachable"
+                          : "Cannot reach Ollama"}
+                      </StatusIndicator>
+                    </Box>
+                  )}
+                </FormField>
+                <FormField
+                  label="Ollama Model"
+                  description="Recommended: phi4-mini (best quality), qwen3:1.7b (fast, multilingual), gemma3:1b (smallest download)"
+                >
+                  <Input
+                    value={config.dictation.ollama_model}
+                    onChange={({ detail }) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        dictation: {
+                          ...prev.dictation,
+                          ollama_model: detail.value,
+                        },
+                      }))
+                    }
+                    disabled={hasWarnings}
+                    placeholder="phi4-mini"
+                  />
+                </FormField>
+              </>
+            )}
           </SpaceBetween>
         </Container>
       </Form>
