@@ -15,7 +15,7 @@ export interface TranscriptPanelProps {
 
 export interface DictationControlsProps {
   phase: DictationPhase;
-  f4Active: boolean;
+  hotkeyActive: boolean;
   whisperReady: boolean;
   ollamaReady: boolean;
   hasProcessedText: boolean;

@@ -18,7 +18,7 @@ export interface DictationState {
   ollamaError: "not_installed" | "model_not_found" | null;
   ollamaModel: string;
   hasModel: boolean;
-  f4Active: boolean;
+  hotkeyActive: boolean;
 }
 
 export interface DictationActions {

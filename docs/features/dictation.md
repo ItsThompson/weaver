@@ -54,15 +54,15 @@ Click **Download** next to a model. A progress bar shows the download status. Af
 
 Models are stored in `~/.weaver/models/`.
 
-## F4 quick capture
+## Hotkey quick capture
 
-Press **F4** from anywhere (even when Weaver is not focused) to start a headless dictation:
+Press the dictation hotkey (default: **F4**) from anywhere (even when Weaver is not focused) to start a headless dictation:
 
-1. **F4** (first press): a macOS notification appears saying "Listening..." and audio capture begins
-2. **F4** (second press): a notification says "Processing..." and the transcript is sent through the cleanup pipeline
+1. **First press**: a macOS notification appears saying "Listening..." and audio capture begins
+2. **Second press**: a notification says "Processing..." and the transcript is sent through the cleanup pipeline
 3. When processing finishes: the result is copied to your clipboard and a notification confirms "Copied to clipboard!"
 
-The F4 flow works independently of the Dictation page. If the Dictation page is open while F4 is active, its controls are disabled and an info banner is shown.
+The hotkey flow works independently of the Dictation page. If the Dictation page is open while the hotkey is active, its controls are disabled and an info banner is shown.
 
 ## LLM cleanup
 

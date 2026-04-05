@@ -4,7 +4,7 @@ import type { DictationControlsProps } from "../types";
 
 export function DictationControls({
   phase,
-  f4Active,
+  hotkeyActive,
   whisperReady,
   ollamaReady,
   hasProcessedText,
@@ -14,7 +14,7 @@ export function DictationControls({
 }: DictationControlsProps) {
   const servicesReady = whisperReady && ollamaReady;
   const loading = phase === "idle" || phase === "preflight_checking";
-  const disabled = f4Active || !servicesReady || loading;
+  const disabled = hotkeyActive || !servicesReady || loading;
   const isRecording = phase === "recording" || phase === "starting";
 
   return (
@@ -23,7 +23,7 @@ export function DictationControls({
         <Button
           variant="primary"
           onClick={onStop}
-          disabled={f4Active || phase === "starting"}
+          disabled={hotkeyActive || phase === "starting"}
           loading={phase === "starting"}
         >
           {phase === "starting" ? "Starting..." : "Stop Dictation"}

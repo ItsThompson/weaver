@@ -50,7 +50,7 @@ Create a snippet with:
 - **Trigger**: "signature"
 - **Expansion**: "Best regards,\nJane Smith\nSenior Engineer"
 
-Now when you open the Dictation page (or press F4) and say "signature", the processed output is the expansion text. No LLM processing is needed.
+Now when you open the Dictation page (or use the dictation hotkey) and say "signature", the processed output is the expansion text. No LLM processing is needed.
 
 ## Storage
 
