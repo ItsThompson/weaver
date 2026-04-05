@@ -14,7 +14,8 @@
   "scripts": {
     "dev": "turbo dev --filter=weaver-server --filter=weaver-client",
     "app": "turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm start --prefix desktop",
-    "dist": "npm run version:sync && turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm run dist --prefix desktop",
+    "build:whisper": "bash scripts/build-whisper.sh",
+    "dist": "npm run version:sync && npm run build:whisper && turbo build --filter=weaver-client --filter=weaver-server --filter=weaver-cli --filter=weaver-electron && npm run dist --prefix desktop",
     "build": "turbo build",
     "start": "turbo build && node server/dist/index.js",
     "lint": "eslint '**/*.{ts,tsx}' --ignore-pattern '**/dist/**'",

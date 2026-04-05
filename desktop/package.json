@@ -46,6 +46,10 @@
       {
         "from": "assets",
         "to": "assets"
+      },
+      {
+        "from": "resources/whisper-server",
+        "to": "whisper-server"
       }
     ]
   },
