@@ -1,6 +1,7 @@
 import {
   VALID_OPEN_DISPLAY_OPTIONS,
   VALID_CLOSE_DISPLAY_OPTIONS,
+  DEFAULT_CONFIG,
 } from "@weaver/shared/types";
 import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
 
@@ -220,6 +221,43 @@ export function validateSkillPaths(value: unknown): ValidatorResult {
   return { value: trimmed };
 }
 
+function validateNonEmptyString(
+  obj: Record<string, unknown>,
+  key: string,
+  prefix: string,
+): string | undefined {
+  if (obj[key] === undefined) {
+    return undefined;
+  }
+  if (typeof obj[key] !== "string" || (obj[key] as string).trim() === "") {
+    return `${prefix}.${key} must be a non-empty string`;
+  }
+  return undefined;
+}
+
+export function validateDictation(value: unknown): ValidatorResult {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) {
+    return { warning: "dictation must be an object" };
+  }
+
+  const obj = value as Record<string, unknown>;
+
+  for (const key of ["ollama_url", "ollama_model"] as const) {
+    const warning = validateNonEmptyString(obj, key, "dictation");
+    if (warning) {
+      return { warning };
+    }
+  }
+
+  return {
+    value: {
+      ...DEFAULT_CONFIG.dictation,
+      ...("ollama_url" in obj && { ollama_url: obj.ollama_url }),
+      ...("ollama_model" in obj && { ollama_model: obj.ollama_model }),
+    },
+  };
+}
+
 export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
   enable_notification_sounds: validateBoolean("enable_notification_sounds"),
   dark_mode: validateBoolean("dark_mode"),
@@ -239,4 +277,5 @@ export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
   test_runners: validateTestRunners,
   skill_graph: validateSkillGraph,
   skill_paths: validateSkillPaths,
+  dictation: validateDictation,
 };

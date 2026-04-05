@@ -7,7 +7,9 @@ import {
   validateTestRunners,
   validateSkillGraph,
   validateSkillPaths,
+  validateDictation,
 } from "./field";
+import { DEFAULT_CONFIG } from "@weaver/shared/types";
 
 describe("validatePageSize", () => {
   it.each([10, 25, 50])("accepts %d", (size) => {
@@ -301,5 +303,87 @@ describe("FIELD_VALIDATORS display options", () => {
     ).toEqual({
       warning: "open_display_options contains invalid options: invalid, fake",
     });
+  });
+});
+
+describe("validateDictation", () => {
+  it("accepts valid dictation config", () => {
+    const input = {
+      ollama_url: "http://localhost:11434",
+      ollama_model: "phi4-mini",
+    };
+    expect(validateDictation(input)).toEqual({ value: input });
+  });
+
+  it("merges partial config with defaults", () => {
+    expect(validateDictation({ ollama_model: "llama3" })).toEqual({
+      value: {
+        ollama_url: DEFAULT_CONFIG.dictation.ollama_url,
+        ollama_model: "llama3",
+      },
+    });
+  });
+
+  it("falls back to all defaults for empty object", () => {
+    expect(validateDictation({})).toEqual({
+      value: DEFAULT_CONFIG.dictation,
+    });
+  });
+
+  it("rejects non-object", () => {
+    expect(validateDictation("bad")).toEqual({
+      warning: "dictation must be an object",
+    });
+  });
+
+  it("rejects array", () => {
+    expect(validateDictation([])).toEqual({
+      warning: "dictation must be an object",
+    });
+  });
+
+  it("rejects null", () => {
+    expect(validateDictation(null)).toEqual({
+      warning: "dictation must be an object",
+    });
+  });
+
+  it("rejects non-string ollama_url", () => {
+    expect(validateDictation({ ollama_url: 123 })).toEqual({
+      warning: "dictation.ollama_url must be a non-empty string",
+    });
+  });
+
+  it("rejects empty ollama_url", () => {
+    expect(validateDictation({ ollama_url: "  " })).toEqual({
+      warning: "dictation.ollama_url must be a non-empty string",
+    });
+  });
+
+  it("rejects non-string ollama_model", () => {
+    expect(validateDictation({ ollama_model: 42 })).toEqual({
+      warning: "dictation.ollama_model must be a non-empty string",
+    });
+  });
+
+  it("rejects empty ollama_model", () => {
+    expect(validateDictation({ ollama_model: "" })).toEqual({
+      warning: "dictation.ollama_model must be a non-empty string",
+    });
+  });
+
+  it("ignores unknown keys", () => {
+    const input = {
+      ollama_url: "http://example.com",
+      ollama_model: "test",
+      future_key: true,
+    };
+    expect(validateDictation(input)).toEqual({
+      value: { ollama_url: "http://example.com", ollama_model: "test" },
+    });
+  });
+
+  it("is registered in FIELD_VALIDATORS", () => {
+    expect(FIELD_VALIDATORS.dictation).toBe(validateDictation);
   });
 });
