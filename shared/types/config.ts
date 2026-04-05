@@ -1,5 +1,10 @@
 import { DEFAULT_TEST_RUNNERS } from "./validation";
 
+export interface DictationConfig {
+  ollama_url: string;
+  ollama_model: string;
+}
+
 export interface SkillGraphCategoryConfig {
   color?: string;
   skills: string[];
@@ -23,6 +28,7 @@ export interface WeaverConfig {
   test_runners: string[];
   skill_graph: SkillGraphConfig;
   skill_paths: string[];
+  dictation: DictationConfig;
 }
 
 export const VALID_OPEN_DISPLAY_OPTIONS = [
@@ -57,4 +63,8 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   test_runners: [...DEFAULT_TEST_RUNNERS],
   skill_graph: { categories: {} },
   skill_paths: [],
+  dictation: {
+    ollama_url: "http://localhost:11434",
+    ollama_model: "phi4-mini",
+  },
 };
