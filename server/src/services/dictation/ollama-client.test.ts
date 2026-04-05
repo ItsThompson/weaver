@@ -37,7 +37,7 @@ describe("generateText", () => {
   it("sends correct request body and returns response text", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ response: "Cleaned text." }),
+      json: () => Promise.resolve({ message: { content: "Cleaned text." } }),
     } as unknown as Response);
 
     const result = await generateText(
@@ -47,13 +47,20 @@ describe("generateText", () => {
     );
 
     expect(result).toBe("Cleaned text.");
-    expect(fetch).toHaveBeenCalledWith("http://localhost:11434/api/generate", {
+    expect(fetch).toHaveBeenCalledWith("http://localhost:11434/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "phi4-mini",
-        prompt: "Fix this transcript",
         stream: false,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a text transformation tool. You receive raw text and return transformed text. You NEVER respond conversationally. You NEVER add commentary, greetings, or explanations. You return ONLY the transformed text.",
+          },
+          { role: "user", content: "Fix this transcript" },
+        ],
       }),
     });
   });

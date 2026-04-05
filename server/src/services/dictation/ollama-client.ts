@@ -16,10 +16,21 @@ export async function generateText(
 ): Promise<string> {
   const start = Date.now();
   try {
-    const res = await fetch(`${url}/api/generate`, {
+    const res = await fetch(`${url}/api/chat`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model, prompt, stream: false }),
+      body: JSON.stringify({
+        model,
+        stream: false,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a text transformation tool. You receive raw text and return transformed text. You NEVER respond conversationally. You NEVER add commentary, greetings, or explanations. You return ONLY the transformed text.",
+          },
+          { role: "user", content: prompt },
+        ],
+      }),
     });
 
     if (!res.ok) {
@@ -34,7 +45,8 @@ export async function generateText(
       return `Ollama error: ${res.status} ${res.statusText}`;
     }
 
-    const body = (await res.json()) as { response: string };
+    const body = (await res.json()) as { message?: { content: string } };
+    const text = body.message?.content ?? "";
     log({
       timestamp: new Date().toISOString(),
       event: "ollama_generate_done",
@@ -42,9 +54,9 @@ export async function generateText(
       durationMs: Date.now() - start,
       success: true,
       promptLength: prompt.length,
-      responseLength: body.response.length,
+      responseLength: text.length,
     });
-    return body.response;
+    return text;
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     log({
