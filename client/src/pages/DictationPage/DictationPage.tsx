@@ -1,14 +1,19 @@
+import { useEffect } from "react";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Alert from "@cloudscape-design/components/alert";
-import { useDictationPage } from "./hooks/useDictationPage";
+import { useDictation } from "../../hooks/useDictation";
 import { PreflightCheck } from "./components/PreflightCheck";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
 import { ModelDownload } from "./components/ModelDownload";
 
 export function DictationPage() {
-  const { state, actions } = useDictationPage();
+  const { state, actions } = useDictation();
+
+  useEffect(() => {
+    actions.checkServices();
+  }, [actions.checkServices]);
 
   const noModel =
     !state.whisperStatus &&
