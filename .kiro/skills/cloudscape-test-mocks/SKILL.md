@@ -1,63 +1,43 @@
 ---
 name: cloudscape-test-mocks
 description: >
-  Cloudscape component mock conventions for this project's Jest test suite.
-  Apply whenever writing, modifying, or reviewing any client test file (.test.tsx),
-  any mock in client/__tests__/mocks/, or any component that uses Cloudscape
-  components. Also apply when client tests fail with "Unable to find element"
-  errors.
+  Cloudscape component testing conventions for this project's Vitest test suite.
+  Apply whenever writing, modifying, or reviewing any client test file (.test.tsx)
+  or any component that uses Cloudscape components. Also apply when client tests
+  fail with "Unable to find element" errors.
 ---
 
-# Cloudscape Test Mocks
+# Cloudscape Test Conventions
 
-## Mock Location
+## No Special Configuration Required
 
-All Cloudscape mocks live in `client/__tests__/mocks/` and are wired via `moduleNameMapper` in `client/jest.config.mjs`.
+Cloudscape components render natively in Vitest with jsdom. No jest-preset, no module aliasing, and no component mocks are needed. Tests interact with real Cloudscape components.
 
-## Component-Specific Mocks
+## Querying Components
 
-These mocks exist because the components have interactive behavior or structural rendering that tests depend on:
+Use `@testing-library/react` queries (`screen.getByText`, `screen.getByRole`, `fireEvent`) for most assertions.
 
-| Mock file | Renders |
-|-----------|---------|
-| `cloudscape-header.tsx` | `children`, `actions`, `counter`, `description` |
-| `cloudscape-button.tsx` | `children` with `onClick` handler |
-| `cloudscape-table.tsx` | Iterates `items` through `columnDefinitions[].cell()`, renders `filter` and `empty` |
-| `cloudscape-tabs.tsx` | Iterates `tabs` rendering `label` and `content` |
-| `cloudscape-text-filter.tsx` | Renders `<input>` with `onChange` wired to `detail.filteringText` |
-| `cloudscape-expandable-section.tsx` | Renders `headerText` and `children` |
-
-## Passthrough Mock
-
-`cloudscape-passthrough.tsx` is the catch-all for components without a dedicated mock. It renders all common content-bearing props:
-
-- `label`, `description` (FormField, etc.)
-- `header`, `actions`, `footer` (Container, Modal, etc.)
-- `content` (AppLayout, Form, etc.)
-- `children`
-
-When a test can't find text that should be visible, check whether the text is passed as a **prop** (not children) and whether the relevant mock renders that prop.
-
-## Adding New Mocks
-
-Only create a component-specific mock when:
-1. The passthrough mock can't express the component's rendering (e.g., Table iterating items)
-2. Tests need to interact with the component (e.g., Button onClick, TextFilter onChange)
-
-Otherwise, rely on the passthrough mock and ensure it renders the prop slot you need.
-
-## ESM Mock Pattern
-
-Client tests use `jest.unstable_mockModule` for API mocks, with dynamic imports after mock registration:
+For Cloudscape-specific queries (finding a component by type, accessing sub-elements), use the DOM test utilities:
 
 ```tsx
-jest.unstable_mockModule('../../utils/api', () => ({
-  getSessions: jest.fn(),
-  // ... other API functions
-}));
+import createWrapper from "@cloudscape-design/components/test-utils/dom";
 
-const api = await import('../../utils/api');
-const { MyPage } = await import('./MyPage');
+const { container } = render(<MyPage />);
+const wrapper = createWrapper(container);
+
+const autosuggest = wrapper.findAutosuggest()!;
+const breadcrumbs = wrapper.findBreadcrumbGroup()!;
+const links = breadcrumbs.findBreadcrumbLinks();
 ```
 
-Wrap renders in `<SWRConfig value={{ provider: () => new Map(), dedupingInterval: 0 }}>` to isolate SWR cache between tests.
+Each Cloudscape component has a corresponding `findX` / `findAllX` method on the wrapper. Use `data-testid` attributes for targeted selection:
+
+```tsx
+wrapper.findButton('[data-testid="submit-button"]')!.click();
+```
+
+Do not use optional chaining (`?.`) on wrapper results in tests: it silently swallows missing elements. Use non-null assertion (`!`) so the test fails if the element is absent.
+
+## Avoid Internal Selectors
+
+Do not query Cloudscape components by internal class names (`awsui_*`). These change between versions. Use `data-testid`, `findX` utilities, or visible text instead.
