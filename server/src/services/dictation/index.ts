@@ -4,4 +4,6 @@ export {
   stopWhisperServer,
   isWhisperServerRunning,
   touchWhisperActivity,
-} from "./whisper-server.js";
+} from "./whisper-server";
+
+export { checkOllamaHealth, generateText } from "./ollama-client";

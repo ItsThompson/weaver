@@ -1,5 +1,5 @@
 import { spawn, type ChildProcess } from "node:child_process";
-import { log } from "../../utils/logger.js";
+import { log } from "../../utils/logger";
 
 export const WHISPER_PORT = 8178;
 const WHISPER_HOST = "127.0.0.1";
