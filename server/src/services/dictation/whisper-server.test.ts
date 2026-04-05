@@ -1,9 +1,20 @@
 import { EventEmitter } from "node:events";
 
 const mockSpawn = vi.hoisted(() => vi.fn());
+const mockExecSync = vi.hoisted(() => vi.fn());
 const mockLog = vi.hoisted(() => vi.fn());
 
-vi.mock("node:child_process", () => ({ spawn: mockSpawn }));
+vi.mock("node:child_process", () => ({
+  spawn: mockSpawn,
+  execSync: mockExecSync,
+}));
+vi.mock("node:fs", () => ({
+  readFileSync: vi.fn(() => {
+    throw new Error("ENOENT");
+  }),
+  writeFileSync: vi.fn(),
+  unlinkSync: vi.fn(),
+}));
 vi.mock("../../utils/logger", () => ({ log: mockLog }));
 
 import {
@@ -35,6 +46,9 @@ function makeFakeChild() {
 beforeEach(() => {
   vi.clearAllMocks();
   vi.useFakeTimers();
+  mockExecSync.mockImplementation(() => {
+    throw new Error("no process");
+  });
   // Ensure clean state — stop any lingering process
   stopWhisperServer();
 });
@@ -57,14 +71,11 @@ describe("startWhisperServer", () => {
 
     startWhisperServer("/usr/bin/whisper", "/models/ggml.bin");
 
-    expect(mockSpawn).toHaveBeenCalledWith("/usr/bin/whisper", [
-      "--model",
-      "/models/ggml.bin",
-      "--port",
-      "8178",
-      "--host",
-      "127.0.0.1",
-    ]);
+    expect(mockSpawn).toHaveBeenCalledWith(
+      "/usr/bin/whisper",
+      ["--model", "/models/ggml.bin", "--port", "8178", "--host", "127.0.0.1"],
+      undefined,
+    );
   });
 
   it("logs the start event", () => {
@@ -194,7 +205,7 @@ describe("inactivity timeout", () => {
 
     expect(child.kill).toHaveBeenCalledWith("SIGTERM");
     expect(mockLog).toHaveBeenCalledWith(
-      expect.objectContaining({ event: "whisper_inactivity_timeout" }),
+      expect.objectContaining({ event: "whisper_server_inactivity_timeout" }),
     );
   });
 

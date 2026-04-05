@@ -1,38 +1,17 @@
-import { spawn, type ChildProcess } from "node:child_process";
+import { createManagedProcess } from "../managed-process";
 import { log } from "../../utils/logger";
 
 export const WHISPER_PORT = 8178;
 const WHISPER_HOST = "127.0.0.1";
-const INACTIVITY_TIMEOUT_MS = 5 * 60 * 1000;
-const KILL_GRACE_MS = 2000;
 
-let child: ChildProcess | null = null;
-let inactivityTimer: ReturnType<typeof setTimeout> | null = null;
-
-function clearInactivityTimer(): void {
-  if (inactivityTimer) {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = null;
-  }
-}
-
-function startInactivityTimer(): void {
-  clearInactivityTimer();
-  inactivityTimer = setTimeout(() => {
-    log({
-      timestamp: new Date().toISOString(),
-      event: "whisper_inactivity_timeout",
-    });
-    stopWhisperServer();
-  }, INACTIVITY_TIMEOUT_MS);
-}
+const managed = createManagedProcess({
+  name: "whisper_server",
+  cleanup: { type: "port", port: WHISPER_PORT },
+  inactivityTimeoutMs: 5 * 60 * 1000,
+});
 
 export function startWhisperServer(binPath: string, modelPath: string): void {
-  if (child) {
-    return;
-  }
-
-  child = spawn(binPath, [
+  const child = managed.start(binPath, [
     "--model",
     modelPath,
     "--port",
@@ -48,46 +27,14 @@ export function startWhisperServer(binPath: string, modelPath: string): void {
       message: data.toString().trim(),
     });
   });
-
-  child.on("exit", (code, signal) => {
-    log({
-      timestamp: new Date().toISOString(),
-      event: "whisper_server_exited",
-      code,
-      signal,
-    });
-    child = null;
-    clearInactivityTimer();
-  });
-
-  log({
-    timestamp: new Date().toISOString(),
-    event: "whisper_server_started",
-    pid: child.pid,
-  });
-  startInactivityTimer();
 }
 
 export function stopWhisperServer(): void {
-  if (!child) {
-    return;
-  }
-
-  const ref = child;
-  child = null;
-  clearInactivityTimer();
-
-  ref.kill("SIGTERM");
-  const timeout = setTimeout(() => {
-    if (!ref.killed) {
-      ref.kill("SIGKILL");
-    }
-  }, KILL_GRACE_MS);
-  ref.on("exit", () => clearTimeout(timeout));
+  managed.stop();
 }
 
 export async function isWhisperServerRunning(): Promise<boolean> {
-  if (!child) {
+  if (!managed.isAlive()) {
     return false;
   }
   try {
@@ -100,7 +47,7 @@ export async function isWhisperServerRunning(): Promise<boolean> {
 
 function buildSilentWav(): Buffer {
   const sampleRate = 16000;
-  const numSamples = 1600; // 0.1s of silence
+  const numSamples = 1600;
   const dataSize = numSamples * 2;
   const buf = Buffer.alloc(44 + dataSize);
   buf.write("RIFF", 0);
@@ -155,7 +102,6 @@ export async function waitForWhisperReady(
     intervalMs,
   });
 
-  // Phase 1: wait for HTTP listener
   let httpReady = false;
   for (let i = 0; i < retries; i++) {
     if (await isWhisperServerRunning()) {
@@ -168,7 +114,7 @@ export async function waitForWhisperReady(
       });
       break;
     }
-    if (!child) {
+    if (!managed.isAlive()) {
       log({
         timestamp: new Date().toISOString(),
         event: "whisper_ready_poll_done",
@@ -179,7 +125,7 @@ export async function waitForWhisperReady(
       });
       return false;
     }
-    await new Promise((r) => setTimeout(r, intervalMs));
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
   }
 
   if (!httpReady) {
@@ -194,7 +140,6 @@ export async function waitForWhisperReady(
     return false;
   }
 
-  // Phase 2: warmup inference to confirm model is loaded
   const warmupStart = Date.now();
   const warmed = await warmupWhisper();
   log({
@@ -210,7 +155,5 @@ export async function waitForWhisperReady(
 }
 
 export function touchWhisperActivity(): void {
-  if (child) {
-    startInactivityTimer();
-  }
+  managed.touch();
 }

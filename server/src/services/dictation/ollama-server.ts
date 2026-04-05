@@ -1,5 +1,8 @@
-import { execSync, spawn, type ChildProcess } from "node:child_process";
+import { execSync } from "node:child_process";
 import { existsSync } from "node:fs";
+import { join } from "node:path";
+import { weaverDir } from "@weaver/shared/paths";
+import { createManagedProcess } from "../managed-process";
 import { log } from "../../utils/logger";
 import { checkOllamaHealth } from "./ollama-client";
 
@@ -9,8 +12,10 @@ const KNOWN_PATHS = [
   "/usr/bin/ollama",
 ];
 
-let child: ChildProcess | null = null;
-let weStartedIt = false;
+const managed = createManagedProcess({
+  name: "ollama_server",
+  cleanup: { type: "pidfile", path: join(weaverDir(), ".ollama-pid") },
+});
 
 function findOllamaBin(): string | null {
   try {
@@ -26,7 +31,7 @@ export async function ensureOllamaRunning(url: string): Promise<boolean> {
     return true;
   }
 
-  if (child) {
+  if (managed.isAlive()) {
     return false;
   }
 
@@ -40,34 +45,14 @@ export async function ensureOllamaRunning(url: string): Promise<boolean> {
     return false;
   }
 
-  child = spawn(bin, ["serve"], {
+  managed.start(bin, ["serve"], {
     stdio: "ignore",
-    detached: false,
     env: { ...process.env, OLLAMA_NUM_PARALLEL: "4" },
-  });
-  weStartedIt = true;
-
-  child.on("exit", (code, signal) => {
-    log({
-      timestamp: new Date().toISOString(),
-      event: "ollama_server_exited",
-      code,
-      signal,
-    });
-    child = null;
-    weStartedIt = false;
-  });
-
-  log({
-    timestamp: new Date().toISOString(),
-    event: "ollama_server_started",
-    pid: child.pid,
-    bin,
   });
 
   for (let attempt = 0; attempt < 20; attempt++) {
     await new Promise((resolve) => setTimeout(resolve, 500));
-    if (!child) {
+    if (!managed.isAlive()) {
       return false;
     }
     if (await checkOllamaHealth(url)) {
@@ -79,19 +64,5 @@ export async function ensureOllamaRunning(url: string): Promise<boolean> {
 }
 
 export function stopOllamaServer(): void {
-  if (!child || !weStartedIt) {
-    return;
-  }
-
-  const ref = child;
-  child = null;
-  weStartedIt = false;
-
-  ref.kill("SIGTERM");
-  const timeout = setTimeout(() => {
-    if (!ref.killed) {
-      ref.kill("SIGKILL");
-    }
-  }, 2000);
-  ref.on("exit", () => clearTimeout(timeout));
+  managed.stop();
 }
