@@ -3,8 +3,10 @@ vi.mock("../../services/dictation/index", () => ({
   isWhisperServerRunning: vi.fn(),
   startWhisperServer: vi.fn(),
   stopWhisperServer: vi.fn(),
+  waitForWhisperReady: vi.fn(),
   touchWhisperActivity: vi.fn(),
   checkOllamaHealth: vi.fn(),
+  ensureOllamaRunning: vi.fn(),
   generateText: vi.fn(),
   logDictation: vi.fn(),
   AVAILABLE_MODELS: [
@@ -18,6 +20,7 @@ vi.mock("../../services/dictation/index", () => ({
   downloadModel: vi.fn(),
   listLocalModels: vi.fn(),
   getDefaultModelPath: vi.fn(),
+  stopOllamaServer: vi.fn(),
 }));
 
 vi.mock("../../services/config/index", () => ({
@@ -30,9 +33,11 @@ import { registerDictationRoutes } from "./dictation";
 import {
   isWhisperServerRunning,
   checkOllamaHealth,
+  ensureOllamaRunning,
   generateText,
   logDictation,
   startWhisperServer,
+  waitForWhisperReady,
   touchWhisperActivity,
   downloadModel,
   listLocalModels,
@@ -58,7 +63,7 @@ afterEach(() => server.close());
 describe("GET /api/dictation/status", () => {
   it("returns both true when whisper and ollama are running", async () => {
     vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
-    vi.mocked(checkOllamaHealth).mockResolvedValue(true);
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
     vi.mocked(getDefaultModelPath).mockResolvedValue(
       "/models/ggml-tiny.en.bin",
     );
@@ -77,7 +82,7 @@ describe("GET /api/dictation/status", () => {
 
   it("returns whisper false when whisper-server is down", async () => {
     vi.mocked(isWhisperServerRunning).mockResolvedValue(false);
-    vi.mocked(checkOllamaHealth).mockResolvedValue(true);
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
     vi.mocked(getDefaultModelPath).mockResolvedValue(null);
 
     const res = await server.inject({
@@ -99,6 +104,7 @@ describe("POST /api/dictation/transcribe", () => {
       "/models/ggml-tiny.en.bin",
     );
     vi.mocked(isWhisperServerRunning).mockResolvedValue(false);
+    vi.mocked(waitForWhisperReady).mockResolvedValue(true);
 
     const mockResponse = {
       ok: true,
@@ -160,6 +166,7 @@ describe("POST /api/dictation/process", () => {
   });
 
   it("returns Ollama-cleaned text when no snippet matches", async () => {
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
     vi.mocked(generateText).mockResolvedValue("Hello, how are you?");
 
     const res = await server.inject({
