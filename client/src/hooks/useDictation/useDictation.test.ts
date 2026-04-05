@@ -6,6 +6,11 @@ vi.mock("../notifications/soundUtils", () => ({
   playNotificationSound: vi.fn(),
 }));
 
+const mockResolveDeviceId = vi.fn();
+vi.mock("../useAudioDevices", () => ({
+  resolveDeviceId: (...args: unknown[]) => mockResolveDeviceId(...args),
+}));
+
 import * as api from "../../utils/api";
 import { useDictation } from "./useDictation";
 
@@ -42,6 +47,10 @@ beforeEach(() => {
   vi.clearAllMocks();
   chunkCallback = null;
   mockIsRecording = false;
+  mockResolveDeviceId.mockResolvedValue({
+    deviceId: undefined,
+    isStale: false,
+  });
 });
 
 describe("useDictation", () => {
@@ -228,5 +237,72 @@ describe("useDictation", () => {
     expect(result.current.state.phase).toBe("idle");
     expect(result.current.state.rawTranscript).toBe("");
     expect(result.current.state.processedText).toBe("");
+  });
+
+  it("passes resolved deviceId to startRecording", async () => {
+    mockResolveDeviceId.mockResolvedValue({
+      deviceId: "mic-1",
+      isStale: false,
+    });
+
+    const { result } = renderHook(() => useDictation("mic-1"));
+
+    await act(async () => {
+      await result.current.actions.startDictation();
+    });
+
+    expect(mockResolveDeviceId).toHaveBeenCalledWith("mic-1");
+    expect(mockStartRecording).toHaveBeenCalledWith("mic-1");
+    expect(result.current.state.deviceWarning).toBeNull();
+  });
+
+  it("uses system default when deviceId is undefined", async () => {
+    const { result } = renderHook(() => useDictation());
+
+    await act(async () => {
+      await result.current.actions.startDictation();
+    });
+
+    expect(mockResolveDeviceId).toHaveBeenCalledWith("");
+    expect(mockStartRecording).toHaveBeenCalledWith(undefined);
+  });
+
+  it("sets deviceWarning when saved device is stale", async () => {
+    mockResolveDeviceId.mockResolvedValue({
+      deviceId: undefined,
+      isStale: true,
+    });
+
+    const { result } = renderHook(() => useDictation("gone-device"));
+
+    await act(async () => {
+      await result.current.actions.startDictation();
+    });
+
+    expect(result.current.state.deviceWarning).toBe(
+      "Previously selected microphone is no longer available. Using system default.",
+    );
+    expect(mockStartRecording).toHaveBeenCalledWith(undefined);
+  });
+
+  it("clears deviceWarning on reset", async () => {
+    mockResolveDeviceId.mockResolvedValue({
+      deviceId: undefined,
+      isStale: true,
+    });
+
+    const { result } = renderHook(() => useDictation("gone-device"));
+
+    await act(async () => {
+      await result.current.actions.startDictation();
+    });
+
+    expect(result.current.state.deviceWarning).not.toBeNull();
+
+    act(() => {
+      result.current.actions.reset();
+    });
+
+    expect(result.current.state.deviceWarning).toBeNull();
   });
 });

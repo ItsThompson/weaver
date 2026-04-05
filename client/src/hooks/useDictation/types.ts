@@ -13,6 +13,7 @@ export interface DictationState {
   rawTranscript: string;
   processedText: string;
   error: string | null;
+  deviceWarning: string | null;
   whisperStatus: boolean;
   ollamaStatus: boolean;
   ollamaError: "not_installed" | "model_not_found" | null;

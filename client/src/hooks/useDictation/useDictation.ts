@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useAudioCapture } from "../useAudioCapture";
+import { resolveDeviceId } from "../useAudioDevices";
 import {
   getDictationStatus,
   transcribeAudio,
@@ -14,6 +15,7 @@ const INITIAL_STATE: DictationState = {
   rawTranscript: "",
   processedText: "",
   error: null,
+  deviceWarning: null,
   whisperStatus: false,
   ollamaStatus: false,
   ollamaError: null,
@@ -22,7 +24,7 @@ const INITIAL_STATE: DictationState = {
   hotkeyActive: false,
 };
 
-export function useDictation(): {
+export function useDictation(deviceId?: string): {
   state: DictationState;
   actions: DictationActions;
 } {
@@ -131,25 +133,34 @@ export function useDictation(): {
   const startDictation = useCallback(async () => {
     transcriptRef.current = "";
     pendingRef.current = Promise.resolve();
-    setState((s) => ({
-      ...s,
+    setState((prev) => ({
+      ...prev,
       phase: "starting",
       rawTranscript: "",
       processedText: "",
       error: null,
+      deviceWarning: null,
     }));
     try {
-      await audio.startRecording();
-      setState((s) => ({ ...s, phase: "recording" }));
+      const resolved = await resolveDeviceId(deviceId ?? "");
+      if (resolved.isStale) {
+        setState((prev) => ({
+          ...prev,
+          deviceWarning:
+            "Previously selected microphone is no longer available. Using system default.",
+        }));
+      }
+      await audio.startRecording(resolved.deviceId);
+      setState((prev) => ({ ...prev, phase: "recording" }));
       playNotificationSound("dictation-start");
     } catch (err) {
-      setState((s) => ({
-        ...s,
+      setState((prev) => ({
+        ...prev,
         phase: "error",
         error: err instanceof Error ? err.message : "Microphone access failed",
       }));
     }
-  }, [audio]);
+  }, [audio, deviceId]);
 
   const stopDictation = useCallback(() => {
     setState((s) => ({ ...s, phase: "processing" }));
