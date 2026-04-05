@@ -9,7 +9,7 @@ function send(channel: string, ...args: unknown[]): void {
 }
 
 function notify(title: string, body: string): void {
-  new Notification({ title, body }).show();
+  new Notification({ title, body, silent: true }).show();
 }
 
 export function setupDictation(): void {
@@ -45,7 +45,7 @@ export function setupDictation(): void {
   });
 }
 
-export function handleF4(): void {
+export function handleDictationHotkey(): void {
   if (state === "idle") {
     send("dictation-command", "start");
     state = "recording";
