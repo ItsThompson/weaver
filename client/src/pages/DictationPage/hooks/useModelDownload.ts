@@ -14,6 +14,69 @@ const IDLE_STATUS: DownloadStatus = {
   error: null,
 };
 
+type SSEResult =
+  | { type: "progress"; progress: number }
+  | { type: "complete" }
+  | { type: "error"; error: string };
+
+function parseSSEEvent(line: string): SSEResult | null {
+  const match = line.match(/^data: (.+)$/m);
+  if (!match) {
+    return null;
+  }
+  const event = JSON.parse(match[1]);
+  if (event.progress !== undefined) {
+    return { type: "progress", progress: event.progress };
+  }
+  if (event.complete) {
+    return { type: "complete" };
+  }
+  if (event.error) {
+    return { type: "error", error: event.error };
+  }
+  return null;
+}
+
+type StreamResult =
+  | { type: "complete" }
+  | { type: "error"; error: string }
+  | { type: "done" };
+
+async function readSSEStream(
+  body: ReadableStream<Uint8Array>,
+  onProgress: (progress: number) => void,
+): Promise<StreamResult> {
+  const reader = body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = "";
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    buffer += decoder.decode(value, { stream: true });
+
+    const lines = buffer.split("\n\n");
+    buffer = lines.pop() || "";
+
+    for (const line of lines) {
+      const result = parseSSEEvent(line);
+      if (!result) {
+        continue;
+      }
+      if (result.type === "progress") {
+        onProgress(result.progress);
+      } else if (result.type === "complete") {
+        return { type: "complete" };
+      } else if (result.type === "error") {
+        return { type: "error", error: result.error };
+      }
+    }
+  }
+  return { type: "done" };
+}
+
 export function useModelDownload(onComplete: () => void) {
   const [available, setAvailable] = useState<WhisperModel[]>([]);
   const [local, setLocal] = useState<string[]>([]);
@@ -49,38 +112,14 @@ export function useModelDownload(onComplete: () => void) {
           return;
         }
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let buffer = "";
-
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) {
-            break;
-          }
-          buffer += decoder.decode(value, { stream: true });
-
-          const lines = buffer.split("\n\n");
-          buffer = lines.pop() || "";
-
-          for (const line of lines) {
-            const match = line.match(/^data: (.+)$/m);
-            if (!match) {
-              continue;
-            }
-            const event = JSON.parse(match[1]);
-
-            if (event.progress !== undefined) {
-              setDownload((prev) => ({ ...prev, progress: event.progress }));
-            } else if (event.complete) {
-              setDownload(IDLE_STATUS);
-              onComplete();
-              return;
-            } else if (event.error) {
-              setDownload({ ...IDLE_STATUS, error: event.error });
-              return;
-            }
-          }
+        const streamResult = await readSSEStream(response.body, (progress) =>
+          setDownload((prev) => ({ ...prev, progress })),
+        );
+        if (streamResult.type === "error") {
+          setDownload({ ...IDLE_STATUS, error: streamResult.error });
+        } else if (streamResult.type === "complete") {
+          setDownload(IDLE_STATUS);
+          onComplete();
         }
       } catch {
         setDownload({ ...IDLE_STATUS, error: "Download failed" });

@@ -9,6 +9,8 @@ export default tseslint.config(
     },
     rules: {
       curly: "error",
+      "no-nested-ternary": "error",
+      "max-depth": ["error", 3],
     },
   },
 );

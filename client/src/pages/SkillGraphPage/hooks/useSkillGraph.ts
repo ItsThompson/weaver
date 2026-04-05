@@ -6,6 +6,19 @@ import { useSkillGraphQuery, useConfigQuery } from "../../../hooks/queries";
 import { useCategoryColors } from "./useCategoryColors";
 import type { SkillNodeData } from "../types";
 
+function getSkillLabel(
+  skill: { name: string; project: string | null },
+  showGlobalSuffix: boolean,
+): string {
+  if (skill.project !== null) {
+    return `${skill.name} (${skill.project})`;
+  }
+  if (showGlobalSuffix) {
+    return `${skill.name} (global)`;
+  }
+  return skill.name;
+}
+
 export function useSkillGraph() {
   const { data, error, isLoading } = useSkillGraphQuery();
   const { data: configData } = useConfigQuery();
@@ -41,12 +54,7 @@ export function useSkillGraph() {
       const pos = g.node(skill.id);
       const showGlobalSuffix =
         skill.source === "global" && workspaceSkillNames.has(skill.skillName);
-      const label =
-        skill.project !== null
-          ? `${skill.name} (${skill.project})`
-          : showGlobalSuffix
-            ? `${skill.name} (global)`
-            : skill.name;
+      const label = getSkillLabel(skill, showGlobalSuffix);
 
       return {
         id: skill.id,

@@ -3,6 +3,19 @@ import { useSessionsQuery, useSkillGraphQuery } from "../queries";
 import type { WindowEntry } from "../../components/CommandPalette/types";
 import { isElectron } from "../../utils/isElectron";
 
+function getSkillSuffix(
+  project: string | null,
+  showGlobalSuffix: boolean,
+): string {
+  if (project !== null) {
+    return ` (${project})`;
+  }
+  if (showGlobalSuffix) {
+    return " (global)";
+  }
+  return "";
+}
+
 const BASE_WINDOWS: WindowEntry[] = [
   { label: "Sessions", href: "/", searchableText: "Sessions" },
   { label: "Skills", href: "/skills", searchableText: "Skills skill graph" },
@@ -71,12 +84,7 @@ export function useWindowList(): WindowEntry[] {
           : `?source=global`;
       const showGlobalSuffix =
         skill.source === "global" && workspaceSkillNames.has(skill.skillName);
-      const suffix =
-        skill.project !== null
-          ? ` (${skill.project})`
-          : showGlobalSuffix
-            ? " (global)"
-            : "";
+      const suffix = getSkillSuffix(skill.project, showGlobalSuffix);
       return {
         label: `Skill: ${skill.name}${suffix}`,
         href: `/skills/${skill.skillName}${query}`,

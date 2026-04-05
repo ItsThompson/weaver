@@ -33,22 +33,40 @@ function resolveDir(
   }
 }
 
+function resolveDepth(scope: StopValidationHook["scope"]): number {
+  if (scope === "file") {
+    return 0;
+  }
+  if (scope === "parent") {
+    return 1;
+  }
+  return scope as number;
+}
+
 function applyScope(rel: string, scope: StopValidationHook["scope"]): string {
   if (scope === undefined || scope === "cwd") {
     return ".";
   }
   const dir = dirname(rel);
-  const depth = scope === "file" ? 0 : scope === "parent" ? 1 : scope;
+  const depth = resolveDepth(scope);
   return Array.from({ length: depth }).reduce<string>((cur) => {
     const parent = dirname(cur);
     return parent === cur ? cur : parent;
   }, dir);
 }
 
+function compareDirDepth(a: string, b: string): number {
+  if (a === ".") {
+    return -1;
+  }
+  if (b === ".") {
+    return 1;
+  }
+  return a.split("/").length - b.split("/").length;
+}
+
 function collapseSubdirs(dirs: string[]): string[] {
-  dirs.sort((a, b) =>
-    a === "." ? -1 : b === "." ? 1 : a.split("/").length - b.split("/").length,
-  );
+  dirs.sort(compareDirDepth);
   return dirs.reduce<string[]>(
     (kept, d) =>
       kept.some((k) => d === k || d.startsWith(k + "/")) ? kept : [...kept, d],

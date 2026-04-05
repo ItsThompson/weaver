@@ -104,6 +104,7 @@ test.describe("ghost mode", () => {
       for (let i = 0; i < 30; i++) {
         try {
           const res = await fetch(`${SERVER_URL}/api/health`);
+          // eslint-disable-next-line max-depth
           if (res.ok) {
             break;
           }

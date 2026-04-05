@@ -10,6 +10,19 @@ import {
 import { playNotificationSound } from "../notifications/soundUtils";
 import type { DictationState, DictationActions } from "./types";
 
+function getDictationError(
+  ollamaOk: boolean,
+  whisperOk: boolean,
+): string | null {
+  if (!ollamaOk) {
+    return "Ollama is not available";
+  }
+  if (!whisperOk) {
+    return "No whisper model downloaded";
+  }
+  return null;
+}
+
 const INITIAL_STATE: DictationState = {
   phase: "idle",
   rawTranscript: "",
@@ -115,11 +128,7 @@ export function useDictation(deviceId?: string): {
         ollamaModel: status.ollamaModel,
         hasModel: !!status.model,
         phase: whisperOk && ollamaOk ? "ready" : "error",
-        error: !ollamaOk
-          ? "Ollama is not available"
-          : !whisperOk
-            ? "No whisper model downloaded"
-            : null,
+        error: getDictationError(ollamaOk, whisperOk),
       }));
     } catch {
       setState((s) => ({

@@ -15,6 +15,18 @@ function ollamaHelpText(
   return null;
 }
 
+function micIndicatorType(
+  status: "loading" | "success" | "warning" | "error",
+): "success" | "warning" | "error" {
+  if (status === "success") {
+    return "success";
+  }
+  if (status === "error") {
+    return "error";
+  }
+  return "warning";
+}
+
 export function PreflightCheck({
   whisperStatus,
   ollamaStatus,
@@ -45,17 +57,7 @@ export function PreflightCheck({
           {loading ? "Ollama: checking..." : "Ollama"}
         </StatusIndicator>
         {micStatus && (
-          <StatusIndicator
-            type={
-              micStatus === "success"
-                ? "success"
-                : micStatus === "warning"
-                  ? "warning"
-                  : micStatus === "error"
-                    ? "error"
-                    : "warning"
-            }
-          >
+          <StatusIndicator type={micIndicatorType(micStatus)}>
             {micStatus === "loading"
               ? "Microphone: checking..."
               : `Microphone: ${micLabel}`}

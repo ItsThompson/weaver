@@ -17,6 +17,19 @@ import {
 import { patchConfig } from "../../../utils/api";
 import { buildUpdatedCategories } from "../utils";
 
+function buildQueryString(
+  project: string | undefined,
+  source: string | undefined,
+): string {
+  if (project) {
+    return `?project=${encodeURIComponent(project)}`;
+  }
+  if (source) {
+    return `?source=${encodeURIComponent(source)}`;
+  }
+  return "";
+}
+
 const CREATE_NEW = "__create_new__";
 export const UNCATEGORIZED = "__uncategorized__";
 
@@ -132,11 +145,7 @@ export function useSkillDetailPage(): {
   };
 
   const referrer = (location.state as { from?: string } | null)?.from;
-  const queryString = project
-    ? `?project=${encodeURIComponent(project)}`
-    : source
-      ? `?source=${encodeURIComponent(source)}`
-      : "";
+  const queryString = buildQueryString(project, source);
   const breadcrumbs = referrer
     ? [
         { text: "Sessions", href: "/" },
