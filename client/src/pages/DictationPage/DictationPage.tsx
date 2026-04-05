@@ -1,9 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Alert from "@cloudscape-design/components/alert";
 import Link from "@cloudscape-design/components/link";
 import { useDictation } from "../../hooks/useDictation";
+import { useHotkeyDictationActive } from "../../hooks/useHotkeyDictation";
+import { useNotifications } from "../../context/NotificationContext/NotificationContext";
 import { PreflightCheck } from "./components/PreflightCheck";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
@@ -39,10 +41,29 @@ function ollamaErrorAlert(
 
 export function DictationPage() {
   const { state, actions } = useDictation();
+  const { addNotification } = useNotifications();
+  const hotkeyActive = useHotkeyDictationActive();
+  const prevPhaseRef = useRef(state.phase);
 
   useEffect(() => {
     actions.checkServices();
   }, [actions.checkServices]);
+
+  useEffect(() => {
+    const prev = prevPhaseRef.current;
+    prevPhaseRef.current = state.phase;
+    if (prev === state.phase) {
+      return;
+    }
+
+    if (state.phase === "recording") {
+      addNotification("Listening...", "info");
+    } else if (state.phase === "processing") {
+      addNotification("Processing...", "info");
+    } else if (state.phase === "done") {
+      addNotification("Dictation complete", "success");
+    }
+  }, [state.phase, addNotification]);
 
   const noModel =
     !state.hasModel &&
@@ -58,9 +79,9 @@ export function DictationPage() {
     <SpaceBetween size="l">
       <Header variant="h1">Dictation</Header>
 
-      {state.f4Active && (
+      {hotkeyActive && (
         <Alert type="info">
-          Dictation in progress via F4 shortcut. Controls are disabled.
+          Dictation in progress via hotkey. Controls are disabled.
         </Alert>
       )}
 
@@ -85,7 +106,7 @@ export function DictationPage() {
         <>
           <DictationControls
             phase={state.phase}
-            f4Active={state.f4Active}
+            hotkeyActive={hotkeyActive}
             whisperReady={state.whisperStatus}
             ollamaReady={state.ollamaStatus}
             hasProcessedText={!!state.processedText}

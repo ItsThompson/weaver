@@ -8,6 +8,22 @@ import type {
 } from "../../hooks/useDictation";
 import { DictationPage } from "./DictationPage";
 
+const mockAddNotification = vi.fn();
+
+vi.mock("../../context/NotificationContext/NotificationContext", () => ({
+  useNotifications: () => ({
+    notifications: [],
+    addNotification: mockAddNotification,
+    dismissNotification: vi.fn(),
+  }),
+}));
+
+let mockHotkeyActive = false;
+
+vi.mock("../../hooks/useHotkeyDictation", () => ({
+  useHotkeyDictationActive: () => mockHotkeyActive,
+}));
+
 const mockActions: DictationActions = {
   checkServices: vi.fn(),
   startDictation: vi.fn(),
@@ -40,6 +56,7 @@ function renderPage() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  mockHotkeyActive = false;
   mockState = {
     phase: "idle",
     rawTranscript: "",
@@ -50,7 +67,7 @@ beforeEach(() => {
     ollamaError: null,
     ollamaModel: "phi4-mini",
     hasModel: false,
-    f4Active: false,
+    hotkeyActive: false,
   };
 });
 
@@ -155,20 +172,20 @@ describe("DictationPage", () => {
     expect(screen.getByDisplayValue("Hello, world.")).toBeInTheDocument();
   });
 
-  it("disables controls and shows info Alert when F4 is active", () => {
+  it("disables controls and shows info Alert when hotkey is active", () => {
+    mockHotkeyActive = true;
     mockState = {
       ...mockState,
       phase: "ready",
       whisperStatus: true,
       hasModel: true,
       ollamaStatus: true,
-      f4Active: true,
     };
     renderPage();
 
     expect(
       screen.getByText(
-        "Dictation in progress via F4 shortcut. Controls are disabled.",
+        "Dictation in progress via hotkey. Controls are disabled.",
       ),
     ).toBeInTheDocument();
     expect(

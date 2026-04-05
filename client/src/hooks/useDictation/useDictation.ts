@@ -6,6 +6,7 @@ import {
   processTranscript,
   getSnippets,
 } from "../../utils/api";
+import { playNotificationSound } from "../notifications/soundUtils";
 import type { DictationState, DictationActions } from "./types";
 
 const INITIAL_STATE: DictationState = {
@@ -18,7 +19,7 @@ const INITIAL_STATE: DictationState = {
   ollamaError: null,
   ollamaModel: "",
   hasModel: false,
-  f4Active: false,
+  hotkeyActive: false,
 };
 
 export function useDictation(): {
@@ -63,6 +64,7 @@ export function useDictation(): {
       const transcript = transcriptRef.current;
       if (!transcript.trim()) {
         setState((s) => ({ ...s, phase: "done", processedText: "" }));
+        playNotificationSound("dictation-done");
         return;
       }
       try {
@@ -73,6 +75,7 @@ export function useDictation(): {
           phase: "done",
           processedText: result.processedText,
         }));
+        playNotificationSound("dictation-done");
       } catch (err) {
         setState((s) => ({
           ...s,
@@ -84,14 +87,14 @@ export function useDictation(): {
     run();
   }, [audio.isRecording]);
 
-  // F4 IPC awareness
+  // Hotkey IPC awareness
   useEffect(() => {
     if (!window.weaver?.onDictationCommand) {
       return;
     }
     window.weaver.onDictationCommand((_event, command) => {
       if (command === "start" || command === "stop") {
-        setState((s) => ({ ...s, f4Active: true }));
+        setState((s) => ({ ...s, hotkeyActive: true }));
       }
     });
   }, []);
@@ -138,6 +141,7 @@ export function useDictation(): {
     try {
       await audio.startRecording();
       setState((s) => ({ ...s, phase: "recording" }));
+      playNotificationSound("dictation-start");
     } catch (err) {
       setState((s) => ({
         ...s,
@@ -149,6 +153,7 @@ export function useDictation(): {
 
   const stopDictation = useCallback(() => {
     setState((s) => ({ ...s, phase: "processing" }));
+    playNotificationSound("dictation-stop");
     stoppingRef.current = true;
     audio.stopRecording();
   }, [audio]);

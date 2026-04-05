@@ -2,6 +2,10 @@ import { renderHook, act } from "@testing-library/react";
 
 import "../../__tests__/mocks/api";
 
+vi.mock("../notifications/soundUtils", () => ({
+  playNotificationSound: vi.fn(),
+}));
+
 import * as api from "../../utils/api";
 import { useDictation } from "./useDictation";
 
@@ -175,7 +179,7 @@ describe("useDictation", () => {
     expect(mockProcessTranscript).toHaveBeenCalledWith("hello world", []);
   });
 
-  it("sets f4Active when dictation command is received", () => {
+  it("sets hotkeyActive when dictation command is received", () => {
     let capturedCallback: ((event: unknown, command: string) => void) | null =
       null;
     window.weaver = {
@@ -196,7 +200,7 @@ describe("useDictation", () => {
       capturedCallback!(null, "start");
     });
 
-    expect(result.current.state.f4Active).toBe(true);
+    expect(result.current.state.hotkeyActive).toBe(true);
 
     delete window.weaver;
   });
