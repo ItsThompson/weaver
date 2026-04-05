@@ -47,6 +47,8 @@ beforeEach(() => {
     error: null,
     whisperStatus: false,
     ollamaStatus: false,
+    ollamaError: null,
+    ollamaModel: "phi4-mini",
     hasModel: false,
     f4Active: false,
   };
@@ -218,5 +220,41 @@ describe("DictationPage", () => {
 
     await user.click(screen.getByRole("button", { name: "Stop Dictation" }));
     expect(mockActions.stopDictation).toHaveBeenCalled();
+  });
+
+  it("shows install guidance when Ollama is not installed", () => {
+    mockState = {
+      ...mockState,
+      phase: "error",
+      whisperStatus: true,
+      hasModel: true,
+      ollamaStatus: false,
+      ollamaError: "not_installed",
+      error: "Ollama is not available",
+    };
+    renderPage();
+
+    expect(screen.getAllByText(/brew install ollama/).length).toBeGreaterThan(
+      0,
+    );
+    expect(screen.getByText("ollama.com")).toBeInTheDocument();
+  });
+
+  it("shows model pull guidance when model is not found", () => {
+    mockState = {
+      ...mockState,
+      phase: "error",
+      whisperStatus: true,
+      hasModel: true,
+      ollamaStatus: false,
+      ollamaError: "model_not_found",
+      ollamaModel: "phi4-mini",
+      error: "Ollama is not available",
+    };
+    renderPage();
+
+    expect(screen.getAllByText(/ollama pull phi4-mini/).length).toBeGreaterThan(
+      0,
+    );
   });
 });

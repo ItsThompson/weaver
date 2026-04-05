@@ -7,6 +7,7 @@ import {
   touchWhisperActivity,
   WHISPER_PORT,
   checkOllamaHealth,
+  listOllamaModels,
   ensureOllamaRunning,
   generateText,
   logDictation,
@@ -32,6 +33,33 @@ function matchSnippet(transcript: string, snippets: Snippet[]): Snippet | null {
   return matches.length === 1 ? matches[0] : null;
 }
 
+type OllamaError = "not_installed" | "model_not_found" | null;
+
+function modelMatchesAny(
+  configuredModel: string,
+  availableModels: string[],
+): boolean {
+  return availableModels.some(
+    (name) =>
+      name === configuredModel || name.startsWith(`${configuredModel}:`),
+  );
+}
+
+async function checkOllama(
+  url: string,
+  model: string,
+): Promise<{ ok: boolean; error: OllamaError }> {
+  const running = await ensureOllamaRunning(url);
+  if (!running) {
+    return { ok: false, error: "not_installed" };
+  }
+  const models = await listOllamaModels(url);
+  if (!modelMatchesAny(model, models)) {
+    return { ok: false, error: "model_not_found" };
+  }
+  return { ok: true, error: null };
+}
+
 export function registerDictationRoutes(
   server: FastifyInstance,
   whisperBinPath: string | undefined,
@@ -43,7 +71,13 @@ export function registerDictationRoutes(
   );
 
   server.get<{
-    Reply: { whisper: boolean; ollama: boolean; model: string | null };
+    Reply: {
+      whisper: boolean;
+      ollama: boolean;
+      ollamaError: OllamaError;
+      ollamaModel: string;
+      model: string | null;
+    };
   }>("/api/dictation/status", async () => {
     const start = Date.now();
     const { config } = await readConfig();
@@ -51,19 +85,29 @@ export function registerDictationRoutes(
     const needsOllama = config.dictation.llm_cleanup;
 
     if (!modelPath || !whisperBinPath) {
-      const ollama = needsOllama
-        ? await ensureOllamaRunning(config.dictation.ollama_url)
-        : true;
+      const ollamaResult = needsOllama
+        ? await checkOllama(
+            config.dictation.ollama_url,
+            config.dictation.ollama_model,
+          )
+        : { ok: true, error: null as OllamaError };
       log({
         timestamp: new Date().toISOString(),
         event: "dictation_status",
         durationMs: Date.now() - start,
         whisper: false,
-        ollama,
+        ollama: ollamaResult.ok,
+        ollamaError: ollamaResult.error,
         hasModel: !!modelPath,
         hasBin: !!whisperBinPath,
       });
-      return { whisper: false, ollama, model: modelPath };
+      return {
+        whisper: false,
+        ollama: ollamaResult.ok,
+        ollamaError: ollamaResult.error,
+        ollamaModel: config.dictation.ollama_model,
+        model: modelPath,
+      };
     }
 
     // Start whisper and ollama in parallel
@@ -71,21 +115,31 @@ export function registerDictationRoutes(
     if (!running) {
       startWhisperServer(whisperBinPath, modelPath);
     }
-    const [whisper, ollama] = await Promise.all([
+    const [whisper, ollamaResult] = await Promise.all([
       running ? Promise.resolve(true) : waitForWhisperReady(),
       needsOllama
-        ? ensureOllamaRunning(config.dictation.ollama_url)
-        : Promise.resolve(true),
+        ? checkOllama(
+            config.dictation.ollama_url,
+            config.dictation.ollama_model,
+          )
+        : Promise.resolve({ ok: true, error: null as OllamaError }),
     ]);
     log({
       timestamp: new Date().toISOString(),
       event: "dictation_status",
       durationMs: Date.now() - start,
       whisper,
-      ollama,
+      ollama: ollamaResult.ok,
+      ollamaError: ollamaResult.error,
       coldStart: !running,
     });
-    return { whisper, ollama, model: modelPath };
+    return {
+      whisper,
+      ollama: ollamaResult.ok,
+      ollamaError: ollamaResult.error,
+      ollamaModel: config.dictation.ollama_model,
+      model: modelPath,
+    };
   });
 
   server.post<{ Reply: { text: string } | ApiError }>(
@@ -216,21 +270,22 @@ export function registerDictationRoutes(
 
     await ensureOllamaRunning(ollama_url);
 
-    // If whisper didn't add punctuation, do a cheap first pass to add it
-    let punctuated = transcript;
-    const needsPunctuation = !hasPunctuation(transcript);
-    if (needsPunctuation) {
-      punctuated = await generateText(
-        ollama_url,
-        ollama_model,
-        `Add punctuation and capitalization to this raw speech transcript. Do NOT change any words, do NOT remove anything, do NOT add commentary. Return ONLY the punctuated text.\n\n${transcript}`,
-      );
-    }
+    try {
+      // If whisper didn't add punctuation, do a cheap first pass to add it
+      let punctuated = transcript;
+      const needsPunctuation = !hasPunctuation(transcript);
+      if (needsPunctuation) {
+        punctuated = await generateText(
+          ollama_url,
+          ollama_model,
+          `Add punctuation and capitalization to this raw speech transcript. Do NOT change any words, do NOT remove anything, do NOT add commentary. Return ONLY the punctuated text.\n\n${transcript}`,
+        );
+      }
 
-    const chunks = chunkTranscript(punctuated);
-    const cleanedChunks = await Promise.all(
-      chunks.map((chunk) => {
-        const prompt = `You are a dictation cleanup tool. Your ONLY job is to take raw speech-to-text output and make minimal fixes. Rules:
+      const chunks = chunkTranscript(punctuated);
+      const cleanedChunks = await Promise.all(
+        chunks.map((chunk) => {
+          const prompt = `You are a dictation cleanup tool. Your ONLY job is to take raw speech-to-text output and make minimal fixes. Rules:
 - Add correct punctuation and capitalization
 - Fix obvious grammar errors
 - Remove filler words (um, uh, like, you know, basically, so, right)
@@ -242,28 +297,39 @@ export function registerDictationRoutes(
 
 Raw transcript:
 ${chunk}`;
-        return generateText(ollama_url, ollama_model, prompt);
-      }),
-    );
-    const processedText = cleanedChunks.join(" ");
+          return generateText(ollama_url, ollama_model, prompt);
+        }),
+      );
+      const processedText = cleanedChunks.join(" ");
 
-    await logDictation({
-      timestamp: new Date().toISOString(),
-      rawTranscript: transcript,
-      processedText,
-    });
+      await logDictation({
+        timestamp: new Date().toISOString(),
+        rawTranscript: transcript,
+        processedText,
+      });
 
-    log({
-      timestamp: new Date().toISOString(),
-      event: "dictation_process",
-      durationMs: Date.now() - start,
-      transcriptLength: transcript.length,
-      needsPunctuation,
-      chunkCount: chunks.length,
-      model: ollama_model,
-    });
+      log({
+        timestamp: new Date().toISOString(),
+        event: "dictation_process",
+        durationMs: Date.now() - start,
+        transcriptLength: transcript.length,
+        needsPunctuation,
+        chunkCount: chunks.length,
+        model: ollama_model,
+      });
 
-    return { processedText, snippetUsed: null };
+      return { processedText, snippetUsed: null };
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "LLM processing failed";
+      log({
+        timestamp: new Date().toISOString(),
+        event: "dictation_process_error",
+        durationMs: Date.now() - start,
+        error: message,
+      });
+      return reply.status(500).send({ error: message });
+    }
   });
 
   server.get<{

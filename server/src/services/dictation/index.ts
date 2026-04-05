@@ -7,7 +7,11 @@ export {
   touchWhisperActivity,
 } from "./whisper-server";
 
-export { checkOllamaHealth, generateText } from "./ollama-client";
+export {
+  checkOllamaHealth,
+  listOllamaModels,
+  generateText,
+} from "./ollama-client";
 
 export { ensureOllamaRunning, stopOllamaServer } from "./ollama-server";
 

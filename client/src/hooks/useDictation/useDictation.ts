@@ -15,6 +15,8 @@ const INITIAL_STATE: DictationState = {
   error: null,
   whisperStatus: false,
   ollamaStatus: false,
+  ollamaError: null,
+  ollamaModel: "",
   hasModel: false,
   f4Active: false,
 };
@@ -104,6 +106,8 @@ export function useDictation(): {
         ...s,
         whisperStatus: whisperOk,
         ollamaStatus: ollamaOk,
+        ollamaError: status.ollamaError,
+        ollamaModel: status.ollamaModel,
         hasModel: !!status.model,
         phase: whisperOk && ollamaOk ? "ready" : "error",
         error: !ollamaOk

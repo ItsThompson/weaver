@@ -199,6 +199,8 @@ describe("SettingsPage dictation section", () => {
     mockGetDictationStatus.mockResolvedValue({
       whisper: true,
       ollama: true,
+      ollamaError: null,
+      ollamaModel: "phi4-mini",
       model: null,
     });
     await act(async () => {
@@ -217,6 +219,8 @@ describe("SettingsPage dictation section", () => {
     mockGetDictationStatus.mockResolvedValue({
       whisper: false,
       ollama: false,
+      ollamaError: "not_installed",
+      ollamaModel: "phi4-mini",
       model: null,
     });
     await act(async () => {

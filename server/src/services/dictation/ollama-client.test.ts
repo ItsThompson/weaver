@@ -1,7 +1,11 @@
 const mockLog = vi.hoisted(() => vi.fn());
 vi.mock("../../utils/logger", () => ({ log: mockLog }));
 
-import { checkOllamaHealth, generateText } from "./ollama-client";
+import {
+  checkOllamaHealth,
+  listOllamaModels,
+  generateText,
+} from "./ollama-client";
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -30,6 +34,36 @@ describe("checkOllamaHealth", () => {
     vi.mocked(fetch).mockRejectedValue(new Error("ECONNREFUSED"));
 
     expect(await checkOllamaHealth("http://localhost:11434")).toBe(false);
+  });
+});
+
+describe("listOllamaModels", () => {
+  it("returns model names when Ollama responds with models", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          models: [{ name: "phi4-mini:latest" }, { name: "gemma3:1b" }],
+        }),
+    } as unknown as Response);
+
+    const models = await listOllamaModels("http://localhost:11434");
+    expect(models).toEqual(["phi4-mini:latest", "gemma3:1b"]);
+  });
+
+  it("returns empty array when Ollama is not reachable", async () => {
+    vi.mocked(fetch).mockRejectedValue(new Error("ECONNREFUSED"));
+
+    expect(await listOllamaModels("http://localhost:11434")).toEqual([]);
+  });
+
+  it("returns empty array when response has no models", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({}),
+    } as unknown as Response);
+
+    expect(await listOllamaModels("http://localhost:11434")).toEqual([]);
   });
 });
 
@@ -65,31 +99,23 @@ describe("generateText", () => {
     });
   });
 
-  it("returns an error string when Ollama responds with non-200", async () => {
+  it("throws when Ollama responds with non-200", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: false,
       status: 500,
       statusText: "Internal Server Error",
     } as Response);
 
-    const result = await generateText(
-      "http://localhost:11434",
-      "phi4-mini",
-      "Fix this",
-    );
-
-    expect(result).toMatch(/Ollama error: 500 Internal Server Error/);
+    await expect(
+      generateText("http://localhost:11434", "phi4-mini", "Fix this"),
+    ).rejects.toThrow("Ollama error: 500 Internal Server Error");
   });
 
-  it("returns an error string when fetch throws a network error", async () => {
+  it("throws when fetch throws a network error", async () => {
     vi.mocked(fetch).mockRejectedValue(new Error("ECONNREFUSED"));
 
-    const result = await generateText(
-      "http://localhost:11434",
-      "phi4-mini",
-      "Fix this",
-    );
-
-    expect(result).toMatch(/Ollama request failed: ECONNREFUSED/);
+    await expect(
+      generateText("http://localhost:11434", "phi4-mini", "Fix this"),
+    ).rejects.toThrow("Ollama request failed: ECONNREFUSED");
   });
 });

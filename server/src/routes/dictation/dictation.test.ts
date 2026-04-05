@@ -6,6 +6,7 @@ vi.mock("../../services/dictation/index", () => ({
   waitForWhisperReady: vi.fn(),
   touchWhisperActivity: vi.fn(),
   checkOllamaHealth: vi.fn(),
+  listOllamaModels: vi.fn(),
   ensureOllamaRunning: vi.fn(),
   generateText: vi.fn(),
   logDictation: vi.fn(),
@@ -33,6 +34,7 @@ import { registerDictationRoutes } from "./dictation";
 import {
   isWhisperServerRunning,
   checkOllamaHealth,
+  listOllamaModels,
   ensureOllamaRunning,
   generateText,
   logDictation,
@@ -61,9 +63,10 @@ beforeEach(async () => {
 afterEach(() => server.close());
 
 describe("GET /api/dictation/status", () => {
-  it("returns both true when whisper and ollama are running", async () => {
+  it("returns both true when whisper and ollama are running with model available", async () => {
     vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
     vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
+    vi.mocked(listOllamaModels).mockResolvedValue(["phi4-mini:latest"]);
     vi.mocked(getDefaultModelPath).mockResolvedValue(
       "/models/ggml-tiny.en.bin",
     );
@@ -77,12 +80,14 @@ describe("GET /api/dictation/status", () => {
     expect(res.statusCode).toBe(200);
     expect(body.whisper).toBe(true);
     expect(body.ollama).toBe(true);
+    expect(body.ollamaError).toBeNull();
     expect(body.model).toBe("/models/ggml-tiny.en.bin");
   });
 
-  it("returns whisper false when whisper-server is down", async () => {
+  it("returns whisper false when no model is downloaded", async () => {
     vi.mocked(isWhisperServerRunning).mockResolvedValue(false);
     vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
+    vi.mocked(listOllamaModels).mockResolvedValue(["phi4-mini:latest"]);
     vi.mocked(getDefaultModelPath).mockResolvedValue(null);
 
     const res = await server.inject({
@@ -94,7 +99,45 @@ describe("GET /api/dictation/status", () => {
     expect(res.statusCode).toBe(200);
     expect(body.whisper).toBe(false);
     expect(body.ollama).toBe(true);
+    expect(body.ollamaError).toBeNull();
     expect(body.model).toBeNull();
+  });
+
+  it("returns ollamaError not_installed when Ollama binary is not found", async () => {
+    vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(false);
+    vi.mocked(getDefaultModelPath).mockResolvedValue(
+      "/models/ggml-tiny.en.bin",
+    );
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/dictation/status",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.ollama).toBe(false);
+    expect(body.ollamaError).toBe("not_installed");
+  });
+
+  it("returns ollamaError model_not_found when configured model is not pulled", async () => {
+    vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
+    vi.mocked(listOllamaModels).mockResolvedValue(["gemma3:1b"]);
+    vi.mocked(getDefaultModelPath).mockResolvedValue(
+      "/models/ggml-tiny.en.bin",
+    );
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/dictation/status",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.ollama).toBe(false);
+    expect(body.ollamaError).toBe("model_not_found");
   });
 });
 
@@ -184,6 +227,26 @@ describe("POST /api/dictation/process", () => {
     expect(body.snippetUsed).toBeNull();
     expect(generateText).toHaveBeenCalled();
     expect(logDictation).toHaveBeenCalled();
+  });
+
+  it("returns 500 when LLM processing fails", async () => {
+    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
+    vi.mocked(generateText).mockRejectedValue(
+      new Error("Ollama error: 404 Not Found"),
+    );
+
+    const res = await server.inject({
+      method: "POST",
+      url: "/api/dictation/process",
+      payload: {
+        transcript: "hello world",
+        snippets: [],
+      },
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(500);
+    expect(body.error).toBe("Ollama error: 404 Not Found");
   });
 
   it("returns 400 when transcript is missing", async () => {

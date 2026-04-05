@@ -3,6 +3,7 @@ import type { DictationPhase } from "../../hooks/useDictation";
 export interface PreflightCheckProps {
   whisperStatus: boolean;
   ollamaStatus: boolean;
+  ollamaError: "not_installed" | "model_not_found" | null;
   phase: DictationPhase;
 }
 

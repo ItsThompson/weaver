@@ -15,6 +15,8 @@ export interface DictationState {
   error: string | null;
   whisperStatus: boolean;
   ollamaStatus: boolean;
+  ollamaError: "not_installed" | "model_not_found" | null;
+  ollamaModel: string;
   hasModel: boolean;
   f4Active: boolean;
 }

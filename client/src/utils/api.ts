@@ -137,9 +137,13 @@ export const deleteSnippetApi = (id: string) =>
   });
 
 export const getDictationStatus = () =>
-  apiFetch<{ whisper: boolean; ollama: boolean; model: string | null }>(
-    "/dictation/status",
-  );
+  apiFetch<{
+    whisper: boolean;
+    ollama: boolean;
+    ollamaError: "not_installed" | "model_not_found" | null;
+    ollamaModel: string;
+    model: string | null;
+  }>("/dictation/status");
 
 export const transcribeAudio = (blob: Blob) =>
   fetch(`${API_BASE}/dictation/transcribe`, {

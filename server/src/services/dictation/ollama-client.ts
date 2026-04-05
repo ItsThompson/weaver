@@ -9,6 +9,21 @@ export async function checkOllamaHealth(url: string): Promise<boolean> {
   }
 }
 
+export async function listOllamaModels(url: string): Promise<string[]> {
+  try {
+    const res = await fetch(`${url}/api/tags`);
+    if (!res.ok) {
+      return [];
+    }
+    const body = (await res.json()) as {
+      models?: { name: string }[];
+    };
+    return (body.models ?? []).map((m) => m.name);
+  } catch {
+    return [];
+  }
+}
+
 export async function generateText(
   url: string,
   model: string,
@@ -42,7 +57,7 @@ export async function generateText(
         success: false,
         status: res.status,
       });
-      return `Ollama error: ${res.status} ${res.statusText}`;
+      throw new Error(`Ollama error: ${res.status} ${res.statusText}`);
     }
 
     const body = (await res.json()) as { message?: { content: string } };
@@ -67,6 +82,6 @@ export async function generateText(
       success: false,
       error: msg,
     });
-    return `Ollama request failed: ${msg}`;
+    throw new Error(`Ollama request failed: ${msg}`);
   }
 }
