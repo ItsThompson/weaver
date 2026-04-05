@@ -1,6 +1,11 @@
 export interface WeaverBridge {
   resizeMini(height: number): void;
   selectDirectory(): Promise<string | null>;
+  startDictation(): Promise<void>;
+  stopDictation(): Promise<void>;
+  onDictationCommand(callback: (event: unknown, command: string) => void): void;
+  copyToClipboard(text: string): void;
+  showNotification(title: string, body: string): void;
 }
 
 /**

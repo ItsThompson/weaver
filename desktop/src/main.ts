@@ -16,6 +16,7 @@ import { createTray } from "./tray";
 import { fetchConfig, putConfig } from "./config";
 import { subscribeSSE } from "./sse";
 import { installCli } from "./install-cli";
+import { setupDictation, handleF4 } from "./dictation";
 import { log } from "./utils/logger";
 
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
@@ -63,6 +64,8 @@ app.on("ready", async () => {
     isMiniMode,
   );
   globalShortcut.register("F5", toggleWindow);
+  globalShortcut.register("F4", handleF4);
+  setupDictation();
   showWindow(); // marks visible=true; actual show happens on ready-to-show
 
   subscribeSSE(server.SERVER_URL, (event, data) => {
