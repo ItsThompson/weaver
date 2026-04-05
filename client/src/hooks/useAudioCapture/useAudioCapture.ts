@@ -26,32 +26,42 @@ export function useAudioCapture() {
     callbackRef.current(encodeWav(resampled));
   }, []);
 
-  const startRecording = useCallback(async () => {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      audio: { sampleRate: TARGET_SAMPLE_RATE, channelCount: 1 },
-    });
-    streamRef.current = stream;
-
-    const ctx = new AudioContext({ sampleRate: TARGET_SAMPLE_RATE });
-    ctxRef.current = ctx;
-
-    await ctx.audioWorklet.addModule("/audio-processor.js");
-    const source = ctx.createMediaStreamSource(stream);
-    sourceRef.current = source;
-
-    const worklet = new AudioWorkletNode(ctx, "audio-capture-processor");
-    workletRef.current = worklet;
-
-    worklet.port.onmessage = (e: MessageEvent) => {
-      if (e.data.type === "chunk") {
-        handleChunk(e.data.samples);
+  const startRecording = useCallback(
+    async (deviceId?: string) => {
+      const audioConstraints: MediaTrackConstraints = {
+        sampleRate: TARGET_SAMPLE_RATE,
+        channelCount: 1,
+      };
+      if (deviceId) {
+        audioConstraints.deviceId = { exact: deviceId };
       }
-    };
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: audioConstraints,
+      });
+      streamRef.current = stream;
 
-    source.connect(worklet);
-    worklet.connect(ctx.destination);
-    setIsRecording(true);
-  }, [handleChunk]);
+      const ctx = new AudioContext({ sampleRate: TARGET_SAMPLE_RATE });
+      ctxRef.current = ctx;
+
+      await ctx.audioWorklet.addModule("/audio-processor.js");
+      const source = ctx.createMediaStreamSource(stream);
+      sourceRef.current = source;
+
+      const worklet = new AudioWorkletNode(ctx, "audio-capture-processor");
+      workletRef.current = worklet;
+
+      worklet.port.onmessage = (e: MessageEvent) => {
+        if (e.data.type === "chunk") {
+          handleChunk(e.data.samples);
+        }
+      };
+
+      source.connect(worklet);
+      worklet.connect(ctx.destination);
+      setIsRecording(true);
+    },
+    [handleChunk],
+  );
 
   const stopRecording = useCallback(() => {
     const worklet = workletRef.current;
