@@ -9,6 +9,7 @@ import { registerEventRoutes } from "./routes/events/index";
 import { registerOrphanRoutes } from "./routes/orphans/index";
 import { registerConfigRoutes } from "./routes/config";
 import { registerSkillRoutes } from "./routes/skills/index";
+import { registerDictationRoutes } from "./routes/dictation/index";
 import { registerSnippetRoutes } from "./routes/snippets/index";
 import {
   ensureDataDir,
@@ -46,6 +47,7 @@ registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
 registerSkillRoutes(server);
+registerDictationRoutes(server, process.env.WEAVER_WHISPER_BIN);
 registerSnippetRoutes(server);
 
 const clientDist =
