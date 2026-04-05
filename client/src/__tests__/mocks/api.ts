@@ -29,4 +29,7 @@ vi.mock("../../utils/api", () => ({
   createSnippet: vi.fn(),
   updateSnippet: vi.fn(),
   deleteSnippetApi: vi.fn(),
+  getDictationStatus: vi.fn(),
+  transcribeAudio: vi.fn(),
+  processTranscript: vi.fn(),
 }));
