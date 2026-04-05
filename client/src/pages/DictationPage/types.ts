@@ -3,6 +3,7 @@ import type { DictationPhase } from "../../hooks/useDictation";
 export interface PreflightCheckProps {
   whisperStatus: boolean;
   ollamaStatus: boolean;
+  phase: DictationPhase;
 }
 
 export interface TranscriptPanelProps {

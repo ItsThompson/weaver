@@ -16,7 +16,7 @@ export function DictationPage() {
   }, [actions.checkServices]);
 
   const noModel =
-    !state.whisperStatus &&
+    !state.hasModel &&
     state.phase !== "preflight_checking" &&
     state.phase !== "idle";
 
@@ -37,6 +37,7 @@ export function DictationPage() {
       <PreflightCheck
         whisperStatus={state.whisperStatus}
         ollamaStatus={state.ollamaStatus}
+        phase={state.phase}
       />
 
       {noModel ? (

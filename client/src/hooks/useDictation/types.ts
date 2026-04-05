@@ -2,6 +2,7 @@ export type DictationPhase =
   | "idle"
   | "preflight_checking"
   | "ready"
+  | "starting"
   | "recording"
   | "processing"
   | "done"
@@ -14,6 +15,7 @@ export interface DictationState {
   error: string | null;
   whisperStatus: boolean;
   ollamaStatus: boolean;
+  hasModel: boolean;
   f4Active: boolean;
 }
 

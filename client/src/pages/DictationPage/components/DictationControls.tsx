@@ -13,14 +13,20 @@ export function DictationControls({
   onCopy,
 }: DictationControlsProps) {
   const servicesReady = whisperReady && ollamaReady;
-  const disabled = f4Active || !servicesReady;
-  const isRecording = phase === "recording";
+  const loading = phase === "idle" || phase === "preflight_checking";
+  const disabled = f4Active || !servicesReady || loading;
+  const isRecording = phase === "recording" || phase === "starting";
 
   return (
     <SpaceBetween size="xs" direction="horizontal">
       {isRecording ? (
-        <Button variant="primary" onClick={onStop} disabled={f4Active}>
-          Stop Dictation
+        <Button
+          variant="primary"
+          onClick={onStop}
+          disabled={f4Active || phase === "starting"}
+          loading={phase === "starting"}
+        >
+          {phase === "starting" ? "Starting..." : "Stop Dictation"}
         </Button>
       ) : (
         <Button

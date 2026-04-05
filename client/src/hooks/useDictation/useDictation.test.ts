@@ -12,7 +12,7 @@ const mockGetSnippets = vi.mocked(api.getSnippets);
 
 let chunkCallback: ((blob: Blob) => void) | null = null;
 let mockIsRecording = false;
-const mockStartRecording = vi.fn(() => {
+const mockStartRecording = vi.fn(async () => {
   mockIsRecording = true;
 });
 const mockStopRecording = vi.fn(() => {
@@ -103,7 +103,7 @@ describe("useDictation", () => {
     const { result } = renderHook(() => useDictation());
 
     await act(async () => {
-      result.current.actions.startDictation();
+      await result.current.actions.startDictation();
     });
 
     expect(result.current.state.phase).toBe("recording");
@@ -117,7 +117,7 @@ describe("useDictation", () => {
     const { result } = renderHook(() => useDictation());
 
     await act(async () => {
-      result.current.actions.startDictation();
+      await result.current.actions.startDictation();
     });
 
     await act(async () => {
@@ -146,7 +146,7 @@ describe("useDictation", () => {
     const { result } = renderHook(() => useDictation());
 
     await act(async () => {
-      result.current.actions.startDictation();
+      await result.current.actions.startDictation();
     });
 
     await act(async () => {

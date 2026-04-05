@@ -15,6 +15,7 @@ const INITIAL_STATE: DictationState = {
   error: null,
   whisperStatus: false,
   ollamaStatus: false,
+  hasModel: false,
   f4Active: false,
 };
 
@@ -34,7 +35,10 @@ export function useDictation(): {
         try {
           const { text } = await transcribeAudio(blob);
           transcriptRef.current += text;
-          setState((s) => ({ ...s, rawTranscript: transcriptRef.current }));
+          setState((s) => ({
+            ...s,
+            rawTranscript: transcriptRef.current,
+          }));
         } catch {
           /* transcription errors are non-fatal; next chunk retries */
         }
@@ -94,12 +98,13 @@ export function useDictation(): {
     setState((s) => ({ ...s, phase: "preflight_checking" }));
     try {
       const status = await getDictationStatus();
-      const whisperOk = status.whisper || !!status.model;
+      const whisperOk = status.whisper;
       const ollamaOk = status.ollama;
       setState((s) => ({
         ...s,
         whisperStatus: whisperOk,
         ollamaStatus: ollamaOk,
+        hasModel: !!status.model,
         phase: whisperOk && ollamaOk ? "ready" : "error",
         error: !ollamaOk
           ? "Ollama is not available"
@@ -116,17 +121,26 @@ export function useDictation(): {
     }
   }, []);
 
-  const startDictation = useCallback(() => {
+  const startDictation = useCallback(async () => {
     transcriptRef.current = "";
     pendingRef.current = Promise.resolve();
     setState((s) => ({
       ...s,
-      phase: "recording",
+      phase: "starting",
       rawTranscript: "",
       processedText: "",
       error: null,
     }));
-    audio.startRecording();
+    try {
+      await audio.startRecording();
+      setState((s) => ({ ...s, phase: "recording" }));
+    } catch (err) {
+      setState((s) => ({
+        ...s,
+        phase: "error",
+        error: err instanceof Error ? err.message : "Microphone access failed",
+      }));
+    }
   }, [audio]);
 
   const stopDictation = useCallback(() => {

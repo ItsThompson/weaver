@@ -47,6 +47,7 @@ beforeEach(() => {
     error: null,
     whisperStatus: false,
     ollamaStatus: false,
+    hasModel: false,
     f4Active: false,
   };
 });
@@ -62,6 +63,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "ready",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
     };
     renderPage();
@@ -110,6 +112,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "recording",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
       rawTranscript: "hello world",
     };
@@ -126,6 +129,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "processing",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
       rawTranscript: "hello world",
     };
@@ -139,6 +143,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "done",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
       rawTranscript: "hello world",
       processedText: "Hello, world.",
@@ -153,6 +158,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "ready",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
       f4Active: true,
     };
@@ -174,6 +180,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "done",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
       processedText: "Hello, world.",
     };
@@ -189,6 +196,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "ready",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
     };
     renderPage();
@@ -203,6 +211,7 @@ describe("DictationPage", () => {
       ...mockState,
       phase: "recording",
       whisperStatus: true,
+      hasModel: true,
       ollamaStatus: true,
     };
     renderPage();
