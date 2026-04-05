@@ -19,12 +19,14 @@ vi.mock("../../utils/api", () => ({
   getSkillGraph: vi
     .fn<() => Promise<any>>()
     .mockResolvedValue({ nodes: [], edges: [] }),
-  getSkillDetail: vi
-    .fn<() => Promise<any>>()
-    .mockResolvedValue({
-      frontmatter: {},
-      body: "",
-      source: "global",
-      category: null,
-    }),
+  getSkillDetail: vi.fn<() => Promise<any>>().mockResolvedValue({
+    frontmatter: {},
+    body: "",
+    source: "global",
+    category: null,
+  }),
+  getSnippets: vi.fn<() => Promise<any>>().mockResolvedValue({ snippets: [] }),
+  createSnippet: vi.fn(),
+  updateSnippet: vi.fn(),
+  deleteSnippetApi: vi.fn(),
 }));

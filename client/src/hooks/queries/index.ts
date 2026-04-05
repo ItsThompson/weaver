@@ -13,4 +13,6 @@ export {
   revalidateSkillGraph,
   useSkillDetailQuery,
   revalidateSkillDetail,
+  useSnippetsQuery,
+  revalidateSnippets,
 } from "./queries";
