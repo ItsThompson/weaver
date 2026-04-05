@@ -312,13 +312,15 @@ describe("validateDictation", () => {
       ollama_url: "http://localhost:11434",
       ollama_model: "phi4-mini",
     };
-    expect(validateDictation(input)).toEqual({ value: input });
+    expect(validateDictation(input)).toEqual({
+      value: { ...DEFAULT_CONFIG.dictation, ...input },
+    });
   });
 
   it("merges partial config with defaults", () => {
     expect(validateDictation({ ollama_model: "llama3" })).toEqual({
       value: {
-        ollama_url: DEFAULT_CONFIG.dictation.ollama_url,
+        ...DEFAULT_CONFIG.dictation,
         ollama_model: "llama3",
       },
     });
@@ -379,7 +381,11 @@ describe("validateDictation", () => {
       future_key: true,
     };
     expect(validateDictation(input)).toEqual({
-      value: { ollama_url: "http://example.com", ollama_model: "test" },
+      value: {
+        ...DEFAULT_CONFIG.dictation,
+        ollama_url: "http://example.com",
+        ollama_model: "test",
+      },
     });
   });
 

@@ -249,11 +249,16 @@ export function validateDictation(value: unknown): ValidatorResult {
     }
   }
 
+  if ("llm_cleanup" in obj && typeof obj.llm_cleanup !== "boolean") {
+    return { warning: "dictation.llm_cleanup must be a boolean" };
+  }
+
   return {
     value: {
       ...DEFAULT_CONFIG.dictation,
       ...("ollama_url" in obj && { ollama_url: obj.ollama_url }),
       ...("ollama_model" in obj && { ollama_model: obj.ollama_model }),
+      ...("llm_cleanup" in obj && { llm_cleanup: obj.llm_cleanup }),
     },
   };
 }

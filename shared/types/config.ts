@@ -3,6 +3,7 @@ import { DEFAULT_TEST_RUNNERS } from "./validation";
 export interface DictationConfig {
   ollama_url: string;
   ollama_model: string;
+  llm_cleanup: boolean;
 }
 
 export interface SkillGraphCategoryConfig {
@@ -66,5 +67,6 @@ export const DEFAULT_CONFIG: WeaverConfig = {
   dictation: {
     ollama_url: "http://localhost:11434",
     ollama_model: "phi4-mini",
+    llm_cleanup: true,
   },
 };
