@@ -10,4 +10,8 @@ contextBridge.exposeInMainWorld("weaver", {
   copyToClipboard: (text: string) => ipcRenderer.send("copy-clipboard", text),
   showNotification: (title: string, body: string) =>
     ipcRenderer.send("show-notification", title, body),
+  sendDictationComplete: (text: string) =>
+    ipcRenderer.send("dictation-complete", text),
+  sendDictationError: (message: string) =>
+    ipcRenderer.send("dictation-error", message),
 });

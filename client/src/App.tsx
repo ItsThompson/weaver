@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import AppLayout from "@cloudscape-design/components/app-layout";
 import SideNavigation, {
@@ -11,6 +11,8 @@ import { OrphansPage } from "./pages/OrphansPage/OrphansPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { SkillGraphPage } from "./pages/SkillGraphPage";
 import { SkillDetailPage } from "./pages/SkillDetailPage";
+import { DictationPage } from "./pages/DictationPage";
+import { SnippetsPage } from "./pages/SnippetsPage";
 import { MiniPage } from "./pages/MiniPage";
 import { useNavigateOnView } from "./hooks/useNavigateOnView";
 import { useSessionNotifications } from "./hooks/useSessionNotifications";
@@ -20,23 +22,42 @@ import { applyMode, Mode } from "@cloudscape-design/global-styles";
 import { NotificationBar } from "./components/NotificationBar";
 import { CommandPalette } from "./components/CommandPalette";
 import { COMMAND_PALETTE_OPEN_EVENT } from "./constants";
-
-const NAV_ITEMS: SideNavigationProps.Item[] = [
-  { type: "link", text: "Sessions", href: "/" },
-  { type: "link", text: "Skills", href: "/skills" },
-  { type: "link", text: "Cherrypick", href: "/cherrypick" },
-  { type: "link", text: "Settings", href: "/settings" },
-  { type: "link", text: "Command Palette", href: "#command-palette" },
-];
+import { isElectron } from "./utils/isElectron";
+import {
+  useHotkeyDictation,
+  HotkeyDictationContext,
+} from "./hooks/useHotkeyDictation";
 
 export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
+  const { active: hotkeyDictationActive } = useHotkeyDictation();
   const { data } = useConfigQuery();
   useNavigateOnView();
   useSessionNotifications();
   useSessionEvents();
+
+  const electron = isElectron();
+
+  const navItems = useMemo<SideNavigationProps.Item[]>(() => {
+    const items: SideNavigationProps.Item[] = [
+      { type: "link", text: "Sessions", href: "/" },
+      { type: "link", text: "Skills", href: "/skills" },
+      { type: "link", text: "Cherrypick", href: "/cherrypick" },
+    ];
+    if (electron) {
+      items.push(
+        { type: "link", text: "Dictation", href: "/dictation" },
+        { type: "link", text: "Snippets", href: "/snippets" },
+      );
+    }
+    items.push(
+      { type: "link", text: "Settings", href: "/settings" },
+      { type: "link", text: "Command Palette", href: "#command-palette" },
+    );
+    return items;
+  }, [electron]);
 
   useEffect(() => {
     applyMode(data?.config.dark_mode === false ? Mode.Light : Mode.Dark);
@@ -55,15 +76,15 @@ export function App() {
 
   if (isMini) {
     return (
-      <>
+      <HotkeyDictationContext.Provider value={hotkeyDictationActive}>
         <MiniPage />
         <CommandPalette />
-      </>
+      </HotkeyDictationContext.Provider>
     );
   }
 
   return (
-    <>
+    <HotkeyDictationContext.Provider value={hotkeyDictationActive}>
       <div
         style={
           {
@@ -81,7 +102,7 @@ export function App() {
         navigation={
           <SideNavigation
             header={{ text: "Weaver", href: "/" }}
-            items={NAV_ITEMS}
+            items={navItems}
             activeHref={location.pathname}
             onFollow={handleFollow}
           />
@@ -97,6 +118,12 @@ export function App() {
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/skills" element={<SkillGraphPage />} />
             <Route path="/skills/:skillName" element={<SkillDetailPage />} />
+            {electron && (
+              <>
+                <Route path="/dictation" element={<DictationPage />} />
+                <Route path="/snippets" element={<SnippetsPage />} />
+              </>
+            )}
           </Routes>
         }
         disableContentPaddings={location.pathname === "/skills"}
@@ -105,6 +132,6 @@ export function App() {
       />
       <NotificationBar />
       <CommandPalette />
-    </>
+    </HotkeyDictationContext.Provider>
   );
 }

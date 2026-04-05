@@ -1,12 +1,26 @@
 import { useMemo } from "react";
 import { useSessionsQuery, useSkillGraphQuery } from "../queries";
 import type { WindowEntry } from "../../components/CommandPalette/types";
+import { isElectron } from "../../utils/isElectron";
 
-const STATIC_WINDOWS: WindowEntry[] = [
+const BASE_WINDOWS: WindowEntry[] = [
   { label: "Sessions", href: "/", searchableText: "Sessions" },
   { label: "Skills", href: "/skills", searchableText: "Skills skill graph" },
   { label: "Cherry Pick", href: "/cherrypick", searchableText: "Cherry Pick" },
   { label: "Settings", href: "/settings", searchableText: "Settings" },
+];
+
+const ELECTRON_WINDOWS: WindowEntry[] = [
+  {
+    label: "Dictation",
+    href: "/dictation",
+    searchableText: "Dictation voice speech text",
+  },
+  {
+    label: "Snippets",
+    href: "/snippets",
+    searchableText: "Snippets triggers expansion",
+  },
 ];
 
 function dirName(cwd: string): string {
@@ -18,6 +32,10 @@ export function useWindowList(): WindowEntry[] {
   const { data: skillGraph } = useSkillGraphQuery();
 
   return useMemo(() => {
+    const staticWindows = isElectron()
+      ? [...BASE_WINDOWS, ...ELECTRON_WINDOWS]
+      : BASE_WINDOWS;
+
     const sessionWindows = sessions.reduce<WindowEntry[]>((acc, session) => {
       if (session.status !== "open") {
         return acc;
@@ -66,6 +84,6 @@ export function useWindowList(): WindowEntry[] {
       };
     });
 
-    return [...STATIC_WINDOWS, ...sessionWindows, ...skillWindows];
+    return [...staticWindows, ...sessionWindows, ...skillWindows];
   }, [sessions, skillGraph]);
 }
