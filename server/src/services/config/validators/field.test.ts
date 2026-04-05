@@ -389,6 +389,32 @@ describe("validateDictation", () => {
     });
   });
 
+  it("accepts valid microphone_device_id string", () => {
+    const input = { microphone_device_id: "abc123" };
+    expect(validateDictation(input)).toEqual({
+      value: { ...DEFAULT_CONFIG.dictation, microphone_device_id: "abc123" },
+    });
+  });
+
+  it("accepts empty microphone_device_id (system default)", () => {
+    const input = { microphone_device_id: "" };
+    expect(validateDictation(input)).toEqual({
+      value: { ...DEFAULT_CONFIG.dictation, microphone_device_id: "" },
+    });
+  });
+
+  it("rejects non-string microphone_device_id", () => {
+    expect(validateDictation({ microphone_device_id: 123 })).toEqual({
+      warning: "dictation.microphone_device_id must be a string",
+    });
+  });
+
+  it("falls back to default when microphone_device_id is missing", () => {
+    expect(validateDictation({})).toEqual({
+      value: DEFAULT_CONFIG.dictation,
+    });
+  });
+
   it("is registered in FIELD_VALIDATORS", () => {
     expect(FIELD_VALIDATORS.dictation).toBe(validateDictation);
   });
