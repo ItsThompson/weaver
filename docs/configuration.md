@@ -22,6 +22,7 @@ Changes made via the Settings page or CLI take effect immediately. If you edit t
 | `test_runners`               | `string[]`               | see below   | Additional test runner patterns for agent test deduplication |
 | `skill_paths`                | `string[]`               | `[]`        | Directories containing skill subdirectories (see below)      |
 | `skill_graph`                | `object`                 | `{}`        | Skill graph category definitions (see below)                 |
+| `dictation`                  | `object`                 | see below   | Dictation settings (desktop app only, see below)             |
 
 ### Display options
 
@@ -77,6 +78,30 @@ If a category has no `color`, it gets one from a default palette. Skills not ass
 
 Categories can also be managed from the Settings page (bulk editing) or the Skill Detail page (per-skill assignment).
 
+### Dictation
+
+Configure the local dictation pipeline. These settings only apply in the desktop app. They can be managed from the Settings page under the "Dictation" heading.
+
+| Option                   | Type      | Default                    | Description                                                        |
+| ------------------------ | --------- | -------------------------- | ------------------------------------------------------------------ |
+| `dictation.ollama_url`   | `string`  | `"http://localhost:11434"` | URL of the Ollama server                                           |
+| `dictation.ollama_model` | `string`  | `"phi4-mini"`              | Ollama model for transcript cleanup                                |
+| `dictation.llm_cleanup`  | `boolean` | `true`                     | Run LLM post-processing on transcripts. Disable for lower latency. |
+
+Recommended models: `phi4-mini` (best quality), `qwen3:1.7b` (fast, multilingual), `gemma3:1b` (smallest download).
+
+The Settings page includes a **Test Connection** button next to the Ollama URL field that checks whether Ollama is reachable.
+
+```json
+{
+  "dictation": {
+    "ollama_url": "http://localhost:11434",
+    "ollama_model": "phi4-mini",
+    "llm_cleanup": true
+  }
+}
+```
+
 ### Example
 
 ```json
@@ -86,7 +111,11 @@ Categories can also be managed from the Settings page (bulk editing) or the Skil
   "ghost_mode": false,
   "ghost_opacity": 0.5,
   "webhook_url": "",
-  "test_runners": ["bun test"]
+  "test_runners": ["bun test"],
+  "dictation": {
+    "ollama_model": "qwen3:1.7b",
+    "llm_cleanup": false
+  }
 }
 ```
 

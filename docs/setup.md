@@ -7,6 +7,12 @@
 - kiro-cli installed and configured
 - macOS (required for the desktop app and E2E tests)
 
+### For dictation (optional)
+
+- [Ollama](https://ollama.com) installed and running (for LLM transcript cleanup)
+- A pulled Ollama model: `ollama pull phi4-mini`
+- CMake and Xcode Command Line Tools (only if building from source: needed to compile the whisper-server binary)
+
 ## Installation
 
 ### Option 1: From source
