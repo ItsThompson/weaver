@@ -166,7 +166,7 @@ export function DictationPage() {
       {noModel ? (
         <ModelDownload onComplete={actions.checkServices} />
       ) : (
-        <>
+        <SpaceBetween size="l">
           <DictationControls
             phase={state.phase}
             hotkeyActive={hotkeyActive}
@@ -183,7 +183,7 @@ export function DictationPage() {
             processedText={state.processedText}
             phase={state.phase}
           />
-        </>
+        </SpaceBetween>
       )}
     </SpaceBetween>
   );
