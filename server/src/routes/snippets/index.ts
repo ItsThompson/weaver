@@ -1,0 +1,1 @@
+export { registerSnippetRoutes } from "./snippets";

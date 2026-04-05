@@ -7,6 +7,7 @@ import {
   getConfig,
   getSkillGraph,
   getSkillDetail,
+  getSnippets,
 } from "../../utils/api";
 
 export const KEYS = {
@@ -16,6 +17,7 @@ export const KEYS = {
   orphanCount: "/orphans/count",
   config: "/config",
   skills: "/skills",
+  snippets: "/snippets",
   skill: (name: string, project?: string, source?: string) => {
     const params = new URLSearchParams();
     if (project) {
@@ -70,3 +72,7 @@ export const revalidateSkillDetail = (
   project?: string,
   source?: string,
 ) => mutate(KEYS.skill(name, project, source));
+
+export const useSnippetsQuery = () => useSWR(KEYS.snippets, getSnippets);
+
+export const revalidateSnippets = () => mutate(KEYS.snippets);
