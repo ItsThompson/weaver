@@ -7,6 +7,8 @@ import {
   getSnippets,
 } from "../../utils/api";
 
+type Phase = "idle" | "recording" | "processing";
+
 export const HotkeyDictationContext = createContext(false);
 
 export function useHotkeyDictationActive(): boolean {
@@ -14,8 +16,7 @@ export function useHotkeyDictationActive(): boolean {
 }
 
 export function useHotkeyDictation(): { active: boolean } {
-  const [active, setActive] = useState(false);
-  const [stopping, setStopping] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const audio = useAudioCapture();
   const transcriptRef = useRef("");
   const pendingRef = useRef<Promise<void>>(Promise.resolve());
@@ -36,10 +37,9 @@ export function useHotkeyDictation(): { active: boolean } {
   }, [audio]);
 
   useEffect(() => {
-    if (!stopping || audio.isRecording) {
+    if (phase !== "processing" || audio.isRecording) {
       return;
     }
-    setStopping(false);
 
     const run = async () => {
       await pendingRef.current;
@@ -47,7 +47,7 @@ export function useHotkeyDictation(): { active: boolean } {
       if (!transcript.trim()) {
         window.weaver?.sendDictationComplete("");
         playNotificationSound("dictation-done");
-        setActive(false);
+        setPhase("idle");
         return;
       }
       try {
@@ -60,10 +60,10 @@ export function useHotkeyDictation(): { active: boolean } {
           err instanceof Error ? err.message : "Processing failed",
         );
       }
-      setActive(false);
+      setPhase("idle");
     };
     run();
-  }, [stopping, audio.isRecording]);
+  }, [phase, audio.isRecording]);
 
   useEffect(() => {
     if (!window.weaver?.onDictationCommand) {
@@ -74,16 +74,16 @@ export function useHotkeyDictation(): { active: boolean } {
       if (command === "start") {
         transcriptRef.current = "";
         pendingRef.current = Promise.resolve();
-        setActive(true);
+        setPhase("recording");
         playNotificationSound("dictation-start");
         audioRef.current.startRecording();
       } else if (command === "stop") {
         playNotificationSound("dictation-stop");
-        setStopping(true);
+        setPhase("processing");
         audioRef.current.stopRecording();
       }
     });
   }, []);
 
-  return { active };
+  return { active: phase !== "idle" };
 }
