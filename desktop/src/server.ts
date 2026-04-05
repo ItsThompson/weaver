@@ -42,7 +42,9 @@ export function start(): void {
   if (isPacked) {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, "client/dist");
   }
-  child = fork(serverEntry, [], { stdio: "inherit", env });
+  child = fork(serverEntry, [], { stdio: "pipe", env });
+  child.stdout?.pipe(process.stdout);
+  child.stderr?.pipe(process.stderr);
   child.on("exit", (code) => {
     if (code !== 0 && code !== null) {
       log({
@@ -58,15 +60,17 @@ export function stop(): void {
   if (!child) {
     return;
   }
-  child.kill("SIGTERM");
   const ref = child;
+  child = null;
+  ref.stdout?.unpipe();
+  ref.stderr?.unpipe();
+  ref.kill("SIGTERM");
   const timeout = setTimeout(() => {
-    if (ref.killed === false) {
+    if (ref.exitCode === null && ref.signalCode === null) {
       ref.kill("SIGKILL");
     }
   }, 2000);
   ref.on("exit", () => clearTimeout(timeout));
-  child = null;
 }
 
 export function waitForReady(retries = 30): Promise<void> {
