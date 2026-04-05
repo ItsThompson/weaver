@@ -5,9 +5,15 @@ import { useDictationPage } from "./hooks/useDictationPage";
 import { PreflightCheck } from "./components/PreflightCheck";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
+import { ModelDownload } from "./components/ModelDownload";
 
 export function DictationPage() {
   const { state, actions } = useDictationPage();
+
+  const noModel =
+    !state.whisperStatus &&
+    state.phase !== "preflight_checking" &&
+    state.phase !== "idle";
 
   return (
     <SpaceBetween size="l">
@@ -19,7 +25,7 @@ export function DictationPage() {
         </Alert>
       )}
 
-      {state.phase === "error" && state.error && (
+      {state.phase === "error" && state.error && !noModel && (
         <Alert type="error">{state.error}</Alert>
       )}
 
@@ -28,22 +34,28 @@ export function DictationPage() {
         ollamaStatus={state.ollamaStatus}
       />
 
-      <DictationControls
-        phase={state.phase}
-        f4Active={state.f4Active}
-        whisperReady={state.whisperStatus}
-        ollamaReady={state.ollamaStatus}
-        hasProcessedText={!!state.processedText}
-        onStart={actions.startDictation}
-        onStop={actions.stopDictation}
-        onCopy={actions.copyToClipboard}
-      />
+      {noModel ? (
+        <ModelDownload onComplete={actions.checkServices} />
+      ) : (
+        <>
+          <DictationControls
+            phase={state.phase}
+            f4Active={state.f4Active}
+            whisperReady={state.whisperStatus}
+            ollamaReady={state.ollamaStatus}
+            hasProcessedText={!!state.processedText}
+            onStart={actions.startDictation}
+            onStop={actions.stopDictation}
+            onCopy={actions.copyToClipboard}
+          />
 
-      <TranscriptPanel
-        rawTranscript={state.rawTranscript}
-        processedText={state.processedText}
-        phase={state.phase}
-      />
+          <TranscriptPanel
+            rawTranscript={state.rawTranscript}
+            processedText={state.processedText}
+            phase={state.phase}
+          />
+        </>
+      )}
     </SpaceBetween>
   );
 }

@@ -32,4 +32,7 @@ vi.mock("../../utils/api", () => ({
   getDictationStatus: vi.fn(),
   transcribeAudio: vi.fn(),
   processTranscript: vi.fn(),
+  getModels: vi
+    .fn<() => Promise<any>>()
+    .mockResolvedValue({ available: [], local: [] }),
 }));

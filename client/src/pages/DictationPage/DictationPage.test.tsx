@@ -22,6 +22,14 @@ vi.mock("../../hooks/useDictation", () => ({
   useDictation: () => ({ state: mockState, actions: mockActions }),
 }));
 
+vi.mock("./components/ModelDownload", () => ({
+  ModelDownload: ({ onComplete }: { onComplete: () => void }) => (
+    <div data-testid="model-download">
+      <button onClick={onComplete}>mock-complete</button>
+    </div>
+  ),
+}));
+
 function renderPage() {
   return render(
     <MemoryRouter>
@@ -66,7 +74,7 @@ describe("DictationPage", () => {
     expect(screen.getByText("Ollama")).toBeInTheDocument();
   });
 
-  it("disables Start button and shows error Alert when whisper is down", () => {
+  it("shows ModelDownload when whisper has no model", () => {
     mockState = {
       ...mockState,
       phase: "error",
@@ -76,10 +84,25 @@ describe("DictationPage", () => {
     };
     renderPage();
 
+    expect(screen.getByTestId("model-download")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Start Dictation" }),
-    ).toBeDisabled();
-    expect(screen.getByText("No whisper model downloaded")).toBeInTheDocument();
+      screen.queryByRole("button", { name: "Start Dictation" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("calls checkServices when ModelDownload completes", async () => {
+    const user = userEvent.setup();
+    mockState = {
+      ...mockState,
+      phase: "error",
+      whisperStatus: false,
+      ollamaStatus: true,
+      error: "No whisper model downloaded",
+    };
+    renderPage();
+
+    await user.click(screen.getByText("mock-complete"));
+    expect(mockActions.checkServices).toHaveBeenCalledTimes(2); // once on mount, once on complete
   });
 
   it("shows raw transcript and Stop button during recording", () => {

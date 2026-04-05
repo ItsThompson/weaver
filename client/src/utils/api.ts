@@ -7,6 +7,7 @@ import type {
   SkillGraph,
   SkillDetail,
   Snippet,
+  WhisperModel,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -161,3 +162,6 @@ export const processTranscript = (transcript: string, snippets: Snippet[]) =>
       body: JSON.stringify({ transcript, snippets }),
     },
   );
+
+export const getModels = () =>
+  apiFetch<{ available: WhisperModel[]; local: string[] }>("/dictation/models");
