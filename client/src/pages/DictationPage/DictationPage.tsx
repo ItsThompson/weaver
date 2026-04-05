@@ -5,7 +5,11 @@ import Alert from "@cloudscape-design/components/alert";
 import Link from "@cloudscape-design/components/link";
 import { useDictation } from "../../hooks/useDictation";
 import { useHotkeyDictationActive } from "../../hooks/useHotkeyDictation";
+import { useConfigQuery, revalidateConfig } from "../../hooks/queries";
+import { useAudioDevices } from "../../hooks/useAudioDevices";
+import { patchConfig } from "../../utils/api";
 import { useNotifications } from "../../context/NotificationContext/NotificationContext";
+import { MicrophoneSelector } from "../../components/MicrophoneSelector";
 import { PreflightCheck } from "./components/PreflightCheck";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
@@ -40,10 +44,52 @@ function ollamaErrorAlert(
 }
 
 export function DictationPage() {
-  const { state, actions } = useDictation();
+  const { data: configData } = useConfigQuery();
+  const config = configData?.config;
+  const savedDeviceId = config?.dictation?.microphone_device_id ?? "";
+  const { state, actions } = useDictation(savedDeviceId);
   const { addNotification } = useNotifications();
   const hotkeyActive = useHotkeyDictationActive();
   const prevPhaseRef = useRef(state.phase);
+  const { devices, loading: devicesLoading } = useAudioDevices();
+
+  const handleMicChange = async (deviceId: string) => {
+    if (!config) {
+      return;
+    }
+    await patchConfig({
+      dictation: { ...config.dictation, microphone_device_id: deviceId },
+    });
+    await revalidateConfig();
+  };
+
+  // Determine mic preflight status
+  const micStatus = (() => {
+    if (devicesLoading) {
+      return "loading" as const;
+    }
+    if (state.deviceWarning) {
+      return "warning" as const;
+    }
+    if (devices.length === 0) {
+      return "error" as const;
+    }
+    return "success" as const;
+  })();
+
+  const micLabel = (() => {
+    if (state.deviceWarning) {
+      return "fallback to default";
+    }
+    if (devices.length === 0) {
+      return "no devices found";
+    }
+    if (!savedDeviceId) {
+      return "System Default";
+    }
+    const match = devices.find((device) => device.deviceId === savedDeviceId);
+    return match ? match.label : "System Default";
+  })();
 
   useEffect(() => {
     actions.checkServices();
@@ -69,6 +115,11 @@ export function DictationPage() {
     !state.hasModel &&
     state.phase !== "preflight_checking" &&
     state.phase !== "idle";
+
+  const isRecordingOrProcessing =
+    state.phase === "recording" ||
+    state.phase === "starting" ||
+    state.phase === "processing";
 
   const ollamaAlert =
     state.phase === "error" && !state.ollamaStatus && !noModel
@@ -98,12 +149,24 @@ export function DictationPage() {
         ollamaStatus={state.ollamaStatus}
         ollamaError={state.ollamaError}
         phase={state.phase}
+        micStatus={micStatus}
+        micLabel={micLabel}
       />
+
+      <MicrophoneSelector
+        selectedDeviceId={savedDeviceId}
+        onChange={handleMicChange}
+        disabled={isRecordingOrProcessing || hotkeyActive}
+      />
+
+      {state.deviceWarning && (
+        <Alert type="warning">{state.deviceWarning}</Alert>
+      )}
 
       {noModel ? (
         <ModelDownload onComplete={actions.checkServices} />
       ) : (
-        <>
+        <SpaceBetween size="l">
           <DictationControls
             phase={state.phase}
             hotkeyActive={hotkeyActive}
@@ -120,7 +183,7 @@ export function DictationPage() {
             processedText={state.processedText}
             phase={state.phase}
           />
-        </>
+        </SpaceBetween>
       )}
     </SpaceBetween>
   );

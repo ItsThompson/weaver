@@ -14,6 +14,14 @@ vi.mock("../../utils/isElectron", () => ({
   isElectron: vi.fn().mockReturnValue(false),
 }));
 
+vi.mock("../../hooks/useAudioDevices", () => ({
+  useAudioDevices: () => ({
+    devices: [{ deviceId: "mic-1", label: "USB Microphone" }],
+    loading: false,
+    refresh: vi.fn(),
+  }),
+}));
+
 import { isElectron } from "../../utils/isElectron";
 import * as api from "../../utils/api";
 import { SettingsPage } from "./SettingsPage";
@@ -261,5 +269,40 @@ describe("SettingsPage dictation section", () => {
 
     const savedConfig = mockUpdateConfig.mock.calls[0][0];
     expect(savedConfig.dictation).toEqual(DEFAULT_CONFIG.dictation);
+  });
+
+  it("shows microphone selector in dictation section", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(screen.getByText("Microphone")).toBeInTheDocument();
+    expect(screen.getByText("System Default")).toBeInTheDocument();
+  });
+
+  it("hides microphone selector when isElectron is false", async () => {
+    mockIsElectron.mockReturnValue(false);
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    await act(async () => {
+      renderPage();
+    });
+
+    expect(screen.queryByText("Microphone")).not.toBeInTheDocument();
+  });
+
+  it("saves microphone_device_id with config", async () => {
+    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
+    mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
+    await act(async () => {
+      renderPage();
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText("Save"));
+    });
+
+    const savedConfig = mockUpdateConfig.mock.calls[0][0];
+    expect(savedConfig.dictation.microphone_device_id).toBe("");
   });
 });

@@ -20,6 +20,8 @@ export function PreflightCheck({
   ollamaStatus,
   ollamaError,
   phase,
+  micStatus,
+  micLabel,
 }: PreflightCheckProps) {
   const loading = phase === "idle" || phase === "preflight_checking";
 
@@ -42,6 +44,23 @@ export function PreflightCheck({
         <StatusIndicator type={indicatorType(ollamaStatus)}>
           {loading ? "Ollama: checking..." : "Ollama"}
         </StatusIndicator>
+        {micStatus && (
+          <StatusIndicator
+            type={
+              micStatus === "success"
+                ? "success"
+                : micStatus === "warning"
+                  ? "warning"
+                  : micStatus === "error"
+                    ? "error"
+                    : "warning"
+            }
+          >
+            {micStatus === "loading"
+              ? "Microphone: checking..."
+              : `Microphone: ${micLabel}`}
+          </StatusIndicator>
+        )}
       </SpaceBetween>
       {helpText && (
         <Box color="text-status-error" fontSize="body-s">

@@ -253,12 +253,22 @@ export function validateDictation(value: unknown): ValidatorResult {
     return { warning: "dictation.llm_cleanup must be a boolean" };
   }
 
+  if (
+    "microphone_device_id" in obj &&
+    typeof obj.microphone_device_id !== "string"
+  ) {
+    return { warning: "dictation.microphone_device_id must be a string" };
+  }
+
   return {
     value: {
       ...DEFAULT_CONFIG.dictation,
       ...("ollama_url" in obj && { ollama_url: obj.ollama_url }),
       ...("ollama_model" in obj && { ollama_model: obj.ollama_model }),
       ...("llm_cleanup" in obj && { llm_cleanup: obj.llm_cleanup }),
+      ...("microphone_device_id" in obj && {
+        microphone_device_id: obj.microphone_device_id,
+      }),
     },
   };
 }

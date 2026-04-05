@@ -16,6 +16,7 @@ import { isElectron } from "../../utils/isElectron";
 import { getDictationStatus } from "../../utils/api";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
+import { MicrophoneSelector } from "../../components/MicrophoneSelector";
 import { TestRunnersField } from "./components/TestRunnersField";
 import { SkillPathsField } from "./components/SkillPathsField";
 import { SkillGraphCategoriesField } from "./components/SkillGraphCategoriesField";
@@ -175,6 +176,24 @@ export function SettingsPage() {
             {isElectron() && (
               <>
                 <Header variant="h3">Dictation</Header>
+                <FormField
+                  label="Microphone"
+                  description="Select which microphone to use for dictation"
+                >
+                  <MicrophoneSelector
+                    selectedDeviceId={config.dictation.microphone_device_id}
+                    onChange={(deviceId) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        dictation: {
+                          ...prev.dictation,
+                          microphone_device_id: deviceId,
+                        },
+                      }))
+                    }
+                    disabled={hasWarnings}
+                  />
+                </FormField>
                 <FormField
                   label="LLM Cleanup"
                   description="Use Ollama to remove filler words and fix grammar. Disable for lower latency (whisper already adds punctuation)."

@@ -1,11 +1,13 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useAudioCapture } from "../useAudioCapture";
+import { resolveDeviceId } from "../useAudioDevices";
 import { playNotificationSound } from "../notifications/soundUtils";
 import {
   transcribeAudio,
   processTranscript,
   getSnippets,
 } from "../../utils/api";
+import { useConfigQuery } from "../queries";
 
 type Phase = "idle" | "recording" | "processing";
 
@@ -22,6 +24,10 @@ export function useHotkeyDictation(): { active: boolean } {
   const pendingRef = useRef<Promise<void>>(Promise.resolve());
   const audioRef = useRef(audio);
   audioRef.current = audio;
+  const { data } = useConfigQuery();
+  const savedDeviceId = data?.config?.dictation?.microphone_device_id ?? "";
+  const savedDeviceIdRef = useRef(savedDeviceId);
+  savedDeviceIdRef.current = savedDeviceId;
 
   useEffect(() => {
     audio.onChunk((blob: Blob) => {
@@ -76,7 +82,14 @@ export function useHotkeyDictation(): { active: boolean } {
         pendingRef.current = Promise.resolve();
         setPhase("recording");
         playNotificationSound("dictation-start");
-        audioRef.current.startRecording();
+        resolveDeviceId(savedDeviceIdRef.current)
+          .then((resolved) =>
+            audioRef.current.startRecording(resolved.deviceId),
+          )
+          .catch(() => {
+            setPhase("idle");
+            window.weaver?.sendDictationError("Microphone access failed");
+          });
       } else if (command === "stop") {
         playNotificationSound("dictation-stop");
         setPhase("processing");

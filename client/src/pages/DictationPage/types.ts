@@ -5,6 +5,8 @@ export interface PreflightCheckProps {
   ollamaStatus: boolean;
   ollamaError: "not_installed" | "model_not_found" | null;
   phase: DictationPhase;
+  micStatus?: "loading" | "success" | "warning" | "error";
+  micLabel?: string;
 }
 
 export interface TranscriptPanelProps {

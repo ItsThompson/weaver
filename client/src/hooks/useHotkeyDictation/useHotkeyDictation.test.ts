@@ -2,6 +2,18 @@ import { renderHook, act } from "@testing-library/react";
 
 import "../../__tests__/mocks/api";
 
+const mockResolveDeviceId = vi.fn();
+vi.mock("../useAudioDevices", () => ({
+  resolveDeviceId: (...args: unknown[]) => mockResolveDeviceId(...args),
+}));
+
+let mockConfigData:
+  | { config: { dictation: { microphone_device_id: string } } }
+  | undefined;
+vi.mock("../queries", () => ({
+  useConfigQuery: () => ({ data: mockConfigData }),
+}));
+
 import * as api from "../../utils/api";
 import * as soundUtils from "../notifications/soundUtils";
 import { useHotkeyDictation } from "./useHotkeyDictation";
@@ -58,6 +70,11 @@ beforeEach(() => {
   chunkCallback = null;
   commandCallback = null;
   mockIsRecording = false;
+  mockConfigData = undefined;
+  mockResolveDeviceId.mockResolvedValue({
+    deviceId: undefined,
+    isStale: false,
+  });
   window.weaver = mockWeaver;
 });
 
@@ -71,11 +88,14 @@ describe("useHotkeyDictation", () => {
     expect(result.current.active).toBe(false);
   });
 
-  it("plays start sound and begins recording on start command", () => {
+  it("plays start sound and begins recording on start command", async () => {
     const { result } = renderHook(() => useHotkeyDictation());
 
-    act(() => {
+    await act(async () => {
       commandCallback!(null, "start");
+      await vi.waitFor(() => {
+        expect(mockStartRecording).toHaveBeenCalled();
+      });
     });
 
     expect(result.current.active).toBe(true);
@@ -168,5 +188,68 @@ describe("useHotkeyDictation", () => {
 
     expect(result.current.active).toBe(false);
     expect(commandCallback).toBeNull();
+  });
+
+  it("resolves saved device ID from config before recording", async () => {
+    mockConfigData = {
+      config: { dictation: { microphone_device_id: "mic-1" } },
+    };
+    mockResolveDeviceId.mockResolvedValue({
+      deviceId: "mic-1",
+      isStale: false,
+    });
+
+    renderHook(() => useHotkeyDictation());
+
+    await act(async () => {
+      commandCallback!(null, "start");
+      await vi.waitFor(() => {
+        expect(mockStartRecording).toHaveBeenCalled();
+      });
+    });
+
+    expect(mockResolveDeviceId).toHaveBeenCalledWith("mic-1");
+    expect(mockStartRecording).toHaveBeenCalledWith("mic-1");
+  });
+
+  it("falls back silently when saved device is stale", async () => {
+    mockConfigData = {
+      config: { dictation: { microphone_device_id: "gone-device" } },
+    };
+    mockResolveDeviceId.mockResolvedValue({
+      deviceId: undefined,
+      isStale: true,
+    });
+
+    renderHook(() => useHotkeyDictation());
+
+    await act(async () => {
+      commandCallback!(null, "start");
+      await vi.waitFor(() => {
+        expect(mockStartRecording).toHaveBeenCalled();
+      });
+    });
+
+    expect(mockStartRecording).toHaveBeenCalledWith(undefined);
+    // No error sent: silent fallback
+    expect(mockWeaver.sendDictationError).not.toHaveBeenCalled();
+  });
+
+  it("sends error when startRecording fails after device resolution", async () => {
+    mockResolveDeviceId.mockRejectedValue(new Error("Permission denied"));
+
+    const { result } = renderHook(() => useHotkeyDictation());
+
+    await act(async () => {
+      commandCallback!(null, "start");
+      await vi.waitFor(() => {
+        expect(mockWeaver.sendDictationError).toHaveBeenCalled();
+      });
+    });
+
+    expect(mockWeaver.sendDictationError).toHaveBeenCalledWith(
+      "Microphone access failed",
+    );
+    expect(result.current.active).toBe(false);
   });
 });
