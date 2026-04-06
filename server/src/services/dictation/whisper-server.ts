@@ -152,7 +152,3 @@ export async function waitForWhisperReady(
   });
   return warmed;
 }
-
-export function touchWhisperActivity(): void {
-  managed.touch();
-}

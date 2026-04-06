@@ -138,15 +138,6 @@ export const deleteSnippetApi = (id: string) =>
     }
   });
 
-export const getDictationStatus = () =>
-  apiFetch<{
-    whisper: boolean;
-    ollama: boolean;
-    ollamaError: "not_installed" | "model_not_found" | null;
-    ollamaModel: string;
-    model: string | null;
-  }>("/dictation/status");
-
 export const getServicesStatus = () =>
   apiFetch<ServicesStatusResponse>("/services/status");
 

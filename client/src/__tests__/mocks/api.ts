@@ -29,7 +29,6 @@ vi.mock("../../utils/api", () => ({
   createSnippet: vi.fn(),
   updateSnippet: vi.fn(),
   deleteSnippetApi: vi.fn(),
-  getDictationStatus: vi.fn(),
   getServicesStatus: vi.fn<() => Promise<any>>().mockResolvedValue({
     ready: true,
     services: {

@@ -21,7 +21,6 @@ import {
   startWhisperServer,
   stopWhisperServer,
   isWhisperServerRunning,
-  touchWhisperActivity,
   WHISPER_PORT,
 } from "./whisper-server";
 
@@ -190,11 +189,5 @@ describe("isWhisperServerRunning", () => {
 
     expect(result).toBe(false);
     vi.unstubAllGlobals();
-  });
-});
-
-describe("inactivity timeout", () => {
-  it("touchWhisperActivity is a no-op when not running", () => {
-    expect(() => touchWhisperActivity()).not.toThrow();
   });
 });
