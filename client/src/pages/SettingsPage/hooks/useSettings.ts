@@ -1,23 +1,11 @@
 import { useState, useEffect, useMemo } from "react";
 import {
   DEFAULT_CONFIG,
-  SERVICE_RESTART_FIELDS,
+  needsServiceRestart,
   type WeaverConfig,
 } from "@weaver/shared/types";
 import { useConfigQuery, revalidateConfig } from "../../../hooks/queries";
 import { updateConfig } from "../../../utils/api";
-
-function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
-  return path
-    .split(".")
-    .reduce<unknown>(
-      (current, key) =>
-        current !== null && typeof current === "object"
-          ? (current as Record<string, unknown>)[key]
-          : undefined,
-      obj,
-    );
-}
 
 export interface SettingsState {
   config: WeaverConfig;
@@ -56,18 +44,11 @@ export function useSettings(
     }
   }, [serverConfig]);
 
-  const needsServiceRestart = useMemo(() => {
+  const needsRestart = useMemo(() => {
     if (!serverConfig) {
       return false;
     }
-    return SERVICE_RESTART_FIELDS.some(
-      (field) =>
-        getNestedValue(
-          serverConfig as unknown as Record<string, unknown>,
-          field,
-        ) !==
-        getNestedValue(config as unknown as Record<string, unknown>, field),
-    );
+    return needsServiceRestart(serverConfig, config);
   }, [serverConfig, config]);
 
   const handleSave = async () => {
@@ -93,7 +74,7 @@ export function useSettings(
       isLoading: fetching || !serverConfig,
       warnings,
       hasWarnings,
-      needsServiceRestart,
+      needsServiceRestart: needsRestart,
     },
     actions: { setConfig, handleSave },
   };
