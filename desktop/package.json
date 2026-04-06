@@ -1,6 +1,6 @@
 {
   "name": "weaver-electron",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Weaver desktop app",
   "author": "thompsnt",
   "private": true,
@@ -19,8 +19,10 @@
     "mac": {
       "icon": "assets/desktop-icon.png",
       "target": "dmg",
+      "identity": null,
       "extendInfo": {
-        "LSUIElement": true
+        "LSUIElement": true,
+        "NSMicrophoneUsageDescription": "Weaver needs microphone access for voice dictation."
       }
     },
     "files": [
