@@ -10,6 +10,7 @@ export {
   snippetsPath,
   dictationsPath,
   modelsDir,
+  appLogsDir,
   globalSkillsPath,
   globalKiroDir,
   expandHome,
