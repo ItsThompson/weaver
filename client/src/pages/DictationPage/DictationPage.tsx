@@ -1,88 +1,29 @@
-import { useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Alert from "@cloudscape-design/components/alert";
-import { useDictation } from "../../hooks/useDictation";
-import { useHotkeyDictationActive } from "../../hooks/useHotkeyDictation";
-import { useConfigQuery, revalidateConfig } from "../../hooks/queries";
-import { useAudioDevices } from "../../hooks/useAudioDevices";
-import { useServicesStatus } from "../../hooks/useServicesStatus";
-import { patchConfig } from "../../utils/api";
-import { useNotifications } from "../../context/NotificationContext/NotificationContext";
+import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import { MicrophoneSelector } from "../../components/MicrophoneSelector";
-import {
-  ActionDropdown,
-  type ActionItem,
-} from "../../components/ActionDropdown";
+import { ActionDropdown } from "../../components/ActionDropdown";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
 import { ModelDownload } from "./components/ModelDownload";
+import { useDictationPage } from "./hooks/useDictationPage";
 
 export function DictationPage() {
-  const navigate = useNavigate();
-  const { data: configData } = useConfigQuery();
-  const config = configData?.config;
-  const savedDeviceId = config?.dictation?.microphone_device_id ?? "";
-  const { state, actions } = useDictation(savedDeviceId);
-  const { addNotification } = useNotifications();
-  const hotkeyActive = useHotkeyDictationActive();
-  const prevPhaseRef = useRef(state.phase);
-  const { devices, loading: devicesLoading } = useAudioDevices();
-  const { status: servicesStatus, refetch: refetchServices } =
-    useServicesStatus();
-
-  const dictationEnabled = config?.enable_dictation ?? false;
-  const whisperRunning = servicesStatus?.services.whisper.state === "running";
-  const whisperNotConfigured =
-    servicesStatus?.services.whisper.state === "not_configured";
-  const hasServiceError =
-    servicesStatus?.services.whisper.state === "error" ||
-    servicesStatus?.services.ollama.state === "error";
-
-  const handleMicChange = async (deviceId: string) => {
-    if (!config) {
-      return;
-    }
-    await patchConfig({
-      dictation: { ...config.dictation, microphone_device_id: deviceId },
-    });
-    await revalidateConfig();
-  };
-
-  useEffect(() => {
-    const prev = prevPhaseRef.current;
-    prevPhaseRef.current = state.phase;
-    if (prev === state.phase) {
-      return;
-    }
-
-    if (state.phase === "recording") {
-      addNotification("Listening...", "info");
-    } else if (state.phase === "processing") {
-      addNotification("Processing...", "info");
-    } else if (state.phase === "done") {
-      addNotification("Dictation complete", "success");
-    }
-  }, [state.phase, addNotification]);
-
-  const isRecordingOrProcessing =
-    state.phase === "recording" ||
-    state.phase === "starting" ||
-    state.phase === "processing";
-
-  const headerActions: ActionItem[] = [
-    {
-      id: "manage-snippets",
-      text: "Manage Snippets",
-      action: () => navigate("/snippets"),
-    },
-    {
-      id: "dictation-history",
-      text: "Dictation History",
-      action: () => navigate("/dictation/history"),
-    },
-  ];
+  const { state, actions } = useDictationPage();
+  const {
+    dictationState,
+    dictationEnabled,
+    whisperRunning,
+    whisperNotConfigured,
+    hasServiceError,
+    ollamaReady,
+    hotkeyActive,
+    servicesLoading,
+    isRecordingOrProcessing,
+    savedDeviceId,
+    headerActions,
+  } = state;
 
   return (
     <SpaceBetween size="l">
@@ -111,44 +52,47 @@ export function DictationPage() {
         </Alert>
       )}
 
-      {state.phase === "error" && state.error && (
-        <Alert type="error">{state.error}</Alert>
+      {dictationState.phase === "error" && dictationState.error && (
+        <Alert type="error">{dictationState.error}</Alert>
       )}
 
-      {dictationEnabled && (
+      {dictationEnabled && servicesLoading && (
+        <StatusIndicator type="loading">
+          Checking service status...
+        </StatusIndicator>
+      )}
+
+      {dictationEnabled && !servicesLoading && (
         <>
           <MicrophoneSelector
             selectedDeviceId={savedDeviceId}
-            onChange={handleMicChange}
+            onChange={actions.handleMicChange}
             disabled={isRecordingOrProcessing || hotkeyActive}
           />
 
-          {state.deviceWarning && (
-            <Alert type="warning">{state.deviceWarning}</Alert>
+          {dictationState.deviceWarning && (
+            <Alert type="warning">{dictationState.deviceWarning}</Alert>
           )}
 
           {whisperNotConfigured ? (
-            <ModelDownload onComplete={refetchServices} />
+            <ModelDownload onComplete={actions.refetchServices} />
           ) : (
             <SpaceBetween size="l">
               <DictationControls
-                phase={state.phase}
+                phase={dictationState.phase}
                 hotkeyActive={hotkeyActive}
-                whisperReady={whisperRunning}
-                ollamaReady={
-                  servicesStatus?.services.ollama.state === "running" ||
-                  servicesStatus?.services.ollama.state === "not_configured"
-                }
-                hasProcessedText={!!state.processedText}
+                whisperReady={whisperRunning ?? false}
+                ollamaReady={ollamaReady ?? false}
+                hasProcessedText={!!dictationState.processedText}
                 onStart={actions.startDictation}
                 onStop={actions.stopDictation}
                 onCopy={actions.copyToClipboard}
               />
 
               <TranscriptPanel
-                rawTranscript={state.rawTranscript}
-                processedText={state.processedText}
-                phase={state.phase}
+                rawTranscript={dictationState.rawTranscript}
+                processedText={dictationState.processedText}
+                phase={dictationState.phase}
               />
             </SpaceBetween>
           )}
