@@ -76,3 +76,4 @@ All session data is stored in `~/.weaver/`:
 | `snippets.jsonl`          | Snippet definitions for dictation                               |
 | `dictations.jsonl`        | Dictation history (raw + processed transcripts)                 |
 | `models/`                 | Downloaded whisper speech recognition models                    |
+| `app-logs/*.log`          | Date-based application logs (JSONL, pruned after 30 days)       |
