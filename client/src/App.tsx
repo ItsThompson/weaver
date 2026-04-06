@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import AppLayout from "@cloudscape-design/components/app-layout";
 import SideNavigation, {
@@ -15,6 +15,7 @@ import { DictationPage } from "./pages/DictationPage";
 import { DictationHistoryPage } from "./pages/DictationHistoryPage";
 import { SnippetsPage } from "./pages/SnippetsPage";
 import { MiniPage } from "./pages/MiniPage";
+import { StartupPage } from "./pages/StartupPage";
 import { useNavigateOnView } from "./hooks/useNavigateOnView";
 import { useSessionNotifications } from "./hooks/useSessionNotifications";
 import { useSessionEvents } from "./hooks/useSessionEvents";
@@ -28,16 +29,21 @@ import {
   useHotkeyDictation,
   HotkeyDictationContext,
 } from "./hooks/useHotkeyDictation";
+import { useServiceEvents } from "./hooks/useServiceEvents";
 
 export function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const [navOpen, setNavOpen] = useState(false);
+  const [startup, setStartup] = useState(true);
   const { active: hotkeyDictationActive } = useHotkeyDictation();
   const { data } = useConfigQuery();
   useNavigateOnView();
   useSessionNotifications();
   useSessionEvents();
+  useServiceEvents({
+    onServicesRestarting: useCallback(() => setStartup(true), []),
+  });
 
   const electron = isElectron();
 
@@ -74,6 +80,14 @@ export function App() {
   };
 
   const isMini = location.pathname === "/mini";
+
+  if (startup && !isMini) {
+    return (
+      <HotkeyDictationContext.Provider value={hotkeyDictationActive}>
+        <StartupPage onReady={() => setStartup(false)} />
+      </HotkeyDictationContext.Provider>
+    );
+  }
 
   if (isMini) {
     return (
