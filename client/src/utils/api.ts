@@ -9,6 +9,7 @@ import type {
   Snippet,
   WhisperModel,
   DictationLogEntry,
+  ServicesStatusResponse,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -145,6 +146,9 @@ export const getDictationStatus = () =>
     ollamaModel: string;
     model: string | null;
   }>("/dictation/status");
+
+export const getServicesStatus = () =>
+  apiFetch<ServicesStatusResponse>("/services/status");
 
 export const transcribeAudio = (blob: Blob) =>
   fetch(`${API_BASE}/dictation/transcribe`, {

@@ -30,6 +30,13 @@ vi.mock("../../utils/api", () => ({
   updateSnippet: vi.fn(),
   deleteSnippetApi: vi.fn(),
   getDictationStatus: vi.fn(),
+  getServicesStatus: vi.fn<() => Promise<any>>().mockResolvedValue({
+    ready: true,
+    services: {
+      whisper: { state: "not_configured" },
+      ollama: { state: "not_configured" },
+    },
+  }),
   transcribeAudio: vi.fn(),
   processTranscript: vi.fn(),
   getModels: vi

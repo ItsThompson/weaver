@@ -51,7 +51,7 @@ registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
 registerSkillRoutes(server);
-registerDictationRoutes(server, process.env.WEAVER_WHISPER_BIN);
+registerDictationRoutes(server);
 registerSnippetRoutes(server);
 registerServicesRoute(server);
 
