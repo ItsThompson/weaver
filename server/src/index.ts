@@ -25,6 +25,7 @@ import {
   stopWhisperServer,
 } from "./services/dictation/index";
 import { log } from "./utils/logger";
+import { pruneAppLogs } from "@weaver/shared/logger";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -65,6 +66,7 @@ if (existsSync(clientDist)) {
 
 async function start(): Promise<void> {
   await ensureDataDir();
+  pruneAppLogs();
   startStaleSessionCleanup();
   startPidPolling((sessionId) => broadcast(sessionId));
   startKeepAwake(resolve(__dirname, "../../bin/keep-awake.sh"));
