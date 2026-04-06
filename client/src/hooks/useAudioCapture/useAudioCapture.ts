@@ -63,25 +63,6 @@ export function useAudioCapture() {
     [handleChunk],
   );
 
-  const stopRecording = useCallback(() => {
-    const worklet = workletRef.current;
-    if (worklet) {
-      // Replace handler to catch flush
-      worklet.port.onmessage = (e: MessageEvent) => {
-        if (e.data.type === "chunk") {
-          handleChunk(e.data.samples);
-        }
-        if (e.data.type === "flushed") {
-          cleanup();
-        }
-      };
-      worklet.port.postMessage("flush");
-    } else {
-      cleanup();
-    }
-    setIsRecording(false);
-  }, [handleChunk]);
-
   const cleanup = useCallback(() => {
     sourceRef.current?.disconnect();
     workletRef.current?.disconnect();
@@ -94,6 +75,26 @@ export function useAudioCapture() {
     workletRef.current = null;
     streamRef.current = null;
   }, []);
+
+  const stopRecording = useCallback(() => {
+    const worklet = workletRef.current;
+    if (worklet) {
+      // Replace handler to catch flush
+      worklet.port.onmessage = (e: MessageEvent) => {
+        if (e.data.type === "chunk") {
+          handleChunk(e.data.samples);
+        }
+        if (e.data.type === "flushed") {
+          cleanup();
+          setIsRecording(false);
+        }
+      };
+      worklet.port.postMessage("flush");
+    } else {
+      cleanup();
+      setIsRecording(false);
+    }
+  }, [handleChunk, cleanup]);
 
   const onChunk = useCallback((callback: (blob: Blob) => void) => {
     callbackRef.current = callback;
