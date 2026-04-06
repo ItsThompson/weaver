@@ -1,6 +1,6 @@
 # Release
 
-Create a new Weaver release: review changes, bump version, build, tag, and create a draft GitHub release.
+Create a new Weaver release: review changes, run the release script, and create a draft GitHub release.
 
 ## Steps
 
@@ -18,37 +18,13 @@ Present the summary and your chosen bump type to the user for confirmation befor
 
 If there are no commits since the last tag, stop and tell the user there is nothing to release.
 
-### 2. Bump version, commit, and tag
+### 2. Run the release script
 
-Parse the latest tag to get the current version (strip the `v` prefix). Increment according to the chosen bump type:
+Run `scripts/release.sh <patch|minor|major>` with the confirmed bump type. The script handles everything: version bump in root `package.json`, workspace version sync, build, commit, tag, and push.
 
-- `patch`: increment patch (e.g., 1.4.1 → 1.4.2)
-- `minor`: increment minor, reset patch (e.g., 1.4.1 → 1.5.0)
-- `major`: increment major, reset minor and patch (e.g., 1.4.1 → 2.0.0)
+If the script fails, stop and show the error. Do not proceed to the release step.
 
-Update the `"version"` field in the root `package.json` to the new version, then commit and tag. The tag MUST exist before `npm run dist` because `version:sync` (which `dist` runs) uses `npm version from-git` to read the version from the latest git tag.
-
-```bash
-git add package.json
-git commit -m "chore: version bump to v{new_version}"
-git tag v{new_version}
-```
-
-### 3. Build the distribution
-
-Run `npm run dist` and wait for it to complete. This runs `version:sync` internally, which propagates the tagged version to all workspace `package.json` files. The output .dmg will be at `desktop/dist/Weaver-{new_version}-arm64.dmg`.
-
-After the build succeeds, commit the synced workspace versions and push everything:
-
-```bash
-git add -A
-git commit -m "chore: sync workspace versions to v{new_version}"
-git push && git push --tags
-```
-
-If the build fails, stop and show the error. Do not proceed to the release step.
-
-### 4. Create draft GitHub release
+### 3. Create draft GitHub release
 
 Compose the release using this pattern:
 

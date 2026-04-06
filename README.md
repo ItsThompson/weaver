@@ -31,10 +31,14 @@ npm run app
 
 # Browser dev mode (hot reload)
 npm run dev
-
-# Package into a distributable .app / .dmg
-npm run dist
 ```
+
+## Releasing
+
+1. Open a kiro-cli session in the repo
+2. Run `@release`
+
+This reviews commits since the last tag, asks you to confirm the bump type, runs `scripts/release.sh` (version bump, test, build, commit, tag, push), and creates a draft GitHub release with the `.dmg` attached.
 
 ## Documentation
 

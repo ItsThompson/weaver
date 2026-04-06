@@ -21,7 +21,7 @@
     "lint": "eslint '**/*.{ts,tsx}' --ignore-pattern '**/dist/**'",
     "test": "turbo test",
     "test:e2e": "npm test --prefix e2e",
-    "version:sync": "npm version from-git --workspaces --include-workspace-root --no-git-tag-version --allow-same-version"
+    "version:sync": "npm version $(node -p 'require(`./package.json`).version') --workspaces --no-git-tag-version --allow-same-version"
   },
   "packageManager": "npm@10.8.2",
   "devDependencies": {
