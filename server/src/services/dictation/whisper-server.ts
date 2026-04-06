@@ -7,7 +7,6 @@ const WHISPER_HOST = "127.0.0.1";
 const managed = createManagedProcess({
   name: "whisper_server",
   cleanup: { type: "port", port: WHISPER_PORT },
-  inactivityTimeoutMs: 5 * 60 * 1000,
 });
 
 export function startWhisperServer(binPath: string, modelPath: string): void {
