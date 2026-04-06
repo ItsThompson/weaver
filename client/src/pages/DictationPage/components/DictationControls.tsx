@@ -40,9 +40,6 @@ export function DictationControls({
       <Button onClick={onCopy} disabled={!hasProcessedText}>
         Copy to Clipboard
       </Button>
-      <Button variant="link" href="/snippets">
-        Manage Snippets
-      </Button>
     </SpaceBetween>
   );
 }
