@@ -90,6 +90,14 @@ async function start(): Promise<void> {
   };
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
+
+  // When spawned by Electron with stdio: "pipe", stdin closes if the parent
+  // dies unexpectedly (force-quit, crash). Treat that as a shutdown signal
+  // so child processes (whisper, ollama) don't become orphans.
+  if (process.stdin?.readable) {
+    process.stdin.resume();
+    process.stdin.on("end", shutdown);
+  }
 }
 
 start().catch((err) => {
