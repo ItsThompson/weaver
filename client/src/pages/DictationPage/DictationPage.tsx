@@ -136,7 +136,8 @@ export function DictationPage() {
                 hotkeyActive={hotkeyActive}
                 whisperReady={whisperRunning}
                 ollamaReady={
-                  servicesStatus?.services.ollama.state === "running"
+                  servicesStatus?.services.ollama.state === "running" ||
+                  servicesStatus?.services.ollama.state === "not_configured"
                 }
                 hasProcessedText={!!state.processedText}
                 onStart={actions.startDictation}

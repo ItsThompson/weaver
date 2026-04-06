@@ -5,6 +5,7 @@ import Box from "@cloudscape-design/components/box";
 import Link from "@cloudscape-design/components/link";
 import type { ServiceStatus } from "@weaver/shared/types";
 import { useServicesStatus } from "../../hooks/useServicesStatus";
+import { colors } from "../../theme/colors";
 
 interface StartupPageProps {
   onReady: () => void;
@@ -40,13 +41,21 @@ export function StartupPage({ onReady }: StartupPageProps) {
     return () => clearTimeout(timer);
   }, []);
 
+  const pageStyle: React.CSSProperties = {
+    background: colors.backgroundPage,
+    color: colors.textPrimary,
+    minHeight: "100vh",
+  };
+
   if (!status) {
     return (
-      <Box textAlign="center" padding={{ top: "xxxl" }}>
-        <StatusIndicator type="loading">
-          Connecting to server...
-        </StatusIndicator>
-      </Box>
+      <div style={pageStyle}>
+        <Box textAlign="center" padding={{ top: "xxxl" }}>
+          <StatusIndicator type="loading">
+            Connecting to server...
+          </StatusIndicator>
+        </Box>
+      </div>
     );
   }
 
@@ -56,25 +65,27 @@ export function StartupPage({ onReady }: StartupPageProps) {
   ];
 
   return (
-    <Box textAlign="center" padding={{ top: "xxxl" }}>
-      <SpaceBetween size="l">
-        <Box variant="h2">Starting services...</Box>
-        <SpaceBetween size="xs">
-          {services.map((service) => (
-            <div key={service.name}>
-              <StatusIndicator type={statusType(service.status.state)}>
-                {service.name}
-                {service.status.error && ` — ${service.status.error}`}
-              </StatusIndicator>
-            </div>
-          ))}
+    <div style={pageStyle}>
+      <Box textAlign="center" padding={{ top: "xxxl" }}>
+        <SpaceBetween size="l">
+          <Box variant="h2">Starting services...</Box>
+          <SpaceBetween size="xs">
+            {services.map((service) => (
+              <div key={service.name}>
+                <StatusIndicator type={statusType(service.status.state)}>
+                  {service.name}
+                  {service.status.error && ` — ${service.status.error}`}
+                </StatusIndicator>
+              </div>
+            ))}
+          </SpaceBetween>
+          {showSkip && (
+            <Link onFollow={onReady} variant="secondary">
+              Skip and continue
+            </Link>
+          )}
         </SpaceBetween>
-        {showSkip && (
-          <Link onFollow={onReady} variant="secondary">
-            Skip and continue
-          </Link>
-        )}
-      </SpaceBetween>
-    </Box>
+      </Box>
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export function DictationControls({
   onCopy,
 }: DictationControlsProps) {
   const servicesReady = whisperReady && ollamaReady;
-  const disabled = hotkeyActive || !servicesReady || phase === "idle";
+  const disabled = hotkeyActive || !servicesReady;
   const isRecording = phase === "recording" || phase === "starting";
 
   return (
