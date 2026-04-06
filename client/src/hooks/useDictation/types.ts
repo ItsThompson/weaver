@@ -1,6 +1,5 @@
 export type DictationPhase =
   | "idle"
-  | "preflight_checking"
   | "ready"
   | "starting"
   | "recording"
@@ -14,16 +13,10 @@ export interface DictationState {
   processedText: string;
   error: string | null;
   deviceWarning: string | null;
-  whisperStatus: boolean;
-  ollamaStatus: boolean;
-  ollamaError: "not_installed" | "model_not_found" | null;
-  ollamaModel: string;
-  hasModel: boolean;
   hotkeyActive: boolean;
 }
 
 export interface DictationActions {
-  checkServices: () => Promise<void>;
   startDictation: () => void;
   stopDictation: () => void;
   copyToClipboard: () => void;

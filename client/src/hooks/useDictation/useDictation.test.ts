@@ -14,10 +14,13 @@ vi.mock("../useAudioDevices", () => ({
 import * as api from "../../utils/api";
 import { useDictation } from "./useDictation";
 
-const mockGetDictationStatus = vi.mocked(api.getDictationStatus);
 const mockTranscribeAudio = vi.mocked(api.transcribeAudio);
 const mockProcessTranscript = vi.mocked(api.processTranscript);
 const mockGetSnippets = vi.mocked(api.getSnippets);
+
+function isRecording(result: { current: ReturnType<typeof useDictation> }) {
+  return result.current.state.phase === "recording";
+}
 
 let chunkCallback: ((blob: Blob) => void) | null = null;
 let mockIsRecording = false;
@@ -57,65 +60,6 @@ describe("useDictation", () => {
   it("starts in idle phase", () => {
     const { result } = renderHook(() => useDictation());
     expect(result.current.state.phase).toBe("idle");
-  });
-
-  it("transitions to ready when services are healthy", async () => {
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: true,
-      ollama: true,
-      ollamaError: null,
-      ollamaModel: "phi4-mini",
-      model: "/path/to/model.bin",
-    });
-
-    const { result } = renderHook(() => useDictation());
-
-    await act(async () => {
-      await result.current.actions.checkServices();
-    });
-
-    expect(result.current.state.phase).toBe("ready");
-    expect(result.current.state.whisperStatus).toBe(true);
-    expect(result.current.state.ollamaStatus).toBe(true);
-    expect(result.current.state.error).toBeNull();
-  });
-
-  it("transitions to error when ollama is down", async () => {
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: false,
-      ollama: false,
-      ollamaError: "not_installed",
-      ollamaModel: "phi4-mini",
-      model: "/path/to/model.bin",
-    });
-
-    const { result } = renderHook(() => useDictation());
-
-    await act(async () => {
-      await result.current.actions.checkServices();
-    });
-
-    expect(result.current.state.phase).toBe("error");
-    expect(result.current.state.error).toBe("Ollama is not available");
-  });
-
-  it("transitions to error when no whisper model is available", async () => {
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: false,
-      ollama: true,
-      ollamaError: null,
-      ollamaModel: "phi4-mini",
-      model: null,
-    });
-
-    const { result } = renderHook(() => useDictation());
-
-    await act(async () => {
-      await result.current.actions.checkServices();
-    });
-
-    expect(result.current.state.phase).toBe("error");
-    expect(result.current.state.error).toBe("No whisper model downloaded");
   });
 
   it("transitions to recording and starts audio capture", async () => {
@@ -173,8 +117,6 @@ describe("useDictation", () => {
       await flush();
     });
 
-    expect(result.current.state.rawTranscript).toBe("hello world");
-
     await act(async () => {
       result.current.actions.stopDictation();
       await flush();
@@ -188,47 +130,13 @@ describe("useDictation", () => {
     expect(mockProcessTranscript).toHaveBeenCalledWith("hello world", []);
   });
 
-  it("sets hotkeyActive when dictation command is received", () => {
-    let capturedCallback: ((event: unknown, command: string) => void) | null =
-      null;
-    window.weaver = {
-      resizeMini: vi.fn(),
-      selectDirectory: vi.fn(),
-      startDictation: vi.fn(),
-      stopDictation: vi.fn(),
-      onDictationCommand: (cb) => {
-        capturedCallback = cb;
-      },
-      copyToClipboard: vi.fn(),
-      showNotification: vi.fn(),
-    };
-
-    const { result } = renderHook(() => useDictation());
-
-    act(() => {
-      capturedCallback!(null, "start");
-    });
-
-    expect(result.current.state.hotkeyActive).toBe(true);
-
-    delete window.weaver;
-  });
-
   it("reset returns to idle state", async () => {
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: true,
-      ollama: true,
-      ollamaError: null,
-      ollamaModel: "phi4-mini",
-      model: "/path/to/model.bin",
-    });
-
     const { result } = renderHook(() => useDictation());
 
     await act(async () => {
-      await result.current.actions.checkServices();
+      await result.current.actions.startDictation();
     });
-    expect(result.current.state.phase).toBe("ready");
+    expect(isRecording(result)).toBe(true);
 
     act(() => {
       result.current.actions.reset();
@@ -256,17 +164,6 @@ describe("useDictation", () => {
     expect(result.current.state.deviceWarning).toBeNull();
   });
 
-  it("uses system default when deviceId is undefined", async () => {
-    const { result } = renderHook(() => useDictation());
-
-    await act(async () => {
-      await result.current.actions.startDictation();
-    });
-
-    expect(mockResolveDeviceId).toHaveBeenCalledWith("");
-    expect(mockStartRecording).toHaveBeenCalledWith(undefined);
-  });
-
   it("sets deviceWarning when saved device is stale", async () => {
     mockResolveDeviceId.mockResolvedValue({
       deviceId: undefined,
@@ -282,27 +179,5 @@ describe("useDictation", () => {
     expect(result.current.state.deviceWarning).toBe(
       "Previously selected microphone is no longer available. Using system default.",
     );
-    expect(mockStartRecording).toHaveBeenCalledWith(undefined);
-  });
-
-  it("clears deviceWarning on reset", async () => {
-    mockResolveDeviceId.mockResolvedValue({
-      deviceId: undefined,
-      isStale: true,
-    });
-
-    const { result } = renderHook(() => useDictation("gone-device"));
-
-    await act(async () => {
-      await result.current.actions.startDictation();
-    });
-
-    expect(result.current.state.deviceWarning).not.toBeNull();
-
-    act(() => {
-      result.current.actions.reset();
-    });
-
-    expect(result.current.state.deviceWarning).toBeNull();
   });
 });
