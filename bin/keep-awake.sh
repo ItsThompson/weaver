@@ -1,3 +1,3 @@
 #!/bin/bash
-# Single-shot: press fn key to prevent macOS sleep. Invoked by the weaver server.
-osascript -e 'tell application "System Events" to key code 63'
+# Single-shot: assert user activity to prevent macOS sleep. Invoked by the weaver server.
+caffeinate -u -t 1

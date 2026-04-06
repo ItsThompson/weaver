@@ -125,8 +125,7 @@ describe("DictationPage", () => {
     expect(
       screen.getByRole("button", { name: "Start Dictation" }),
     ).not.toBeDisabled();
-    expect(screen.getByText("Whisper")).toBeInTheDocument();
-    expect(screen.getByText("Ollama")).toBeInTheDocument();
+    expect(screen.getByText(/3\/3 checks passed/)).toBeInTheDocument();
   });
 
   it("shows ModelDownload when whisper has no model", () => {
@@ -351,7 +350,7 @@ describe("DictationPage", () => {
     };
     renderPage();
 
-    expect(screen.getByText("Microphone: System Default")).toBeInTheDocument();
+    expect(screen.getByText(/3\/3 checks passed/)).toBeInTheDocument();
   });
 
   it("disables mic selector during recording", () => {
@@ -383,5 +382,33 @@ describe("DictationPage", () => {
     expect(
       screen.getByRole("button", { name: "Refresh devices" }),
     ).toHaveAttribute("disabled");
+  });
+
+  it("renders Actions dropdown in the header", () => {
+    mockState = {
+      ...mockState,
+      phase: "ready",
+      whisperStatus: true,
+      hasModel: true,
+      ollamaStatus: true,
+    };
+    renderPage();
+
+    expect(screen.getByRole("button", { name: "Actions" })).toBeInTheDocument();
+  });
+
+  it("does not render Manage Snippets link in controls", () => {
+    mockState = {
+      ...mockState,
+      phase: "ready",
+      whisperStatus: true,
+      hasModel: true,
+      ollamaStatus: true,
+    };
+    renderPage();
+
+    expect(
+      screen.queryByRole("button", { name: "Manage Snippets" }),
+    ).not.toBeInTheDocument();
   });
 });

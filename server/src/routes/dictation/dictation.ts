@@ -11,6 +11,7 @@ import {
   ensureOllamaRunning,
   generateText,
   logDictation,
+  readDictationHistory,
   AVAILABLE_MODELS,
   downloadModel,
   listLocalModels,
@@ -69,6 +70,11 @@ export function registerDictationRoutes(
     { parseAs: "buffer" },
     (_req, body, done) => done(null, body),
   );
+
+  server.get("/api/dictation/history", async () => {
+    const entries = await readDictationHistory();
+    return { entries };
+  });
 
   server.get<{
     Reply: {

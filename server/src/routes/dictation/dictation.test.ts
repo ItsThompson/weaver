@@ -10,6 +10,7 @@ vi.mock("../../services/dictation/index", () => ({
   ensureOllamaRunning: vi.fn(),
   generateText: vi.fn(),
   logDictation: vi.fn(),
+  readDictationHistory: vi.fn(),
   AVAILABLE_MODELS: [
     {
       name: "Tiny (English)",
@@ -38,6 +39,7 @@ import {
   ensureOllamaRunning,
   generateText,
   logDictation,
+  readDictationHistory,
   startWhisperServer,
   waitForWhisperReady,
   touchWhisperActivity,
@@ -303,5 +305,45 @@ describe("POST /api/dictation/models/download", () => {
     });
 
     expect(res.statusCode).toBe(400);
+  });
+});
+
+describe("GET /api/dictation/history", () => {
+  it("returns entries from readDictationHistory", async () => {
+    const entries = [
+      {
+        timestamp: "2026-04-05T18:01:00.000Z",
+        rawTranscript: "second",
+        processedText: "Second.",
+      },
+      {
+        timestamp: "2026-04-05T18:00:00.000Z",
+        rawTranscript: "first",
+        processedText: "First.",
+      },
+    ];
+    vi.mocked(readDictationHistory).mockResolvedValue(entries);
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/dictation/history",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.entries).toEqual(entries);
+  });
+
+  it("returns empty entries when no history exists", async () => {
+    vi.mocked(readDictationHistory).mockResolvedValue([]);
+
+    const res = await server.inject({
+      method: "GET",
+      url: "/api/dictation/history",
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.entries).toEqual([]);
   });
 });

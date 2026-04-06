@@ -12,6 +12,7 @@ import { SettingsPage } from "./pages/SettingsPage";
 import { SkillGraphPage } from "./pages/SkillGraphPage";
 import { SkillDetailPage } from "./pages/SkillDetailPage";
 import { DictationPage } from "./pages/DictationPage";
+import { DictationHistoryPage } from "./pages/DictationHistoryPage";
 import { SnippetsPage } from "./pages/SnippetsPage";
 import { MiniPage } from "./pages/MiniPage";
 import { useNavigateOnView } from "./hooks/useNavigateOnView";
@@ -121,6 +122,10 @@ export function App() {
             {electron && (
               <>
                 <Route path="/dictation" element={<DictationPage />} />
+                <Route
+                  path="/dictation/history"
+                  element={<DictationHistoryPage />}
+                />
                 <Route path="/snippets" element={<SnippetsPage />} />
               </>
             )}

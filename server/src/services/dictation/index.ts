@@ -15,7 +15,7 @@ export {
 
 export { ensureOllamaRunning, stopOllamaServer } from "./ollama-server";
 
-export { logDictation } from "./history";
+export { logDictation, readDictationHistory } from "./history";
 
 export {
   AVAILABLE_MODELS,

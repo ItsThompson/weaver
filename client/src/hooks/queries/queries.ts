@@ -8,6 +8,7 @@ import {
   getSkillGraph,
   getSkillDetail,
   getSnippets,
+  getDictationHistory,
 } from "../../utils/api";
 
 export const KEYS = {
@@ -18,6 +19,7 @@ export const KEYS = {
   config: "/config",
   skills: "/skills",
   snippets: "/snippets",
+  dictationHistory: "/dictation/history",
   skill: (name: string, project?: string, source?: string) => {
     const params = new URLSearchParams();
     if (project) {
@@ -76,3 +78,8 @@ export const revalidateSkillDetail = (
 export const useSnippetsQuery = () => useSWR(KEYS.snippets, getSnippets);
 
 export const revalidateSnippets = () => mutate(KEYS.snippets);
+
+export const useDictationHistoryQuery = () =>
+  useSWR(KEYS.dictationHistory, getDictationHistory);
+
+export const revalidateDictationHistory = () => mutate(KEYS.dictationHistory);

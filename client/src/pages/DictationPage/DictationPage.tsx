@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import Header from "@cloudscape-design/components/header";
 import Alert from "@cloudscape-design/components/alert";
@@ -10,6 +11,10 @@ import { useAudioDevices } from "../../hooks/useAudioDevices";
 import { patchConfig } from "../../utils/api";
 import { useNotifications } from "../../context/NotificationContext/NotificationContext";
 import { MicrophoneSelector } from "../../components/MicrophoneSelector";
+import {
+  ActionDropdown,
+  type ActionItem,
+} from "../../components/ActionDropdown";
 import { PreflightCheck } from "./components/PreflightCheck";
 import { TranscriptPanel } from "./components/TranscriptPanel";
 import { DictationControls } from "./components/DictationControls";
@@ -44,6 +49,7 @@ function ollamaErrorAlert(
 }
 
 export function DictationPage() {
+  const navigate = useNavigate();
   const { data: configData } = useConfigQuery();
   const config = configData?.config;
   const savedDeviceId = config?.dictation?.microphone_device_id ?? "";
@@ -126,9 +132,29 @@ export function DictationPage() {
       ? ollamaErrorAlert(state.ollamaError, state.ollamaModel)
       : null;
 
+  const headerActions: ActionItem[] = [
+    {
+      id: "manage-snippets",
+      text: "Manage Snippets",
+      action: () => navigate("/snippets"),
+    },
+    {
+      id: "dictation-history",
+      text: "Dictation History",
+      action: () => navigate("/dictation/history"),
+    },
+  ];
+
   return (
     <SpaceBetween size="l">
-      <Header variant="h1">Dictation</Header>
+      <Header
+        variant="h1"
+        actions={
+          <ActionDropdown actions={headerActions}>Actions</ActionDropdown>
+        }
+      >
+        Dictation
+      </Header>
 
       {hotkeyActive && (
         <Alert type="info">

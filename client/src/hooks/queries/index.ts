@@ -15,4 +15,6 @@ export {
   revalidateSkillDetail,
   useSnippetsQuery,
   revalidateSnippets,
+  useDictationHistoryQuery,
+  revalidateDictationHistory,
 } from "./queries";

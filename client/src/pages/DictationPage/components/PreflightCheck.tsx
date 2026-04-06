@@ -1,5 +1,6 @@
 import SpaceBetween from "@cloudscape-design/components/space-between";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
+import Popover from "@cloudscape-design/components/popover";
 import Box from "@cloudscape-design/components/box";
 import type { PreflightCheckProps } from "../types";
 
@@ -15,16 +16,36 @@ function ollamaHelpText(
   return null;
 }
 
-function micIndicatorType(
-  status: "loading" | "success" | "warning" | "error",
-): "success" | "warning" | "error" {
-  if (status === "success") {
-    return "success";
+interface CheckResult {
+  label: string;
+  passed: boolean;
+  detail?: string | null;
+}
+
+function buildChecks(
+  whisperStatus: boolean,
+  ollamaStatus: boolean,
+  ollamaError: "not_installed" | "model_not_found" | null,
+  micStatus?: "loading" | "success" | "warning" | "error",
+  micLabel?: string,
+): CheckResult[] {
+  const checks: CheckResult[] = [
+    { label: "Whisper", passed: whisperStatus },
+    {
+      label: "Ollama",
+      passed: ollamaStatus,
+      detail: !ollamaStatus ? ollamaHelpText(ollamaError) : null,
+    },
+  ];
+  if (micStatus) {
+    checks.push({
+      label: "Microphone",
+      passed: micStatus === "success",
+      detail:
+        micStatus !== "success" && micStatus !== "loading" ? micLabel : null,
+    });
   }
-  if (status === "error") {
-    return "error";
-  }
-  return "warning";
+  return checks;
 }
 
 export function PreflightCheck({
@@ -37,38 +58,50 @@ export function PreflightCheck({
 }: PreflightCheckProps) {
   const loading = phase === "idle" || phase === "preflight_checking";
 
-  function indicatorType(ready: boolean) {
-    if (loading) {
-      return "warning";
-    }
-    return ready ? "success" : "error";
+  if (loading) {
+    return (
+      <StatusIndicator type="in-progress">Checking services...</StatusIndicator>
+    );
   }
 
-  const helpText =
-    !loading && !ollamaStatus ? ollamaHelpText(ollamaError) : null;
+  const checks = buildChecks(
+    whisperStatus,
+    ollamaStatus,
+    ollamaError,
+    micStatus,
+    micLabel,
+  );
+  const passedCount = checks.filter((check) => check.passed).length;
+  const allPassed = passedCount === checks.length;
 
   return (
-    <SpaceBetween size="xs">
-      <SpaceBetween size="xs" direction="horizontal">
-        <StatusIndicator type={indicatorType(whisperStatus)}>
-          {loading ? "Whisper: checking..." : "Whisper"}
-        </StatusIndicator>
-        <StatusIndicator type={indicatorType(ollamaStatus)}>
-          {loading ? "Ollama: checking..." : "Ollama"}
-        </StatusIndicator>
-        {micStatus && (
-          <StatusIndicator type={micIndicatorType(micStatus)}>
-            {micStatus === "loading"
-              ? "Microphone: checking..."
-              : `Microphone: ${micLabel}`}
-          </StatusIndicator>
-        )}
-      </SpaceBetween>
-      {helpText && (
-        <Box color="text-status-error" fontSize="body-s">
-          {helpText}
-        </Box>
-      )}
-    </SpaceBetween>
+    <Popover
+      header="Preflight checks"
+      content={
+        <SpaceBetween size="xs">
+          {checks.map((check) => (
+            <div key={check.label}>
+              <StatusIndicator type={check.passed ? "success" : "error"}>
+                {check.label}
+              </StatusIndicator>
+              {check.detail && (
+                <Box
+                  color="text-status-error"
+                  fontSize="body-s"
+                  padding={{ left: "l" }}
+                >
+                  {check.detail}
+                </Box>
+              )}
+            </div>
+          ))}
+        </SpaceBetween>
+      }
+      triggerType="custom"
+    >
+      <StatusIndicator type={allPassed ? "success" : "error"}>
+        {passedCount}/{checks.length} checks passed
+      </StatusIndicator>
+    </Popover>
   );
 }
