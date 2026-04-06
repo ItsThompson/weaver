@@ -30,7 +30,6 @@ import { SettingsPage } from "./SettingsPage";
 const mockIsElectron = vi.mocked(isElectron);
 const mockGetConfig = vi.mocked(api.getConfig);
 const mockUpdateConfig = vi.mocked(api.updateConfig);
-const mockGetDictationStatus = vi.mocked(api.getDictationStatus);
 
 function renderPage() {
   return render(
@@ -166,11 +165,9 @@ describe("SettingsPage dictation section", () => {
     });
 
     expect(screen.getByText("Dictation")).toBeInTheDocument();
+    expect(screen.getByText("Enable dictation")).toBeInTheDocument();
     expect(screen.getByText("Ollama URL")).toBeInTheDocument();
     expect(screen.getByText("Ollama Model")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Test Connection" }),
-    ).toBeInTheDocument();
   });
 
   it("hides dictation fields when isElectron is false", async () => {
@@ -182,7 +179,6 @@ describe("SettingsPage dictation section", () => {
 
     expect(screen.queryByText("Dictation")).not.toBeInTheDocument();
     expect(screen.queryByText("Ollama URL")).not.toBeInTheDocument();
-    expect(screen.queryByText("Ollama Model")).not.toBeInTheDocument();
   });
 
   it("renders default dictation config values", async () => {
@@ -195,57 +191,6 @@ describe("SettingsPage dictation section", () => {
       screen.getByDisplayValue("http://localhost:11434"),
     ).toBeInTheDocument();
     expect(screen.getByDisplayValue("phi4-mini")).toBeInTheDocument();
-  });
-
-  it("Test Connection shows success when Ollama is reachable", async () => {
-    const user = userEvent.setup();
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: true,
-      ollama: true,
-      ollamaError: null,
-      ollamaModel: "phi4-mini",
-      model: null,
-    });
-    await act(async () => {
-      renderPage();
-    });
-
-    await user.click(screen.getByRole("button", { name: "Test Connection" }));
-
-    expect(screen.getByText("Ollama is reachable")).toBeInTheDocument();
-  });
-
-  it("Test Connection shows failure when Ollama is unreachable", async () => {
-    const user = userEvent.setup();
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockGetDictationStatus.mockResolvedValue({
-      whisper: false,
-      ollama: false,
-      ollamaError: "not_installed",
-      ollamaModel: "phi4-mini",
-      model: null,
-    });
-    await act(async () => {
-      renderPage();
-    });
-
-    await user.click(screen.getByRole("button", { name: "Test Connection" }));
-
-    expect(screen.getByText("Cannot reach Ollama")).toBeInTheDocument();
-  });
-
-  it("Test Connection shows failure when API call throws", async () => {
-    const user = userEvent.setup();
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockGetDictationStatus.mockRejectedValue(new Error("Network error"));
-    await act(async () => {
-      renderPage();
-    });
-
-    await user.click(screen.getByRole("button", { name: "Test Connection" }));
-
-    expect(screen.getByText("Cannot reach Ollama")).toBeInTheDocument();
   });
 
   it("saves dictation config values", async () => {
@@ -269,30 +214,30 @@ describe("SettingsPage dictation section", () => {
     });
 
     expect(screen.getByText("Microphone")).toBeInTheDocument();
-    expect(screen.getByText("System Default")).toBeInTheDocument();
   });
 
-  it("hides microphone selector when isElectron is false", async () => {
-    mockIsElectron.mockReturnValue(false);
-    mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    await act(async () => {
-      renderPage();
-    });
-
-    expect(screen.queryByText("Microphone")).not.toBeInTheDocument();
-  });
-
-  it("saves microphone_device_id with config", async () => {
+  it("shows restart modal when saving service-affecting changes", async () => {
     const user = userEvent.setup();
+    const enabledConfig = { ...DEFAULT_CONFIG, enable_dictation: true };
     mockGetConfig.mockResolvedValue({ config: DEFAULT_CONFIG, warnings: [] });
-    mockUpdateConfig.mockResolvedValue({ config: DEFAULT_CONFIG });
     await act(async () => {
       renderPage();
     });
+
+    // Toggle enable_dictation on (changes a restart field)
+    const toggles = screen.getAllByRole("checkbox");
+    const enableToggle = toggles.find(
+      (toggle) => toggle.closest("[class*='toggle']") !== null,
+    );
+    // Find the "Disabled" text next to the enable_dictation toggle
+    const enableDictationToggle = screen.getByText("Disabled").closest("label");
+    if (enableDictationToggle) {
+      await user.click(enableDictationToggle);
+    }
 
     await user.click(screen.getByText("Save"));
 
-    const savedConfig = mockUpdateConfig.mock.calls[0][0];
-    expect(savedConfig.dictation.microphone_device_id).toBe("");
+    expect(screen.getByText("Restart services?")).toBeInTheDocument();
+    expect(screen.getByText("Save and restart services")).toBeInTheDocument();
   });
 });

@@ -13,35 +13,58 @@ import Spinner from "@cloudscape-design/components/spinner";
 import Box from "@cloudscape-design/components/box";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import { isElectron } from "../../utils/isElectron";
-import { getDictationStatus } from "../../utils/api";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
+import { useServicesStatus } from "../../hooks/useServicesStatus";
 import { MicrophoneSelector } from "../../components/MicrophoneSelector";
 import { TestRunnersField } from "./components/TestRunnersField";
 import { SkillPathsField } from "./components/SkillPathsField";
 import { SkillGraphCategoriesField } from "./components/SkillGraphCategoriesField";
+import { ServiceRestartModal } from "./components/ServiceRestartModal";
+
+function ollamaStatusType(
+  state: string,
+): "success" | "error" | "in-progress" | "info" {
+  if (state === "running") {
+    return "success";
+  }
+  if (state === "starting") {
+    return "in-progress";
+  }
+  if (state === "not_configured") {
+    return "info";
+  }
+  return "error";
+}
 
 export function SettingsPage() {
   const { addNotification } = useNotifications();
   const { state, actions } = useSettings(addNotification);
-  const { config, saving, isLoading, warnings, hasWarnings } = state;
+  const {
+    config,
+    saving,
+    isLoading,
+    warnings,
+    hasWarnings,
+    needsServiceRestart,
+  } = state;
   const { setConfig, handleSave } = actions;
-  const [testingConnection, setTestingConnection] = useState(false);
-  const [connectionResult, setConnectionResult] = useState<{
-    ollama: boolean;
-  } | null>(null);
+  const [showRestartModal, setShowRestartModal] = useState(false);
+  const { status: servicesStatus } = useServicesStatus();
 
-  const handleTestConnection = async () => {
-    setTestingConnection(true);
-    setConnectionResult(null);
-    try {
-      const status = await getDictationStatus();
-      setConnectionResult({ ollama: status.ollama });
-    } catch {
-      setConnectionResult({ ollama: false });
-    } finally {
-      setTestingConnection(false);
+  const dictationDisabled = !config.enable_dictation;
+
+  const onSaveClick = () => {
+    if (needsServiceRestart) {
+      setShowRestartModal(true);
+    } else {
+      handleSave();
     }
+  };
+
+  const onConfirmRestart = () => {
+    setShowRestartModal(false);
+    handleSave();
   };
 
   if (isLoading) {
@@ -67,7 +90,7 @@ export function SettingsPage() {
         actions={
           <Button
             variant="primary"
-            onClick={handleSave}
+            onClick={onSaveClick}
             loading={saving}
             disabled={hasWarnings || isLoading}
           >
@@ -177,6 +200,23 @@ export function SettingsPage() {
               <>
                 <Header variant="h3">Dictation</Header>
                 <FormField
+                  label="Enable dictation"
+                  description="Start whisper and optionally ollama for voice-to-text"
+                >
+                  <Toggle
+                    checked={config.enable_dictation}
+                    onChange={({ detail }) =>
+                      setConfig((prev) => ({
+                        ...prev,
+                        enable_dictation: detail.checked,
+                      }))
+                    }
+                    disabled={hasWarnings}
+                  >
+                    {config.enable_dictation ? "Enabled" : "Disabled"}
+                  </Toggle>
+                </FormField>
+                <FormField
                   label="Microphone"
                   description="Select which microphone to use for dictation"
                 >
@@ -191,7 +231,7 @@ export function SettingsPage() {
                         },
                       }))
                     }
-                    disabled={hasWarnings}
+                    disabled={hasWarnings || dictationDisabled}
                   />
                 </FormField>
                 <FormField
@@ -209,7 +249,7 @@ export function SettingsPage() {
                         },
                       }))
                     }
-                    disabled={hasWarnings}
+                    disabled={hasWarnings || dictationDisabled}
                   >
                     {config.dictation.llm_cleanup ? "Enabled" : "Disabled"}
                   </Toggle>
@@ -231,29 +271,22 @@ export function SettingsPage() {
                             },
                           }))
                         }
-                        disabled={hasWarnings}
+                        disabled={hasWarnings || dictationDisabled}
                         placeholder="http://localhost:11434"
                       />
                     </Box>
-                    <Button
-                      onClick={handleTestConnection}
-                      loading={testingConnection}
-                      disabled={hasWarnings}
-                    >
-                      Test Connection
-                    </Button>
+                    {servicesStatus && (
+                      <Box padding={{ top: "xs" }}>
+                        <StatusIndicator
+                          type={ollamaStatusType(
+                            servicesStatus.services.ollama.state,
+                          )}
+                        >
+                          {servicesStatus.services.ollama.state}
+                        </StatusIndicator>
+                      </Box>
+                    )}
                   </SpaceBetween>
-                  {connectionResult && (
-                    <Box margin={{ top: "xs" }}>
-                      <StatusIndicator
-                        type={connectionResult.ollama ? "success" : "error"}
-                      >
-                        {connectionResult.ollama
-                          ? "Ollama is reachable"
-                          : "Cannot reach Ollama"}
-                      </StatusIndicator>
-                    </Box>
-                  )}
                 </FormField>
                 <FormField
                   label="Ollama Model"
@@ -270,7 +303,7 @@ export function SettingsPage() {
                         },
                       }))
                     }
-                    disabled={hasWarnings}
+                    disabled={hasWarnings || dictationDisabled}
                     placeholder="phi4-mini"
                   />
                 </FormField>
@@ -279,6 +312,11 @@ export function SettingsPage() {
           </SpaceBetween>
         </Container>
       </Form>
+      <ServiceRestartModal
+        visible={showRestartModal}
+        onConfirm={onConfirmRestart}
+        onCancel={() => setShowRestartModal(false)}
+      />
     </SpaceBetween>
   );
 }
