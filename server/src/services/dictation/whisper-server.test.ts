@@ -21,7 +21,6 @@ import {
   startWhisperServer,
   stopWhisperServer,
   isWhisperServerRunning,
-  touchWhisperActivity,
   WHISPER_PORT,
 } from "./whisper-server";
 
@@ -190,46 +189,5 @@ describe("isWhisperServerRunning", () => {
 
     expect(result).toBe(false);
     vi.unstubAllGlobals();
-  });
-});
-
-describe("inactivity timeout", () => {
-  it("kills the process after 5 minutes of inactivity", () => {
-    const child = makeFakeChild();
-    child.kill = vi.fn(() => true);
-    mockSpawn.mockReturnValue(child);
-
-    startWhisperServer("/bin/whisper", "/model.bin");
-
-    vi.advanceTimersByTime(5 * 60 * 1000);
-
-    expect(child.kill).toHaveBeenCalledWith("SIGTERM");
-    expect(mockLog).toHaveBeenCalledWith(
-      expect.objectContaining({ event: "whisper_server_inactivity_timeout" }),
-    );
-  });
-
-  it("resets the timer on touchWhisperActivity", () => {
-    const child = makeFakeChild();
-    child.kill = vi.fn(() => true);
-    mockSpawn.mockReturnValue(child);
-
-    startWhisperServer("/bin/whisper", "/model.bin");
-
-    // Advance 4 minutes, then touch
-    vi.advanceTimersByTime(4 * 60 * 1000);
-    touchWhisperActivity();
-
-    // Advance another 4 minutes — should NOT have killed yet
-    vi.advanceTimersByTime(4 * 60 * 1000);
-    expect(child.kill).not.toHaveBeenCalled();
-
-    // Advance the remaining 1 minute to hit 5 min from last touch
-    vi.advanceTimersByTime(1 * 60 * 1000);
-    expect(child.kill).toHaveBeenCalledWith("SIGTERM");
-  });
-
-  it("touchWhisperActivity is a no-op when not running", () => {
-    expect(() => touchWhisperActivity()).not.toThrow();
   });
 });

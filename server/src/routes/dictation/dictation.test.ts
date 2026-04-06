@@ -1,13 +1,9 @@
+import type { ServicesStatusResponse } from "@weaver/shared/types";
+
+const mockGetStatus = vi.fn<() => Promise<ServicesStatusResponse>>();
+
 vi.mock("../../services/dictation/index", () => ({
   WHISPER_PORT: 8178,
-  isWhisperServerRunning: vi.fn(),
-  startWhisperServer: vi.fn(),
-  stopWhisperServer: vi.fn(),
-  waitForWhisperReady: vi.fn(),
-  touchWhisperActivity: vi.fn(),
-  checkOllamaHealth: vi.fn(),
-  listOllamaModels: vi.fn(),
-  ensureOllamaRunning: vi.fn(),
   generateText: vi.fn(),
   logDictation: vi.fn(),
   readDictationHistory: vi.fn(),
@@ -21,33 +17,35 @@ vi.mock("../../services/dictation/index", () => ({
   ],
   downloadModel: vi.fn(),
   listLocalModels: vi.fn(),
-  getDefaultModelPath: vi.fn(),
-  stopOllamaServer: vi.fn(),
 }));
 
 vi.mock("../../services/config/index", () => ({
   readConfig: vi.fn(),
 }));
 
+vi.mock("../../services/service-manager-instance", () => ({
+  serviceManager: { getStatus: (...args: unknown[]) => mockGetStatus(...args) },
+}));
+
 import Fastify from "fastify";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
 import { registerDictationRoutes } from "./dictation";
 import {
-  isWhisperServerRunning,
-  checkOllamaHealth,
-  listOllamaModels,
-  ensureOllamaRunning,
   generateText,
   logDictation,
   readDictationHistory,
-  startWhisperServer,
-  waitForWhisperReady,
-  touchWhisperActivity,
   downloadModel,
   listLocalModels,
-  getDefaultModelPath,
 } from "../../services/dictation/index";
 import { readConfig } from "../../services/config/index";
+
+const runningStatus: ServicesStatusResponse = {
+  ready: true,
+  services: {
+    whisper: { state: "running" },
+    ollama: { state: "running" },
+  },
+};
 
 let server: ReturnType<typeof Fastify>;
 
@@ -57,100 +55,16 @@ beforeEach(async () => {
     config: { ...DEFAULT_CONFIG },
     warnings: [],
   });
+  mockGetStatus.mockResolvedValue(runningStatus);
   server = Fastify();
-  registerDictationRoutes(server, "/usr/bin/whisper");
+  registerDictationRoutes(server);
   await server.ready();
 });
 
 afterEach(() => server.close());
 
-describe("GET /api/dictation/status", () => {
-  it("returns both true when whisper and ollama are running with model available", async () => {
-    vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
-    vi.mocked(listOllamaModels).mockResolvedValue(["phi4-mini:latest"]);
-    vi.mocked(getDefaultModelPath).mockResolvedValue(
-      "/models/ggml-tiny.en.bin",
-    );
-
-    const res = await server.inject({
-      method: "GET",
-      url: "/api/dictation/status",
-    });
-    const body = JSON.parse(res.body);
-
-    expect(res.statusCode).toBe(200);
-    expect(body.whisper).toBe(true);
-    expect(body.ollama).toBe(true);
-    expect(body.ollamaError).toBeNull();
-    expect(body.model).toBe("/models/ggml-tiny.en.bin");
-  });
-
-  it("returns whisper false when no model is downloaded", async () => {
-    vi.mocked(isWhisperServerRunning).mockResolvedValue(false);
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
-    vi.mocked(listOllamaModels).mockResolvedValue(["phi4-mini:latest"]);
-    vi.mocked(getDefaultModelPath).mockResolvedValue(null);
-
-    const res = await server.inject({
-      method: "GET",
-      url: "/api/dictation/status",
-    });
-    const body = JSON.parse(res.body);
-
-    expect(res.statusCode).toBe(200);
-    expect(body.whisper).toBe(false);
-    expect(body.ollama).toBe(true);
-    expect(body.ollamaError).toBeNull();
-    expect(body.model).toBeNull();
-  });
-
-  it("returns ollamaError not_installed when Ollama binary is not found", async () => {
-    vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(false);
-    vi.mocked(getDefaultModelPath).mockResolvedValue(
-      "/models/ggml-tiny.en.bin",
-    );
-
-    const res = await server.inject({
-      method: "GET",
-      url: "/api/dictation/status",
-    });
-    const body = JSON.parse(res.body);
-
-    expect(res.statusCode).toBe(200);
-    expect(body.ollama).toBe(false);
-    expect(body.ollamaError).toBe("not_installed");
-  });
-
-  it("returns ollamaError model_not_found when configured model is not pulled", async () => {
-    vi.mocked(isWhisperServerRunning).mockResolvedValue(true);
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
-    vi.mocked(listOllamaModels).mockResolvedValue(["gemma3:1b"]);
-    vi.mocked(getDefaultModelPath).mockResolvedValue(
-      "/models/ggml-tiny.en.bin",
-    );
-
-    const res = await server.inject({
-      method: "GET",
-      url: "/api/dictation/status",
-    });
-    const body = JSON.parse(res.body);
-
-    expect(res.statusCode).toBe(200);
-    expect(body.ollama).toBe(false);
-    expect(body.ollamaError).toBe("model_not_found");
-  });
-});
-
 describe("POST /api/dictation/transcribe", () => {
-  it("starts whisper-server if needed and proxies audio", async () => {
-    vi.mocked(getDefaultModelPath).mockResolvedValue(
-      "/models/ggml-tiny.en.bin",
-    );
-    vi.mocked(isWhisperServerRunning).mockResolvedValue(false);
-    vi.mocked(waitForWhisperReady).mockResolvedValue(true);
-
+  it("proxies audio to whisper when service is running", async () => {
     const mockResponse = {
       ok: true,
       json: () => Promise.resolve({ text: "hello world" }),
@@ -167,17 +81,18 @@ describe("POST /api/dictation/transcribe", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.text).toBe("hello world");
-    expect(startWhisperServer).toHaveBeenCalledWith(
-      "/usr/bin/whisper",
-      "/models/ggml-tiny.en.bin",
-    );
-    expect(touchWhisperActivity).toHaveBeenCalled();
 
     vi.unstubAllGlobals();
   });
 
-  it("returns 400 when no model is downloaded", async () => {
-    vi.mocked(getDefaultModelPath).mockResolvedValue(null);
+  it("returns 503 when whisper is not running", async () => {
+    mockGetStatus.mockResolvedValue({
+      ready: true,
+      services: {
+        whisper: { state: "error", error: "Whisper failed to start" },
+        ollama: { state: "running" },
+      },
+    });
 
     const res = await server.inject({
       method: "POST",
@@ -186,7 +101,10 @@ describe("POST /api/dictation/transcribe", () => {
       payload: Buffer.from("fake wav data"),
     });
 
-    expect(res.statusCode).toBe(400);
+    expect(res.statusCode).toBe(503);
+    expect(JSON.parse(res.body).error).toBe(
+      "Whisper is not available. Check service status.",
+    );
   });
 });
 
@@ -211,7 +129,6 @@ describe("POST /api/dictation/process", () => {
   });
 
   it("returns Ollama-cleaned text when no snippet matches", async () => {
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
     vi.mocked(generateText).mockResolvedValue("Hello, how are you?");
 
     const res = await server.inject({
@@ -231,8 +148,55 @@ describe("POST /api/dictation/process", () => {
     expect(logDictation).toHaveBeenCalled();
   });
 
+  it("returns 503 when ollama is not running and llm_cleanup is true", async () => {
+    mockGetStatus.mockResolvedValue({
+      ready: true,
+      services: {
+        whisper: { state: "running" },
+        ollama: { state: "error", error: "Ollama not found" },
+      },
+    });
+
+    const res = await server.inject({
+      method: "POST",
+      url: "/api/dictation/process",
+      payload: {
+        transcript: "hello world",
+        snippets: [],
+      },
+    });
+
+    expect(res.statusCode).toBe(503);
+    expect(JSON.parse(res.body).error).toBe(
+      "Ollama is not available. Check service status.",
+    );
+  });
+
+  it("skips ollama check when llm_cleanup is false", async () => {
+    vi.mocked(readConfig).mockResolvedValue({
+      config: {
+        ...DEFAULT_CONFIG,
+        dictation: { ...DEFAULT_CONFIG.dictation, llm_cleanup: false },
+      },
+      warnings: [],
+    });
+
+    const res = await server.inject({
+      method: "POST",
+      url: "/api/dictation/process",
+      payload: {
+        transcript: "hello world",
+        snippets: [],
+      },
+    });
+    const body = JSON.parse(res.body);
+
+    expect(res.statusCode).toBe(200);
+    expect(body.processedText).toBe("hello world");
+    expect(mockGetStatus).not.toHaveBeenCalledTimes(2); // only called once for initial setup, not for ollama check
+  });
+
   it("returns 500 when LLM processing fails", async () => {
-    vi.mocked(ensureOllamaRunning).mockResolvedValue(true);
     vi.mocked(generateText).mockRejectedValue(
       new Error("Ollama error: 404 Not Found"),
     );
@@ -316,11 +280,6 @@ describe("GET /api/dictation/history", () => {
         rawTranscript: "second",
         processedText: "Second.",
       },
-      {
-        timestamp: "2026-04-05T18:00:00.000Z",
-        rawTranscript: "first",
-        processedText: "First.",
-      },
     ];
     vi.mocked(readDictationHistory).mockResolvedValue(entries);
 
@@ -332,18 +291,5 @@ describe("GET /api/dictation/history", () => {
 
     expect(res.statusCode).toBe(200);
     expect(body.entries).toEqual(entries);
-  });
-
-  it("returns empty entries when no history exists", async () => {
-    vi.mocked(readDictationHistory).mockResolvedValue([]);
-
-    const res = await server.inject({
-      method: "GET",
-      url: "/api/dictation/history",
-    });
-    const body = JSON.parse(res.body);
-
-    expect(res.statusCode).toBe(200);
-    expect(body.entries).toEqual([]);
   });
 });

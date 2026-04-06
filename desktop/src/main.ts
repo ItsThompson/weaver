@@ -71,7 +71,14 @@ app.on("ready", async () => {
     isMiniMode,
   );
   globalShortcut.register("F5", toggleWindow);
-  globalShortcut.register("F4", handleDictationHotkey);
+  globalShortcut.register("F4", () =>
+    handleDictationHotkey({
+      getConfig: () => currentConfig,
+      serverUrl: server.SERVER_URL,
+    }).catch(() => {
+      /* errors are shown as notifications inside the handler */
+    }),
+  );
   setupDictation();
   showWindow(); // marks visible=true; actual show happens on ready-to-show
 

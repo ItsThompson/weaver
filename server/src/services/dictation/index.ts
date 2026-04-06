@@ -4,7 +4,6 @@ export {
   stopWhisperServer,
   isWhisperServerRunning,
   waitForWhisperReady,
-  touchWhisperActivity,
 } from "./whisper-server";
 
 export {
@@ -13,7 +12,7 @@ export {
   generateText,
 } from "./ollama-client";
 
-export { ensureOllamaRunning, stopOllamaServer } from "./ollama-server";
+export { stopOllamaServer } from "./ollama-server";
 
 export { logDictation, readDictationHistory } from "./history";
 

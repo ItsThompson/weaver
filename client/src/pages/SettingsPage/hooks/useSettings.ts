@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
-import { DEFAULT_CONFIG, type WeaverConfig } from "@weaver/shared/types";
+import { useState, useEffect, useMemo } from "react";
+import {
+  DEFAULT_CONFIG,
+  needsServiceRestart,
+  type WeaverConfig,
+} from "@weaver/shared/types";
 import { useConfigQuery, revalidateConfig } from "../../../hooks/queries";
 import { updateConfig } from "../../../utils/api";
 
@@ -9,6 +13,7 @@ export interface SettingsState {
   isLoading: boolean;
   warnings: string[];
   hasWarnings: boolean;
+  needsServiceRestart: boolean;
 }
 
 export interface SettingsActions {
@@ -39,6 +44,13 @@ export function useSettings(
     }
   }, [serverConfig]);
 
+  const needsRestart = useMemo(() => {
+    if (!serverConfig) {
+      return false;
+    }
+    return needsServiceRestart(serverConfig, config);
+  }, [serverConfig, config]);
+
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -62,6 +74,7 @@ export function useSettings(
       isLoading: fetching || !serverConfig,
       warnings,
       hasWarnings,
+      needsServiceRestart: needsRestart,
     },
     actions: { setConfig, handleSave },
   };

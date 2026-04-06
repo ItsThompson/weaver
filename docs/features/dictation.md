@@ -4,6 +4,21 @@ Dictation lets you speak into your microphone and get cleaned-up text, entirely 
 
 This feature is only available in the desktop app (Electron). It does not appear in browser dev mode.
 
+## Enabling dictation
+
+Dictation is disabled by default. To enable it, go to **Settings** > **Dictation** and toggle **Enable dictation** on. This starts the whisper speech recognition server on app launch. If LLM cleanup is also enabled, Ollama starts alongside whisper.
+
+When you change the `enable_dictation` toggle (or other service-affecting settings like `llm_cleanup`, `ollama_url`, or `ollama_model`), a confirmation dialog appears before saving. After confirming, the app briefly returns to the startup screen while services reinitialize.
+
+## Startup status
+
+When the app launches with dictation enabled, a startup status page shows a checklist of service readiness:
+
+- Each configured service displays a status icon: a checkmark for running, a spinner for starting, or an error icon for failures
+- Once all services have reached a final state (running, error, or not configured), the app transitions to the normal dashboard
+- If a service fails to start, the app still proceeds: you can check the error in Settings
+- If services take longer than 30 seconds, a "Skip and continue" link appears
+
 ## Prerequisites
 
 Before using dictation, you need two things installed on your Mac:
@@ -22,15 +37,11 @@ Ollama must be running for LLM cleanup to work. If you disable LLM cleanup in se
 
 Open **Dictation** from the sidebar or command palette.
 
-### Preflight checks
+### Service status
 
-The page shows a compact summary of service readiness (e.g., "3/3 checks passed"). Click the summary to open a popover with the full breakdown:
+When dictation is disabled, the page shows an info message directing you to Settings. When enabled but a service has an error, an error alert is shown.
 
-- **Whisper**: green when a whisper model is available (the whisper server starts automatically when you begin dictation)
-- **Ollama**: green when the Ollama server is reachable
-- **Microphone**: green when an audio input device is available
-
-All checks must pass for the Start button to be enabled. If Ollama is not needed (LLM cleanup disabled), only Whisper and Microphone need to be ready.
+If no whisper model has been downloaded, the page shows the model download screen (see below). Otherwise, the recording controls are shown.
 
 ### Recording
 
@@ -57,7 +68,9 @@ Models are stored in `~/.weaver/models/`.
 
 ## Hotkey quick capture
 
-Press the dictation hotkey (default: **F4**) from anywhere (even when Weaver is not focused) to start a headless dictation:
+Press the dictation hotkey (default: **F4**) from anywhere (even when Weaver is not focused) to start a headless dictation. The hotkey checks whether dictation is enabled and services are ready before starting. If dictation is disabled, a notification tells you to enable it in Settings. If services are still starting, a notification asks you to wait.
+
+When conditions are met:
 
 1. **First press**: a macOS notification appears saying "Listening..." and audio capture begins
 2. **Second press**: a notification says "Processing..." and the transcript is sent through the cleanup pipeline

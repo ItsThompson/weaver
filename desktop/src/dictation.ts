@@ -1,4 +1,5 @@
 import { BrowserWindow, clipboard, ipcMain, Notification } from "electron";
+import type { WeaverConfig } from "@weaver/shared/types";
 
 type DictationState = "idle" | "recording" | "processing";
 
@@ -45,7 +46,41 @@ export function setupDictation(): void {
   });
 }
 
-export function handleDictationHotkey(): void {
+interface DictationHotkeyDeps {
+  getConfig: () => WeaverConfig;
+  serverUrl: string;
+}
+
+export async function handleDictationHotkey(
+  deps: DictationHotkeyDeps,
+): Promise<void> {
+  if (!deps.getConfig().enable_dictation) {
+    notify("Weaver Dictation", "Dictation is disabled. Enable it in Settings.");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${deps.serverUrl}/api/services/status`);
+    const status = await res.json();
+    if (!status.ready) {
+      notify(
+        "Weaver Dictation",
+        "Dictation services are still starting. Please wait.",
+      );
+      return;
+    }
+    if (status.services.whisper.state !== "running") {
+      notify(
+        "Weaver Dictation",
+        "Whisper is not running. Check service status in Settings.",
+      );
+      return;
+    }
+  } catch {
+    notify("Weaver Dictation", "Cannot reach Weaver server.");
+    return;
+  }
+
   if (state === "idle") {
     send("dictation-command", "start");
     state = "recording";

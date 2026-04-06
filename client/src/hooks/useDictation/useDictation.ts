@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useAudioCapture } from "../useAudioCapture";
 import { resolveDeviceId } from "../useAudioDevices";
 import {
-  getDictationStatus,
   transcribeAudio,
   processTranscript,
   getSnippets,
@@ -10,30 +9,12 @@ import {
 import { playNotificationSound } from "../notifications/soundUtils";
 import type { DictationState, DictationActions } from "./types";
 
-function getDictationError(
-  ollamaOk: boolean,
-  whisperOk: boolean,
-): string | null {
-  if (!ollamaOk) {
-    return "Ollama is not available";
-  }
-  if (!whisperOk) {
-    return "No whisper model downloaded";
-  }
-  return null;
-}
-
 const INITIAL_STATE: DictationState = {
   phase: "idle",
   rawTranscript: "",
   processedText: "",
   error: null,
   deviceWarning: null,
-  whisperStatus: false,
-  ollamaStatus: false,
-  ollamaError: null,
-  ollamaModel: "",
-  hasModel: false,
   hotkeyActive: false,
 };
 
@@ -114,31 +95,6 @@ export function useDictation(deviceId?: string): {
     });
   }, []);
 
-  const checkServices = useCallback(async () => {
-    setState((s) => ({ ...s, phase: "preflight_checking" }));
-    try {
-      const status = await getDictationStatus();
-      const whisperOk = status.whisper;
-      const ollamaOk = status.ollama;
-      setState((s) => ({
-        ...s,
-        whisperStatus: whisperOk,
-        ollamaStatus: ollamaOk,
-        ollamaError: status.ollamaError,
-        ollamaModel: status.ollamaModel,
-        hasModel: !!status.model,
-        phase: whisperOk && ollamaOk ? "ready" : "error",
-        error: getDictationError(ollamaOk, whisperOk),
-      }));
-    } catch {
-      setState((s) => ({
-        ...s,
-        phase: "error",
-        error: "Failed to check services",
-      }));
-    }
-  }, []);
-
   const startDictation = useCallback(async () => {
     transcriptRef.current = "";
     pendingRef.current = Promise.resolve();
@@ -195,12 +151,6 @@ export function useDictation(deviceId?: string): {
 
   return {
     state,
-    actions: {
-      checkServices,
-      startDictation,
-      stopDictation,
-      copyToClipboard,
-      reset,
-    },
+    actions: { startDictation, stopDictation, copyToClipboard, reset },
   };
 }

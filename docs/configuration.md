@@ -10,6 +10,7 @@ Changes made via the Settings page or CLI take effect immediately. If you edit t
 
 | Option                       | Type                     | Default     | Description                                                  |
 | ---------------------------- | ------------------------ | ----------- | ------------------------------------------------------------ |
+| `enable_dictation`           | `boolean`                | `false`     | Enable the dictation subsystem (desktop app only)            |
 | `enable_notification_sounds` | `boolean`                | `true`      | Play sounds on session events                                |
 | `dark_mode`                  | `boolean`                | `true`      | Dark theme for the dashboard                                 |
 | `ghost_mode`                 | `boolean`                | `false`     | Transparent click-through overlay mode                       |
@@ -82,6 +83,10 @@ Categories can also be managed from the Settings page (bulk editing) or the Skil
 
 Configure the local dictation pipeline. These settings only apply in the desktop app. They can be managed from the Settings page under the "Dictation" heading.
 
+Set `enable_dictation` to `true` to start the dictation subsystem. When enabled, whisper starts eagerly on app launch. When disabled, no dictation services run.
+
+Changing `enable_dictation`, `dictation.llm_cleanup`, `dictation.ollama_url`, or `dictation.ollama_model` triggers a service restart with a confirmation prompt.
+
 | Option                   | Type      | Default                    | Description                                                        |
 | ------------------------ | --------- | -------------------------- | ------------------------------------------------------------------ |
 | `dictation.ollama_url`   | `string`  | `"http://localhost:11434"` | URL of the Ollama server                                           |
@@ -90,10 +95,11 @@ Configure the local dictation pipeline. These settings only apply in the desktop
 
 Recommended models: `phi4-mini` (best quality), `qwen3:1.7b` (fast, multilingual), `gemma3:1b` (smallest download).
 
-The Settings page includes a **Test Connection** button next to the Ollama URL field that checks whether Ollama is reachable.
+The Settings page shows an inline status indicator next to the Ollama URL field displaying the current ollama service state.
 
 ```json
 {
+  "enable_dictation": true,
   "dictation": {
     "ollama_url": "http://localhost:11434",
     "ollama_model": "phi4-mini",
@@ -106,6 +112,7 @@ The Settings page includes a **Test Connection** button next to the Ollama URL f
 
 ```json
 {
+  "enable_dictation": true,
   "enable_notification_sounds": true,
   "dark_mode": true,
   "ghost_mode": false,

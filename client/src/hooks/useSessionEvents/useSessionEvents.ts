@@ -1,42 +1,53 @@
-import { useEffect } from "react";
+import { useRef, useMemo, useCallback, useEffect } from "react";
 import {
   revalidateSessions,
   revalidateSession,
   revalidateConfig,
 } from "../queries";
+import { useSSE } from "../useSSE";
 
 export function useSessionEvents(debounceMs = 1000): void {
+  const pendingRef = useRef(new Map<string, ReturnType<typeof setTimeout>>());
+
+  // Clear pending timers on unmount
   useEffect(() => {
-    const pending = new Map<string, ReturnType<typeof setTimeout>>();
-    const source = new EventSource("/api/events");
-
-    source.addEventListener("update", (event: MessageEvent) => {
-      try {
-        const { sessionId } = JSON.parse(event.data) as { sessionId: string };
-        const existing = pending.get(sessionId);
-        if (existing) {
-          clearTimeout(existing);
-        }
-        pending.set(
-          sessionId,
-          setTimeout(() => {
-            pending.delete(sessionId);
-            revalidateSessions();
-            revalidateSession(sessionId);
-          }, debounceMs),
-        );
-      } catch (e) {
-        console.warn("Failed to parse session update event:", e);
-      }
-    });
-
-    source.addEventListener("configChanged", () => {
-      revalidateConfig();
-    });
-
     return () => {
-      source.close();
-      pending.forEach((timer) => clearTimeout(timer));
+      pendingRef.current.forEach((timer) => clearTimeout(timer));
+      pendingRef.current.clear();
     };
-  }, [debounceMs]);
+  }, []);
+
+  const handleUpdate = useCallback(
+    (data: Record<string, unknown>) => {
+      const { sessionId } = data as { sessionId: string };
+      const pending = pendingRef.current;
+      const existing = pending.get(sessionId);
+      if (existing) {
+        clearTimeout(existing);
+      }
+      pending.set(
+        sessionId,
+        setTimeout(() => {
+          pending.delete(sessionId);
+          revalidateSessions();
+          revalidateSession(sessionId);
+        }, debounceMs),
+      );
+    },
+    [debounceMs],
+  );
+
+  const handleConfigChanged = useCallback(() => {
+    revalidateConfig();
+  }, []);
+
+  const handlers = useMemo(
+    () => ({
+      update: handleUpdate,
+      configChanged: handleConfigChanged,
+    }),
+    [handleUpdate, handleConfigChanged],
+  );
+
+  useSSE(handlers);
 }

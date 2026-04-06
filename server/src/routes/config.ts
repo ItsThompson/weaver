@@ -8,6 +8,29 @@ import {
 import { emit } from "../services/event-bus";
 import { validatePathsExist } from "../services/config/validators/validate-paths";
 import { skillCache } from "../services/skill-graph/discover";
+import { needsServiceRestart } from "./restart-fields";
+import { serviceManager } from "../services/service-manager-instance";
+import { log } from "../utils/logger";
+
+function triggerRestartIfNeeded(
+  oldConfig: WeaverConfig,
+  newConfig: WeaverConfig,
+): void {
+  if (!needsServiceRestart(oldConfig, newConfig)) {
+    return;
+  }
+  emit({ event: "servicesRestarting", data: {} });
+  serviceManager
+    .stop()
+    .then(() => serviceManager.start(newConfig))
+    .catch((err) =>
+      log({
+        timestamp: new Date().toISOString(),
+        event: "service_restart_error",
+        error: String(err),
+      }),
+    );
+}
 
 export function registerConfigRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { config: WeaverConfig; warnings: string[] } }>(
@@ -33,9 +56,13 @@ export function registerConfigRoutes(server: FastifyInstance): void {
       return reply.status(422).send({ error: pathErrors.join("; ") });
     }
 
+    const { config: oldConfig } = await readConfig();
+
     await writeConfig(config);
     skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
+    triggerRestartIfNeeded(oldConfig, config);
+
     return { config };
   });
 
@@ -60,6 +87,8 @@ export function registerConfigRoutes(server: FastifyInstance): void {
     await writeConfig(config);
     skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
+    triggerRestartIfNeeded(current, config);
+
     return { config };
   });
 }

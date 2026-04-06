@@ -45,7 +45,7 @@ The server listens on port `8143`.
 | `POST /api/snippets`                  | Create a snippet                                |
 | `PUT /api/snippets/:id`               | Update a snippet                                |
 | `DELETE /api/snippets/:id`            | Delete a snippet                                |
-| `GET /api/dictation/status`           | Pre-flight check for dictation services         |
+| `GET /api/services/status`            | Per-service readiness status                    |
 | `GET /api/dictation/history`          | List dictation history (newest first)           |
 | `POST /api/dictation/transcribe`      | Transcribe audio via whisper-server             |
 | `POST /api/dictation/process`         | Process transcript (snippet matching + LLM)     |
@@ -62,3 +62,4 @@ Full request/response documentation for each endpoint is in the [`docs/`](docs/)
 - [Orphans](docs/orphans.md)
 - [Snippets](docs/snippets.md)
 - [Dictation](docs/dictation.md)
+- [Services](docs/services.md)

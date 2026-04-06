@@ -1,21 +1,13 @@
 import type { FastifyInstance } from "fastify";
 import type { Snippet, WhisperModel, ApiError } from "@weaver/shared/types";
 import {
-  isWhisperServerRunning,
-  startWhisperServer,
-  waitForWhisperReady,
-  touchWhisperActivity,
   WHISPER_PORT,
-  checkOllamaHealth,
-  listOllamaModels,
-  ensureOllamaRunning,
   generateText,
   logDictation,
   readDictationHistory,
   AVAILABLE_MODELS,
   downloadModel,
   listLocalModels,
-  getDefaultModelPath,
 } from "../../services/dictation/index";
 import {
   chunkTranscript,
@@ -23,6 +15,7 @@ import {
 } from "../../services/dictation/chunk-transcript";
 import { readConfig } from "../../services/config/index";
 import { log } from "../../utils/logger";
+import { serviceManager } from "../../services/service-manager-instance";
 
 function matchSnippet(transcript: string, snippets: Snippet[]): Snippet | null {
   const normalize = (s: string) => s.replace(/[^a-zA-Z]/g, "").toLowerCase();
@@ -34,37 +27,7 @@ function matchSnippet(transcript: string, snippets: Snippet[]): Snippet | null {
   return matches.length === 1 ? matches[0] : null;
 }
 
-type OllamaError = "not_installed" | "model_not_found" | null;
-
-function modelMatchesAny(
-  configuredModel: string,
-  availableModels: string[],
-): boolean {
-  return availableModels.some(
-    (name) =>
-      name === configuredModel || name.startsWith(`${configuredModel}:`),
-  );
-}
-
-async function checkOllama(
-  url: string,
-  model: string,
-): Promise<{ ok: boolean; error: OllamaError }> {
-  const running = await ensureOllamaRunning(url);
-  if (!running) {
-    return { ok: false, error: "not_installed" };
-  }
-  const models = await listOllamaModels(url);
-  if (!modelMatchesAny(model, models)) {
-    return { ok: false, error: "model_not_found" };
-  }
-  return { ok: true, error: null };
-}
-
-export function registerDictationRoutes(
-  server: FastifyInstance,
-  whisperBinPath: string | undefined,
-): void {
+export function registerDictationRoutes(server: FastifyInstance): void {
   server.addContentTypeParser(
     "application/octet-stream",
     { parseAs: "buffer" },
@@ -76,106 +39,17 @@ export function registerDictationRoutes(
     return { entries };
   });
 
-  server.get<{
-    Reply: {
-      whisper: boolean;
-      ollama: boolean;
-      ollamaError: OllamaError;
-      ollamaModel: string;
-      model: string | null;
-    };
-  }>("/api/dictation/status", async () => {
-    const start = Date.now();
-    const { config } = await readConfig();
-    const modelPath = await getDefaultModelPath();
-    const needsOllama = config.dictation.llm_cleanup;
-
-    if (!modelPath || !whisperBinPath) {
-      const ollamaResult = needsOllama
-        ? await checkOllama(
-            config.dictation.ollama_url,
-            config.dictation.ollama_model,
-          )
-        : { ok: true, error: null as OllamaError };
-      log({
-        timestamp: new Date().toISOString(),
-        event: "dictation_status",
-        durationMs: Date.now() - start,
-        whisper: false,
-        ollama: ollamaResult.ok,
-        ollamaError: ollamaResult.error,
-        hasModel: !!modelPath,
-        hasBin: !!whisperBinPath,
-      });
-      return {
-        whisper: false,
-        ollama: ollamaResult.ok,
-        ollamaError: ollamaResult.error,
-        ollamaModel: config.dictation.ollama_model,
-        model: modelPath,
-      };
-    }
-
-    // Start whisper and ollama in parallel
-    const running = await isWhisperServerRunning();
-    if (!running) {
-      startWhisperServer(whisperBinPath, modelPath);
-    }
-    const [whisper, ollamaResult] = await Promise.all([
-      running ? Promise.resolve(true) : waitForWhisperReady(),
-      needsOllama
-        ? checkOllama(
-            config.dictation.ollama_url,
-            config.dictation.ollama_model,
-          )
-        : Promise.resolve({ ok: true, error: null as OllamaError }),
-    ]);
-    log({
-      timestamp: new Date().toISOString(),
-      event: "dictation_status",
-      durationMs: Date.now() - start,
-      whisper,
-      ollama: ollamaResult.ok,
-      ollamaError: ollamaResult.error,
-      coldStart: !running,
-    });
-    return {
-      whisper,
-      ollama: ollamaResult.ok,
-      ollamaError: ollamaResult.error,
-      ollamaModel: config.dictation.ollama_model,
-      model: modelPath,
-    };
-  });
-
   server.post<{ Reply: { text: string } | ApiError }>(
     "/api/dictation/transcribe",
     async (request, reply) => {
-      const start = Date.now();
-      const modelPath = await getDefaultModelPath();
-      if (!modelPath) {
-        return reply.status(400).send({ error: "No whisper model downloaded" });
-      }
-      if (!whisperBinPath) {
+      const status = await serviceManager.getStatus();
+      if (status.services.whisper.state !== "running") {
         return reply
-          .status(400)
-          .send({ error: "Whisper binary path not configured" });
+          .status(503)
+          .send({ error: "Whisper is not available. Check service status." });
       }
 
-      const running = await isWhisperServerRunning();
-      const coldStart = !running;
-      if (!running) {
-        startWhisperServer(whisperBinPath, modelPath);
-        const ready = await waitForWhisperReady();
-        if (!ready) {
-          return reply
-            .status(503)
-            .send({ error: "Whisper server failed to start" });
-        }
-      }
-      touchWhisperActivity();
-      const readyMs = Date.now() - start;
-
+      const start = Date.now();
       const audioBuffer = request.body as Buffer;
       const boundary = "----WeaverBoundary" + Date.now();
       const header = `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="audio.wav"\r\nContent-Type: audio/wav\r\n\r\n`;
@@ -186,7 +60,6 @@ export function registerDictationRoutes(
         Buffer.from(footer),
       ]);
 
-      const inferenceStart = Date.now();
       const res = await fetch(`http://127.0.0.1:${WHISPER_PORT}/inference`, {
         method: "POST",
         headers: {
@@ -200,8 +73,6 @@ export function registerDictationRoutes(
           timestamp: new Date().toISOString(),
           event: "dictation_transcribe",
           durationMs: Date.now() - start,
-          coldStart,
-          readyMs,
           success: false,
           whisperStatus: res.status,
           audioBytes: audioBuffer.length,
@@ -216,9 +87,6 @@ export function registerDictationRoutes(
         timestamp: new Date().toISOString(),
         event: "dictation_transcribe",
         durationMs: Date.now() - start,
-        coldStart,
-        readyMs,
-        inferenceMs: Date.now() - inferenceStart,
         audioBytes: audioBuffer.length,
         textLength: result.text.length,
         success: true,
@@ -255,7 +123,6 @@ export function registerDictationRoutes(
     }
 
     const { config } = await readConfig();
-
     const { ollama_url, ollama_model, llm_cleanup } = config.dictation;
 
     if (!llm_cleanup) {
@@ -274,10 +141,14 @@ export function registerDictationRoutes(
       return { processedText: transcript, snippetUsed: null };
     }
 
-    await ensureOllamaRunning(ollama_url);
+    const status = await serviceManager.getStatus();
+    if (status.services.ollama.state !== "running") {
+      return reply
+        .status(503)
+        .send({ error: "Ollama is not available. Check service status." });
+    }
 
     try {
-      // If whisper didn't add punctuation, do a cheap first pass to add it
       let punctuated = transcript;
       const needsPunctuation = !hasPunctuation(transcript);
       if (needsPunctuation) {
@@ -365,6 +236,9 @@ ${chunk}`;
         reply.raw.write(`data: ${JSON.stringify({ progress })}\n\n`);
       });
       reply.raw.write(`data: ${JSON.stringify({ complete: true })}\n\n`);
+      serviceManager.startWhisperIfReady().catch(() => {
+        /* best-effort: startup page will show the error state */
+      });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       reply.raw.write(`data: ${JSON.stringify({ error: msg })}\n\n`);

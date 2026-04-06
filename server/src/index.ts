@@ -11,6 +11,7 @@ import { registerConfigRoutes } from "./routes/config";
 import { registerSkillRoutes } from "./routes/skills/index";
 import { registerDictationRoutes } from "./routes/dictation/index";
 import { registerSnippetRoutes } from "./routes/snippets/index";
+import { registerServicesRoute } from "./routes/services";
 import {
   ensureDataDir,
   stopStaleSessionCleanup,
@@ -20,12 +21,10 @@ import {
 import { broadcast } from "./services/event-bus";
 import { startKeepAwake, stopKeepAwake } from "./services/keep-awake";
 import { stopWebhookTimers } from "./services/webhook/index";
-import {
-  stopOllamaServer,
-  stopWhisperServer,
-} from "./services/dictation/index";
 import { log } from "./utils/logger";
 import { pruneAppLogs } from "@weaver/shared/logger";
+import { serviceManager } from "./services/service-manager-instance";
+import { readConfig } from "./services/config/index";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -52,8 +51,9 @@ registerEventRoutes(server);
 registerOrphanRoutes(server);
 registerConfigRoutes(server);
 registerSkillRoutes(server);
-registerDictationRoutes(server, process.env.WEAVER_WHISPER_BIN);
+registerDictationRoutes(server);
 registerSnippetRoutes(server);
+registerServicesRoute(server);
 
 const clientDist =
   process.env.WEAVER_CLIENT_DIST || resolve(__dirname, "../../client/dist");
@@ -77,17 +77,27 @@ async function start(): Promise<void> {
     port: PORT,
   });
 
+  const { config } = await readConfig();
+  serviceManager.start(config);
+
   const shutdown = async () => {
     stopWebhookTimers();
     stopStaleSessionCleanup();
     stopKeepAwake();
-    stopOllamaServer();
-    stopWhisperServer();
+    await serviceManager.stop();
     await server.close();
     process.exit(0);
   };
   process.on("SIGINT", shutdown);
   process.on("SIGTERM", shutdown);
+
+  // When spawned by Electron with stdio: "pipe", stdin closes if the parent
+  // dies unexpectedly (force-quit, crash). Treat that as a shutdown signal
+  // so child processes (whisper, ollama) don't become orphans.
+  if (process.stdin?.readable) {
+    process.stdin.resume();
+    process.stdin.on("end", shutdown);
+  }
 }
 
 start().catch((err) => {
