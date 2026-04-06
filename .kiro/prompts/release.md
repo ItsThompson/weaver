@@ -36,7 +36,7 @@ git tag v{new_version}
 
 ### 3. Build the distribution
 
-Run `npm run dist` and wait for it to complete. This runs `version:sync` internally, which propagates the tagged version to all workspace `package.json` files. The output .dmg will be at `desktop/release/Weaver-{new_version}-arm64.dmg`.
+Run `npm run dist` and wait for it to complete. This runs `version:sync` internally, which propagates the tagged version to all workspace `package.json` files. The output .dmg will be at `desktop/dist/Weaver-{new_version}-arm64.dmg`.
 
 After the build succeeds, commit the synced workspace versions and push everything:
 
@@ -75,7 +75,7 @@ gh release create v{new_version} \
   --title "Weaver v{new_version}: {Short Title}" \
   --notes "{release_body}" \
   --draft \
-  desktop/release/Weaver-{new_version}-arm64.dmg
+  desktop/dist/Weaver-{new_version}-arm64.dmg
 ```
 
 Tell the user the draft release URL so they can review and publish it.
