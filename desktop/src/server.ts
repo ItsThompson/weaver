@@ -1,8 +1,10 @@
 import { fork, execSync, ChildProcess } from "node:child_process";
+import { createInterface } from "node:readline";
 import { resolve } from "node:path";
 import http from "node:http";
 import { app } from "electron";
 import { log } from "./utils/logger";
+import { createLogger } from "@weaver/shared/logger";
 
 export const SERVER_PORT = 8143;
 export const SERVER_URL = `http://localhost:${SERVER_PORT}`;
@@ -43,8 +45,8 @@ export function start(): void {
     env.WEAVER_CLIENT_DIST = resolve(process.resourcesPath, "client/dist");
   }
   child = fork(serverEntry, [], { stdio: "pipe", env });
-  child.stdout?.pipe(process.stdout);
-  child.stderr?.pipe(process.stderr);
+  pipeChildStream(child, "stdout");
+  pipeChildStream(child, "stderr");
   child.on("exit", (code) => {
     if (code !== 0 && code !== null) {
       log({
@@ -62,8 +64,6 @@ export function stop(): void {
   }
   const ref = child;
   child = null;
-  ref.stdout?.unpipe();
-  ref.stderr?.unpipe();
   ref.kill("SIGTERM");
   const timeout = setTimeout(() => {
     if (ref.exitCode === null && ref.signalCode === null) {
@@ -71,6 +71,30 @@ export function stop(): void {
     }
   }, 2000);
   ref.on("exit", () => clearTimeout(timeout));
+}
+
+function pipeChildStream(
+  proc: ChildProcess,
+  stream: "stdout" | "stderr",
+): void {
+  const readable = proc[stream];
+  if (!readable) {
+    return;
+  }
+
+  const childLog = createLogger(`server:${stream}`);
+  createInterface({ input: readable }).on("line", (line) => {
+    try {
+      const parsed = JSON.parse(line);
+      childLog({ ...parsed, source: undefined });
+    } catch {
+      childLog({
+        timestamp: new Date().toISOString(),
+        event: "server_raw_output",
+        message: line,
+      });
+    }
+  });
 }
 
 export function waitForReady(retries = 30): Promise<void> {
