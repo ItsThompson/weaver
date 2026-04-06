@@ -27,6 +27,12 @@ npm install
 
 Download the latest `.dmg` from the [releases page](releases-url) and install the app. You still need to set up the hook scripts and CLI symlink below.
 
+Since the app is not code-signed, macOS may block it with a "damaged" error after downloading. To fix this, run:
+
+```bash
+sudo xattr -d com.apple.quarantine /Applications/Weaver.app
+```
+
 ## Running Weaver
 
 If you installed from source:
