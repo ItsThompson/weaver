@@ -236,6 +236,9 @@ ${chunk}`;
         reply.raw.write(`data: ${JSON.stringify({ progress })}\n\n`);
       });
       reply.raw.write(`data: ${JSON.stringify({ complete: true })}\n\n`);
+      serviceManager.startWhisperIfReady().catch(() => {
+        /* best-effort: startup page will show the error state */
+      });
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
       reply.raw.write(`data: ${JSON.stringify({ error: msg })}\n\n`);
