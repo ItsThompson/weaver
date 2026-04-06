@@ -168,6 +168,7 @@ describe("createServiceManager", () => {
         false,
       );
 
+      await manager.checkHealth();
       const status = await manager.getStatus();
       expect(status.services.whisper.state).toBe("error");
       expect(status.services.whisper.error).toBe(
@@ -184,11 +185,25 @@ describe("createServiceManager", () => {
         false,
       );
 
+      await manager.checkHealth();
       const status = await manager.getStatus();
       expect(status.services.ollama.state).toBe("error");
       expect(status.services.ollama.error).toBe(
         "Ollama is no longer reachable",
       );
+    });
+
+    it("does not mutate state without checkHealth", async () => {
+      const deps = makeDeps();
+      const manager = createServiceManager(deps);
+
+      await manager.start(enabledConfig());
+      (deps.isWhisperRunning as ReturnType<typeof vi.fn>).mockResolvedValue(
+        false,
+      );
+
+      const status = await manager.getStatus();
+      expect(status.services.whisper.state).toBe("running");
     });
   });
 

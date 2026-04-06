@@ -6,6 +6,7 @@ export function registerServicesRoute(server: FastifyInstance): void {
   server.get<{ Reply: ServicesStatusResponse }>(
     "/api/services/status",
     async () => {
+      await serviceManager.checkHealth();
       return serviceManager.getStatus();
     },
   );

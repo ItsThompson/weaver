@@ -21,6 +21,7 @@ export interface ServiceManager {
   start: (config: WeaverConfig) => Promise<void>;
   stop: () => Promise<void>;
   getStatus: () => Promise<ServicesStatusResponse>;
+  checkHealth: () => Promise<void>;
   startWhisperIfReady: () => Promise<void>;
 }
 
@@ -125,21 +126,6 @@ export function createServiceManager(deps: ServiceManagerDeps): ServiceManager {
   }
 
   async function getStatus(): Promise<ServicesStatusResponse> {
-    // Detect crashed services
-    if (whisperState === "running" && !(await deps.isWhisperRunning())) {
-      whisperState = "error";
-      whisperError = "Whisper process exited unexpectedly";
-    }
-    if (ollamaState === "running" && lastConfig) {
-      const healthy = await deps.checkOllamaHealth(
-        lastConfig.dictation.ollama_url,
-      );
-      if (!healthy) {
-        ollamaState = "error";
-        ollamaError = "Ollama is no longer reachable";
-      }
-    }
-
     return {
       ready: isTerminal(whisperState) && isTerminal(ollamaState),
       services: {
@@ -155,23 +141,43 @@ export function createServiceManager(deps: ServiceManagerDeps): ServiceManager {
     };
   }
 
-  async function startWhisperIfReady(): Promise<void> {
-    const { config } = await deps.readConfig();
-    if (!config.enable_dictation) {
-      return;
-    }
-    if (whisperState === "running" || whisperState === "starting") {
-      return;
-    }
-
-    const modelPath = await deps.getDefaultModelPath();
-    if (!modelPath) {
-      return;
-    }
-
-    lastConfig = config;
-    await startWhisper(config);
+  async function checkHealth(): Promise<void> {
+    return serialize(async () => {
+      if (whisperState === "running" && !(await deps.isWhisperRunning())) {
+        whisperState = "error";
+        whisperError = "Whisper process exited unexpectedly";
+      }
+      if (ollamaState === "running" && lastConfig) {
+        const healthy = await deps.checkOllamaHealth(
+          lastConfig.dictation.ollama_url,
+        );
+        if (!healthy) {
+          ollamaState = "error";
+          ollamaError = "Ollama is no longer reachable";
+        }
+      }
+    });
   }
 
-  return { start, stop, getStatus, startWhisperIfReady };
+  async function startWhisperIfReady(): Promise<void> {
+    return serialize(async () => {
+      const { config } = await deps.readConfig();
+      if (!config.enable_dictation) {
+        return;
+      }
+      if (whisperState === "running" || whisperState === "starting") {
+        return;
+      }
+
+      const modelPath = await deps.getDefaultModelPath();
+      if (!modelPath) {
+        return;
+      }
+
+      lastConfig = config;
+      await startWhisper(config);
+    });
+  }
+
+  return { start, stop, getStatus, checkHealth, startWhisperIfReady };
 }

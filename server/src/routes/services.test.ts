@@ -1,9 +1,13 @@
 import type { ServicesStatusResponse } from "@weaver/shared/types";
 
 const mockGetStatus = vi.fn<() => Promise<ServicesStatusResponse>>();
+const mockCheckHealth = vi.fn<() => Promise<void>>();
 
 vi.mock("../services/service-manager-instance", () => ({
-  serviceManager: { getStatus: (...args: unknown[]) => mockGetStatus(...args) },
+  serviceManager: {
+    getStatus: (...args: unknown[]) => mockGetStatus(...args),
+    checkHealth: (...args: unknown[]) => mockCheckHealth(...args),
+  },
 }));
 
 import Fastify from "fastify";
