@@ -42,8 +42,8 @@ export function createLogger(
     try {
       ensureDir();
       appendFileSync(logFilePath(), line + "\n");
-    } catch {
-      // File write failed: console output is the fallback
+    } catch (error) {
+      console.error(`[logger] file write failed: ${error}`);
     }
   };
 }

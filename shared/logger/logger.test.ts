@@ -77,7 +77,7 @@ describe("createLogger", () => {
     );
   });
 
-  it("still writes to console when file write fails", () => {
+  it("logs error to stderr when file write fails", () => {
     vi.setSystemTime(new Date("2026-04-06T12:00:00Z"));
     vi.mocked(mkdirSync).mockImplementation(() => {
       throw new Error("EACCES");
@@ -87,6 +87,9 @@ describe("createLogger", () => {
     log({ timestamp: "t", event: "e" });
 
     expect(console.log).toHaveBeenCalled();
+    expect(console.error).toHaveBeenCalledWith(
+      expect.stringContaining("EACCES"),
+    );
   });
 });
 
