@@ -8,6 +8,7 @@ import type {
   SkillDetail,
   Snippet,
   WhisperModel,
+  DictationLogEntry,
 } from "@weaver/shared/types";
 
 const API_BASE = "/api";
@@ -169,3 +170,6 @@ export const processTranscript = (transcript: string, snippets: Snippet[]) =>
 
 export const getModels = () =>
   apiFetch<{ available: WhisperModel[]; local: string[] }>("/dictation/models");
+
+export const getDictationHistory = () =>
+  apiFetch<{ entries: DictationLogEntry[] }>("/dictation/history");
