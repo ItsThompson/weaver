@@ -8,6 +8,9 @@ import {
 import { emit } from "../services/event-bus";
 import { validatePathsExist } from "../services/config/validators/validate-paths";
 import { skillCache } from "../services/skill-graph/discover";
+import { needsServiceRestart } from "./restart-fields";
+import { serviceManager } from "../services/service-manager-instance";
+import { log } from "../utils/logger";
 
 export function registerConfigRoutes(server: FastifyInstance): void {
   server.get<{ Reply: { config: WeaverConfig; warnings: string[] } }>(
@@ -33,9 +36,27 @@ export function registerConfigRoutes(server: FastifyInstance): void {
       return reply.status(422).send({ error: pathErrors.join("; ") });
     }
 
+    const { config: oldConfig } = await readConfig();
+    const restart = needsServiceRestart(oldConfig, config);
+
     await writeConfig(config);
     skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
+
+    if (restart) {
+      emit({ event: "servicesRestarting", data: {} });
+      serviceManager
+        .stop()
+        .then(() => serviceManager.start(config))
+        .catch((err) =>
+          log({
+            timestamp: new Date().toISOString(),
+            event: "service_restart_error",
+            error: String(err),
+          }),
+        );
+    }
+
     return { config };
   });
 
@@ -57,9 +78,26 @@ export function registerConfigRoutes(server: FastifyInstance): void {
       return reply.status(422).send({ error: pathErrors.join("; ") });
     }
 
+    const restart = needsServiceRestart(current, config);
+
     await writeConfig(config);
     skillCache.clear();
     emit({ event: "configChanged", data: { ...config } });
+
+    if (restart) {
+      emit({ event: "servicesRestarting", data: {} });
+      serviceManager
+        .stop()
+        .then(() => serviceManager.start(config))
+        .catch((err) =>
+          log({
+            timestamp: new Date().toISOString(),
+            event: "service_restart_error",
+            error: String(err),
+          }),
+        );
+    }
+
     return { config };
   });
 }
