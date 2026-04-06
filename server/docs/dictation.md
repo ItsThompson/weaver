@@ -1,5 +1,44 @@
 # Dictation API
 
+## GET /api/dictation/history
+
+List all past dictation entries in reverse chronological order (newest first).
+
+### Parameters
+
+None.
+
+### Response
+
+**Status:** `200 OK`
+
+```json
+{
+  "entries": [
+    {
+      "timestamp": "2026-04-05T18:01:00.000Z",
+      "rawTranscript": "um hello how are you",
+      "processedText": "Hello, how are you?"
+    },
+    {
+      "timestamp": "2026-04-05T18:00:00.000Z",
+      "rawTranscript": "my email",
+      "processedText": "user@example.com"
+    }
+  ]
+}
+```
+
+| Field                     | Type   | Description                         |
+| ------------------------- | ------ | ----------------------------------- |
+| `entries[].timestamp`     | string | ISO 8601 timestamp of the dictation |
+| `entries[].rawTranscript` | string | Original speech-to-text output      |
+| `entries[].processedText` | string | Cleaned or snippet-expanded text    |
+
+Returns `{ "entries": [] }` when no dictation history exists.
+
+---
+
 ## GET /api/dictation/status
 
 Pre-flight check for dictation services.
