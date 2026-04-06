@@ -10,7 +10,7 @@ export function useServicesStatus(options: UseServicesStatusOptions = {}) {
   const { pollInterval } = options;
   const [status, setStatus] = useState<ServicesStatusResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const intervalRef = useRef<ReturnType<typeof setInterval>>();
+  const intervalRef = useRef<ReturnType<typeof setInterval>>(undefined);
 
   const refetch = useCallback(async () => {
     try {
