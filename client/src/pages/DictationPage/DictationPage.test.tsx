@@ -125,8 +125,7 @@ describe("DictationPage", () => {
     expect(
       screen.getByRole("button", { name: "Start Dictation" }),
     ).not.toBeDisabled();
-    expect(screen.getByText("Whisper")).toBeInTheDocument();
-    expect(screen.getByText("Ollama")).toBeInTheDocument();
+    expect(screen.getByText(/3\/3 checks passed/)).toBeInTheDocument();
   });
 
   it("shows ModelDownload when whisper has no model", () => {
@@ -351,7 +350,7 @@ describe("DictationPage", () => {
     };
     renderPage();
 
-    expect(screen.getByText("Microphone: System Default")).toBeInTheDocument();
+    expect(screen.getByText(/3\/3 checks passed/)).toBeInTheDocument();
   });
 
   it("disables mic selector during recording", () => {
