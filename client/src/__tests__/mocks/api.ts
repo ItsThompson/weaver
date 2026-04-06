@@ -35,4 +35,7 @@ vi.mock("../../utils/api", () => ({
   getModels: vi
     .fn<() => Promise<any>>()
     .mockResolvedValue({ available: [], local: [] }),
+  getDictationHistory: vi
+    .fn<() => Promise<any>>()
+    .mockResolvedValue({ entries: [] }),
 }));
