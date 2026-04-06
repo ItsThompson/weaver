@@ -39,37 +39,9 @@ Returns `{ "entries": [] }` when no dictation history exists.
 
 ---
 
-## GET /api/dictation/status
-
-Pre-flight check for dictation services.
-
-### Parameters
-
-None.
-
-### Response
-
-**Status:** `200 OK`
-
-```json
-{
-  "whisper": true,
-  "ollama": true,
-  "model": "/Users/you/.weaver/models/ggml-base.en.bin"
-}
-```
-
-| Field     | Type           | Description                                         |
-| --------- | -------------- | --------------------------------------------------- |
-| `whisper` | boolean        | Whether whisper-server is running or a model exists |
-| `ollama`  | boolean        | Whether the Ollama server is reachable              |
-| `model`   | string \| null | Path to the default whisper model, or null if none  |
-
----
-
 ## POST /api/dictation/transcribe
 
-Transcribe an audio buffer using whisper-server. Starts whisper-server on demand if it is not already running.
+Transcribe an audio buffer using whisper-server.
 
 ### Request
 
@@ -97,11 +69,11 @@ Body: raw WAV audio data (16kHz, 16-bit, mono).
 }
 ```
 
-**Status:** `500 Internal Server Error`
+**Status:** `503 Service Unavailable`
 
 ```json
 {
-  "error": "Whisper server is not available"
+  "error": "Whisper is not available. Check service status."
 }
 ```
 
@@ -167,6 +139,16 @@ When LLM cleanup is disabled and no snippet matches:
   "error": "transcript is required"
 }
 ```
+
+**Status:** `503 Service Unavailable`
+
+```json
+{
+  "error": "Ollama is not available. Check service status."
+}
+```
+
+Returned when `llm_cleanup` is enabled and ollama is not running.
 
 ---
 
