@@ -18,6 +18,7 @@ export interface SkillGraphConfig {
 
 // Settings stored in ~/.weaver/config.json
 export interface WeaverConfig {
+  enable_dictation: boolean;
   enable_notification_sounds: boolean;
   open_display_options: string[];
   close_display_options: string[];
@@ -53,6 +54,7 @@ export const VALID_CLOSE_DISPLAY_OPTIONS = [
 ] as const;
 
 export const DEFAULT_CONFIG: WeaverConfig = {
+  enable_dictation: false,
   enable_notification_sounds: true,
   open_display_options: [...VALID_OPEN_DISPLAY_OPTIONS],
   close_display_options: [...VALID_CLOSE_DISPLAY_OPTIONS],

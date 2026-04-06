@@ -238,19 +238,23 @@ describe("validateSkillPaths", () => {
 });
 
 describe("FIELD_VALIDATORS boolean fields", () => {
-  it.each(["dark_mode", "ghost_mode", "enable_notification_sounds"])(
-    "%s accepts true",
-    (field) => {
-      expect(FIELD_VALIDATORS[field](true)).toEqual({ value: true });
-    },
-  );
+  it.each([
+    "dark_mode",
+    "ghost_mode",
+    "enable_notification_sounds",
+    "enable_dictation",
+  ])("%s accepts true", (field) => {
+    expect(FIELD_VALIDATORS[field](true)).toEqual({ value: true });
+  });
 
-  it.each(["dark_mode", "ghost_mode", "enable_notification_sounds"])(
-    "%s accepts false",
-    (field) => {
-      expect(FIELD_VALIDATORS[field](false)).toEqual({ value: false });
-    },
-  );
+  it.each([
+    "dark_mode",
+    "ghost_mode",
+    "enable_notification_sounds",
+    "enable_dictation",
+  ])("%s accepts false", (field) => {
+    expect(FIELD_VALIDATORS[field](false)).toEqual({ value: false });
+  });
 
   it.each(["yes", 1, null, undefined, []])(
     "rejects non-boolean: %p",

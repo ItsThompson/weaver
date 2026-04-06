@@ -274,6 +274,7 @@ export function validateDictation(value: unknown): ValidatorResult {
 }
 
 export const FIELD_VALIDATORS: Record<string, FieldValidator> = {
+  enable_dictation: validateBoolean("enable_dictation"),
   enable_notification_sounds: validateBoolean("enable_notification_sounds"),
   dark_mode: validateBoolean("dark_mode"),
   ghost_mode: validateBoolean("ghost_mode"),
