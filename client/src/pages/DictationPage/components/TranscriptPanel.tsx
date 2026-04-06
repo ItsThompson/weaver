@@ -12,7 +12,7 @@ export function TranscriptPanel({
 }: TranscriptPanelProps) {
   return (
     <SpaceBetween size="m">
-      <FormField label="Raw Transcript">
+      <FormField label="Raw Transcript" stretch>
         <Textarea
           value={rawTranscript}
           readOnly
@@ -25,7 +25,7 @@ export function TranscriptPanel({
           <Spinner /> Processing...
         </Box>
       )}
-      <FormField label="Processed Output">
+      <FormField label="Processed Output" stretch>
         <Textarea
           value={processedText}
           readOnly
