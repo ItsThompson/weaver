@@ -75,6 +75,8 @@ app.on("ready", async () => {
     handleDictationHotkey({
       getConfig: () => currentConfig,
       serverUrl: server.SERVER_URL,
+    }).catch(() => {
+      /* errors are shown as notifications inside the handler */
     }),
   );
   setupDictation();

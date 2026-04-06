@@ -69,6 +69,13 @@ export async function handleDictationHotkey(
       );
       return;
     }
+    if (status.services.whisper.state !== "running") {
+      notify(
+        "Weaver Dictation",
+        "Whisper is not running. Check service status in Settings.",
+      );
+      return;
+    }
   } catch {
     notify("Weaver Dictation", "Cannot reach Weaver server.");
     return;
