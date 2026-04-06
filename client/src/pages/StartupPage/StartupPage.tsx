@@ -5,25 +5,11 @@ import Box from "@cloudscape-design/components/box";
 import Link from "@cloudscape-design/components/link";
 import type { ServiceStatus } from "@weaver/shared/types";
 import { useServicesStatus } from "../../hooks/useServicesStatus";
+import { serviceStatusType } from "../../utils/serviceStatusType";
 import { colors } from "../../theme/colors";
 
 interface StartupPageProps {
   onReady: () => void;
-}
-
-function statusType(
-  state: ServiceStatus["state"],
-): "success" | "in-progress" | "error" | "info" {
-  if (state === "running") {
-    return "success";
-  }
-  if (state === "starting") {
-    return "in-progress";
-  }
-  if (state === "not_configured") {
-    return "info";
-  }
-  return "error";
 }
 
 export function StartupPage({ onReady }: StartupPageProps) {
@@ -72,9 +58,9 @@ export function StartupPage({ onReady }: StartupPageProps) {
           <SpaceBetween size="xs">
             {services.map((service) => (
               <div key={service.name}>
-                <StatusIndicator type={statusType(service.status.state)}>
+                <StatusIndicator type={serviceStatusType(service.status.state)}>
                   {service.name}
-                  {service.status.error && ` — ${service.status.error}`}
+                  {service.status.error && `: ${service.status.error}`}
                 </StatusIndicator>
               </div>
             ))}

@@ -103,7 +103,7 @@ describe("StartupPage", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Whisper — Whisper failed to start"),
+        screen.getByText("Whisper: Whisper failed to start"),
       ).toBeInTheDocument();
     });
   });

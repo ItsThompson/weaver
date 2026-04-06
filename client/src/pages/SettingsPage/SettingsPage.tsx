@@ -13,6 +13,7 @@ import Spinner from "@cloudscape-design/components/spinner";
 import Box from "@cloudscape-design/components/box";
 import StatusIndicator from "@cloudscape-design/components/status-indicator";
 import { isElectron } from "../../utils/isElectron";
+import { serviceStatusType } from "../../utils/serviceStatusType";
 import { useNotifications } from "../../context/NotificationContext";
 import { useSettings } from "./hooks/useSettings";
 import { useServicesStatus } from "../../hooks/useServicesStatus";
@@ -21,21 +22,6 @@ import { TestRunnersField } from "./components/TestRunnersField";
 import { SkillPathsField } from "./components/SkillPathsField";
 import { SkillGraphCategoriesField } from "./components/SkillGraphCategoriesField";
 import { ServiceRestartModal } from "./components/ServiceRestartModal";
-
-function ollamaStatusType(
-  state: string,
-): "success" | "error" | "in-progress" | "info" {
-  if (state === "running") {
-    return "success";
-  }
-  if (state === "starting") {
-    return "in-progress";
-  }
-  if (state === "not_configured") {
-    return "info";
-  }
-  return "error";
-}
 
 export function SettingsPage() {
   const { addNotification } = useNotifications();
@@ -278,7 +264,7 @@ export function SettingsPage() {
                     {servicesStatus && (
                       <Box padding={{ top: "xs" }}>
                         <StatusIndicator
-                          type={ollamaStatusType(
+                          type={serviceStatusType(
                             servicesStatus.services.ollama.state,
                           )}
                         >
