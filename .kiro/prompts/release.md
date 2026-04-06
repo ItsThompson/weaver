@@ -18,32 +18,37 @@ Present the summary and your chosen bump type to the user for confirmation befor
 
 If there are no commits since the last tag, stop and tell the user there is nothing to release.
 
-### 2. Bump version in package.json
+### 2. Bump version, commit, and tag
 
-Parse the latest tag to get the current version (strip the `v` prefix). Increment according to the user's chosen bump type:
+Parse the latest tag to get the current version (strip the `v` prefix). Increment according to the chosen bump type:
 
 - `patch`: increment patch (e.g., 1.4.1 → 1.4.2)
 - `minor`: increment minor, reset patch (e.g., 1.4.1 → 1.5.0)
 - `major`: increment major, reset minor and patch (e.g., 1.4.1 → 2.0.0)
 
-Update the `"version"` field in the root `package.json` to the new version.
-
-### 3. Commit, tag, and push
+Update the `"version"` field in the root `package.json` to the new version, then commit and tag. The tag MUST exist before `npm run dist` because `version:sync` (which `dist` runs) uses `npm version from-git` to read the version from the latest git tag.
 
 ```bash
 git add package.json
 git commit -m "chore: version bump to v{new_version}"
 git tag v{new_version}
+```
+
+### 3. Build the distribution
+
+Run `npm run dist` and wait for it to complete. This runs `version:sync` internally, which propagates the tagged version to all workspace `package.json` files. The output .dmg will be at `desktop/release/Weaver-{new_version}-arm64.dmg`.
+
+After the build succeeds, commit the synced workspace versions and push everything:
+
+```bash
+git add -A
+git commit -m "chore: sync workspace versions to v{new_version}"
 git push && git push --tags
 ```
 
-### 4. Build the distribution
-
-Run `npm run dist` and wait for it to complete. The output .dmg will be at `desktop/release/Weaver-{new_version}-arm64.dmg`.
-
 If the build fails, stop and show the error. Do not proceed to the release step.
 
-### 5. Create draft GitHub release
+### 4. Create draft GitHub release
 
 Compose the release using this pattern:
 
