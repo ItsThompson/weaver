@@ -26,7 +26,7 @@ Choose trigger phrases that are unique and unlikely to appear in regular speech.
 
 ## Managing snippets
 
-Open **Snippets** from the sidebar or command palette. You can also click **Manage Snippets** on the Dictation page.
+Open **Snippets** from the sidebar or command palette. You can also select **Manage Snippets** from the **Actions** dropdown on the Dictation page.
 
 ### Adding a snippet
 

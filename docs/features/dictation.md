@@ -24,12 +24,13 @@ Open **Dictation** from the sidebar or command palette.
 
 ### Preflight checks
 
-The page shows status indicators for two services:
+The page shows a compact summary of service readiness (e.g., "3/3 checks passed"). Click the summary to open a popover with the full breakdown:
 
 - **Whisper**: green when a whisper model is available (the whisper server starts automatically when you begin dictation)
 - **Ollama**: green when the Ollama server is reachable
+- **Microphone**: green when an audio input device is available
 
-Both must be green for the Start button to be enabled. If Ollama is not needed (LLM cleanup disabled), only Whisper needs to be ready.
+All checks must pass for the Start button to be enabled. If Ollama is not needed (LLM cleanup disabled), only Whisper and Microphone need to be ready.
 
 ### Recording
 
@@ -84,6 +85,8 @@ Dictation settings are available on the **Settings** page under the "Dictation" 
 ## Dictation history
 
 Every completed dictation is logged to `~/.weaver/dictations.jsonl` with the timestamp, raw transcript, and processed text.
+
+To view past dictations, open the **Actions** dropdown on the Dictation page and select **Dictation History**. The history page shows all entries newest first, with the processed text visible on each card and the raw transcript behind an expandable section.
 
 ## Sounds
 

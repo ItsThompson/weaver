@@ -46,6 +46,7 @@ The server listens on port `8143`.
 | `PUT /api/snippets/:id`               | Update a snippet                                |
 | `DELETE /api/snippets/:id`            | Delete a snippet                                |
 | `GET /api/dictation/status`           | Pre-flight check for dictation services         |
+| `GET /api/dictation/history`          | List dictation history (newest first)           |
 | `POST /api/dictation/transcribe`      | Transcribe audio via whisper-server             |
 | `POST /api/dictation/process`         | Process transcript (snippet matching + LLM)     |
 | `GET /api/dictation/models`           | List available and downloaded whisper models    |
