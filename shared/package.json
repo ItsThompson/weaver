@@ -31,6 +31,10 @@
     "./paths": {
       "types": "./dist/paths/index.d.ts",
       "default": "./dist/paths/index.js"
+    },
+    "./logger": {
+      "types": "./dist/logger/index.d.ts",
+      "default": "./dist/logger/index.js"
     }
   },
   "scripts": {

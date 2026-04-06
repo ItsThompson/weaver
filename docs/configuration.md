@@ -153,3 +153,9 @@ Per-project validation hooks. Place this file in your project root (or per-packa
 | ---------------------------- | ----------------------- | --------------------------------------------------------- |
 | `WEAVER_SERVER`              | `http://localhost:8143` | Server URL used by the CLI and hook scripts               |
 | `WEAVER_MAX_RESPONSE_LENGTH` | `500`                   | Max character length for tool response truncation in logs |
+
+## Application logs
+
+Weaver writes structured JSONL logs to `~/.weaver/app-logs/YYYY-MM-DD.log`. Each line includes a `source` field identifying the package that produced it (`server`, `desktop`, `hook-handler`, `server:stdout`, or `server:stderr`).
+
+Log files older than 30 days are automatically deleted on server startup. To share logs for debugging, send the relevant date's file from `~/.weaver/app-logs/`.

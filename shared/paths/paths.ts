@@ -15,6 +15,7 @@ export const orphanPath = () => join(logsDir(), "orphan.jsonl");
 export const snippetsPath = () => join(weaverDir(), "snippets.jsonl");
 export const dictationsPath = () => join(weaverDir(), "dictations.jsonl");
 export const modelsDir = () => join(weaverDir(), "models");
+export const appLogsDir = () => join(weaverDir(), "app-logs");
 export const globalSkillsPath = () => join(globalKiroDir(), "skills");
 export const globalKiroDir = () => join(homedir(), ".kiro");
 

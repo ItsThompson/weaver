@@ -22,6 +22,13 @@ import { log } from "./utils/logger";
 let currentConfig: WeaverConfig = { ...DEFAULT_CONFIG };
 
 app.on("ready", async () => {
+  log({
+    timestamp: new Date().toISOString(),
+    event: "app_started",
+    version: app.getVersion(),
+    packaged: app.isPackaged,
+  });
+
   if (app.dock) {
     app.dock.hide();
   }
