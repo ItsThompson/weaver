@@ -29,6 +29,18 @@ export const AVAILABLE_MODELS: WhisperModel[] = [
     filename: "ggml-small.en.bin",
     url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-small.en.bin",
   },
+  {
+    name: "Medium (English)",
+    size: "1.5 GB",
+    filename: "ggml-medium.en.bin",
+    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-medium.en.bin",
+  },
+  {
+    name: "Large v3 Turbo (Quantized)",
+    size: "574 MB",
+    filename: "ggml-large-v3-turbo-q5_0.bin",
+    url: "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo-q5_0.bin",
+  },
 ];
 
 export async function downloadModel(
