@@ -1,9 +1,5 @@
-export interface LogEntry {
-  timestamp: string;
-  event: string;
-  [key: string]: unknown;
-}
+import { createLogger } from "@weaver/shared/logger";
 
-export function log(entry: LogEntry): void {
-  console.log(JSON.stringify(entry));
-}
+export type { LogEntry } from "@weaver/shared/logger";
+
+export const log = createLogger("server");
