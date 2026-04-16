@@ -12,6 +12,7 @@
     "test": "vitest run && bash ../bin/weaver.test.sh"
   },
   "dependencies": {
+    "@weaver/binding-kiro": "*",
     "@weaver/shared": "*",
     "zod": "^4.3.6"
   },

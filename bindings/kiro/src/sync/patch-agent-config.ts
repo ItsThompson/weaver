@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { isPlainObject } from "../utils/fs";
-import { WEAVER_LOG_HOOK } from "../types/validation";
-import type { SyncResult, TimeoutPatch } from "./types";
+import { isPlainObject } from "@weaver/shared/utils";
+import { WEAVER_LOG_HOOK } from "@weaver/shared/types";
+import type { SyncResult, TimeoutPatch } from "@weaver/shared/sync";
 
 /** Type guard: returns true if the hook entry has a command containing `weaver-log.sh`. */
 function isWeaverHook(

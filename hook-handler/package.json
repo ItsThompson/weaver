@@ -8,6 +8,7 @@
     "test": "vitest run --passWithNoTests && bash weaver-log.test.sh"
   },
   "dependencies": {
+    "@weaver/binding-kiro": "*",
     "@weaver/shared": "*",
     "zod": "^4.3.6"
   },

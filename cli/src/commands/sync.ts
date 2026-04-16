@@ -1,4 +1,4 @@
-import { syncAgentTimeouts } from "@weaver/shared/sync";
+import { syncAgentTimeouts } from "@weaver/binding-kiro/sync";
 import { print } from "../utils/output";
 
 export function sync(_pid: number, args: string[]): void {

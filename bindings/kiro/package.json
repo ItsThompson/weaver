@@ -5,6 +5,16 @@
   "type": "module",
   "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./sync": {
+      "types": "./src/sync/sync.ts",
+      "default": "./src/sync/sync.ts"
+    }
+  },
   "scripts": {
     "build": "tsc --noEmit -p tsconfig.build.json && tsdown",
     "test": "vitest run --passWithNoTests && bash weaver-log.test.sh"

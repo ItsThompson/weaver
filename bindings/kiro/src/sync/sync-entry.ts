@@ -1,1 +1,5 @@
-// CLI entry point: sync logic moved here in Step 5
+import { syncAgentTimeouts } from "./sync";
+
+const cwdIndex = process.argv.indexOf("--cwd");
+const cwd = cwdIndex !== -1 ? process.argv[cwdIndex + 1] : process.cwd();
+syncAgentTimeouts(cwd);

@@ -4,12 +4,12 @@ vi.mock("./utils", () => ({
   patch: vi.fn(),
 }));
 
-vi.mock("@weaver/shared/sync", () => ({
+vi.mock("@weaver/binding-kiro/sync", () => ({
   syncAgentTimeouts: vi.fn(),
 }));
 
 import { post, get, patch } from "./utils";
-import { syncAgentTimeouts } from "@weaver/shared/sync";
+import { syncAgentTimeouts } from "@weaver/binding-kiro/sync";
 import { view } from "./commands/view";
 import { session } from "./commands/session";
 import { rename } from "./commands/rename";

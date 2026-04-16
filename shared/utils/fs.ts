@@ -1,11 +1,6 @@
 import { readFileSync, existsSync } from "node:fs";
 
-/** Type guard for plain objects (not arrays, not null). */
-export function isPlainObject(
-  value: unknown,
-): value is Record<string, unknown> {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
-}
+export { isPlainObject } from "./is-plain-object";
 
 /** Reads a file as UTF-8. Returns null if the file doesn't exist or can't be read. */
 export function readFile(configPath: string): string | null {
