@@ -1,4 +1,5 @@
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 
 const {
   mockReadSessions,
@@ -45,6 +46,7 @@ function makeSession(overrides: Partial<Session> = {}): Session {
     customName: null,
     cwd: "/tmp",
     agentName: null,
+    harness: Harness.KIRO_CLI,
     startTime: "2026-01-01T00:00:00Z",
     lastEventTime: "2026-01-01T00:01:00Z",
     ...overrides,

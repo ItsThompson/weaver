@@ -3,6 +3,7 @@ import { dirname } from "node:path";
 import type { ValidationResult } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
 import { Harness, WeaverEventName } from "@weaver/shared/types";
+import { WEAVER_NOTIFY_URL } from "@weaver/shared/paths";
 import { log } from "./utils/logger";
 
 export function writeValidationEvent(
@@ -38,7 +39,7 @@ export function writeValidationEvent(
   }
 
   // Fire-and-forget server notification
-  fetch("http://localhost:8143/api/notify", {
+  fetch(WEAVER_NOTIFY_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ sessionId, eventName: "validation" }),

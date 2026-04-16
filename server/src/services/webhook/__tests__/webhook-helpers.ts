@@ -18,6 +18,7 @@ export const TEST_SESSION: Session = {
   customName: "my-project",
   cwd: "/Users/me/project",
   agentName: null,
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-01T00:00:00Z",
   lastEventTime: "2026-01-01T00:01:00Z",
 };

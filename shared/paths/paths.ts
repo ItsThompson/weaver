@@ -2,6 +2,8 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 export const weaverDir = () => join(homedir(), ".weaver");
+export const WEAVER_SERVER_URL = "http://localhost:8143";
+export const WEAVER_NOTIFY_URL = `${WEAVER_SERVER_URL}/api/notify`;
 export const logsDir = () => join(weaverDir(), "logs");
 export const configPath = () => join(weaverDir(), "config.json");
 export const sessionsPath = () => join(weaverDir(), "sessions.jsonl");

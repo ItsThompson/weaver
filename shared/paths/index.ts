@@ -1,5 +1,7 @@
 export {
   weaverDir,
+  WEAVER_SERVER_URL,
+  WEAVER_NOTIFY_URL,
   logsDir,
   configPath,
   sessionsPath,

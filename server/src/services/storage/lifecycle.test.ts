@@ -113,12 +113,25 @@ describe("cleanStaleSessions", () => {
     expect(vi.mocked(unlink)).not.toHaveBeenCalled();
   });
 
-  it("skips marker files with no matching session", async () => {
+  it("skips marker files with no matching session when PID is alive", async () => {
     const manager = createLifecycleManager(makeDeps());
-    vi.mocked(readdir).mockResolvedValue([".current-session-999"] as any);
+    vi.mocked(readdir).mockResolvedValue([
+      `.current-session-${process.pid}`,
+    ] as any);
 
     await manager.cleanStaleSessions();
     expect(vi.mocked(unlink)).not.toHaveBeenCalled();
+  });
+
+  it("deletes orphaned marker files when PID is dead and no session exists", async () => {
+    const deps = makeDeps();
+    const manager = createLifecycleManager(deps);
+    vi.mocked(readdir).mockResolvedValue([".current-session-999999"] as any);
+
+    await manager.cleanStaleSessions();
+    expect(vi.mocked(unlink)).toHaveBeenCalledWith(
+      expect.stringContaining(".current-session-999999"),
+    );
   });
 
   it("handles readdir failure gracefully", async () => {

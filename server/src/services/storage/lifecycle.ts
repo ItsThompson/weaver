@@ -79,7 +79,15 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
           const session = sessions.find((s) => s.pid === pid);
           const processName = session ? getProcessName(session) : null;
           if (!processName) {
-            return null;
+            // No session in index: marker file is orphaned. If the PID is
+            // dead, clean it up. If alive, leave it (could be a race with
+            // session creation).
+            try {
+              process.kill(pid, 0);
+              return null;
+            } catch {
+              return { file, pid };
+            }
           }
           const alive = await manager.isProcessRunning(pid, processName);
           return alive ? null : { file, pid };

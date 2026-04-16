@@ -1,6 +1,7 @@
 import "../../__tests__/mocks/services";
 
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 import { SKILL_READ_EVENTS } from "../../__tests__/fixtures/events";
 import {
   toSessionWithStatus,
@@ -19,6 +20,7 @@ const session: Session = {
   customName: null,
   cwd: "/tmp",
   agentName: null,
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-01T00:00:00Z",
   lastEventTime: "2026-01-01T00:01:00Z",
 };

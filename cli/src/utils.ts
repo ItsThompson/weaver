@@ -1,6 +1,7 @@
 import { execSync } from "node:child_process";
+import { WEAVER_SERVER_URL } from "@weaver/shared/paths";
 
-const WEAVER_SERVER = process.env.WEAVER_SERVER ?? "http://localhost:8143";
+const WEAVER_SERVER = process.env.WEAVER_SERVER ?? WEAVER_SERVER_URL;
 
 type HttpResult = { ok: boolean; status: number; data: unknown };
 

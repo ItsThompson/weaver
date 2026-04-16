@@ -1,6 +1,7 @@
 import { mkdir, appendFile } from "node:fs/promises";
 import { atomicWriteFile } from "../../utils/atomic-write";
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 import { weaverDir, logsDir, sessionsPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { FileCache, parseJsonlFile } from "../file-cache/index";
@@ -35,15 +36,20 @@ export function createSessionStore(): SessionStore {
 
     async readSessions(): Promise<Session[]> {
       const filePath = sessionsPath();
-      return sessionCache.get(filePath, () =>
-        parseJsonlFile<Session>(filePath, (line) =>
+      return sessionCache.get(filePath, async () => {
+        const sessions = await parseJsonlFile<Session>(filePath, (line) =>
           log({
             timestamp: new Date().toISOString(),
             event: "malformed_session_line",
             line,
           }),
-        ),
-      );
+        );
+        // Backfill harness for pre-migration sessions that may lack the field
+        sessions.forEach((s) => {
+          s.harness ??= Harness.KIRO_CLI;
+        });
+        return sessions;
+      });
     },
 
     async appendSession(session: Session): Promise<void> {

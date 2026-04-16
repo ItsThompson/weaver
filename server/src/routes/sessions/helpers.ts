@@ -3,7 +3,6 @@ import type {
   SessionWithStatus,
   ActivityStatus,
 } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
 import { getAdapter } from "@weaver/shared/adapter-registry";
 import { extractActiveSkillPaths } from "../../services/log-parser/index";
 import {
@@ -33,7 +32,7 @@ export async function safeConfiguredSkills(
   session: Session,
 ): Promise<string[]> {
   try {
-    const adapter = getAdapter(session.harness ?? Harness.KIRO_CLI);
+    const adapter = getAdapter(session.harness);
     const skillPaths = adapter
       .skillSearchPaths(session.cwd)
       .map((entry) => entry.path);

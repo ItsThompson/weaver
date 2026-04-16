@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { SWRConfig } from "swr";
 import type { SessionWithStatus } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 
 import "../../__tests__/mocks/api";
 
@@ -27,6 +28,7 @@ const openSession: SessionWithStatus = {
   customName: "My Project",
   cwd: "/projects/app",
   agentName: "dev",
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-02T00:00:00Z",
   lastEventTime: "2026-01-02T00:05:00Z",
   status: "open",
@@ -39,6 +41,7 @@ const closedSession: SessionWithStatus = {
   customName: null,
   cwd: "/tmp/other",
   agentName: null,
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-01T00:00:00Z",
   lastEventTime: "2026-01-01T00:10:00Z",
   status: "closed",

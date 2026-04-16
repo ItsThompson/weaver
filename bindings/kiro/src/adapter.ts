@@ -10,7 +10,6 @@ import { Harness, WeaverEventName } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
 import type { HookEventData } from "@weaver/shared/types";
 import { sessionMarkerPath } from "@weaver/shared/paths";
-import { log } from "./utils/logger";
 
 const EVENT_NAME_MAP: Record<string, WeaverEventName> = {
   agentSpawn: WeaverEventName.AGENT_SPAWN,

@@ -1,5 +1,9 @@
 import { appendFileSync } from "node:fs";
-import { sessionLogPath, orphanPath } from "@weaver/shared/paths";
+import {
+  sessionLogPath,
+  orphanPath,
+  WEAVER_NOTIFY_URL,
+} from "@weaver/shared/paths";
 import { claudeCodeAdapter } from "./adapter";
 import { log } from "./utils/logger";
 
@@ -35,7 +39,7 @@ const logPath =
   sessionId === "orphan" ? orphanPath() : sessionLogPath(sessionId);
 appendFileSync(logPath, JSON.stringify(event) + "\n");
 
-fetch("http://localhost:8143/api/notify", {
+fetch(WEAVER_NOTIFY_URL, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({ sessionId, eventName: event.eventName }),

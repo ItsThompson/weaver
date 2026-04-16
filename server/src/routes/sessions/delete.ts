@@ -1,6 +1,5 @@
 import type { FastifyInstance } from "fastify";
 import type { ApiError } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
 import { unlink } from "node:fs/promises";
 import { sessionLogPath } from "@weaver/shared/paths";
 import { getAdapter } from "@weaver/shared/adapter-registry";
@@ -35,7 +34,7 @@ export function registerDeleteRoute(server: FastifyInstance): void {
 
       // Harness-specific cleanup (kiro: delete marker file, claude-code: no-op)
       try {
-        const adapter = getAdapter(session.harness ?? Harness.KIRO_CLI);
+        const adapter = getAdapter(session.harness);
         await adapter.cleanupSession(session);
       } catch (e) {
         log({

@@ -10,7 +10,7 @@ export interface Session {
   agentName: string | null;
   startTime: string;
   lastEventTime: string;
-  harness?: Harness;
+  harness: Harness;
 }
 
 // Computed at runtime by checking if pid is still running
