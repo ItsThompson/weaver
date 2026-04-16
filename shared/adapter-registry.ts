@@ -15,3 +15,7 @@ export function getAdapter(harness: string): HarnessAdapter {
   }
   return adapter;
 }
+
+export function getRegisteredAdapters(): HarnessAdapter[] {
+  return [...adapters.values()];
+}

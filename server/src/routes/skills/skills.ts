@@ -5,8 +5,7 @@ import type {
   ApiError,
   SkillSearchPath,
 } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
-import { getAdapter } from "@weaver/shared/adapter-registry";
+import { getRegisteredAdapters } from "@weaver/shared/adapter-registry";
 import {
   buildSkillGraph,
   getSkillDetail,
@@ -18,17 +17,10 @@ function allSkillPaths(configPaths: string[]): SkillSearchPath[] {
     path,
     source: "workspace",
   }));
-  // TODO: The skill graph endpoint has no session context to determine which
-  // harness is active. Once multiple harnesses are common, combine global paths
-  // from all registered adapters instead of hardcoding kiro.
-  try {
-    const global = getAdapter(Harness.KIRO_CLI)
-      .skillSearchPaths("")
-      .filter((entry) => entry.source === "global");
-    return [...workspace, ...global];
-  } catch {
-    return workspace;
-  }
+  const global = getRegisteredAdapters().flatMap((adapter) =>
+    adapter.skillSearchPaths("").filter((entry) => entry.source === "global"),
+  );
+  return [...workspace, ...global];
 }
 
 export function registerSkillRoutes(server: FastifyInstance): void {
