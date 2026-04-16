@@ -1,4 +1,5 @@
-import { appendFileSync } from "node:fs";
+import { appendFileSync, mkdirSync } from "node:fs";
+import { dirname } from "node:path";
 import { sessionLogPath, orphanPath, WEAVER_NOTIFY_URL } from "./paths/index";
 import type { HarnessAdapter } from "./types/harness";
 import type { LogEntry } from "./logger/logger";
@@ -37,6 +38,7 @@ export async function logEvent(
 
   const logPath =
     sessionId === "orphan" ? orphanPath() : sessionLogPath(sessionId);
+  mkdirSync(dirname(logPath), { recursive: true });
   appendFileSync(logPath, JSON.stringify(event) + "\n");
 
   fetch(WEAVER_NOTIFY_URL, {
