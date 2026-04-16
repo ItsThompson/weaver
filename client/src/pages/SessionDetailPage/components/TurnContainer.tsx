@@ -19,7 +19,7 @@ export function TurnContainer({
   showTools,
   onToggleTools,
 }: TurnContainerProps) {
-  const firstEvent = turn.events[0]?.event.hook_event_name;
+  const firstEvent = turn.events[0]?.eventName;
 
   if (firstEvent === "agentSpawn") {
     return (

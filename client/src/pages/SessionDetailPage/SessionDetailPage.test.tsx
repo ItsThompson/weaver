@@ -40,8 +40,11 @@ const mockTurns: TurnGroup[] = [
     endTime: "2024-01-01T10:01:00Z",
     events: [
       {
+        sessionId: "test-session-id",
         timestamp: "2024-01-01T10:00:00Z",
-        event: { hook_event_name: "agentSpawn", cwd: "/test/path" },
+        harness: "kiro-cli",
+        eventName: "agentSpawn",
+        cwd: "/test/path",
       },
     ],
     userPrompt: null,
@@ -54,8 +57,11 @@ const mockTurns: TurnGroup[] = [
     endTime: "2024-01-01T10:06:00Z",
     events: [
       {
+        sessionId: "test-session-id",
         timestamp: "2024-01-01T10:05:00Z",
-        event: { hook_event_name: "userPrompt", cwd: "/test/path" },
+        harness: "kiro-cli",
+        eventName: "userPromptSubmit",
+        cwd: "/test/path",
       },
     ],
     userPrompt: "Test user prompt",
