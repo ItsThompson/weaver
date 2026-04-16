@@ -10,11 +10,17 @@ export interface SkillSearchPath {
   source: "workspace" | "global";
 }
 
+export interface EventContext {
+  sessionId: string;
+  timestamp: string;
+  pid?: number;
+}
+
 export interface HarnessAdapter {
   name: string;
   processName: string;
   providesSessionId: boolean;
-  parseEvent(raw: unknown): WeaverEvent;
+  parseEvent(raw: unknown, context: EventContext): WeaverEvent;
   globalConfigDir(): string;
   skillSearchPaths(cwd: string): SkillSearchPath[];
   cleanupSession(session: { id: string; pid: number }): Promise<void>;
