@@ -5,6 +5,8 @@ import type {
   TurnGroup,
   ApiError,
 } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import {
   readSessions,
   writeSessions,
@@ -35,7 +37,8 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     const sessions = await readSessions();
     const results = await Promise.all(
       sessions.map(async (s) => {
-        const isOpen = await isProcessRunning(s.pid);
+        const processName = getProcessName(s);
+        const isOpen = await isProcessRunning(s.pid, processName);
         let activity: SessionWithStatus["activity"];
         if (isOpen) {
           const last = await getLastEvent(s.id);
@@ -67,7 +70,7 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       return reply.status(404).send({ error: "Log file not found" });
     }
 
-    const isOpen = await isProcessRunning(session.pid);
+    const isOpen = await isProcessRunning(session.pid, getProcessName(session));
     const lastEvent = events.length > 0 ? events[events.length - 1] : null;
     const activity = isOpen
       ? deriveActivity(
@@ -148,4 +151,12 @@ export function registerSessionRoutes(server: FastifyInstance): void {
   );
 
   registerDeleteRoute(server);
+}
+
+function getProcessName(session: Session): string {
+  try {
+    return getAdapter(session.harness ?? Harness.KIRO_CLI).processName;
+  } catch {
+    return "kiro-cli";
+  }
 }

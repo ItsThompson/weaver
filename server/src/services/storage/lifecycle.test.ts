@@ -51,18 +51,32 @@ describe("isProcessRunning", () => {
   it("returns true for a running kiro-cli process", async () => {
     const manager = createLifecycleManager(makeDeps());
     mockExecFileOutput("/path/to/kiro-cli chat --agent dev\n");
-    await expect(manager.isProcessRunning(process.pid)).resolves.toBe(true);
+    await expect(
+      manager.isProcessRunning(process.pid, "kiro-cli"),
+    ).resolves.toBe(true);
   });
 
   it("returns false for a non-existent process", async () => {
     const manager = createLifecycleManager(makeDeps());
-    await expect(manager.isProcessRunning(999999)).resolves.toBe(false);
+    await expect(manager.isProcessRunning(999999, "kiro-cli")).resolves.toBe(
+      false,
+    );
   });
 
   it("returns false when PID is alive but not kiro-cli (PID reuse)", async () => {
     const manager = createLifecycleManager(makeDeps());
     mockExecFileOutput("/usr/bin/some-other-process\n");
-    await expect(manager.isProcessRunning(process.pid)).resolves.toBe(false);
+    await expect(
+      manager.isProcessRunning(process.pid, "kiro-cli"),
+    ).resolves.toBe(false);
+  });
+
+  it("matches claude process name", async () => {
+    const manager = createLifecycleManager(makeDeps());
+    mockExecFileOutput("/usr/local/bin/claude --session abc\n");
+    await expect(manager.isProcessRunning(process.pid, "claude")).resolves.toBe(
+      true,
+    );
   });
 });
 

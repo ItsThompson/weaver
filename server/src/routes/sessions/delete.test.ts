@@ -1,12 +1,18 @@
 import "../../__tests__/mocks/fs";
 import "../../__tests__/mocks/services";
 
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
+import { claudeCodeAdapter } from "@weaver/binding-claude-code";
 import { SESSION_A } from "../../__tests__/fixtures/sessions";
 import { readSessions, writeSessions } from "../../services/storage/index";
 import { unlink } from "node:fs/promises";
 import { broadcast } from "../../services/event-bus";
 import Fastify from "fastify";
 import { registerDeleteRoute } from "./delete";
+
+registerAdapter(kiroAdapter);
+registerAdapter(claudeCodeAdapter);
 
 let server: ReturnType<typeof Fastify>;
 
@@ -33,9 +39,7 @@ describe("DELETE /api/sessions/:id", () => {
     expect(vi.mocked(unlink)).toHaveBeenCalledWith(
       expect.stringContaining("aaa.jsonl"),
     );
-    expect(vi.mocked(unlink)).toHaveBeenCalledWith(
-      expect.stringContaining(".current-session-100"),
-    );
+    // Marker file cleanup is handled by adapter.cleanupSession() (uses unlinkSync)
     expect(vi.mocked(writeSessions)).toHaveBeenCalledWith([]);
     expect(vi.mocked(broadcast)).toHaveBeenCalledWith("aaa");
   });

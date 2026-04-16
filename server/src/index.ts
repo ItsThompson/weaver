@@ -3,6 +3,9 @@ import { existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import Fastify, { FastifyError } from "fastify";
 import fastifyStatic from "@fastify/static";
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
+import { claudeCodeAdapter } from "@weaver/binding-claude-code";
 import { registerHealthRoute } from "./routes/health";
 import { registerSessionRoutes } from "./routes/sessions/index";
 import { registerEventRoutes } from "./routes/events/index";
@@ -27,6 +30,9 @@ import { serviceManager } from "./services/service-manager-instance";
 import { readConfig } from "./services/config/index";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+
+registerAdapter(kiroAdapter);
+registerAdapter(claudeCodeAdapter);
 
 const PORT = 8143;
 

@@ -1,5 +1,7 @@
 import { execFile as defaultExecFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import { readSessions, isProcessRunning } from "./storage/index";
 import { getLastEvent, deriveActivity } from "./log-parser/index";
 import { log as defaultLog } from "../utils/logger";
@@ -12,7 +14,7 @@ const ACTIVE_STATES = new Set(["processing", "running_tool"]);
 
 export interface KeepAwakeDeps {
   readSessions: () => Promise<Session[]>;
-  isProcessRunning: (pid: number) => Promise<boolean>;
+  isProcessRunning: (pid: number, processName: string) => Promise<boolean>;
   getLastEvent: (sessionId: string) => Promise<LastEvent | null>;
   deriveActivity: (
     eventName: HookEventName,
@@ -27,13 +29,21 @@ export interface KeepAwake {
   stopKeepAwake: () => void;
 }
 
+function getProcessName(session: Session): string {
+  try {
+    return getAdapter(session.harness ?? Harness.KIRO_CLI).processName;
+  } catch {
+    return "kiro-cli";
+  }
+}
+
 export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
   let interval: ReturnType<typeof setInterval> | null = null;
 
   async function hasActiveSessions(): Promise<boolean> {
     const sessions = await deps.readSessions();
     for (const s of sessions) {
-      if (!(await deps.isProcessRunning(s.pid))) {
+      if (!(await deps.isProcessRunning(s.pid, getProcessName(s)))) {
         continue;
       }
       const last = await deps.getLastEvent(s.id);

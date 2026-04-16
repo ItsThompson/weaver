@@ -3,6 +3,8 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { join } from "node:path";
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import type { LogEntry } from "../../utils/logger";
 import { readSessions } from "./sessions";
 import { log } from "../../utils/logger";
@@ -14,7 +16,7 @@ const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
 const PID_POLL_INTERVAL_MS = 30 * 1000;
 
 export interface LifecycleManager {
-  isProcessRunning(pid: number): Promise<boolean>;
+  isProcessRunning(pid: number, processName: string): Promise<boolean>;
   cleanStaleSessions(): Promise<void>;
   startStaleSessionCleanup(): void;
   startPidPolling(onSessionClosed: (sessionId: string) => void): void;
@@ -33,7 +35,7 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
   const openPids = new Set<number>();
 
   const manager: LifecycleManager = {
-    async isProcessRunning(pid: number): Promise<boolean> {
+    async isProcessRunning(pid: number, processName: string): Promise<boolean> {
       try {
         process.kill(pid, 0);
       } catch {
@@ -46,7 +48,7 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
           "-o",
           "args=",
         ]);
-        return stdout.includes("kiro-cli");
+        return stdout.includes(processName);
       } catch {
         return false;
       }
@@ -71,7 +73,7 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
           if (isNaN(pid)) {
             return null;
           }
-          const alive = await manager.isProcessRunning(pid);
+          const alive = await manager.isProcessRunning(pid, "kiro-cli");
           return alive ? null : { file, pid };
         }),
       );
@@ -108,10 +110,19 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
       const poll = async () => {
         const sessions = await deps.readSessions();
         const results = await Promise.all(
-          sessions.map(async (s) => ({
-            session: s,
-            alive: await manager.isProcessRunning(s.pid),
-          })),
+          sessions.map(async (s) => {
+            const harness = s.harness ?? Harness.KIRO_CLI;
+            let processName: string;
+            try {
+              processName = getAdapter(harness).processName;
+            } catch {
+              processName = "kiro-cli";
+            }
+            return {
+              session: s,
+              alive: await manager.isProcessRunning(s.pid, processName),
+            };
+          }),
         );
         const currentPids = new Set(
           results.filter((r) => r.alive).map((r) => r.session.pid),

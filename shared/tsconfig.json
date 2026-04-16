@@ -10,6 +10,7 @@
     "utils/**/*.ts",
     "sync/**/*.ts",
     "paths/**/*.ts",
-    "logger/**/*.ts"
+    "logger/**/*.ts",
+    "adapter-registry.ts"
   ]
 }
