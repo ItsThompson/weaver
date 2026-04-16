@@ -5,8 +5,7 @@ import type {
   TurnGroup,
   ApiError,
 } from "@weaver/shared/types";
-import { Harness, WeaverEventName } from "@weaver/shared/types";
-import { getAdapter } from "@weaver/shared/adapter-registry";
+import { WeaverEventName } from "@weaver/shared/types";
 import {
   readSessions,
   writeSessions,
@@ -29,6 +28,7 @@ import {
   safeConfiguredSkills,
 } from "./helpers";
 import { registerDeleteRoute } from "./delete";
+import { getProcessName } from "../../utils/get-process-name";
 import { patchSessionBody, renameBody, webhookToggleBody } from "../schemas";
 import { zodBody } from "../schema-utils";
 
@@ -151,12 +151,4 @@ export function registerSessionRoutes(server: FastifyInstance): void {
   );
 
   registerDeleteRoute(server);
-}
-
-function getProcessName(session: Session): string {
-  try {
-    return getAdapter(session.harness ?? Harness.KIRO_CLI).processName;
-  } catch {
-    return "kiro-cli";
-  }
 }

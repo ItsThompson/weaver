@@ -1,18 +1,5 @@
 import type { WeaverEvent } from "@weaver/shared/types";
-import { Harness, WeaverEventName } from "@weaver/shared/types";
-
-const EVENT_NAME_MAP: Record<string, WeaverEventName> = {
-  agentSpawn: WeaverEventName.AGENT_SPAWN,
-  stop: WeaverEventName.STOP,
-  preToolUse: WeaverEventName.PRE_TOOL_USE,
-  postToolUse: WeaverEventName.POST_TOOL_USE,
-  userPromptSubmit: WeaverEventName.USER_PROMPT_SUBMIT,
-  validation: WeaverEventName.VALIDATION,
-};
-
-function resolveEventName(name: string): WeaverEventName {
-  return EVENT_NAME_MAP[name] ?? (name as WeaverEventName);
-}
+import { Harness, resolveEventName } from "@weaver/shared/types";
 
 export function makeEvent(
   name: string,

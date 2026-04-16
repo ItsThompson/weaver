@@ -2,8 +2,7 @@ import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import type { ValidationResult } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
-import { WeaverEventName } from "@weaver/shared/types";
-import type { Harness } from "@weaver/shared/types";
+import { Harness, WeaverEventName } from "@weaver/shared/types";
 import { log } from "./utils/logger";
 
 export function writeValidationEvent(
@@ -13,12 +12,12 @@ export function writeValidationEvent(
   results: ValidationResult[],
   changedFiles: string[],
   agentTestedDirs: string[],
-  harness = "kiro-cli" as string,
+  harness: Harness = Harness.KIRO_CLI,
 ): void {
   const entry: WeaverEvent = {
     sessionId,
     timestamp: new Date().toISOString(),
-    harness: harness as Harness,
+    harness,
     eventName: WeaverEventName.VALIDATION,
     cwd: "",
     validationTrigger: trigger,

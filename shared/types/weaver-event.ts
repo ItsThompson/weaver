@@ -46,3 +46,15 @@ export interface WeaverEvent {
   permissionMode?: string;
   raw?: unknown;
 }
+
+const WEAVER_EVENT_NAME_VALUES = new Set<string>(
+  Object.values(WeaverEventName),
+);
+
+/** Resolve a string event name to a WeaverEventName enum value. */
+export function resolveEventName(name: string): WeaverEventName {
+  if (WEAVER_EVENT_NAME_VALUES.has(name)) {
+    return name as WeaverEventName;
+  }
+  throw new Error(`Unknown event name: "${name}"`);
+}

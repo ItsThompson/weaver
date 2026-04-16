@@ -1,13 +1,13 @@
 import { execFile as defaultExecFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
-import { Harness, WeaverEventName } from "@weaver/shared/types";
-import { getAdapter } from "@weaver/shared/adapter-registry";
+import { WeaverEventName } from "@weaver/shared/types";
 import { readSessions, isProcessRunning } from "./storage/index";
 import { getLastEvent, deriveActivity } from "./log-parser/index";
 import { log as defaultLog } from "../utils/logger";
 import type { LogEntry } from "../utils/logger";
 import type { LastEvent } from "./log-parser/types";
 import type { ActivityStatus } from "@weaver/shared/types";
+import { getProcessName as defaultGetProcessName } from "../utils/get-process-name";
 
 const POLL_INTERVAL_MS = 60_000;
 const ACTIVE_STATES = new Set(["processing", "running_tool"]);
@@ -22,19 +22,12 @@ export interface KeepAwakeDeps {
   ) => ActivityStatus;
   log: (entry: LogEntry) => void;
   execFile: typeof defaultExecFile;
+  getProcessName: (session: Session) => string;
 }
 
 export interface KeepAwake {
   startKeepAwake: (scriptPath: string) => void;
   stopKeepAwake: () => void;
-}
-
-function getProcessName(session: Session): string {
-  try {
-    return getAdapter(session.harness ?? Harness.KIRO_CLI).processName;
-  } catch {
-    return "kiro-cli";
-  }
 }
 
 export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
@@ -43,7 +36,7 @@ export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
   async function hasActiveSessions(): Promise<boolean> {
     const sessions = await deps.readSessions();
     for (const s of sessions) {
-      if (!(await deps.isProcessRunning(s.pid, getProcessName(s)))) {
+      if (!(await deps.isProcessRunning(s.pid, deps.getProcessName(s)))) {
         continue;
       }
       const last = await deps.getLastEvent(s.id);
@@ -108,5 +101,6 @@ const defaultKeepAwake = createKeepAwake({
   deriveActivity,
   log: defaultLog,
   execFile: defaultExecFile,
+  getProcessName: defaultGetProcessName,
 });
 export const { startKeepAwake, stopKeepAwake } = defaultKeepAwake;

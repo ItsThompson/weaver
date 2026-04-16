@@ -18,6 +18,9 @@ function allSkillPaths(configPaths: string[]): SkillSearchPath[] {
     path,
     source: "workspace",
   }));
+  // TODO: The skill graph endpoint has no session context to determine which
+  // harness is active. Once multiple harnesses are common, combine global paths
+  // from all registered adapters instead of hardcoding kiro.
   try {
     const global = getAdapter(Harness.KIRO_CLI)
       .skillSearchPaths("")

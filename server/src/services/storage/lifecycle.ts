@@ -3,12 +3,11 @@ import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { join } from "node:path";
 import type { Session } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
-import { getAdapter } from "@weaver/shared/adapter-registry";
 import type { LogEntry } from "../../utils/logger";
 import { readSessions } from "./sessions";
 import { log } from "../../utils/logger";
 import { weaverDir } from "@weaver/shared/paths";
+import { getProcessName } from "../../utils/get-process-name";
 
 const execFileAsync = promisify(execFile);
 
@@ -67,13 +66,19 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
         f.startsWith(".current-session-"),
       );
 
+      // Marker files are the Weaver-level PID fallback for harnesses that don't
+      // provide native session IDs. Look up the session to resolve the correct
+      // process name for alive-detection.
+      const sessions = await deps.readSessions();
       const checked = await Promise.all(
         sessionFiles.map(async (file) => {
           const pid = parseInt(file.replace(".current-session-", ""), 10);
           if (isNaN(pid)) {
             return null;
           }
-          const alive = await manager.isProcessRunning(pid, "kiro-cli");
+          const session = sessions.find((s) => s.pid === pid);
+          const processName = session ? getProcessName(session) : "kiro-cli";
+          const alive = await manager.isProcessRunning(pid, processName);
           return alive ? null : { file, pid };
         }),
       );
@@ -110,19 +115,10 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
       const poll = async () => {
         const sessions = await deps.readSessions();
         const results = await Promise.all(
-          sessions.map(async (s) => {
-            const harness = s.harness ?? Harness.KIRO_CLI;
-            let processName: string;
-            try {
-              processName = getAdapter(harness).processName;
-            } catch {
-              processName = "kiro-cli";
-            }
-            return {
-              session: s,
-              alive: await manager.isProcessRunning(s.pid, processName),
-            };
-          }),
+          sessions.map(async (s) => ({
+            session: s,
+            alive: await manager.isProcessRunning(s.pid, getProcessName(s)),
+          })),
         );
         const currentPids = new Set(
           results.filter((r) => r.alive).map((r) => r.session.pid),

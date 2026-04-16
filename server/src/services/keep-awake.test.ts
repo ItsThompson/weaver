@@ -172,6 +172,7 @@ describe("createKeepAwake (factory)", () => {
       deriveActivity: vi.fn().mockReturnValue("idle"),
       log: vi.fn(),
       execFile: mockExecFile,
+      getProcessName: vi.fn().mockReturnValue("kiro-cli"),
       ...overrides,
     };
   }

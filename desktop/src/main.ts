@@ -50,7 +50,9 @@ app.on("ready", async () => {
 
   currentConfig = await fetchConfig(server.SERVER_URL);
   installCli();
-  installHooks();
+  if (!process.env.WEAVER_TEST) {
+    installHooks();
+  }
 
   createWindow(server.SERVER_URL, currentConfig);
   createTray(

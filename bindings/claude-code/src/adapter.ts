@@ -50,6 +50,8 @@ export const claudeCodeAdapter: HarnessAdapter = {
   providesSessionId: true,
 
   parseEvent(raw: unknown, context: EventContext): WeaverEvent {
+    // TODO: Add a typed schema (e.g., Zod) when the Claude Code hook contract stabilizes.
+    // Currently uses untyped Record access: field name typos are silent.
     const data = raw as Record<string, unknown>;
     const hookName = String(data.hook_event_name ?? "");
     const eventName = EVENT_NAME_MAP[hookName];

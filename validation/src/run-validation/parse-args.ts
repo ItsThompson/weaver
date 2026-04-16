@@ -1,11 +1,15 @@
+import { Harness } from "@weaver/shared/types";
+
 export interface ValidateArgs {
   sessionId: string;
   cwd: string;
   trigger: "stop" | "postToolUse";
-  harness: string;
+  harness: Harness;
   toolName?: string;
   toolPath?: string;
 }
+
+const VALID_HARNESSES = new Set<string>(Object.values(Harness));
 
 export function parseArgs(argv: string[]): ValidateArgs {
   const args: Record<string, string> = {};
@@ -16,11 +20,14 @@ export function parseArgs(argv: string[]): ValidateArgs {
       args[key] = val;
     }
   }
+  const harness = args["harness"] ?? "kiro-cli";
   return {
     sessionId: args["session-id"],
     cwd: args["cwd"],
     trigger: args["trigger"] as "stop" | "postToolUse",
-    harness: args["harness"] ?? "kiro-cli",
+    harness: VALID_HARNESSES.has(harness)
+      ? (harness as Harness)
+      : Harness.KIRO_CLI,
     toolName: args["tool-name"],
     toolPath: args["tool-path"],
   };
