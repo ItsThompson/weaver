@@ -39,6 +39,10 @@
     "./adapter-registry": {
       "types": "./dist/adapter-registry.d.ts",
       "default": "./dist/adapter-registry.js"
+    },
+    "./log-event": {
+      "types": "./dist/log-event.d.ts",
+      "default": "./dist/log-event.js"
     }
   },
   "scripts": {

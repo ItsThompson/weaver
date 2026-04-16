@@ -11,6 +11,7 @@
     "sync/**/*.ts",
     "paths/**/*.ts",
     "logger/**/*.ts",
-    "adapter-registry.ts"
+    "adapter-registry.ts",
+    "log-event.ts"
   ]
 }
