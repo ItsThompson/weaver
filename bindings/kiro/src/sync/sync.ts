@@ -47,7 +47,7 @@ export function syncAgentTimeouts(
       return;
     }
 
-    readdirSync(dir).reduce<void>((_, file) => {
+    readdirSync(dir).forEach((file) => {
       if (!file.endsWith(".json")) {
         return;
       }
@@ -58,7 +58,7 @@ export function syncAgentTimeouts(
         result,
         options?.dryRun ?? false,
       );
-    }, undefined);
+    });
   });
 
   return result;

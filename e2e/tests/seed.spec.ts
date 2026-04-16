@@ -4,11 +4,12 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import {
   makeSession,
-  makeHookEvent,
+  makeWeaverEvent,
   seedSession,
   seedLogEvents,
   seedConfig,
 } from "../fixtures/seed";
+import { WeaverEventName } from "@weaver/shared/types";
 
 test.describe("seed helpers", () => {
   let tmpDir: string;
@@ -37,8 +38,8 @@ test.describe("seed helpers", () => {
   test("seedLogEvents writes events to correct file", async () => {
     const sessionId = "test-session-id";
     const events = [
-      makeHookEvent(),
-      makeHookEvent({ timestamp: "2026-01-01T00:00:00Z" }),
+      makeWeaverEvent({ sessionId }),
+      makeWeaverEvent({ sessionId, timestamp: "2026-01-01T00:00:00Z" }),
     ];
     await seedLogEvents(tmpDir, sessionId, events);
     const raw = await readFile(
@@ -50,7 +51,7 @@ test.describe("seed helpers", () => {
       .split("\n")
       .map((l) => JSON.parse(l));
     expect(lines).toHaveLength(2);
-    expect(lines[0].event.hook_event_name).toBe("userPromptSubmit");
+    expect(lines[0].eventName).toBe("userPromptSubmit");
     expect(lines[1].timestamp).toBe("2026-01-01T00:00:00Z");
   });
 
@@ -73,11 +74,12 @@ test.describe("seed helpers", () => {
     expect(session.cwd).toBeTruthy();
   });
 
-  test("makeHookEvent returns complete object with overrides", () => {
-    const event = makeHookEvent({
-      event: { hook_event_name: "stop", cwd: "/test" },
+  test("makeWeaverEvent returns complete object with overrides", () => {
+    const event = makeWeaverEvent({
+      eventName: WeaverEventName.STOP,
+      cwd: "/test",
     });
-    expect(event.event.hook_event_name).toBe("stop");
+    expect(event.eventName).toBe("stop");
     expect(event.timestamp).toBeTruthy();
   });
 });

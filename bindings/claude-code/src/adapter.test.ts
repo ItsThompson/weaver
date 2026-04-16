@@ -100,6 +100,40 @@ describe("claudeCodeAdapter", () => {
       });
     });
 
+    it("infers failure from non-zero exit_code", () => {
+      const event = claudeCodeAdapter.parseEvent(
+        {
+          hook_event_name: "PostToolUse",
+          session_id: "s1",
+          cwd: "/project",
+          tool_name: "Bash",
+          tool_response: { stdout: "", exit_code: 1 },
+        },
+        context,
+      );
+      expect(event.toolResponse).toEqual({
+        success: false,
+        result: [{ stdout: "", exit_code: 1 }],
+      });
+    });
+
+    it("infers failure from error field", () => {
+      const event = claudeCodeAdapter.parseEvent(
+        {
+          hook_event_name: "PostToolUse",
+          session_id: "s1",
+          cwd: "/project",
+          tool_name: "Read",
+          tool_response: { error: "file not found" },
+        },
+        context,
+      );
+      expect(event.toolResponse).toEqual({
+        success: false,
+        result: [{ error: "file not found" }],
+      });
+    });
+
     it("maps Stop", () => {
       const event = claudeCodeAdapter.parseEvent(
         { hook_event_name: "Stop", session_id: "s1", cwd: "/project" },

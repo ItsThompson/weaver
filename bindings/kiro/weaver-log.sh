@@ -16,7 +16,7 @@ mkdir -p "$LOGS_DIR"
 # Resolve binding directory (follow symlinks)
 SCRIPT_PATH="$0"
 if [ -L "$SCRIPT_PATH" ]; then
-  SCRIPT_PATH="$(readlink "$SCRIPT_PATH")"
+  SCRIPT_PATH="$(readlink -f "$SCRIPT_PATH" 2>/dev/null || perl -MCwd -e 'print Cwd::abs_path shift' "$SCRIPT_PATH")"
 fi
 BINDING_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 ROOT_DIR="$(cd "$BINDING_DIR/../.." && pwd)"

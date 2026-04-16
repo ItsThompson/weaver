@@ -40,8 +40,10 @@ function normalizeToolResponse(
   if ("success" in obj && "result" in obj && Array.isArray(obj.result)) {
     return { success: Boolean(obj.success), result: obj.result };
   }
-  // Wrap non-standard response shape
-  return { success: true, result: [raw] };
+  // Infer success from common failure indicators when shape is non-standard
+  const hasFailureSignal =
+    ("exit_code" in obj && obj.exit_code !== 0) || "error" in obj;
+  return { success: !hasFailureSignal, result: [raw] };
 }
 
 export const claudeCodeAdapter: HarnessAdapter = {

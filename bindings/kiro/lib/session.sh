@@ -19,7 +19,7 @@ manage_session() {
     fi
 
     # Append session metadata to the index
-    local session_meta="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":$agent_json,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\"}"
+    local session_meta="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":$agent_json,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\",\"harness\":\"kiro-cli\"}"
     echo "$session_meta" >> "$SESSIONS_FILE"
 
     touch "$LOGS_DIR/$SESSION_ID.jsonl"
