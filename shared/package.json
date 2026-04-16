@@ -35,6 +35,10 @@
     "./logger": {
       "types": "./dist/logger/index.d.ts",
       "default": "./dist/logger/index.js"
+    },
+    "./adapter-registry": {
+      "types": "./dist/adapter-registry.d.ts",
+      "default": "./dist/adapter-registry.js"
     }
   },
   "scripts": {

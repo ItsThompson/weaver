@@ -1,4 +1,6 @@
 import type { ValidationResult } from "./validation";
+import type { WeaverEvent } from "./weaver-event";
+import { WeaverEventName } from "./weaver-event";
 
 export const HOOK_EVENT_NAMES = [
   "agentSpawn",
@@ -9,6 +11,7 @@ export const HOOK_EVENT_NAMES = [
   "validation",
 ] as const;
 
+/** @deprecated Use {@link WeaverEventName} instead. */
 export type HookEventName = (typeof HOOK_EVENT_NAMES)[number];
 
 // Raw hook event as received from kiro-cli via STDIN
@@ -24,7 +27,10 @@ export interface HookEventData {
   };
 }
 
-// Timestamped wrapper written to per-session JSONL log files
+/**
+ * @deprecated Use {@link WeaverEvent} instead.
+ * Timestamped wrapper written to per-session JSONL log files (legacy format).
+ */
 export interface HookEvent {
   timestamp: string;
   pid?: number;
