@@ -23,7 +23,6 @@
         "./server/src/**",
         "./server/package.json",
         "./cli/src/**",
-        "./hook-handler/src/**",
         "./desktop/src/**",
         "./client/src/**",
         "~/Desktop/weaver-audit-fixes/progress.md"

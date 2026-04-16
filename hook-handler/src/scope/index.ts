@@ -1,1 +1,0 @@
-export { resolveTestDirs } from "./scope";

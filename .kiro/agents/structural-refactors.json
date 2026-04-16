@@ -25,14 +25,8 @@
         "./server/src/services/webhook/**",
         "./server/src/services/keep-awake.test.ts",
         "./server/src/services/orphan-storage/**",
-        "./hook-handler/src/session-analysis/**",
-        "./hook-handler/src/validate/**",
-        "./hook-handler/src/scope/**",
-        "./hook-handler/src/__test-helpers__/**",
-        "./hook-handler/src/path-utils/**",
-        "./hook-handler/src/changed-files/**",
-        "./hook-handler/src/turn-boundary/**",
-        "./hook-handler/src/agent-tests/**",
+        "./validation/src/**",
+        "./bindings/kiro/**",
         "~/Desktop/structural-refactors/progress.md"
       ]
     },

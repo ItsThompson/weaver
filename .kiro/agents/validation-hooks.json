@@ -31,7 +31,8 @@
     "fs_write": {
       "allowedPaths": [
         "./shared/types/**",
-        "./hook-handler/**",
+        "./bindings/kiro/**",
+        "./validation/**",
         "./server/src/services/log-parser/**",
         "./server/src/__tests__/**",
         "./client/src/components/ValidationBanner/**",

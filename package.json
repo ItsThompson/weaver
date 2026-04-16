@@ -7,7 +7,6 @@
     "server",
     "client",
     "cli",
-    "hook-handler",
     "bindings/kiro",
     "bindings/claude-code",
     "validation",
