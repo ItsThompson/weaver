@@ -1,2 +1,1 @@
-// Barrel export: adapter implementation added in Step 4
-export {};
+export { kiroAdapter } from "./adapter";
