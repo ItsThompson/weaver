@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc --noEmit -p tsconfig.build.json && tsdown",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests && bash weaver-log.test.sh"
   },
   "dependencies": {
     "@weaver/shared": "*",
