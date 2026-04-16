@@ -24,6 +24,10 @@ export interface HarnessAdapter {
   globalConfigDir(): string;
   skillSearchPaths(cwd: string): SkillSearchPath[];
   cleanupSession(session: { id: string; pid: number }): Promise<void>;
+  loadAgentConfig?(
+    agentName: string,
+    cwd: string,
+  ): Promise<Record<string, unknown> | null>;
   syncConfig?(
     cwd: string,
     options?: { dryRun?: boolean },

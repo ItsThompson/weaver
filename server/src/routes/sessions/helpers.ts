@@ -36,7 +36,15 @@ export async function safeConfiguredSkills(
     const skillPaths = adapter
       .skillSearchPaths(session.cwd)
       .map((entry) => entry.path);
-    return await resolveConfiguredSkills(session.agentName, skillPaths);
+    const loader = adapter.loadAgentConfig
+      ? (name: string) => adapter.loadAgentConfig!(name, session.cwd)
+      : undefined;
+    return await resolveConfiguredSkills(
+      session.agentName,
+      skillPaths,
+      loader,
+      session.cwd,
+    );
   } catch {
     return [];
   }
