@@ -22,7 +22,7 @@ export interface KeepAwakeDeps {
   ) => ActivityStatus;
   log: (entry: LogEntry) => void;
   execFile: typeof defaultExecFile;
-  getProcessName: (session: Session) => string;
+  getProcessName: (session: Session) => string | null;
 }
 
 export interface KeepAwake {
@@ -36,7 +36,11 @@ export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
   async function hasActiveSessions(): Promise<boolean> {
     const sessions = await deps.readSessions();
     for (const s of sessions) {
-      if (!(await deps.isProcessRunning(s.pid, deps.getProcessName(s)))) {
+      const processName = deps.getProcessName(s);
+      if (!processName) {
+        continue;
+      }
+      if (!(await deps.isProcessRunning(s.pid, processName))) {
         continue;
       }
       const last = await deps.getLastEvent(s.id);

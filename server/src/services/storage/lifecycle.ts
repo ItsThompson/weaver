@@ -77,7 +77,10 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
             return null;
           }
           const session = sessions.find((s) => s.pid === pid);
-          const processName = session ? getProcessName(session) : "kiro-cli";
+          const processName = session ? getProcessName(session) : null;
+          if (!processName) {
+            return null;
+          }
           const alive = await manager.isProcessRunning(pid, processName);
           return alive ? null : { file, pid };
         }),
@@ -115,17 +118,28 @@ export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
       const poll = async () => {
         const sessions = await deps.readSessions();
         const results = await Promise.all(
-          sessions.map(async (s) => ({
-            session: s,
-            alive: await manager.isProcessRunning(s.pid, getProcessName(s)),
-          })),
+          sessions.map(async (s) => {
+            const processName = getProcessName(s);
+            if (!processName) {
+              return { session: s, alive: false, skip: true };
+            }
+            return {
+              session: s,
+              alive: await manager.isProcessRunning(s.pid, processName),
+              skip: false,
+            };
+          }),
         );
         const currentPids = new Set(
           results.filter((r) => r.alive).map((r) => r.session.pid),
         );
 
+        const skippedPids = new Set(
+          results.filter((r) => r.skip).map((r) => r.session.pid),
+        );
+
         openPids.forEach((pid) => {
-          if (currentPids.has(pid)) {
+          if (currentPids.has(pid) || skippedPids.has(pid)) {
             return;
           }
           const session = sessions.find((s) => s.pid === pid);

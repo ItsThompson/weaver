@@ -4,11 +4,16 @@ import "../../__tests__/mocks/child-process";
 import { readdir, unlink } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
 import {
   createLifecycleManager,
   type LifecycleDeps,
   type LifecycleManager,
 } from "./lifecycle";
+
+registerAdapter(kiroAdapter);
 
 function makeSession(overrides: Partial<Session> = {}): Session {
   return {
@@ -17,6 +22,7 @@ function makeSession(overrides: Partial<Session> = {}): Session {
     customName: null,
     cwd: "/tmp",
     agentName: null,
+    harness: Harness.KIRO_CLI,
     startTime: "t1",
     lastEventTime: "t1",
     ...overrides,
@@ -48,7 +54,7 @@ beforeEach(() => {
 });
 
 describe("isProcessRunning", () => {
-  it("returns true for a running kiro-cli process", async () => {
+  it("returns true for a running process with matching name", async () => {
     const manager = createLifecycleManager(makeDeps());
     mockExecFileOutput("/path/to/kiro-cli chat --agent dev\n");
     await expect(
@@ -63,7 +69,7 @@ describe("isProcessRunning", () => {
     );
   });
 
-  it("returns false when PID is alive but not kiro-cli (PID reuse)", async () => {
+  it("returns false when PID is alive but process name differs (PID reuse)", async () => {
     const manager = createLifecycleManager(makeDeps());
     mockExecFileOutput("/usr/bin/some-other-process\n");
     await expect(
@@ -82,7 +88,12 @@ describe("isProcessRunning", () => {
 
 describe("cleanStaleSessions", () => {
   it("deletes marker files for dead PIDs", async () => {
-    const manager = createLifecycleManager(makeDeps());
+    const deps = makeDeps({
+      readSessions: vi
+        .fn<() => Promise<Session[]>>()
+        .mockResolvedValue([makeSession({ pid: 999 })]),
+    });
+    const manager = createLifecycleManager(deps);
     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(false);
     vi.mocked(readdir).mockResolvedValue([".current-session-999"] as any);
 
@@ -93,9 +104,22 @@ describe("cleanStaleSessions", () => {
   });
 
   it("preserves marker files for live PIDs", async () => {
-    const manager = createLifecycleManager(makeDeps());
+    const deps = makeDeps({
+      readSessions: vi
+        .fn<() => Promise<Session[]>>()
+        .mockResolvedValue([makeSession({ pid: 123 })]),
+    });
+    const manager = createLifecycleManager(deps);
     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(true);
     vi.mocked(readdir).mockResolvedValue([".current-session-123"] as any);
+
+    await manager.cleanStaleSessions();
+    expect(vi.mocked(unlink)).not.toHaveBeenCalled();
+  });
+
+  it("skips marker files with no matching session", async () => {
+    const manager = createLifecycleManager(makeDeps());
+    vi.mocked(readdir).mockResolvedValue([".current-session-999"] as any);
 
     await manager.cleanStaleSessions();
     expect(vi.mocked(unlink)).not.toHaveBeenCalled();
@@ -117,7 +141,11 @@ describe("cleanStaleSessions", () => {
   });
 
   it("logs when a stale file is deleted", async () => {
-    const deps = makeDeps();
+    const deps = makeDeps({
+      readSessions: vi
+        .fn<() => Promise<Session[]>>()
+        .mockResolvedValue([makeSession({ pid: 999 })]),
+    });
     const manager = createLifecycleManager(deps);
     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(false);
     vi.mocked(readdir).mockResolvedValue([".current-session-999"] as any);

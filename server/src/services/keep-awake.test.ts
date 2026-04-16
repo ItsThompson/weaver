@@ -1,4 +1,8 @@
 import type { Session } from "@weaver/shared/types";
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
+
+registerAdapter(kiroAdapter);
 
 const {
   mockReadSessions,

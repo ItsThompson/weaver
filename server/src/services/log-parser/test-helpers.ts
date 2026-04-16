@@ -33,11 +33,12 @@ export function makeTimedEvent(
 export function makeOrphanEvent(
   pid: number,
   name = "userPromptSubmit",
+  harness: Harness = Harness.KIRO_CLI,
 ): WeaverEvent {
   return {
     sessionId: "orphan",
     timestamp: "2026-01-01T00:00:00Z",
-    harness: Harness.KIRO_CLI,
+    harness,
     eventName: resolveEventName(name),
     cwd: "/tmp",
     pid,

@@ -38,7 +38,9 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     const results = await Promise.all(
       sessions.map(async (s) => {
         const processName = getProcessName(s);
-        const isOpen = await isProcessRunning(s.pid, processName);
+        const isOpen = processName
+          ? await isProcessRunning(s.pid, processName)
+          : false;
         let activity: SessionWithStatus["activity"];
         if (isOpen) {
           const last = await getLastEvent(s.id);
@@ -70,7 +72,10 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       return reply.status(404).send({ error: "Log file not found" });
     }
 
-    const isOpen = await isProcessRunning(session.pid, getProcessName(session));
+    const sessionProcessName = getProcessName(session);
+    const isOpen = sessionProcessName
+      ? await isProcessRunning(session.pid, sessionProcessName)
+      : false;
     const lastEvent = events.length > 0 ? events[events.length - 1] : null;
     const activity = isOpen
       ? deriveActivity(
