@@ -1,6 +1,7 @@
 import "./__test-helpers__/mock-fs";
 
 import { appendFileSync, mkdirSync } from "node:fs";
+import { Harness } from "@weaver/shared/types";
 import { writeValidationEvent } from "./logging";
 
 let mockFetch: ReturnType<typeof vi.fn>;
@@ -62,7 +63,7 @@ describe("writeValidationEvent", () => {
       [result],
       [],
       [],
-      "claude-code",
+      Harness.CLAUDE_CODE,
     );
     const written = vi.mocked(appendFileSync).mock.calls[0][1] as string;
     const parsed = JSON.parse(written);

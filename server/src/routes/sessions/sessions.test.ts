@@ -5,6 +5,7 @@ import {
   MULTI_TURN_EVENTS,
   SKILL_READ_EVENTS,
 } from "../../__tests__/fixtures/events";
+import { WeaverEventName } from "@weaver/shared/types";
 import {
   readSessions,
   writeSessions,
@@ -49,7 +50,7 @@ describe("GET /api/sessions", () => {
     vi.mocked(readSessions).mockResolvedValue([SESSION_A]);
     vi.mocked(isProcessRunning).mockResolvedValue(true);
     vi.mocked(getLastEvent).mockResolvedValue({
-      name: "preToolUse",
+      name: WeaverEventName.PRE_TOOL_USE,
       timestamp: new Date().toISOString(),
     });
 

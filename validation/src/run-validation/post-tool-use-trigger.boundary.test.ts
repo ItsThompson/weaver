@@ -3,6 +3,7 @@ import "../__test-helpers__/mock-child-process";
 
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
+import { Harness } from "@weaver/shared/types";
 import { spawnResult } from "../__test-helpers__/spawn";
 import type { ValidateArgs } from "./parse-args";
 import { runPostToolUseTrigger } from "./post-tool-use-trigger";
@@ -55,12 +56,13 @@ describe("runPostToolUseTrigger (boundary)", () => {
     vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const args: ValidateArgs = {
-      sessionId: "sess-1",
-      cwd: "/project",
-      trigger: "postToolUse",
-      toolName: "fs_write",
-      toolPath: "/project/src/a.ts",
-    };
+          sessionId: "sess-1",
+          cwd: "/project",
+          trigger: "postToolUse",
+          harness: Harness.KIRO_CLI,
+          toolName: "fs_write",
+          toolPath: "/project/src/a.ts",
+        };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
     expect(result.exitCode).toBe(0);
     expect(spawnSync).toHaveBeenCalledWith(
@@ -72,12 +74,13 @@ describe("runPostToolUseTrigger (boundary)", () => {
   it("exits 0 when no config found", () => {
     setupFs({});
     const args: ValidateArgs = {
-      sessionId: "sess-1",
-      cwd: "/project",
-      trigger: "postToolUse",
-      toolName: "fs_write",
-      toolPath: "/project/a.ts",
-    };
+          sessionId: "sess-1",
+          cwd: "/project",
+          trigger: "postToolUse",
+          harness: Harness.KIRO_CLI,
+          toolName: "fs_write",
+          toolPath: "/project/a.ts",
+        };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
     expect(result.exitCode).toBe(0);
     expect(spawnSync).not.toHaveBeenCalled();
@@ -94,12 +97,13 @@ describe("runPostToolUseTrigger (boundary)", () => {
       },
     });
     const args: ValidateArgs = {
-      sessionId: "sess-1",
-      cwd: "/project",
-      trigger: "postToolUse",
-      toolName: "fs_write",
-      toolPath: "/project/a.ts",
-    };
+          sessionId: "sess-1",
+          cwd: "/project",
+          trigger: "postToolUse",
+          harness: Harness.KIRO_CLI,
+          toolName: "fs_write",
+          toolPath: "/project/a.ts",
+        };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
     expect(result.exitCode).toBe(0);
     expect(spawnSync).not.toHaveBeenCalled();
@@ -118,12 +122,13 @@ describe("runPostToolUseTrigger (boundary)", () => {
     vi.mocked(spawnSync).mockReturnValue(spawnResult());
 
     const args: ValidateArgs = {
-      sessionId: "sess-1",
-      cwd: "/project",
-      trigger: "postToolUse",
-      toolName: "fs_write",
-      toolPath: "",
-    };
+          sessionId: "sess-1",
+          cwd: "/project",
+          trigger: "postToolUse",
+          harness: Harness.KIRO_CLI,
+          toolName: "fs_write",
+          toolPath: "",
+        };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
     expect(result.exitCode).toBe(0);
     expect(spawnSync).toHaveBeenCalledWith(
@@ -147,12 +152,13 @@ describe("runPostToolUseTrigger (boundary)", () => {
     );
 
     const args: ValidateArgs = {
-      sessionId: "sess-1",
-      cwd: "/project",
-      trigger: "postToolUse",
-      toolName: "fs_write",
-      toolPath: "/project/a.ts",
-    };
+          sessionId: "sess-1",
+          cwd: "/project",
+          trigger: "postToolUse",
+          harness: Harness.KIRO_CLI,
+          toolName: "fs_write",
+          toolPath: "/project/a.ts",
+        };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
     expect(result.exitCode).toBe(1);
     expect(result.stderr).toContain("lint");

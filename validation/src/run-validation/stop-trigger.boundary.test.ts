@@ -3,6 +3,7 @@ import "../__test-helpers__/mock-child-process";
 
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
+import { Harness } from "@weaver/shared/types";
 import { spawnResult } from "../__test-helpers__/spawn";
 import { makeEvent } from "../__test-helpers__/events";
 import type { ValidateArgs } from "./parse-args";
@@ -13,6 +14,7 @@ const args: ValidateArgs = {
   sessionId: "sess-1",
   cwd: "/project",
   trigger: "stop",
+  harness: Harness.KIRO_CLI,
 };
 
 let mockFetch: ReturnType<typeof vi.fn>;

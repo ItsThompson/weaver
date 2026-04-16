@@ -20,6 +20,7 @@ vi.mock("../scope/index", () => ({
 
 import { spawnSync } from "node:child_process";
 import { appendFileSync, writeFileSync } from "node:fs";
+import { Harness } from "@weaver/shared/types";
 import type { WeaverProjectConfig } from "@weaver/shared/types";
 import type { ValidateArgs } from "./parse-args";
 import {
@@ -54,11 +55,13 @@ const stopArgs: ValidateArgs = {
   sessionId: "sess-1",
   cwd: "/project",
   trigger: "stop",
+  harness: Harness.KIRO_CLI,
 };
 const postToolArgs: ValidateArgs = {
   sessionId: "sess-1",
   cwd: "/project",
   trigger: "postToolUse",
+  harness: Harness.KIRO_CLI,
   toolName: "fs_write",
 };
 
