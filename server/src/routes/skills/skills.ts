@@ -1,15 +1,40 @@
 import type { FastifyInstance } from "fastify";
-import type { SkillGraph, SkillDetail, ApiError } from "@weaver/shared/types";
+import type {
+  SkillGraph,
+  SkillDetail,
+  ApiError,
+  SkillSearchPath,
+} from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import {
   buildSkillGraph,
   getSkillDetail,
 } from "../../services/skill-graph/index";
 import { readConfig } from "../../services/config/index";
 
+function allSkillPaths(configPaths: string[]): SkillSearchPath[] {
+  const workspace: SkillSearchPath[] = configPaths.map((path) => ({
+    path,
+    source: "workspace",
+  }));
+  try {
+    const global = getAdapter(Harness.KIRO_CLI)
+      .skillSearchPaths("")
+      .filter((entry) => entry.source === "global");
+    return [...workspace, ...global];
+  } catch {
+    return workspace;
+  }
+}
+
 export function registerSkillRoutes(server: FastifyInstance): void {
   server.get<{ Reply: SkillGraph }>("/api/skills", async () => {
     const { config } = await readConfig();
-    return buildSkillGraph(config.skill_paths, config.skill_graph.categories);
+    return buildSkillGraph(
+      allSkillPaths(config.skill_paths),
+      config.skill_graph.categories,
+    );
   });
 
   server.get<{

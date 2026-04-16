@@ -18,14 +18,14 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
         makeEvent("agentSpawn"),
         makeEvent("userPromptSubmit", { prompt: "first" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/old.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/old.ts" },
         }),
         makeEvent("stop"),
         makeEvent("userPromptSubmit", { prompt: "second" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/new.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/new.ts" },
         }),
       ].join("\n"),
     );
@@ -39,8 +39,8 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
       [
         makeEvent("agentSpawn"),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/a.ts" },
         }),
       ].join("\n"),
     );
@@ -53,8 +53,8 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/a.ts" },
         }),
         makeEvent("stop"),
       ].join("\n"),
@@ -81,8 +81,8 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
         makeEvent("userPromptSubmit", { prompt: "hi" }),
         "not valid json",
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/ok.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/ok.ts" },
         }),
       ].join("\n"),
     );
@@ -100,12 +100,12 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.ts" },
         }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/b.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/b.ts" },
         }),
       ].join("\n"),
     );
@@ -122,12 +122,12 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.ts" },
         }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.ts" },
         }),
       ].join("\n"),
     );
@@ -141,14 +141,14 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "first" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/old.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/old.ts" },
         }),
         makeEvent("stop"),
         makeEvent("userPromptSubmit", { prompt: "second" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/new.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/new.ts" },
         }),
       ].join("\n"),
     );
@@ -167,8 +167,8 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_read",
-          tool_input: { path: "/project/x.ts" },
+          toolName: "fs_read",
+          toolInput: { path: "/project/x.ts" },
         }),
       ].join("\n"),
     );
@@ -183,8 +183,8 @@ describe("extractChangedFiles", () => {
         makeEvent("userPromptSubmit", { prompt: "go" }),
         "broken json line",
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/ok.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/ok.ts" },
         }),
       ].join("\n"),
     );

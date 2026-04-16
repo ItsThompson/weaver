@@ -1,5 +1,7 @@
 import "../../__tests__/mocks/services";
 
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
 import type { Session } from "@weaver/shared/types";
 import { SKILL_READ_EVENTS } from "../../__tests__/fixtures/events";
 import {
@@ -7,6 +9,8 @@ import {
   safeActiveSkills,
   safeConfiguredSkills,
 } from "./helpers";
+
+registerAdapter(kiroAdapter);
 
 import { skillNameFromPath } from "../../services/skill-resolver/index";
 import { resolveConfiguredSkills } from "../../services/skill-resolver/index";

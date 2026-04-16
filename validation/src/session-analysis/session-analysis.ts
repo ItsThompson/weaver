@@ -1,8 +1,9 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, relative, isAbsolute } from "node:path";
-import type { HookEvent } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 
-function getCurrentTurnEvents(sessionLogPath: string): HookEvent[] {
+function getCurrentTurnEvents(sessionLogPath: string): WeaverEvent[] {
   if (!existsSync(sessionLogPath)) {
     return [];
   }
@@ -14,12 +15,13 @@ function getCurrentTurnEvents(sessionLogPath: string): HookEvent[] {
     return [];
   }
 
-  const events: HookEvent[] = raw
+  const events: WeaverEvent[] = raw
     .split("\n")
     .filter((l) => l.trim())
     .flatMap((line) => {
       try {
-        return [JSON.parse(line) as HookEvent];
+        const parsed = JSON.parse(line);
+        return "eventName" in parsed ? [parsed as WeaverEvent] : [];
       } catch {
         return [];
       }
@@ -31,8 +33,8 @@ function getCurrentTurnEvents(sessionLogPath: string): HookEvent[] {
 
   const boundaryIndex = events.findLastIndex(
     (e) =>
-      e.event.hook_event_name === "userPromptSubmit" ||
-      e.event.hook_event_name === "agentSpawn",
+      e.eventName === WeaverEventName.USER_PROMPT_SUBMIT ||
+      e.eventName === WeaverEventName.AGENT_SPAWN,
   );
 
   return boundaryIndex === -1 ? events : events.slice(boundaryIndex);
@@ -42,11 +44,11 @@ export function extractChangedFiles(sessionLogPath: string): string[] {
   const events = getCurrentTurnEvents(sessionLogPath);
   const files = events.reduce((acc, e) => {
     if (
-      e.event.hook_event_name === "postToolUse" &&
-      e.event.tool_name === "fs_write" &&
-      typeof e.event.tool_input?.path === "string"
+      e.eventName === WeaverEventName.POST_TOOL_USE &&
+      e.toolName === "fs_write" &&
+      typeof e.toolInput?.path === "string"
     ) {
-      acc.add(e.event.tool_input.path);
+      acc.add(e.toolInput.path);
     }
     return acc;
   }, new Set<string>());
@@ -59,11 +61,11 @@ function findRunner(command: string, runner: string): number {
   const idx = command.indexOf(runner);
   if (idx === -1) {
     return -1;
-  } // not found at all
-  const before = idx === 0 || /\s/.test(command[idx - 1]); // start of string or whitespace before
+  }
+  const before = idx === 0 || /\s/.test(command[idx - 1]);
   const after =
     idx + runner.length >= command.length ||
-    /\s/.test(command[idx + runner.length]); // end of string or whitespace after
+    /\s/.test(command[idx + runner.length]);
   return before && after ? idx : -1;
 }
 
@@ -78,13 +80,13 @@ export function extractAgentTestedDirs(
 
   return getCurrentTurnEvents(sessionLogPath).reduce<string[]>((dirs, e) => {
     if (
-      e.event.hook_event_name !== "postToolUse" ||
-      e.event.tool_name !== "execute_bash"
+      e.eventName !== WeaverEventName.POST_TOOL_USE ||
+      e.toolName !== "execute_bash"
     ) {
       return dirs;
     }
 
-    const command = e.event.tool_input?.command;
+    const command = e.toolInput?.command;
     if (typeof command !== "string") {
       return dirs;
     }

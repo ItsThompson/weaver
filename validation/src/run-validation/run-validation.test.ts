@@ -178,7 +178,7 @@ describe("runValidation - stop trigger", () => {
     runValidation(stopArgs);
     expect(appendFileSync).toHaveBeenCalledWith(
       expect.stringContaining("sess-1.jsonl"),
-      expect.stringContaining('"hook_event_name":"validation"'),
+      expect.stringContaining('"eventName":"validation"'),
     );
   });
 

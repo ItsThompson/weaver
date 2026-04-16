@@ -59,8 +59,8 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix it" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.ts" },
         }),
       ],
       {
@@ -86,8 +86,8 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.py" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.py" },
         }),
       ],
       {
@@ -115,8 +115,8 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/src/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/src/a.ts" },
         }),
       ],
       {
@@ -145,12 +145,12 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/mono/pkg-a/x.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/mono/pkg-a/x.ts" },
         }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/mono/pkg-b/y.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/mono/pkg-b/y.ts" },
         }),
       ],
       {
@@ -177,8 +177,8 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/a.ts" },
         }),
       ],
       {

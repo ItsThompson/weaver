@@ -58,6 +58,7 @@ export function runStopTrigger(
       results,
       files,
       agentTestedDirs,
+      args.harness,
     );
     allResults.push(...results);
   });

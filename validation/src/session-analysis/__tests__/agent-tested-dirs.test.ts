@@ -27,8 +27,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "npx jest src/features/auth/" },
+          toolName: "execute_bash",
+          toolInput: { command: "npx jest src/features/auth/" },
         }),
       ].join("\n"),
     );
@@ -44,8 +44,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "npm test" },
+          toolName: "execute_bash",
+          toolInput: { command: "npm test" },
         }),
       ].join("\n"),
     );
@@ -61,8 +61,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "vitest run src/" },
+          toolName: "execute_bash",
+          toolInput: { command: "vitest run src/" },
         }),
       ].join("\n"),
     );
@@ -78,8 +78,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "pytest tests/" },
+          toolName: "execute_bash",
+          toolInput: { command: "pytest tests/" },
         }),
       ].join("\n"),
     );
@@ -95,8 +95,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "cargo test" },
+          toolName: "execute_bash",
+          toolInput: { command: "cargo test" },
         }),
       ].join("\n"),
     );
@@ -112,8 +112,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "bundle exec rspec spec/models/order/" },
+          toolName: "execute_bash",
+          toolInput: { command: "bundle exec rspec spec/models/order/" },
         }),
       ].join("\n"),
     );
@@ -129,8 +129,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "mix test test/models/" },
+          toolName: "execute_bash",
+          toolInput: { command: "mix test test/models/" },
         }),
       ].join("\n"),
     );
@@ -146,12 +146,12 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "ls -la" },
+          toolName: "execute_bash",
+          toolInput: { command: "ls -la" },
         }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "cat foo.ts" },
+          toolName: "execute_bash",
+          toolInput: { command: "cat foo.ts" },
         }),
       ].join("\n"),
     );
@@ -167,8 +167,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "fs_write",
-          tool_input: { path: "/project/a.ts" },
+          toolName: "fs_write",
+          toolInput: { path: "/project/a.ts" },
         }),
       ].join("\n"),
     );
@@ -191,8 +191,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "my-pytest-wrapper src/" },
+          toolName: "execute_bash",
+          toolInput: { command: "my-pytest-wrapper src/" },
         }),
       ].join("\n"),
     );
@@ -208,8 +208,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "c++ test src/" },
+          toolName: "execute_bash",
+          toolInput: { command: "c++ test src/" },
         }),
       ].join("\n"),
     );
@@ -225,8 +225,8 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          tool_name: "execute_bash",
-          tool_input: { command: "npx jest src/" },
+          toolName: "execute_bash",
+          toolInput: { command: "npx jest src/" },
         }),
       ].join("\n"),
     );

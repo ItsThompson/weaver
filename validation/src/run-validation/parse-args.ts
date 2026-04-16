@@ -2,6 +2,7 @@ export interface ValidateArgs {
   sessionId: string;
   cwd: string;
   trigger: "stop" | "postToolUse";
+  harness: string;
   toolName?: string;
   toolPath?: string;
 }
@@ -19,6 +20,7 @@ export function parseArgs(argv: string[]): ValidateArgs {
     sessionId: args["session-id"],
     cwd: args["cwd"],
     trigger: args["trigger"] as "stop" | "postToolUse",
+    harness: args["harness"] ?? "kiro-cli",
     toolName: args["tool-name"],
     toolPath: args["tool-path"],
   };

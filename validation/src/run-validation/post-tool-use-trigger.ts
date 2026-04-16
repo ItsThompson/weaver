@@ -48,6 +48,7 @@ export function runPostToolUseTrigger(
     results,
     [],
     [],
+    args.harness,
   );
   return handleExitLogic(args.sessionId, results);
 }

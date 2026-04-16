@@ -5,6 +5,8 @@ describe("parseArgs", () => {
     const result = parseArgs([
       "node",
       "validate.js",
+      "--harness",
+      "kiro-cli",
       "--session-id",
       "sess-1",
       "--cwd",
@@ -20,6 +22,7 @@ describe("parseArgs", () => {
       sessionId: "sess-1",
       cwd: "/project",
       trigger: "stop",
+      harness: "kiro-cli",
       toolName: "fs_write",
       toolPath: "/project/a.ts",
     });
@@ -38,6 +41,7 @@ describe("parseArgs", () => {
     ]);
     expect(result.toolName).toBeUndefined();
     expect(result.toolPath).toBeUndefined();
+    expect(result.harness).toBe("kiro-cli");
   });
 
   it("returns all undefined for empty argv", () => {

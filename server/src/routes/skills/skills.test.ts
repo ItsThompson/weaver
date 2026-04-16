@@ -1,5 +1,7 @@
 import "../../__tests__/mocks/services";
 
+import { registerAdapter } from "@weaver/shared/adapter-registry";
+import { kiroAdapter } from "@weaver/binding-kiro";
 import Fastify from "fastify";
 import { registerSkillRoutes } from "./skills";
 import {
@@ -8,6 +10,8 @@ import {
 } from "../../services/skill-graph/index";
 import { readConfig } from "../../services/config/index";
 import { DEFAULT_CONFIG } from "@weaver/shared/types";
+
+registerAdapter(kiroAdapter);
 
 vi.mock("../../services/config/index", () => ({
   readConfig: vi.fn(),
@@ -66,7 +70,9 @@ describe("GET /api/skills", () => {
     await server.inject({ method: "GET", url: "/api/skills" });
 
     expect(buildSkillGraph).toHaveBeenCalledWith(
-      ["/projects/my-app/.kiro/skills"],
+      expect.arrayContaining([
+        { path: "/projects/my-app/.kiro/skills", source: "workspace" },
+      ]),
       { core: { skills: ["skill-a"] } },
     );
   });

@@ -1,6 +1,9 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import type { ValidationEvent, ValidationResult } from "@weaver/shared/types";
+import type { ValidationResult } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
+import type { Harness } from "@weaver/shared/types";
 import { log } from "./utils/logger";
 
 export function writeValidationEvent(
@@ -10,18 +13,22 @@ export function writeValidationEvent(
   results: ValidationResult[],
   changedFiles: string[],
   agentTestedDirs: string[],
+  harness = "kiro-cli" as string,
 ): void {
-  const event: ValidationEvent = {
-    hook_event_name: "validation",
-    trigger,
-    results,
-    changed_files: changedFiles,
-    agent_tested_dirs: agentTestedDirs,
+  const entry: WeaverEvent = {
+    sessionId,
+    timestamp: new Date().toISOString(),
+    harness: harness as Harness,
+    eventName: WeaverEventName.VALIDATION,
+    cwd: "",
+    validationTrigger: trigger,
+    validationResults: results,
+    validationChangedFiles: changedFiles,
+    validationAgentTestedDirs: agentTestedDirs,
   };
-  const logEntry = { timestamp: new Date().toISOString(), event };
   try {
     mkdirSync(dirname(sessionLogPath), { recursive: true });
-    appendFileSync(sessionLogPath, JSON.stringify(logEntry) + "\n");
+    appendFileSync(sessionLogPath, JSON.stringify(entry) + "\n");
   } catch (e) {
     log({
       timestamp: new Date().toISOString(),

@@ -26,9 +26,10 @@ beforeEach(async () => {
 afterEach(() => server.close());
 
 describe("DELETE /api/sessions/:id", () => {
-  it("removes session, log file, and marker file", async () => {
+  it("removes session, log file, and calls adapter cleanup", async () => {
     vi.mocked(readSessions).mockResolvedValue([{ ...SESSION_A }]);
     vi.mocked(writeSessions).mockResolvedValue(undefined);
+    const cleanupSpy = vi.spyOn(kiroAdapter, "cleanupSession");
 
     const res = await server.inject({
       method: "DELETE",
@@ -39,7 +40,9 @@ describe("DELETE /api/sessions/:id", () => {
     expect(vi.mocked(unlink)).toHaveBeenCalledWith(
       expect.stringContaining("aaa.jsonl"),
     );
-    // Marker file cleanup is handled by adapter.cleanupSession() (uses unlinkSync)
+    expect(cleanupSpy).toHaveBeenCalledWith(
+      expect.objectContaining({ id: "aaa", pid: 100 }),
+    );
     expect(vi.mocked(writeSessions)).toHaveBeenCalledWith([]);
     expect(vi.mocked(broadcast)).toHaveBeenCalledWith("aaa");
   });
