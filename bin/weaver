@@ -1,5 +1,5 @@
 #!/bin/bash
-# Thin wrapper that resolves the kiro-cli PID before handing off to the TS CLI.
+# Thin wrapper that resolves the caller PID and harness type before handing off to the TS CLI.
 # npx spawns its own process tree, so we must capture the PID from the caller's context.
 set -euo pipefail
 
@@ -7,7 +7,7 @@ SCRIPT_PATH="$(readlink -f "$0" 2>/dev/null || perl -MCwd -e 'print Cwd::abs_pat
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
-# Walk up from current shell to find the kiro-cli PID
+# Walk up from current shell to find the harness PID
 get_caller_pid() {
   local pid="$PPID"
   local max_depth=10
@@ -36,14 +36,29 @@ get_caller_pid() {
   echo "$pid"
 }
 
-# Always resolve the caller PID and pass it as the first arg.
-# The TS CLI decides what to do with it.
+# Always resolve the caller PID and detect the harness, then pass both as args.
+# The TS CLI decides what to do with them.
 CALLER_PID=$(get_caller_pid)
+
+# Detect harness by checking process args at the resolved PID
+detect_harness() {
+  local pid="$1"
+  local pargs
+  pargs=$(ps -p "$pid" -o args= 2>/dev/null || echo "")
+
+  if echo "$pargs" | grep -q "claude"; then
+    echo "claude-code"
+  else
+    echo "kiro-cli"
+  fi
+}
+
+HARNESS=$(detect_harness "$CALLER_PID")
 
 # Packaged app: cli/dist sits next to bin/ inside Contents/Resources.
 # Dev mode: run from source via tsx.
 if [ -f "$ROOT_DIR/cli/dist/index.mjs" ] && [ ! -d "$ROOT_DIR/cli/src" ]; then
-  exec node "$ROOT_DIR/cli/dist/index.mjs" "$CALLER_PID" "$@"
+  exec node "$ROOT_DIR/cli/dist/index.mjs" "$CALLER_PID" "$HARNESS" "$@"
 else
-  exec npx --prefix "$ROOT_DIR/cli" tsx "$ROOT_DIR/cli/src/index.ts" "$CALLER_PID" "$@"
+  exec npx --prefix "$ROOT_DIR/cli" tsx "$ROOT_DIR/cli/src/index.ts" "$CALLER_PID" "$HARNESS" "$@"
 fi

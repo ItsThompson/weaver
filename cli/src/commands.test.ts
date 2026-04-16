@@ -373,4 +373,21 @@ describe("sync", () => {
       "would patch: /project/.kiro/agents/agent.json",
     );
   });
+
+  it("exits with error for unsupported harness", () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const exitSpy = vi
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    sync(123, [], "claude-code");
+
+    expect(errorSpy).toHaveBeenCalledWith(
+      "sync is not yet supported for claude-code",
+    );
+    expect(exitSpy).toHaveBeenCalledWith(1);
+    expect(syncAgentTimeouts).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+    exitSpy.mockRestore();
+  });
 });

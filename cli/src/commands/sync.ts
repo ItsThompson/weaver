@@ -1,7 +1,18 @@
+import { Harness } from "@weaver/shared/types";
 import { syncAgentTimeouts } from "@weaver/binding-kiro/sync";
-import { print } from "../utils/output";
+import { print, printError } from "../utils/output";
 
-export function sync(_pid: number, args: string[]): void {
+export function sync(
+  _pid: number,
+  args: string[],
+  harness = Harness.KIRO_CLI as string,
+): void {
+  if (harness !== Harness.KIRO_CLI) {
+    printError(`sync is not yet supported for ${harness}`);
+    process.exit(1);
+    return;
+  }
+
   const dryRun = args.includes("--dry-run");
   const result = syncAgentTimeouts(process.cwd(), { dryRun });
 
