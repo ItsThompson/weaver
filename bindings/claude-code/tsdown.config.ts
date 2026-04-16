@@ -8,4 +8,7 @@ const shared = {
   deps: { alwaysBundle: [/^@weaver\//] },
 };
 
-export default defineConfig([{ entry: ["src/log-event.ts"], ...shared }]);
+export default defineConfig([
+  { entry: ["src/index.ts"], ...shared },
+  { entry: ["src/log-event.ts"], ...shared },
+]);
