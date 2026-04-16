@@ -40,17 +40,18 @@ get_caller_pid() {
 # The TS CLI decides what to do with them.
 CALLER_PID=$(get_caller_pid)
 
-# Detect harness by checking process args at the resolved PID
+# Detect harness by checking the binary name at the resolved PID.
+# Uses comm= (executable name) rather than args= to avoid false positives
+# from filenames or arguments that happen to contain "claude".
 detect_harness() {
   local pid="$1"
-  local pargs
-  pargs=$(ps -p "$pid" -o args= 2>/dev/null || echo "")
+  local pname
+  pname=$(ps -p "$pid" -o comm= 2>/dev/null || echo "")
 
-  if echo "$pargs" | grep -q "claude"; then
-    echo "claude-code"
-  else
-    echo "kiro-cli"
-  fi
+  case "$pname" in
+    claude*) echo "claude-code" ;;
+    *)       echo "kiro-cli" ;;
+  esac
 }
 
 HARNESS=$(detect_harness "$CALLER_PID")

@@ -14,6 +14,7 @@ import {
   readdirSync,
   existsSync,
   unlinkSync,
+  copyFileSync,
 } from "node:fs";
 import { join } from "node:path";
 import { homedir } from "node:os";
@@ -40,6 +41,20 @@ const summary: Summary = {
   eventsSkipped: 0,
   errors: [],
 };
+
+// --- Backup ---
+
+function backupFile(filePath: string): void {
+  if (!existsSync(filePath)) {
+    return;
+  }
+  const backupPath = `${filePath}.pre-v2`;
+  if (existsSync(backupPath)) {
+    return;
+  } // don't overwrite a previous backup
+  copyFileSync(filePath, backupPath);
+  console.log("  Backed up %s", backupPath);
+}
 
 // --- Atomic write ---
 
@@ -92,6 +107,7 @@ function migrateSessionsFile(): void {
     return;
   }
 
+  backupFile(SESSIONS_PATH);
   atomicWrite(SESSIONS_PATH, output.join("\n") + "\n");
 }
 
@@ -184,6 +200,7 @@ function migrateLogFile(filePath: string, sessionId: string): void {
     return;
   }
 
+  backupFile(filePath);
   atomicWrite(filePath, output.join("\n") + "\n");
   summary.filesConverted++;
 }

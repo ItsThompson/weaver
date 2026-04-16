@@ -5,6 +5,7 @@ export default defineConfig({
     globals: true,
     environment: "node",
     include: ["src/**/*.test.ts"],
+    setupFiles: ["src/__tests__/setup-adapters.ts"],
     alias: {
       "@weaver/shared/": new URL("../shared/", import.meta.url).pathname,
       "@weaver/binding-kiro": new URL(

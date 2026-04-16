@@ -1,10 +1,5 @@
 import "../../__tests__/mocks/services";
 
-import { registerAdapter } from "@weaver/shared/adapter-registry";
-import { kiroAdapter } from "@weaver/binding-kiro";
-
-registerAdapter(kiroAdapter);
-
 import { SESSION_A, SESSION_B } from "../../__tests__/fixtures/sessions";
 import {
   MULTI_TURN_EVENTS,

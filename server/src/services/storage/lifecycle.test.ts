@@ -5,15 +5,11 @@ import { readdir, unlink } from "node:fs/promises";
 import { execFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
 import { Harness } from "@weaver/shared/types";
-import { registerAdapter } from "@weaver/shared/adapter-registry";
-import { kiroAdapter } from "@weaver/binding-kiro";
 import {
   createLifecycleManager,
   type LifecycleDeps,
   type LifecycleManager,
 } from "./lifecycle";
-
-registerAdapter(kiroAdapter);
 
 function makeSession(overrides: Partial<Session> = {}): Session {
   return {

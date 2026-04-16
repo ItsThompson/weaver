@@ -1,6 +1,7 @@
 import { appendFileSync } from "node:fs";
 import { sessionLogPath, orphanPath } from "@weaver/shared/paths";
 import { claudeCodeAdapter } from "./adapter";
+import { log } from "./utils/logger";
 
 const sessionIdIdx = process.argv.indexOf("--session-id");
 const pidIdx = process.argv.indexOf("--pid");
@@ -15,7 +16,12 @@ try {
     chunks.push(chunk);
   }
   raw = JSON.parse(Buffer.concat(chunks).toString());
-} catch {
+} catch (e) {
+  log({
+    timestamp: new Date().toISOString(),
+    event: "stdin_parse_error",
+    error: String(e),
+  });
   process.exit(1);
 }
 

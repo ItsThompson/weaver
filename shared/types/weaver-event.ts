@@ -1,6 +1,13 @@
 import type { Harness } from "./harness";
 import type { ValidationResult } from "./validation";
 
+/**
+ * Canonical event names across all harnesses.
+ *
+ * Values intentionally use mixed casing: kiro-cli events use camelCase
+ * (e.g. "agentSpawn") and Claude Code events use PascalCase (e.g.
+ * "SessionStart") to match each harness's native event name format.
+ */
 export enum WeaverEventName {
   // Shared across harnesses
   AGENT_SPAWN = "agentSpawn",
