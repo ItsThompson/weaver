@@ -1,6 +1,6 @@
 # CLI reference
 
-The `weaver` command lets you control the dashboard from inside kiro-cli sessions.
+The `weaver` command lets you control the dashboard from inside sessions.
 
 ## Usage
 
@@ -12,7 +12,7 @@ weaver <command> [options]
 
 ### `weaver view`
 
-Navigate the dashboard to the current kiro-cli session.
+Navigate the dashboard to the current session.
 
 ```bash
 weaver view
@@ -30,7 +30,7 @@ weaver session <PID>    # Open a specific session by PID
 
 ### `weaver rename <name>`
 
-Rename the current kiro-cli session.
+Rename the current session.
 
 ```bash
 weaver rename "auth refactor"

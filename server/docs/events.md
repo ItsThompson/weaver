@@ -52,9 +52,9 @@ Navigate the dashboard to a session by PID (used by the CLI).
 }
 ```
 
-| Parameter | Type   | Required | Description                        |
-| --------- | ------ | -------- | ---------------------------------- |
-| `pid`     | number | Yes      | Process ID of the kiro-cli session |
+| Parameter | Type   | Required | Description               |
+| --------- | ------ | -------- | ------------------------- |
+| `pid`     | number | Yes      | Process ID of the session |
 
 ### Response
 
