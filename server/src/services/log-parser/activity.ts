@@ -1,20 +1,21 @@
-import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
-import type {
-  HookEvent,
-  ActivityStatus,
-  HookEventName,
+import {
+  PENDING_APPROVAL_THRESHOLD_MS,
+  WeaverEventName,
 } from "@weaver/shared/types";
+import type { WeaverEvent, ActivityStatus } from "@weaver/shared/types";
 
 export function deriveActivity(
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   eventTimestamp?: string,
 ): ActivityStatus {
   switch (eventName) {
-    case "agentSpawn":
+    case WeaverEventName.AGENT_SPAWN:
+    case WeaverEventName.SESSION_START:
       return "starting";
-    case "stop":
+    case WeaverEventName.STOP:
+    case WeaverEventName.SESSION_END:
       return "idle";
-    case "preToolUse": {
+    case WeaverEventName.PRE_TOOL_USE: {
       if (eventTimestamp) {
         const age = Date.now() - new Date(eventTimestamp).getTime();
         if (age > PENDING_APPROVAL_THRESHOLD_MS) {
@@ -29,16 +30,18 @@ export function deriveActivity(
 }
 
 /** Scans postToolUse fs_read events for SKILL.md paths and returns deduplicated skill file paths. */
-export function extractActiveSkillPaths(events: HookEvent[]): string[] {
+export function extractActiveSkillPaths(events: WeaverEvent[]): string[] {
   const paths = new Set<string>();
 
   events.forEach((event) => {
-    const { hook_event_name, tool_name, tool_input } = event.event;
-    if (hook_event_name !== "postToolUse" || tool_name !== "fs_read") {
+    if (
+      event.eventName !== WeaverEventName.POST_TOOL_USE ||
+      event.toolName !== "fs_read"
+    ) {
       return;
     }
 
-    const operations = tool_input?.operations;
+    const operations = event.toolInput?.operations;
     if (!Array.isArray(operations)) {
       return;
     }

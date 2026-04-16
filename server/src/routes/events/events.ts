@@ -1,5 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import type { HookEventName } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import { broadcast, emit, sseReply } from "../../services/event-bus";
 import { readSessions } from "../../services/storage/index";
 import { handleWebhookEvent } from "../../services/webhook/index";
@@ -8,7 +8,7 @@ import { notifyBody, viewBody, navigateBody } from "../schemas";
 import { zodBody } from "../schema-utils";
 
 export function registerEventRoutes(server: FastifyInstance): void {
-  server.post<{ Body: { sessionId: string; eventName?: HookEventName } }>(
+  server.post<{ Body: { sessionId: string; eventName?: WeaverEventName } }>(
     "/api/notify",
     { schema: zodBody(notifyBody) },
     async (request, reply) => {

@@ -41,7 +41,7 @@ export interface HookEvent {
 export interface ToolCallPair {
   toolName: string;
   input: Record<string, unknown>;
-  response?: HookEventData["tool_response"];
+  response?: WeaverEvent["toolResponse"];
   startTime: string;
   endTime?: string;
 }
@@ -50,7 +50,7 @@ export interface ToolCallPair {
 export interface TurnGroup {
   id: number;
   userPrompt: string | null;
-  events: HookEvent[];
+  events: WeaverEvent[];
   toolCalls: ToolCallPair[];
   startTime: string;
   endTime: string;

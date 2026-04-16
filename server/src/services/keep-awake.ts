@@ -1,13 +1,13 @@
 import { execFile as defaultExecFile } from "node:child_process";
 import type { Session } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
+import { Harness, WeaverEventName } from "@weaver/shared/types";
 import { getAdapter } from "@weaver/shared/adapter-registry";
 import { readSessions, isProcessRunning } from "./storage/index";
 import { getLastEvent, deriveActivity } from "./log-parser/index";
 import { log as defaultLog } from "../utils/logger";
 import type { LogEntry } from "../utils/logger";
 import type { LastEvent } from "./log-parser/types";
-import type { HookEventName, ActivityStatus } from "@weaver/shared/types";
+import type { ActivityStatus } from "@weaver/shared/types";
 
 const POLL_INTERVAL_MS = 60_000;
 const ACTIVE_STATES = new Set(["processing", "running_tool"]);
@@ -17,7 +17,7 @@ export interface KeepAwakeDeps {
   isProcessRunning: (pid: number, processName: string) => Promise<boolean>;
   getLastEvent: (sessionId: string) => Promise<LastEvent | null>;
   deriveActivity: (
-    eventName: HookEventName,
+    eventName: WeaverEventName,
     timestamp?: string,
   ) => ActivityStatus;
   log: (entry: LogEntry) => void;
@@ -48,7 +48,7 @@ export function createKeepAwake(deps: KeepAwakeDeps): KeepAwake {
       }
       const last = await deps.getLastEvent(s.id);
       const activity = deps.deriveActivity(
-        last?.name ?? "agentSpawn",
+        last?.name ?? WeaverEventName.AGENT_SPAWN,
         last?.timestamp,
       );
       if (ACTIVE_STATES.has(activity)) {

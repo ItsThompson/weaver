@@ -1,5 +1,5 @@
-import type { HookEvent, HookEventName, Session } from "@weaver/shared/types";
-import { DEFAULT_CONFIG } from "@weaver/shared/types";
+import type { WeaverEvent, Session } from "@weaver/shared/types";
+import { Harness, WeaverEventName, DEFAULT_CONFIG } from "@weaver/shared/types";
 import type * as WebhookModule from "../index";
 
 vi.mock("../../config", () => ({ readConfig: vi.fn() }));
@@ -23,12 +23,16 @@ export const TEST_SESSION: Session = {
 };
 
 export function makeEvent(
-  name: HookEventName,
+  name: WeaverEventName | string,
   extra: Record<string, unknown> = {},
-): HookEvent {
+): WeaverEvent {
   return {
+    sessionId: "test-session",
     timestamp: "2026-01-01T00:00:00Z",
-    event: { hook_event_name: name, cwd: "/tmp", ...extra },
+    harness: Harness.KIRO_CLI,
+    eventName: name as WeaverEventName,
+    cwd: "/tmp",
+    ...extra,
   };
 }
 

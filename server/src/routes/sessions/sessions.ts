@@ -5,7 +5,7 @@ import type {
   TurnGroup,
   ApiError,
 } from "@weaver/shared/types";
-import { Harness } from "@weaver/shared/types";
+import { Harness, WeaverEventName } from "@weaver/shared/types";
 import { getAdapter } from "@weaver/shared/adapter-registry";
 import {
   readSessions,
@@ -43,7 +43,7 @@ export function registerSessionRoutes(server: FastifyInstance): void {
         if (isOpen) {
           const last = await getLastEvent(s.id);
           activity = deriveActivity(
-            last?.name ?? "agentSpawn",
+            last?.name ?? WeaverEventName.AGENT_SPAWN,
             last?.timestamp,
           );
         }
@@ -74,7 +74,7 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     const lastEvent = events.length > 0 ? events[events.length - 1] : null;
     const activity = isOpen
       ? deriveActivity(
-          lastEvent?.event.hook_event_name ?? "agentSpawn",
+          lastEvent?.eventName ?? WeaverEventName.AGENT_SPAWN,
           lastEvent?.timestamp,
         )
       : undefined;

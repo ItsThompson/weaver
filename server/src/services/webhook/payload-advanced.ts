@@ -1,19 +1,19 @@
 import type {
   ActivityStatus,
   Session,
-  HookEvent,
-  HookEventName,
+  WeaverEvent,
 } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import type { WebhookPayload } from "./types";
 import { extractContext } from "./context";
 
 export function buildWebhookPayload(
   sessionId: string,
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   activity: ActivityStatus,
   sessionName: string,
   session: Session | undefined,
-  events: HookEvent[],
+  events: WeaverEvent[],
 ): WebhookPayload {
   const ctx = extractContext(eventName, events);
   return {

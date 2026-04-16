@@ -1,4 +1,7 @@
-import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
+import {
+  PENDING_APPROVAL_THRESHOLD_MS,
+  WeaverEventName,
+} from "@weaver/shared/types";
 import {
   mockFetch,
   TEST_SESSION,
@@ -16,7 +19,7 @@ describe("buildWebhookPayload (advanced)", () => {
   it("returns null fields for agentSpawn", () => {
     const payload = webhook.buildWebhookPayload(
       "sess-1",
-      "agentSpawn",
+      WeaverEventName.AGENT_SPAWN,
       "starting",
       "my-project",
       TEST_SESSION,
@@ -29,10 +32,12 @@ describe("buildWebhookPayload (advanced)", () => {
   });
 
   it("extracts prompt for userPromptSubmit", () => {
-    const events = [makeEvent("userPromptSubmit", { prompt: "fix the bug" })];
+    const events = [
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "fix the bug" }),
+    ];
     const payload = webhook.buildWebhookPayload(
       "sess-1",
-      "userPromptSubmit",
+      WeaverEventName.USER_PROMPT_SUBMIT,
       "processing",
       "my-project",
       TEST_SESSION,
@@ -44,15 +49,15 @@ describe("buildWebhookPayload (advanced)", () => {
 
   it("extracts tool context for preToolUse", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "add tests" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/src/a.ts" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "add tests" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/src/a.ts" },
       }),
     ];
     const payload = webhook.buildWebhookPayload(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "running_tool",
       "my-project",
       TEST_SESSION,
@@ -65,16 +70,16 @@ describe("buildWebhookPayload (advanced)", () => {
 
   it("stringifies tool_response for postToolUse", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "read file" }),
-      makeEvent("postToolUse", {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["ok"] },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "read file" }),
+      makeEvent(WeaverEventName.POST_TOOL_USE, {
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["ok"] },
       }),
     ];
     const payload = webhook.buildWebhookPayload(
       "sess-1",
-      "postToolUse",
+      WeaverEventName.POST_TOOL_USE,
       "processing",
       "my-project",
       TEST_SESSION,
@@ -87,15 +92,15 @@ describe("buildWebhookPayload (advanced)", () => {
 
   it("produces a flat payload with no nested objects", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "test" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "test" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/a" },
       }),
     ];
     const payload = webhook.buildWebhookPayload(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "running_tool",
       "my-project",
       TEST_SESSION,
@@ -109,10 +114,12 @@ describe("buildWebhookPayload (advanced)", () => {
 
 describe("handleWebhookEvent (advanced)", () => {
   it("dispatches advanced format when configured", async () => {
-    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([
+      makeEvent(WeaverEventName.AGENT_SPAWN),
+    ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "agentSpawn",
+      WeaverEventName.AGENT_SPAWN,
       "my-project",
       TEST_SESSION,
     );
@@ -123,17 +130,17 @@ describe("handleWebhookEvent (advanced)", () => {
 
   it("fires pending_approval with advanced payload after threshold", async () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "do it" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "do it" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/a" },
       }),
     ];
     vi.mocked(parseLogFile).mockResolvedValue(events);
 
     await webhook.handleWebhookEvent(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "my-project",
       TEST_SESSION,
     );

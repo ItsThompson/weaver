@@ -1,41 +1,43 @@
-import type { HookEvent } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
 import { sessionLogPath } from "@weaver/shared/paths";
 import { log } from "../../utils/logger";
 import { FileCache, parseJsonlFile } from "../file-cache/index";
 import type { LastEvent } from "./types";
 
 export interface LogParser {
-  parseLogFile: (sessionId: string) => Promise<HookEvent[]>;
+  parseLogFile: (sessionId: string) => Promise<WeaverEvent[]>;
   getLastEvent: (sessionId: string) => Promise<LastEvent | null>;
-  _logCache: FileCache<HookEvent[]>;
+  _logCache: FileCache<WeaverEvent[]>;
 }
 
 export function createLogParser(): LogParser {
-  const logCache = new FileCache<HookEvent[]>();
+  const logCache = new FileCache<WeaverEvent[]>();
 
   const parser: LogParser = {
     _logCache: logCache,
 
-    async parseLogFile(sessionId: string): Promise<HookEvent[]> {
+    async parseLogFile(sessionId: string): Promise<WeaverEvent[]> {
       const filePath = sessionLogPath(sessionId);
-      return logCache.get(filePath, () =>
-        parseJsonlFile<HookEvent>(filePath, (line) =>
+      return logCache.get(filePath, async () => {
+        const raw = await parseJsonlFile<unknown>(filePath, (line) =>
           log({
             timestamp: new Date().toISOString(),
             event: "malformed_log_line",
             sessionId,
             line,
           }),
-        ),
-      );
+        );
+        return raw.filter(
+          (entry): entry is WeaverEvent =>
+            typeof entry === "object" && entry !== null && "eventName" in entry,
+        );
+      });
     },
 
     async getLastEvent(sessionId: string): Promise<LastEvent | null> {
       const events = await parser.parseLogFile(sessionId);
-      const last = events.findLast((event) => event.event.hook_event_name);
-      return last
-        ? { name: last.event.hook_event_name, timestamp: last.timestamp }
-        : null;
+      const last = events.findLast((event) => event.eventName);
+      return last ? { name: last.eventName, timestamp: last.timestamp } : null;
     },
   };
 

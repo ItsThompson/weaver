@@ -1,23 +1,24 @@
 import type {
-  HookEvent,
+  WeaverEvent,
   TurnGroup,
   ValidationResult,
 } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import { matchToolCalls } from "./tool-calls";
 import { isValidationEvent } from "./types";
 
-function extractValidationResults(evts: HookEvent[]): ValidationResult[] {
+function extractValidationResults(evts: WeaverEvent[]): ValidationResult[] {
   return evts.reduce<ValidationResult[]>((acc, event) => {
-    if (isValidationEvent(event.event)) {
-      acc.push(...event.event.results);
+    if (isValidationEvent(event)) {
+      acc.push(...event.validationResults);
     }
     return acc;
   }, []);
 }
 
-export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
+export function groupEventsByTurn(events: WeaverEvent[]): TurnGroup[] {
   const turns: TurnGroup[] = [];
-  let currentEvents: HookEvent[] = [];
+  let currentEvents: WeaverEvent[] = [];
   let currentPrompt: string | null = null;
   let turnStart: string | null = null;
 
@@ -40,10 +41,9 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
   };
 
   for (const event of events) {
-    const name = event.event.hook_event_name;
+    const name = event.eventName;
 
-    if (name === "agentSpawn") {
-      // agentSpawn is its own "turn" (session start marker)
+    if (name === WeaverEventName.AGENT_SPAWN) {
       flushTurn(event.timestamp);
       turns.push({
         id: turns.length,
@@ -57,16 +57,15 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
       continue;
     }
 
-    if (name === "userPromptSubmit") {
-      // New user turn — flush any prior incomplete turn
+    if (name === WeaverEventName.USER_PROMPT_SUBMIT) {
       flushTurn(event.timestamp);
-      currentPrompt = event.event.prompt ?? null;
+      currentPrompt = event.prompt ?? null;
       turnStart = event.timestamp;
       currentEvents.push(event);
       continue;
     }
 
-    if (name === "stop") {
+    if (name === WeaverEventName.STOP) {
       currentEvents.push(event);
       flushTurn(event.timestamp);
       continue;
@@ -75,7 +74,6 @@ export function groupEventsByTurn(events: HookEvent[]): TurnGroup[] {
     currentEvents.push(event);
   }
 
-  // Flush any remaining events without a stop marker
   if (currentEvents.length > 0) {
     flushTurn(currentEvents[currentEvents.length - 1].timestamp);
   }

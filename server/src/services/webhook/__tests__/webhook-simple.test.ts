@@ -1,4 +1,7 @@
-import { PENDING_APPROVAL_THRESHOLD_MS } from "@weaver/shared/types";
+import {
+  PENDING_APPROVAL_THRESHOLD_MS,
+  WeaverEventName,
+} from "@weaver/shared/types";
 import {
   mockFetch,
   TEST_SESSION,
@@ -18,7 +21,7 @@ describe("buildSimpleWebhookPayload", () => {
   it("formats agentSpawn", () => {
     expect(
       webhook.buildSimpleWebhookPayload(
-        "agentSpawn",
+        WeaverEventName.AGENT_SPAWN,
         "starting",
         "my-project",
         [],
@@ -28,15 +31,22 @@ describe("buildSimpleWebhookPayload", () => {
 
   it("formats stop", () => {
     expect(
-      webhook.buildSimpleWebhookPayload("stop", "idle", "my-project", []).text,
+      webhook.buildSimpleWebhookPayload(
+        WeaverEventName.STOP,
+        "idle",
+        "my-project",
+        [],
+      ).text,
     ).toBe("⚫ my-project idle");
   });
 
   it("formats userPromptSubmit with prompt", () => {
-    const events = [makeEvent("userPromptSubmit", { prompt: "fix the bug" })];
+    const events = [
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "fix the bug" }),
+    ];
     expect(
       webhook.buildSimpleWebhookPayload(
-        "userPromptSubmit",
+        WeaverEventName.USER_PROMPT_SUBMIT,
         "processing",
         "my-project",
         events,
@@ -46,15 +56,15 @@ describe("buildSimpleWebhookPayload", () => {
 
   it("formats preToolUse with tool name and input summary", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "test" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/src/upload.ts" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "test" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/src/upload.ts" },
       }),
     ];
     expect(
       webhook.buildSimpleWebhookPayload(
-        "preToolUse",
+        WeaverEventName.PRE_TOOL_USE,
         "running_tool",
         "my-project",
         events,
@@ -64,15 +74,15 @@ describe("buildSimpleWebhookPayload", () => {
 
   it("formats postToolUse", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "test" }),
-      makeEvent("postToolUse", {
-        tool_name: "execute_bash",
-        tool_input: { command: "npm test" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "test" }),
+      makeEvent(WeaverEventName.POST_TOOL_USE, {
+        toolName: "execute_bash",
+        toolInput: { command: "npm test" },
       }),
     ];
     expect(
       webhook.buildSimpleWebhookPayload(
-        "postToolUse",
+        WeaverEventName.POST_TOOL_USE,
         "processing",
         "my-project",
         events,
@@ -82,14 +92,16 @@ describe("buildSimpleWebhookPayload", () => {
 
   it("formats pending_approval with prompt", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "add error handling" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/src/upload.ts" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, {
+        prompt: "add error handling",
+      }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/src/upload.ts" },
       }),
     ];
     const { text } = webhook.buildSimpleWebhookPayload(
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "pending_approval",
       "my-project",
       events,
@@ -103,7 +115,12 @@ describe("buildSimpleWebhookPayload", () => {
   it("returns only text field", () => {
     expect(
       Object.keys(
-        webhook.buildSimpleWebhookPayload("stop", "idle", "my-project", []),
+        webhook.buildSimpleWebhookPayload(
+          WeaverEventName.STOP,
+          "idle",
+          "my-project",
+          [],
+        ),
       ),
     ).toEqual(["text"]);
   });
@@ -146,7 +163,7 @@ describe("handleWebhookEvent (simple)", () => {
     vi.mocked(readConfig).mockResolvedValue(configWith(""));
     await webhook.handleWebhookEvent(
       "sess-1",
-      "agentSpawn",
+      WeaverEventName.AGENT_SPAWN,
       "my-project",
       TEST_SESSION,
     );
@@ -165,10 +182,12 @@ describe("handleWebhookEvent (simple)", () => {
 
   it("skips dispatch when session webhook is disabled", async () => {
     webhook.setWebhookEnabled("sess-1", false);
-    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([
+      makeEvent(WeaverEventName.AGENT_SPAWN),
+    ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "agentSpawn",
+      WeaverEventName.AGENT_SPAWN,
       "my-project",
       TEST_SESSION,
     );
@@ -176,10 +195,12 @@ describe("handleWebhookEvent (simple)", () => {
   });
 
   it("dispatches simple format by default", async () => {
-    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("agentSpawn")]);
+    vi.mocked(parseLogFile).mockResolvedValue([
+      makeEvent(WeaverEventName.AGENT_SPAWN),
+    ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "agentSpawn",
+      WeaverEventName.AGENT_SPAWN,
       "my-project",
       TEST_SESSION,
     );
@@ -189,15 +210,15 @@ describe("handleWebhookEvent (simple)", () => {
 
   it("fires pending_approval after threshold", async () => {
     vi.mocked(parseLogFile).mockResolvedValue([
-      makeEvent("userPromptSubmit", { prompt: "do it" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "do it" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/a" },
       }),
     ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "my-project",
       TEST_SESSION,
     );
@@ -209,20 +230,26 @@ describe("handleWebhookEvent (simple)", () => {
 
   it("cancels pending timer on postToolUse", async () => {
     vi.mocked(parseLogFile).mockResolvedValue([
-      makeEvent("preToolUse", { tool_name: "fs_write", tool_input: {} }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: {},
+      }),
     ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "my-project",
       TEST_SESSION,
     );
     vi.mocked(parseLogFile).mockResolvedValue([
-      makeEvent("postToolUse", { tool_name: "fs_write", tool_input: {} }),
+      makeEvent(WeaverEventName.POST_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: {},
+      }),
     ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "postToolUse",
+      WeaverEventName.POST_TOOL_USE,
       "my-project",
       TEST_SESSION,
     );
@@ -232,18 +259,23 @@ describe("handleWebhookEvent (simple)", () => {
 
   it("cancels pending timer on stop", async () => {
     vi.mocked(parseLogFile).mockResolvedValue([
-      makeEvent("preToolUse", { tool_name: "fs_write", tool_input: {} }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: {},
+      }),
     ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "preToolUse",
+      WeaverEventName.PRE_TOOL_USE,
       "my-project",
       TEST_SESSION,
     );
-    vi.mocked(parseLogFile).mockResolvedValue([makeEvent("stop")]);
+    vi.mocked(parseLogFile).mockResolvedValue([
+      makeEvent(WeaverEventName.STOP),
+    ]);
     await webhook.handleWebhookEvent(
       "sess-1",
-      "stop",
+      WeaverEventName.STOP,
       "my-project",
       TEST_SESSION,
     );

@@ -1,4 +1,4 @@
-import type { HookEventName } from "@weaver/shared/types";
+import type { WeaverEventName } from "@weaver/shared/types";
 
 export interface SSETarget {
   raw: {
@@ -19,7 +19,7 @@ export interface EventBus {
   subscribe(listener: Listener): () => void;
   broadcast(
     sessionId: string,
-    eventName?: HookEventName,
+    eventName?: WeaverEventName,
     sessionName?: string,
   ): void;
   emit(msg: SSEMessage): void;
