@@ -4,6 +4,7 @@ import type {
   SkillEdge,
   SkillGraphCategoryConfig,
 } from "@weaver/shared/types";
+import { globalSkillsPath } from "@weaver/shared/paths";
 import { categorizeSkill } from "./category";
 import { discoverSkills } from "./discover";
 import { findReferences, extractFrontmatterString } from "./utils";
@@ -38,7 +39,11 @@ export async function buildSkillGraph(
   skillPaths: string[],
   configCategories: Record<string, SkillGraphCategoryConfig>,
 ): Promise<SkillGraph> {
-  const skills = await discoverSkills(skillPaths);
+  const taggedPaths = [
+    ...skillPaths.map((path) => ({ path, source: "workspace" as const })),
+    { path: globalSkillsPath(), source: "global" as const },
+  ];
+  const skills = await discoverSkills(taggedPaths);
   const knownNames = [...new Set(skills.map((skill) => skill.name))];
 
   const edges = skills.reduce<SkillEdge[]>((acc, skill) => {

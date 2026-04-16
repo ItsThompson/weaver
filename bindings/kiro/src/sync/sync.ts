@@ -1,6 +1,6 @@
 import { readdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import { globalKiroDir } from "@weaver/shared/paths";
+import { globalKiroDir } from "../paths";
 import { readProjectConfig } from "@weaver/shared/sync";
 import {
   calculateStopTimeout,

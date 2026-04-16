@@ -16,7 +16,9 @@ export const snippetsPath = () => join(weaverDir(), "snippets.jsonl");
 export const dictationsPath = () => join(weaverDir(), "dictations.jsonl");
 export const modelsDir = () => join(weaverDir(), "models");
 export const appLogsDir = () => join(weaverDir(), "app-logs");
+/** @deprecated Use the kiro adapter's globalConfigDir() instead. */
 export const globalSkillsPath = () => join(globalKiroDir(), "skills");
+/** @deprecated Use the kiro adapter's globalConfigDir() instead. */
 export const globalKiroDir = () => join(homedir(), ".kiro");
 
 export function expandHome(filePath: string): string {

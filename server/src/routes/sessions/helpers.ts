@@ -3,6 +3,8 @@ import type {
   SessionWithStatus,
   ActivityStatus,
 } from "@weaver/shared/types";
+import { globalKiroDir } from "@weaver/shared/paths";
+import { join } from "node:path";
 import { extractActiveSkillPaths } from "../../services/log-parser/index";
 import {
   skillNameFromPath,
@@ -31,7 +33,11 @@ export async function safeConfiguredSkills(
   session: Session,
 ): Promise<string[]> {
   try {
-    return await resolveConfiguredSkills(session.agentName, session.cwd);
+    const skillPaths = [
+      join(session.cwd, ".kiro", "skills"),
+      join(globalKiroDir(), "skills"),
+    ];
+    return await resolveConfiguredSkills(session.agentName, skillPaths);
   } catch {
     return [];
   }

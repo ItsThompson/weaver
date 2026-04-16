@@ -5,16 +5,14 @@ import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { homedir } from "node:os";
 import { resolveConfiguredSkills } from "./resolve-configured";
-import { _configCache } from "./agent-config";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  _configCache.clear();
 });
 
 describe("resolveConfiguredSkills", () => {
   describe("default agent (agentName = null)", () => {
-    it("lists skills from workspace and global directories", async () => {
+    it("lists skills from provided search paths", async () => {
       vi.mocked(existsSync).mockImplementation((p) => {
         const path = String(p);
         return (
@@ -36,7 +34,10 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills(null, "/project");
+      const result = await resolveConfiguredSkills(null, [
+        "/project/.kiro/skills",
+        `${homedir()}/.kiro/skills`,
+      ]);
       expect(result).toEqual(["skill-a", "skill-b"]);
     });
 
@@ -62,13 +63,18 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills(null, "/project");
+      const result = await resolveConfiguredSkills(null, [
+        "/project/.kiro/skills",
+        `${homedir()}/.kiro/skills`,
+      ]);
       expect(result).toEqual(["shared-skill"]);
     });
 
     it("returns empty when skill directories do not exist", async () => {
       vi.mocked(existsSync).mockReturnValue(false);
-      const result = await resolveConfiguredSkills(null, "/project");
+      const result = await resolveConfiguredSkills(null, [
+        "/project/.kiro/skills",
+      ]);
       expect(result).toEqual([]);
     });
 
@@ -89,30 +95,33 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills(null, "/project");
+      const result = await resolveConfiguredSkills(null, [
+        "/project/.kiro/skills",
+        `${homedir()}/.kiro/skills`,
+      ]);
       expect(result).toEqual([]);
     });
   });
 
   describe("custom agent", () => {
+    const mockLoadConfig = vi.fn();
+
     it("resolves skill:// URIs from agent config", async () => {
       const agentConfig = {
         name: "dev",
         resources: ["skill://~/.config/amazonq/global/skills/*/SKILL.md"],
       };
+      mockLoadConfig.mockResolvedValue(agentConfig);
 
       vi.mocked(existsSync).mockImplementation((p) => {
         const path = String(p);
         return (
-          path === "/project/.kiro/agents/dev.json" ||
           path === `${homedir()}/.config/amazonq/global/skills` ||
           path ===
             `${homedir()}/.config/amazonq/global/skills/coding-practices/SKILL.md` ||
           path === `${homedir()}/.config/amazonq/global/skills/testing/SKILL.md`
         );
       });
-
-      vi.mocked(readFile).mockResolvedValue(JSON.stringify(agentConfig));
 
       vi.mocked(readdir).mockImplementation(async (dirPath) => {
         const path = String(dirPath);
@@ -125,7 +134,12 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills("dev", "/project");
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
       expect(result).toEqual(["coding-practices", "testing"]);
     });
 
@@ -134,17 +148,15 @@ describe("resolveConfiguredSkills", () => {
         name: "dev",
         resources: ["skill://.kiro/skills/*/SKILL.md"],
       };
+      mockLoadConfig.mockResolvedValue(agentConfig);
 
       vi.mocked(existsSync).mockImplementation((p) => {
         const path = String(p);
         return (
-          path === "/project/.kiro/agents/dev.json" ||
           path === "/project/.kiro/skills" ||
           path === "/project/.kiro/skills/local-skill/SKILL.md"
         );
       });
-
-      vi.mocked(readFile).mockResolvedValue(JSON.stringify(agentConfig));
 
       vi.mocked(readdir).mockImplementation(async (dirPath) => {
         const path = String(dirPath);
@@ -154,52 +166,34 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills("dev", "/project");
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
       expect(result).toEqual(["local-skill"]);
     });
 
-    it("falls back to global agent config when workspace config missing", async () => {
-      const agentConfig = {
-        name: "dev",
-        resources: ["skill://~/.kiro/skills/*/SKILL.md"],
-      };
-
-      vi.mocked(existsSync).mockImplementation((p) => {
-        const path = String(p);
-        return (
-          path === `${homedir()}/.kiro/agents/dev.json` ||
-          path === `${homedir()}/.kiro/skills` ||
-          path === `${homedir()}/.kiro/skills/global-skill/SKILL.md`
-        );
-      });
-
-      vi.mocked(readFile).mockResolvedValue(JSON.stringify(agentConfig));
-
-      vi.mocked(readdir).mockImplementation(async (dirPath) => {
-        const path = String(dirPath);
-        if (path === `${homedir()}/.kiro/skills`) {
-          return [{ name: "global-skill", isDirectory: () => true }] as any;
-        }
-        return [];
-      });
-
-      const result = await resolveConfiguredSkills("dev", "/project");
-      expect(result).toEqual(["global-skill"]);
-    });
-
     it("returns empty when agent config not found", async () => {
-      vi.mocked(existsSync).mockReturnValue(false);
-      const result = await resolveConfiguredSkills("missing-agent", "/project");
+      mockLoadConfig.mockResolvedValue(null);
+      const result = await resolveConfiguredSkills(
+        "missing-agent",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
       expect(result).toEqual([]);
     });
 
     it("returns empty when agent config has no resources", async () => {
-      vi.mocked(existsSync).mockImplementation(
-        (p) => String(p) === "/project/.kiro/agents/dev.json",
+      mockLoadConfig.mockResolvedValue({ name: "dev" });
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
       );
-      vi.mocked(readFile).mockResolvedValue(JSON.stringify({ name: "dev" }));
-
-      const result = await resolveConfiguredSkills("dev", "/project");
       expect(result).toEqual([]);
     });
 
@@ -208,17 +202,15 @@ describe("resolveConfiguredSkills", () => {
         name: "dev",
         resources: ["file://some/path", "skill://~/.kiro/skills/*/SKILL.md"],
       };
+      mockLoadConfig.mockResolvedValue(agentConfig);
 
       vi.mocked(existsSync).mockImplementation((p) => {
         const path = String(p);
         return (
-          path === "/project/.kiro/agents/dev.json" ||
           path === `${homedir()}/.kiro/skills` ||
           path === `${homedir()}/.kiro/skills/my-skill/SKILL.md`
         );
       });
-
-      vi.mocked(readFile).mockResolvedValue(JSON.stringify(agentConfig));
 
       vi.mocked(readdir).mockImplementation(async (dirPath) => {
         if (String(dirPath) === `${homedir()}/.kiro/skills`) {
@@ -227,8 +219,18 @@ describe("resolveConfiguredSkills", () => {
         return [];
       });
 
-      const result = await resolveConfiguredSkills("dev", "/project");
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
       expect(result).toEqual(["my-skill"]);
+    });
+
+    it("returns empty when no loadAgentConfig provided", async () => {
+      const result = await resolveConfiguredSkills("dev", []);
+      expect(result).toEqual([]);
     });
   });
 });

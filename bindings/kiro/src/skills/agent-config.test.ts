@@ -1,14 +1,18 @@
-import "../../__tests__/mocks/fs";
-import "../../__tests__/mocks/logger";
+vi.mock("node:fs", () => ({
+  existsSync: vi.fn<() => boolean>(),
+}));
+
+vi.mock("node:fs/promises", () => ({
+  readFile: vi.fn<() => Promise<string>>(),
+}));
 
 import { existsSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { loadAgentConfig, _configCache } from "./agent-config";
+import { loadAgentConfig } from "./agent-config";
 
 beforeEach(() => {
   vi.clearAllMocks();
-  _configCache.clear();
 });
 
 describe("loadAgentConfig", () => {
