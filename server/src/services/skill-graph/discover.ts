@@ -11,11 +11,12 @@ const skillCache = new FileCache<ParsedSkill>();
 
 export { skillCache };
 
+const SKILLS_DIR_PATTERN = /[/\\]\.[^/\\]+[/\\]skills$/;
+
 export function deriveProject(skillDirPath: string): string | null {
   const normalized = resolve(expandHome(skillDirPath));
-  const suffix = `${join(".kiro", "skills")}`;
-  if (normalized.endsWith(`/${suffix}`) || normalized.endsWith(`\\${suffix}`)) {
-    const parent = normalized.slice(0, -(suffix.length + 1));
+  if (SKILLS_DIR_PATTERN.test(normalized)) {
+    const parent = resolve(normalized, "..", "..");
     return basename(parent);
   }
   return basename(normalized);

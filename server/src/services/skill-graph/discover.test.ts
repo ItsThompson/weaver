@@ -22,6 +22,10 @@ describe("deriveProject", () => {
     expect(deriveProject("/projects/my-app/.kiro/skills")).toBe("my-app");
   });
 
+  it("strips .claude/skills suffix and returns basename", () => {
+    expect(deriveProject("/projects/my-app/.claude/skills")).toBe("my-app");
+  });
+
   it("strips .kiro/skills suffix with tilde path", () => {
     expect(deriveProject("~/projects/my-app/.kiro/skills")).toBe("my-app");
   });
