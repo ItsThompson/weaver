@@ -46,6 +46,24 @@
         "to": "cli/dist"
       },
       {
+        "from": "../bindings/kiro",
+        "to": "bindings/kiro",
+        "filter": [
+          "weaver-log.sh",
+          "lib/**",
+          "dist/**",
+          "prompts/**"
+        ]
+      },
+      {
+        "from": "../bindings/claude-code/dist",
+        "to": "bindings/claude-code/dist"
+      },
+      {
+        "from": "../validation/dist",
+        "to": "validation/dist"
+      },
+      {
         "from": "assets",
         "to": "assets"
       },
