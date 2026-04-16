@@ -20,7 +20,6 @@ export function writeValidationEvent(
     timestamp: new Date().toISOString(),
     harness,
     eventName: WeaverEventName.VALIDATION,
-    cwd: "",
     validationTrigger: trigger,
     validationResults: results,
     validationChangedFiles: changedFiles,

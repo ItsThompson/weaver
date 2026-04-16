@@ -39,7 +39,7 @@ export interface WeaverEvent {
   timestamp: string;
   harness: Harness;
   eventName: WeaverEventName;
-  cwd: string;
+  cwd?: string;
   pid?: number;
   transcriptPath?: string;
   prompt?: string;
