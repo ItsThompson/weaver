@@ -1,2 +1,6 @@
-// Barrel export: validation logic moved here in Step 3
-export {};
+export { runValidation, parseArgs } from "./run-validation";
+export type { ValidateArgs } from "./run-validation";
+export type { ValidateResult } from "./exit";
+export { matchesExtensionGlob } from "./glob";
+export { runStopHook } from "./stop-hook";
+export { runInject } from "./inject";
