@@ -1,23 +1,20 @@
-import type {
-  ActivityStatus,
-  HookEvent,
-  HookEventName,
-} from "@weaver/shared/types";
+import type { ActivityStatus, WeaverEvent } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import type { SimpleWebhookPayload, EventContext } from "./types";
 import { extractContext } from "./context";
 
 export function buildSimpleWebhookPayload(
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   activity: ActivityStatus,
   sessionName: string,
-  events: HookEvent[],
+  events: WeaverEvent[],
 ): SimpleWebhookPayload {
   const ctx = extractContext(eventName, events);
   return { text: formatText(eventName, activity, sessionName, ctx) };
 }
 
 function formatText(
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   activity: ActivityStatus,
   name: string,
   ctx: EventContext | null,
@@ -26,13 +23,13 @@ function formatText(
     ? `${ctx.tool_name}${summarizeToolInput(ctx.tool_input)}`
     : "";
 
-  if (eventName === "agentSpawn") {
+  if (eventName === WeaverEventName.AGENT_SPAWN) {
     return `🟢 ${name} started`;
   }
-  if (eventName === "stop") {
+  if (eventName === WeaverEventName.STOP) {
     return `⚫ ${name} idle`;
   }
-  if (eventName === "userPromptSubmit") {
+  if (eventName === WeaverEventName.USER_PROMPT_SUBMIT) {
     return `💬 ${name} ── ${truncate(ctx?.prompt ?? "", 200)}`;
   }
 
@@ -44,10 +41,10 @@ function formatText(
     return text;
   }
 
-  if (eventName === "postToolUse") {
+  if (eventName === WeaverEventName.POST_TOOL_USE) {
     return `✅ ${name} ── ${toolSummary}`;
   }
-  if (eventName === "preToolUse") {
+  if (eventName === WeaverEventName.PRE_TOOL_USE) {
     return `🔧 ${name} ── ${toolSummary}`;
   }
 

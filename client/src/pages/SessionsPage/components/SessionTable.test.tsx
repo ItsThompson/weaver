@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 
 import { MemoryRouter } from "react-router-dom";
 import type { SessionWithStatus } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 
 import "../../../__tests__/mocks/api";
 
@@ -16,6 +17,7 @@ function makeSession(index: number): SessionWithStatus {
     customName: `Session ${index}`,
     cwd: `/projects/project-${index}`,
     agentName: "dev",
+    harness: Harness.KIRO_CLI,
     startTime: `2026-01-01T00:${String(index).padStart(2, "0")}:00Z`,
     lastEventTime: `2026-01-01T00:${String(index).padStart(2, "0")}:00Z`,
     status: "open",
@@ -29,6 +31,7 @@ const SESSIONS: SessionWithStatus[] = [
     customName: "Frontend App",
     cwd: "/projects/frontend",
     agentName: "dev",
+    harness: Harness.KIRO_CLI,
     startTime: "2026-01-02T00:00:00Z",
     lastEventTime: "2026-01-02T00:05:00Z",
     status: "open",
@@ -39,6 +42,7 @@ const SESSIONS: SessionWithStatus[] = [
     customName: null,
     cwd: "/projects/backend",
     agentName: null,
+    harness: Harness.KIRO_CLI,
     startTime: "2026-01-01T00:00:00Z",
     lastEventTime: "2026-01-01T00:10:00Z",
     status: "closed",

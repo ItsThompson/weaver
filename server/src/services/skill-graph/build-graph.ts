@@ -4,6 +4,7 @@ import type {
   SkillEdge,
   SkillGraphCategoryConfig,
 } from "@weaver/shared/types";
+import type { SkillSearchPath } from "@weaver/shared/types";
 import { categorizeSkill } from "./category";
 import { discoverSkills } from "./discover";
 import { findReferences, extractFrontmatterString } from "./utils";
@@ -35,7 +36,7 @@ function resolveEdgeTarget(
 }
 
 export async function buildSkillGraph(
-  skillPaths: string[],
+  skillPaths: SkillSearchPath[],
   configCategories: Record<string, SkillGraphCategoryConfig>,
 ): Promise<SkillGraph> {
   const skills = await discoverSkills(skillPaths);

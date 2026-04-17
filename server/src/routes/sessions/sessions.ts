@@ -5,6 +5,7 @@ import type {
   TurnGroup,
   ApiError,
 } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import {
   readSessions,
   writeSessions,
@@ -27,6 +28,7 @@ import {
   safeConfiguredSkills,
 } from "./helpers";
 import { registerDeleteRoute } from "./delete";
+import { getProcessName } from "../../utils/get-process-name";
 import { patchSessionBody, renameBody, webhookToggleBody } from "../schemas";
 import { zodBody } from "../schema-utils";
 
@@ -35,12 +37,15 @@ export function registerSessionRoutes(server: FastifyInstance): void {
     const sessions = await readSessions();
     const results = await Promise.all(
       sessions.map(async (s) => {
-        const isOpen = await isProcessRunning(s.pid);
+        const processName = getProcessName(s);
+        const isOpen = processName
+          ? await isProcessRunning(s.pid, processName)
+          : false;
         let activity: SessionWithStatus["activity"];
         if (isOpen) {
           const last = await getLastEvent(s.id);
           activity = deriveActivity(
-            last?.name ?? "agentSpawn",
+            last?.name ?? WeaverEventName.AGENT_SPAWN,
             last?.timestamp,
           );
         }
@@ -67,11 +72,14 @@ export function registerSessionRoutes(server: FastifyInstance): void {
       return reply.status(404).send({ error: "Log file not found" });
     }
 
-    const isOpen = await isProcessRunning(session.pid);
+    const sessionProcessName = getProcessName(session);
+    const isOpen = sessionProcessName
+      ? await isProcessRunning(session.pid, sessionProcessName)
+      : false;
     const lastEvent = events.length > 0 ? events[events.length - 1] : null;
     const activity = isOpen
       ? deriveActivity(
-          lastEvent?.event.hook_event_name ?? "agentSpawn",
+          lastEvent?.eventName ?? WeaverEventName.AGENT_SPAWN,
           lastEvent?.timestamp,
         )
       : undefined;

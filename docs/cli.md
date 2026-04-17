@@ -1,6 +1,6 @@
 # CLI reference
 
-The `weaver` command lets you control the dashboard from inside kiro-cli sessions.
+The `weaver` command lets you control the dashboard from inside sessions.
 
 ## Usage
 
@@ -12,7 +12,7 @@ weaver <command> [options]
 
 ### `weaver view`
 
-Navigate the dashboard to the current kiro-cli session.
+Navigate the dashboard to the current session.
 
 ```bash
 weaver view
@@ -30,7 +30,7 @@ weaver session <PID>    # Open a specific session by PID
 
 ### `weaver rename <name>`
 
-Rename the current kiro-cli session.
+Rename the current session.
 
 ```bash
 weaver rename "auth refactor"
@@ -66,7 +66,7 @@ weaver config sounds off        # Disable notification sounds
 ### `weaver sync`
 
 Sync `.weaver.json` validation timeouts to `.kiro/agents/` configs. Calculates
-the required kiro-cli hook timeouts from your validation hooks and patches all
+the required hook timeouts from your validation hooks and patches all
 agent config files that use `weaver-log.sh`.
 
 Scans both workspace (`.kiro/agents/`) and global (`~/.kiro/agents/`) agent
@@ -77,11 +77,13 @@ weaver sync              # Patch agent configs
 weaver sync --dry-run    # Show what would change without writing
 ```
 
-Run before starting an agent session to ensure kiro-cli won't kill validation
+Run before starting an agent session to ensure the harness won't kill validation
 early. Also runs automatically on `agentSpawn` so the next session picks up
 changes.
+
+> **Note:** `weaver sync` currently supports kiro-cli only.
 
 ## Notes
 
 - The CLI communicates with the Weaver server at `http://localhost:8143` by default. Override with the `WEAVER_SERVER` environment variable.
-- The CLI automatically resolves the calling kiro-cli process ID, so commands like `view` and `rename` target the correct session.
+- The CLI automatically resolves the calling process ID, so commands like `view` and `rename` target the correct session.

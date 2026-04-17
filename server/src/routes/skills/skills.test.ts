@@ -66,7 +66,9 @@ describe("GET /api/skills", () => {
     await server.inject({ method: "GET", url: "/api/skills" });
 
     expect(buildSkillGraph).toHaveBeenCalledWith(
-      ["/projects/my-app/.kiro/skills"],
+      expect.arrayContaining([
+        { path: "/projects/my-app/.kiro/skills", source: "workspace" },
+      ]),
       { core: { skills: ["skill-a"] } },
     );
   });

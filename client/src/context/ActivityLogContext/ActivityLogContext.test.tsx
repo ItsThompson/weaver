@@ -22,7 +22,7 @@ describe("ActivityLogContext", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         sessionName: "My Session",
       });
     });
@@ -38,14 +38,14 @@ describe("ActivityLogContext", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "preToolUse",
+        eventName: "pre-tool-use",
         sessionName: "S",
       });
     });
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "preToolUse",
+        eventName: "pre-tool-use",
         sessionName: "S",
       });
     });
@@ -59,7 +59,7 @@ describe("ActivityLogContext", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         sessionName: "S",
       });
     });
@@ -78,7 +78,7 @@ describe("ActivityLogContext", () => {
       for (let i = 0; i < 15; i++) {
         dispatchSSE("update", {
           sessionId: `s-${i}`,
-          eventName: "agentSpawn",
+          eventName: "agent-spawn",
           sessionName: `Session ${i}`,
         });
       }

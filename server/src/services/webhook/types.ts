@@ -1,7 +1,8 @@
-import type { ActivityStatus, HookEventName } from "@weaver/shared/types";
+import type { ActivityStatus } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 
 export interface WebhookPayload {
-  event: HookEventName;
+  event: WeaverEventName;
   activity: ActivityStatus;
   timestamp: string;
   session_id: string;

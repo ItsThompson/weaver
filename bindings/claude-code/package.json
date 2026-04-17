@@ -1,0 +1,25 @@
+{
+  "name": "@weaver/binding-claude-code",
+  "version": "1.6.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.build.json && tsdown",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@weaver/shared": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsdown": "^0.21.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.18"
+  }
+}

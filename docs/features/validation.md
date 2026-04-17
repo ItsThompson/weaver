@@ -1,6 +1,6 @@
 # Validation hooks
 
-Validation hooks let you run formatting, linting, type-checking, and test commands automatically during kiro-cli sessions. Define them in a `.weaver.json` config file at your project root and Weaver handles the rest: running commands at the right time, surfacing failures as warnings, and injecting error context into the LLM's next prompt so it can self-correct.
+Validation hooks let you run formatting, linting, type-checking, and test commands automatically during sessions. Define them in a `.weaver.json` config file at your project root and Weaver handles the rest: running commands at the right time, surfacing failures as warnings, and injecting error context into the LLM's next prompt so it can self-correct.
 
 ## How it works
 
@@ -17,7 +17,7 @@ User submits next prompt → userPromptSubmit hook fires
 
 1. **On `stop`**: After the agent finishes a turn, changed files are grouped by their nearest `.weaver.json` config. Each group's `stop` hooks run independently against its own files. If any command fails, a warning is printed to STDERR and a pending file is written.
 2. **On `postToolUse`**: After each `fs_write` tool call, the nearest `.weaver.json` config is found by walking up from the written file. Matching `postToolUse` hooks run (e.g. auto-formatting). Files with no `.weaver.json` ancestor are silently skipped.
-3. **On `userPromptSubmit`**: If a pending file exists from a previous turn's failures, its contents are formatted and printed to STDOUT, which kiro-cli injects into the LLM's context. The pending file is then deleted.
+3. **On `userPromptSubmit`**: If a pending file exists from a previous turn's failures, its contents are formatted and printed to STDOUT, which the harness injects into the LLM's context. The pending file is then deleted.
 
 This creates a feedback loop: the agent sees its own validation failures and can fix them without the user having to copy-paste error output.
 
@@ -262,7 +262,7 @@ Nearest config wins. There is no merging between levels. The root `.weaver.json`
 
 When a command times out, it is killed and marked as failed. Output captured up to that point is still included.
 
-Make sure the kiro-cli hook timeout is greater than the sum of your validation command timeouts, or individual commands may be killed before they finish.
+Make sure the harness hook timeout is greater than the sum of your validation command timeouts, or individual commands may be killed before they finish.
 
 Command output (stdout + stderr combined) is truncated to 5,000 characters to prevent excessive log sizes.
 

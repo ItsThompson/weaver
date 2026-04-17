@@ -1,4 +1,5 @@
 import type { TurnGroup } from "./events";
+import { Harness } from "./harness";
 
 // Session stored in sessions.jsonl (one JSON line per session)
 export interface Session {
@@ -9,6 +10,7 @@ export interface Session {
   agentName: string | null;
   startTime: string;
   lastEventTime: string;
+  harness: Harness;
 }
 
 // Computed at runtime by checking if pid is still running

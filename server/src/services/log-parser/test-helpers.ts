@@ -1,33 +1,46 @@
-import type { HookEvent, HookEventName } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
+import { Harness, resolveEventName } from "@weaver/shared/types";
 
 export function makeEvent(
-  name: HookEventName,
+  name: string,
   extra: Record<string, unknown> = {},
-): HookEvent {
+): WeaverEvent {
   return {
+    sessionId: "test-session",
     timestamp: new Date().toISOString(),
-    event: { hook_event_name: name, cwd: "/tmp", ...extra },
+    harness: Harness.KIRO_CLI,
+    eventName: resolveEventName(name),
+    cwd: "/tmp",
+    ...extra,
   };
 }
 
 export function makeTimedEvent(
-  name: HookEventName,
+  name: string,
   ms: number,
   extra: Record<string, unknown> = {},
-): HookEvent {
+): WeaverEvent {
   return {
+    sessionId: "test-session",
     timestamp: new Date(ms).toISOString(),
-    event: { hook_event_name: name, cwd: "/tmp", ...extra },
+    harness: Harness.KIRO_CLI,
+    eventName: resolveEventName(name),
+    cwd: "/tmp",
+    ...extra,
   };
 }
 
 export function makeOrphanEvent(
   pid: number,
-  name: HookEventName = "userPromptSubmit",
-): HookEvent {
+  name = "userPromptSubmit",
+  harness: Harness = Harness.KIRO_CLI,
+): WeaverEvent {
   return {
+    sessionId: "orphan",
     timestamp: "2026-01-01T00:00:00Z",
+    harness,
+    eventName: resolveEventName(name),
+    cwd: "/tmp",
     pid,
-    event: { hook_event_name: name, cwd: "/tmp" },
   };
 }

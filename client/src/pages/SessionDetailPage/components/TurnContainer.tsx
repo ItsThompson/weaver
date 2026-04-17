@@ -5,6 +5,7 @@ import Badge from "@cloudscape-design/components/badge";
 import Button from "@cloudscape-design/components/button";
 import Box from "@cloudscape-design/components/box";
 import type { TurnGroup } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 import { ToolCallCard } from "../../../components/ToolCallCard";
 import { ValidationBanner } from "../../../components/ValidationBanner";
 
@@ -19,9 +20,9 @@ export function TurnContainer({
   showTools,
   onToggleTools,
 }: TurnContainerProps) {
-  const firstEvent = turn.events[0]?.event.hook_event_name;
+  const firstEvent = turn.events[0]?.eventName;
 
-  if (firstEvent === "agentSpawn") {
+  if (firstEvent === WeaverEventName.AGENT_SPAWN) {
     return (
       <Container
         header={

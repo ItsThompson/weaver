@@ -1,28 +1,37 @@
-import type { HookEvent } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
+import { Harness, WeaverEventName } from "@weaver/shared/types";
 import { extractContext } from "./context";
 
 function makeEvent(
-  name: string,
+  name: WeaverEventName,
   extra: Record<string, unknown> = {},
-): HookEvent {
+): WeaverEvent {
   return {
+    sessionId: "test-session",
     timestamp: "2026-01-01T00:00:00Z",
-    event: { hook_event_name: name, cwd: "/tmp", ...extra },
+    harness: Harness.KIRO_CLI,
+    eventName: name,
+    cwd: "/tmp",
+    ...extra,
   };
 }
 
 describe("extractContext", () => {
   it("returns null for agentSpawn", () => {
-    expect(extractContext("agentSpawn", [])).toBeNull();
+    expect(extractContext(WeaverEventName.AGENT_SPAWN, [])).toBeNull();
   });
 
   it("returns null for stop", () => {
-    expect(extractContext("stop", [makeEvent("stop")])).toBeNull();
+    expect(
+      extractContext(WeaverEventName.STOP, [makeEvent(WeaverEventName.STOP)]),
+    ).toBeNull();
   });
 
   it("returns prompt with null tool fields for userPromptSubmit", () => {
-    const events = [makeEvent("userPromptSubmit", { prompt: "hello" })];
-    expect(extractContext("userPromptSubmit", events)).toEqual({
+    const events = [
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "hello" }),
+    ];
+    expect(extractContext(WeaverEventName.USER_PROMPT_SUBMIT, events)).toEqual({
       prompt: "hello",
       tool_name: null,
       tool_input: null,
@@ -32,31 +41,39 @@ describe("extractContext", () => {
 
   it("returns null prompt when no userPromptSubmit exists", () => {
     const events = [
-      makeEvent("preToolUse", { tool_name: "fs_read", tool_input: {} }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_read",
+        toolInput: {},
+      }),
     ];
-    const ctx = extractContext("preToolUse", events);
+    const ctx = extractContext(WeaverEventName.PRE_TOOL_USE, events);
     expect(ctx?.prompt).toBeNull();
     expect(ctx?.tool_name).toBe("fs_read");
   });
 
   it("uses the last userPromptSubmit when multiple exist", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "first" }),
-      makeEvent("userPromptSubmit", { prompt: "second" }),
-      makeEvent("preToolUse", { tool_name: "grep", tool_input: {} }),
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "first" }),
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "second" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "grep",
+        toolInput: {},
+      }),
     ];
-    expect(extractContext("preToolUse", events)?.prompt).toBe("second");
+    expect(extractContext(WeaverEventName.PRE_TOOL_USE, events)?.prompt).toBe(
+      "second",
+    );
   });
 
   it("extracts tool context for preToolUse", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "do it" }),
-      makeEvent("preToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a.ts" },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "do it" }),
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/a.ts" },
       }),
     ];
-    expect(extractContext("preToolUse", events)).toEqual({
+    expect(extractContext(WeaverEventName.PRE_TOOL_USE, events)).toEqual({
       prompt: "do it",
       tool_name: "fs_write",
       tool_input: { path: "/a.ts" },
@@ -65,8 +82,10 @@ describe("extractContext", () => {
   });
 
   it("returns null tool fields when no matching tool event exists", () => {
-    const events = [makeEvent("userPromptSubmit", { prompt: "test" })];
-    expect(extractContext("preToolUse", events)).toEqual({
+    const events = [
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "test" }),
+    ];
+    expect(extractContext(WeaverEventName.PRE_TOOL_USE, events)).toEqual({
       prompt: "test",
       tool_name: null,
       tool_input: null,
@@ -74,16 +93,16 @@ describe("extractContext", () => {
     });
   });
 
-  it("includes tool_response for postToolUse", () => {
+  it("includes toolResponse for postToolUse", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "read" }),
-      makeEvent("postToolUse", {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["ok"] },
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "read" }),
+      makeEvent(WeaverEventName.POST_TOOL_USE, {
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["ok"] },
       }),
     ];
-    expect(extractContext("postToolUse", events)).toEqual({
+    expect(extractContext(WeaverEventName.POST_TOOL_USE, events)).toEqual({
       prompt: "read",
       tool_name: "fs_read",
       tool_input: { path: "/a" },
@@ -93,31 +112,38 @@ describe("extractContext", () => {
 
   it("returns null tool_response for postToolUse when response is falsy", () => {
     const events = [
-      makeEvent("postToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a" },
+      makeEvent(WeaverEventName.POST_TOOL_USE, {
+        toolName: "fs_write",
+        toolInput: { path: "/a" },
       }),
     ];
-    expect(extractContext("postToolUse", events)?.tool_response).toBeNull();
+    expect(
+      extractContext(WeaverEventName.POST_TOOL_USE, events)?.tool_response,
+    ).toBeNull();
   });
 
   it("returns null tool_response for preToolUse even if event has one", () => {
     const events = [
-      makeEvent("preToolUse", {
-        tool_name: "fs_read",
-        tool_input: {},
-        tool_response: { success: true, result: [] },
+      makeEvent(WeaverEventName.PRE_TOOL_USE, {
+        toolName: "fs_read",
+        toolInput: {},
+        toolResponse: { success: true, result: [] },
       }),
     ];
-    expect(extractContext("preToolUse", events)?.tool_response).toBeNull();
+    expect(
+      extractContext(WeaverEventName.PRE_TOOL_USE, events)?.tool_response,
+    ).toBeNull();
   });
 
   it("returns tool context for unknown event names", () => {
     const events = [
-      makeEvent("userPromptSubmit", { prompt: "go" }),
-      makeEvent("customEvent", { tool_name: "x", tool_input: { a: 1 } }),
+      makeEvent(WeaverEventName.USER_PROMPT_SUBMIT, { prompt: "go" }),
+      makeEvent(WeaverEventName.NOTIFICATION, {
+        toolName: "x",
+        toolInput: { a: 1 },
+      }),
     ];
-    const ctx = extractContext("customEvent", events);
+    const ctx = extractContext(WeaverEventName.NOTIFICATION, events);
     expect(ctx?.prompt).toBe("go");
     expect(ctx?.tool_name).toBe("x");
   });

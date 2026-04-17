@@ -1,3 +1,4 @@
+import { WeaverEventName } from "@weaver/shared/types";
 import {
   subscribe,
   broadcast,
@@ -58,12 +59,12 @@ describe("broadcast", () => {
   it("emits an update event with session data", () => {
     const listener = vi.fn();
     const unsub = subscribe(listener);
-    broadcast("sess-1", "agentSpawn", "my-project");
+    broadcast("sess-1", WeaverEventName.AGENT_SPAWN, "my-project");
     expect(listener).toHaveBeenCalledWith({
       event: "update",
       data: {
         sessionId: "sess-1",
-        eventName: "agentSpawn",
+        eventName: WeaverEventName.AGENT_SPAWN,
         sessionName: "my-project",
       },
     });

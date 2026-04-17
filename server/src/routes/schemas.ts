@@ -1,11 +1,9 @@
 import { z } from "zod";
-import { HOOK_EVENT_NAMES } from "@weaver/shared/types";
-
-const hookEventName = z.enum(HOOK_EVENT_NAMES);
+import { WeaverEventName } from "@weaver/shared/types";
 
 export const notifyBody = z.object({
   sessionId: z.string(),
-  eventName: hookEventName.optional(),
+  eventName: z.nativeEnum(WeaverEventName).optional(),
 });
 
 export const viewBody = z.object({ pid: z.number() });

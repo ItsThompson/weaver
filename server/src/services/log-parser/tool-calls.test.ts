@@ -5,13 +5,13 @@ describe("matchToolCalls", () => {
   it("pairs matching preToolUse and postToolUse events", () => {
     const events = [
       makeTimedEvent("preToolUse", 1000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("postToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["ok"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["ok"] },
       }),
     ];
     const pairs = matchToolCalls(events);
@@ -26,22 +26,22 @@ describe("matchToolCalls", () => {
   it("handles parallel calls to different tools", () => {
     const events = [
       makeTimedEvent("preToolUse", 1000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("preToolUse", 1000, {
-        tool_name: "grep",
-        tool_input: { pattern: "x" },
+        toolName: "grep",
+        toolInput: { pattern: "x" },
       }),
       makeTimedEvent("postToolUse", 2000, {
-        tool_name: "grep",
-        tool_input: { pattern: "x" },
-        tool_response: { success: true, result: [] },
+        toolName: "grep",
+        toolInput: { pattern: "x" },
+        toolResponse: { success: true, result: [] },
       }),
       makeTimedEvent("postToolUse", 2500, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["data"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["data"] },
       }),
     ];
     const pairs = matchToolCalls(events);
@@ -54,22 +54,22 @@ describe("matchToolCalls", () => {
   it("handles multiple sequential calls to the same tool", () => {
     const events = [
       makeTimedEvent("preToolUse", 1000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("postToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["a"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["a"] },
       }),
       makeTimedEvent("preToolUse", 3000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/b" },
+        toolName: "fs_read",
+        toolInput: { path: "/b" },
       }),
       makeTimedEvent("postToolUse", 4000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/b" },
-        tool_response: { success: true, result: ["b"] },
+        toolName: "fs_read",
+        toolInput: { path: "/b" },
+        toolResponse: { success: true, result: ["b"] },
       }),
     ];
     const pairs = matchToolCalls(events);
@@ -81,8 +81,8 @@ describe("matchToolCalls", () => {
   it("handles unmatched preToolUse (no response yet)", () => {
     const events = [
       makeTimedEvent("preToolUse", 1000, {
-        tool_name: "execute_bash",
-        tool_input: { command: "ls" },
+        toolName: "execute_bash",
+        toolInput: { command: "ls" },
       }),
     ];
     const pairs = matchToolCalls(events);
@@ -95,9 +95,9 @@ describe("matchToolCalls", () => {
   it("handles postToolUse without matching preToolUse", () => {
     const events = [
       makeTimedEvent("postToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["ok"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["ok"] },
       }),
     ];
     const pairs = matchToolCalls(events);
@@ -105,7 +105,7 @@ describe("matchToolCalls", () => {
     expect(pairs[0].startTime).toBe(pairs[0].endTime);
   });
 
-  it("ignores events without tool_name", () => {
+  it("ignores events without toolName", () => {
     const events = [
       makeTimedEvent("userPromptSubmit", 1000, { prompt: "hello" }),
       makeTimedEvent("stop", 2000),

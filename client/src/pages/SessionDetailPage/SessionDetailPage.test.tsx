@@ -5,6 +5,7 @@ import "../../__tests__/mocks/api";
 
 import { SWRConfig } from "swr";
 import type { SessionWithStatus, TurnGroup } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 
 vi.mock("react-router-dom", () => ({
   useParams: () => ({ id: "test-session-id" }),
@@ -29,6 +30,7 @@ const mockSession: SessionWithStatus = {
   status: "open",
   customName: null,
   agentName: "dev",
+  harness: Harness.KIRO_CLI,
   startTime: "2024-01-01T10:00:00Z",
   lastEventTime: "2024-01-01T10:05:00Z",
 };
@@ -40,8 +42,11 @@ const mockTurns: TurnGroup[] = [
     endTime: "2024-01-01T10:01:00Z",
     events: [
       {
+        sessionId: "test-session-id",
         timestamp: "2024-01-01T10:00:00Z",
-        event: { hook_event_name: "agentSpawn", cwd: "/test/path" },
+        harness: "kiro-cli",
+        eventName: "agent-spawn",
+        cwd: "/test/path",
       },
     ],
     userPrompt: null,
@@ -54,8 +59,11 @@ const mockTurns: TurnGroup[] = [
     endTime: "2024-01-01T10:06:00Z",
     events: [
       {
+        sessionId: "test-session-id",
         timestamp: "2024-01-01T10:05:00Z",
-        event: { hook_event_name: "userPrompt", cwd: "/test/path" },
+        harness: "kiro-cli",
+        eventName: "userPromptSubmit",
+        cwd: "/test/path",
       },
     ],
     userPrompt: "Test user prompt",

@@ -38,7 +38,7 @@ describe("useSessionNotifications", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         sessionName: "My Session",
       });
     });
@@ -61,7 +61,7 @@ describe("useSessionNotifications", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         sessionName: "S",
       });
     });
@@ -70,7 +70,7 @@ describe("useSessionNotifications", () => {
     act(() => {
       dispatchSSE("update", {
         sessionId: "abc",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         sessionName: "S",
       });
     });

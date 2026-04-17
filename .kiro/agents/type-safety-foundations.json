@@ -36,7 +36,6 @@
         "./server/src/routes/events/**",
         "./server/src/routes/sessions/**",
         "./server/src/utils/**",
-        "./hook-handler/src/**",
         "./client/src/hooks/notifications/**",
         "./client/src/context/ActivityLogContext/**",
         "./e2e/fixtures/**",

@@ -1,7 +1,8 @@
 import type { FastifyInstance } from "fastify";
 import type { ApiError } from "@weaver/shared/types";
 import { unlink } from "node:fs/promises";
-import { sessionLogPath, sessionMarkerPath } from "@weaver/shared/paths";
+import { sessionLogPath } from "@weaver/shared/paths";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import { readSessions, writeSessions } from "../../services/storage/index";
 import { broadcast } from "../../services/event-bus";
 import { log } from "../../utils/logger";
@@ -31,13 +32,14 @@ export function registerDeleteRoute(server: FastifyInstance): void {
         });
       }
 
-      // Remove session marker if present
+      // Harness-specific cleanup (kiro: delete marker file, claude-code: no-op)
       try {
-        await unlink(sessionMarkerPath(session.pid));
+        const adapter = getAdapter(session.harness);
+        await adapter.cleanupSession(session);
       } catch (e) {
         log({
           timestamp: new Date().toISOString(),
-          event: "session_delete_marker_error",
+          event: "session_delete_cleanup_error",
           sessionId: id,
           error: String(e),
         });

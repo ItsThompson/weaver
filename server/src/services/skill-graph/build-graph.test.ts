@@ -8,7 +8,10 @@ import {
   SKILL_A_CONTENT,
   SKILL_B_CONTENT,
 } from "../../__tests__/fixtures/skills";
-import type { SkillGraphCategoryConfig } from "@weaver/shared/types";
+import type {
+  SkillGraphCategoryConfig,
+  SkillSearchPath,
+} from "@weaver/shared/types";
 
 vi.mock("../skill-resolver/list-skill-dirs", () => ({
   listSkillDirNames: vi.fn(),
@@ -18,6 +21,9 @@ const testCategories: Record<string, SkillGraphCategoryConfig> = {
   core: { skills: ["skill-a"] },
   language: { skills: ["skill-b"] },
 };
+
+const ws = (path: string): SkillSearchPath => ({ path, source: "workspace" });
+const gl = (path: string): SkillSearchPath => ({ path, source: "global" });
 
 beforeEach(() => vi.clearAllMocks());
 
@@ -30,7 +36,7 @@ describe("buildSkillGraph", () => {
     vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
     const graph = await buildSkillGraph(
-      ["/projects/my-app/.kiro/skills"],
+      [ws("/projects/my-app/.kiro/skills"), gl("/global/skills")],
       testCategories,
     );
 
@@ -49,7 +55,7 @@ describe("buildSkillGraph", () => {
     vi.mocked(listSkillDirNames).mockResolvedValueOnce(["skill-b"]);
     vi.mocked(readFile).mockResolvedValue(SKILL_B_CONTENT);
 
-    const graph = await buildSkillGraph([], testCategories);
+    const graph = await buildSkillGraph([gl("/global/skills")], testCategories);
 
     expect(graph.nodes[0]).toMatchObject({
       id: "skill-b::global",
@@ -66,7 +72,7 @@ describe("buildSkillGraph", () => {
     vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
     const graph = await buildSkillGraph(
-      ["/projects/my-app/.kiro/skills"],
+      [ws("/projects/my-app/.kiro/skills"), gl("/global/skills")],
       testCategories,
     );
 
@@ -82,7 +88,7 @@ describe("buildSkillGraph", () => {
     vi.mocked(readFile).mockResolvedValue(SKILL_A_CONTENT);
 
     const graph = await buildSkillGraph(
-      ["/projects/my-app/.kiro/skills"],
+      [ws("/projects/my-app/.kiro/skills"), gl("/global/skills")],
       testCategories,
     );
 
@@ -101,7 +107,7 @@ describe("buildSkillGraph", () => {
       return SKILL_B_CONTENT;
     });
 
-    const graph = await buildSkillGraph(["/projects/foo/.kiro/skills"], {});
+    const graph = await buildSkillGraph([ws("/projects/foo/.kiro/skills"), gl("/global/skills")], {});
 
     const edgesFromA = graph.edges.filter(
       (edge) => edge.from === "skill-a::foo",
@@ -121,7 +127,7 @@ describe("buildSkillGraph", () => {
       return SKILL_B_CONTENT;
     });
 
-    const graph = await buildSkillGraph(["/projects/foo/.kiro/skills"], {});
+    const graph = await buildSkillGraph([ws("/projects/foo/.kiro/skills"), gl("/global/skills")], {});
 
     expect(graph.edges).toEqual([
       { from: "skill-a::foo", to: "skill-b::global" },
@@ -141,7 +147,7 @@ describe("buildSkillGraph", () => {
       return SKILL_B_CONTENT;
     });
 
-    const graph = await buildSkillGraph(["/projects/foo/.kiro/skills"], {});
+    const graph = await buildSkillGraph([ws("/projects/foo/.kiro/skills"), gl("/global/skills")], {});
 
     const globalEdges = graph.edges.filter(
       (edge) => edge.from === "skill-a::global",
@@ -164,7 +170,7 @@ describe("buildSkillGraph", () => {
       return SKILL_B_CONTENT;
     });
 
-    const graph = await buildSkillGraph(["/projects/foo/.kiro/skills"], {});
+    const graph = await buildSkillGraph([ws("/projects/foo/.kiro/skills"), gl("/global/skills")], {});
 
     const globalEdges = graph.edges.filter(
       (edge) => edge.from === "skill-a::global",
@@ -186,7 +192,7 @@ describe("buildSkillGraph", () => {
     });
 
     const graph = await buildSkillGraph(
-      ["/projects/foo/.kiro/skills", "/projects/bar/.kiro/skills"],
+      [ws("/projects/foo/.kiro/skills"), ws("/projects/bar/.kiro/skills"), gl("/global/skills")],
       {},
     );
 

@@ -1,25 +1,18 @@
-import type {
-  HookEventData,
-  HookEventName,
-  ValidationResult,
-} from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
 
 export interface LastEvent {
-  name: HookEventName;
+  name: WeaverEventName;
   timestamp: string;
 }
 
-/** HookEventData with validation-specific fields present at runtime. */
-export interface ValidationHookEventData extends HookEventData {
-  results: ValidationResult[];
-}
-
 export function isValidationEvent(
-  data: HookEventData,
-): data is ValidationHookEventData {
+  event: WeaverEvent,
+): event is WeaverEvent & {
+  validationResults: NonNullable<WeaverEvent["validationResults"]>;
+} {
   return (
-    data.hook_event_name === "validation" &&
-    "results" in data &&
-    Array.isArray(data.results)
+    event.eventName === WeaverEventName.VALIDATION &&
+    Array.isArray(event.validationResults)
   );
 }

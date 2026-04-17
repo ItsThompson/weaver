@@ -16,6 +16,7 @@ import { createTray } from "./tray";
 import { fetchConfig, putConfig } from "./config";
 import { subscribeSSE } from "./sse";
 import { installCli } from "./install-cli";
+import { installHooks } from "./install-hooks";
 import { setupDictation, handleDictationHotkey } from "./dictation";
 import { log } from "./utils/logger";
 
@@ -49,6 +50,9 @@ app.on("ready", async () => {
 
   currentConfig = await fetchConfig(server.SERVER_URL);
   installCli();
+  if (!process.env.WEAVER_TEST) {
+    installHooks();
+  }
 
   createWindow(server.SERVER_URL, currentConfig);
   createTray(

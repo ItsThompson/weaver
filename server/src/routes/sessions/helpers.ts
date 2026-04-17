@@ -3,6 +3,7 @@ import type {
   SessionWithStatus,
   ActivityStatus,
 } from "@weaver/shared/types";
+import { getAdapter } from "@weaver/shared/adapter-registry";
 import { extractActiveSkillPaths } from "../../services/log-parser/index";
 import {
   skillNameFromPath,
@@ -31,7 +32,19 @@ export async function safeConfiguredSkills(
   session: Session,
 ): Promise<string[]> {
   try {
-    return await resolveConfiguredSkills(session.agentName, session.cwd);
+    const adapter = getAdapter(session.harness);
+    const skillPaths = adapter
+      .skillSearchPaths(session.cwd)
+      .map((entry) => entry.path);
+    const loader = adapter.loadAgentConfig
+      ? (name: string) => adapter.loadAgentConfig!(name, session.cwd)
+      : undefined;
+    return await resolveConfiguredSkills(
+      session.agentName,
+      skillPaths,
+      loader,
+      session.cwd,
+    );
   } catch {
     return [];
   }

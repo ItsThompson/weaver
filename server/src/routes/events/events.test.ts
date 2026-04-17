@@ -27,13 +27,13 @@ describe("POST /api/notify", () => {
     const res = await server.inject({
       method: "POST",
       url: "/api/notify",
-      payload: { sessionId: "aaa", eventName: "userPromptSubmit" },
+      payload: { sessionId: "aaa", eventName: "user-prompt-submit" },
     });
 
     expect(res.statusCode).toBe(200);
     expect(vi.mocked(broadcast)).toHaveBeenCalledWith(
       "aaa",
-      "userPromptSubmit",
+      "user-prompt-submit",
       "My App",
     );
     expect(vi.mocked(handleWebhookEvent)).toHaveBeenCalled();

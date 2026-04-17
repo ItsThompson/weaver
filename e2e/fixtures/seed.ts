@@ -2,7 +2,8 @@ import { randomUUID } from "node:crypto";
 import { appendFile, mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import type { Session } from "@weaver/shared/session";
-import type { HookEvent, HookEventData } from "@weaver/shared/events";
+import type { WeaverEvent } from "@weaver/shared/types";
+import { Harness, WeaverEventName } from "@weaver/shared/types";
 import type { WeaverConfig } from "@weaver/shared/config";
 import { DEFAULT_CONFIG } from "@weaver/shared/config";
 
@@ -18,18 +19,19 @@ export function makeSession(overrides?: Partial<Session>): Session {
     agentName: null,
     startTime: now,
     lastEventTime: now,
+    harness: Harness.KIRO_CLI,
     ...overrides,
   };
 }
 
-export function makeHookEvent(overrides?: Partial<HookEvent>): HookEvent {
+export function makeWeaverEvent(overrides?: Partial<WeaverEvent>): WeaverEvent {
   return {
+    sessionId: "test-session",
     timestamp: new Date().toISOString(),
-    event: {
-      hook_event_name: "userPromptSubmit",
-      cwd: "/tmp/test-project",
-      prompt: "test prompt",
-    },
+    harness: Harness.KIRO_CLI,
+    eventName: WeaverEventName.USER_PROMPT_SUBMIT,
+    cwd: "/tmp/test-project",
+    prompt: "test prompt",
     ...overrides,
   };
 }
@@ -47,7 +49,7 @@ export async function seedSession(
 export async function seedLogEvents(
   tmpDir: string,
   sessionId: string,
-  events: HookEvent[],
+  events: WeaverEvent[],
 ): Promise<void> {
   const dir = join(weaverDir(tmpDir), "logs");
   await mkdir(dir, { recursive: true });

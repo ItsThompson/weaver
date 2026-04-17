@@ -1,6 +1,8 @@
 # Cherrypick
 
-Cherrypick lets you select and remove parts of a conversation, then reload a pruned context into kiro-cli via `/chat load`.
+Cherrypick lets you select and remove parts of a conversation, then reload a pruned context via `/chat load`.
+
+> **Note:** Cherrypick currently supports kiro-cli only. It relies on kiro-cli's `/chat save` and `/chat load` commands.
 
 ## When to use it
 

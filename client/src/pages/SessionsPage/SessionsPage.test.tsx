@@ -4,6 +4,7 @@ import { render, screen, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { SWRConfig } from "swr";
 import type { SessionWithStatus } from "@weaver/shared/types";
+import { Harness } from "@weaver/shared/types";
 
 import "../../__tests__/mocks/api";
 
@@ -18,6 +19,7 @@ const OPEN_SESSION: SessionWithStatus = {
   customName: "My Session",
   cwd: "/projects/app",
   agentName: "dev",
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-02T00:00:00Z",
   lastEventTime: "2026-01-02T00:05:00Z",
   status: "open",
@@ -29,6 +31,7 @@ const CLOSED_SESSION: SessionWithStatus = {
   customName: null,
   cwd: "/tmp",
   agentName: null,
+  harness: Harness.KIRO_CLI,
   startTime: "2026-01-01T00:00:00Z",
   lastEventTime: "2026-01-01T00:10:00Z",
   status: "closed",

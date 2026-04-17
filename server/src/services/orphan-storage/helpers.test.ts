@@ -41,8 +41,11 @@ describe("partitionByPid", () => {
 
   it("treats missing pid as pid 0", () => {
     const noPidLine = JSON.stringify({
+      sessionId: "orphan",
       timestamp: "2026-01-01T00:00:00Z",
-      event: { hook_event_name: "userPromptSubmit", cwd: "/tmp" },
+      harness: "kiro-cli",
+      eventName: "user-prompt-submit",
+      cwd: "/tmp",
     });
     const content = `${noPidLine}\n`;
     const result = partitionByPid(content, 0, "test_error");

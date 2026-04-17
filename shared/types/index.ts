@@ -5,3 +5,5 @@ export * from "./validation";
 export * from "./skills";
 export * from "./dictation";
 export * from "./services";
+export * from "./harness";
+export * from "./weaver-event";

@@ -4,12 +4,12 @@ vi.mock("./utils", () => ({
   patch: vi.fn(),
 }));
 
-vi.mock("@weaver/shared/sync", () => ({
+vi.mock("@weaver/binding-kiro/sync", () => ({
   syncAgentTimeouts: vi.fn(),
 }));
 
 import { post, get, patch } from "./utils";
-import { syncAgentTimeouts } from "@weaver/shared/sync";
+import { syncAgentTimeouts } from "@weaver/binding-kiro/sync";
 import { view } from "./commands/view";
 import { session } from "./commands/session";
 import { rename } from "./commands/rename";
@@ -372,5 +372,22 @@ describe("sync", () => {
     expect(logSpy).toHaveBeenCalledWith(
       "would patch: /project/.kiro/agents/agent.json",
     );
+  });
+
+  it("exits with error for unsupported harness", () => {
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const exitSpy = vi
+      .spyOn(process, "exit")
+      .mockImplementation(() => undefined as never);
+
+    sync(123, [], "claude-code");
+
+    expect(errorSpy).toHaveBeenCalledWith(
+      "sync is not yet supported for claude-code",
+    );
+    expect(exitSpy).toHaveBeenCalledWith(1);
+    expect(syncAgentTimeouts).not.toHaveBeenCalled();
+    errorSpy.mockRestore();
+    exitSpy.mockRestore();
   });
 });

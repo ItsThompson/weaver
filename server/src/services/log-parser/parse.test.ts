@@ -22,13 +22,13 @@ describe("parseLogFile", () => {
     expect(await parseLogFile("missing")).toEqual([]);
   });
 
-  it("parses valid JSONL into HookEvent array", async () => {
+  it("parses valid JSONL into WeaverEvent array", async () => {
     vi.mocked(existsSync).mockReturnValue(true);
     const event = makeEvent("agentSpawn");
     vi.mocked(readFile).mockResolvedValue(JSON.stringify(event) + "\n");
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
-    expect(result[0].event.hook_event_name).toBe("agentSpawn");
+    expect(result[0].eventName).toBe("agent-spawn");
   });
 
   it("skips malformed lines without crashing", async () => {
@@ -38,6 +38,19 @@ describe("parseLogFile", () => {
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
   });
+
+  it("skips old-format entries without eventName", async () => {
+    vi.mocked(existsSync).mockReturnValue(true);
+    const canonical = JSON.stringify(makeEvent("agentSpawn"));
+    const legacy = JSON.stringify({
+      timestamp: "2026-01-01T00:00:00Z",
+      event: { hook_event_name: "stop", cwd: "/tmp" },
+    });
+    vi.mocked(readFile).mockResolvedValue(`${canonical}\n${legacy}\n`);
+    const result = await parseLogFile("test-id");
+    expect(result).toHaveLength(1);
+    expect(result[0].eventName).toBe("agent-spawn");
+  });
 });
 
 describe("getLastEvent", () => {
@@ -46,7 +59,7 @@ describe("getLastEvent", () => {
     expect(await getLastEvent("empty")).toBeNull();
   });
 
-  it("returns the last event with a hook_event_name", async () => {
+  it("returns the last event with an eventName", async () => {
     vi.mocked(existsSync).mockReturnValue(true);
     const events = [makeEvent("agentSpawn"), makeEvent("stop")];
     vi.mocked(readFile).mockResolvedValue(
@@ -67,15 +80,12 @@ describe("createLogParser", () => {
     vi.mocked(readFile).mockResolvedValue(JSON.stringify(event) + "\n");
     vi.mocked(stat).mockResolvedValue({ mtimeMs: 1000, size: 50 } as any);
 
-    // Parse with A — caches the result
     await parserA.parseLogFile("shared-id");
     expect(readFile).toHaveBeenCalledTimes(1);
 
-    // Parse again with A — served from cache, no new readFile call
     await parserA.parseLogFile("shared-id");
     expect(readFile).toHaveBeenCalledTimes(1);
 
-    // Parse with B — must call readFile again (separate cache)
     await parserB.parseLogFile("shared-id");
     expect(readFile).toHaveBeenCalledTimes(2);
   });

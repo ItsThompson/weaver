@@ -3,6 +3,7 @@ import "../../__tests__/mocks/logger";
 
 import { mkdir, readFile, appendFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { Harness } from "@weaver/shared/types";
 import {
   ensureDataDir,
   readSessions,
@@ -97,6 +98,7 @@ describe("appendSession", () => {
       customName: null,
       cwd: "/tmp",
       agentName: null,
+      harness: Harness.KIRO_CLI,
       startTime: "t1",
       lastEventTime: "t1",
     };

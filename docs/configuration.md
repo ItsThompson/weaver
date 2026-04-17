@@ -41,7 +41,7 @@ Add project-specific runners via `test_runners` in the global config or in your 
 
 ### Skill paths
 
-Configure additional directories where Weaver looks for skills. Each path should point to a directory containing skill subdirectories (each with a `SKILL.md` file). `~/.kiro/skills` is always included as the global skills path and cannot be added to `skill_paths`.
+Configure additional directories where Weaver looks for skills. Each path should point to a directory containing skill subdirectories (each with a `SKILL.md` file). The harness's global skills directory (e.g., `~/.kiro/skills` for kiro-cli) is always included automatically and cannot be added to `skill_paths`.
 
 If a path ends with `.kiro/skills`, the project name is derived from the parent directory (e.g., `~/projects/my-app/.kiro/skills` yields project `my-app`). Otherwise, the basename of the path is used as the project name.
 
@@ -163,6 +163,6 @@ Per-project validation hooks. Place this file in your project root (or per-packa
 
 ## Application logs
 
-Weaver writes structured JSONL logs to `~/.weaver/app-logs/YYYY-MM-DD.log`. Each line includes a `source` field identifying the package that produced it (`server`, `desktop`, `hook-handler`, `server:stdout`, or `server:stderr`).
+Weaver writes structured JSONL logs to `~/.weaver/app-logs/YYYY-MM-DD.log`. Each line includes a `source` field identifying the package that produced it (`server`, `desktop`, `binding-kiro`, `binding-claude-code`, `validation`, `server:stdout`, or `server:stderr`).
 
 Log files older than 30 days are automatically deleted on server startup. To share logs for debugging, send the relevant date's file from `~/.weaver/app-logs/`.

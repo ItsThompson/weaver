@@ -1,6 +1,6 @@
 # weaver-cli
 
-CLI tool for controlling the Weaver dashboard from inside kiro-cli sessions.
+CLI tool for controlling the Weaver dashboard from inside sessions.
 
 ## Installation
 

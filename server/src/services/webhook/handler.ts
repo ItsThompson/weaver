@@ -1,10 +1,10 @@
 import {
   PENDING_APPROVAL_THRESHOLD_MS,
+  WeaverEventName,
   type ActivityStatus,
   type Session,
-  type HookEvent,
+  type WeaverEvent,
   type WeaverConfig,
-  type HookEventName,
 } from "@weaver/shared/types";
 import type { WebhookPayload, SimpleWebhookPayload } from "./types";
 import { readConfig } from "../config/index";
@@ -21,11 +21,11 @@ const pendingTracker = createPendingTracker();
 function buildPayloadForFormat(
   format: WeaverConfig["webhook_format"],
   sessionId: string,
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   activity: ActivityStatus,
   sessionName: string,
   session: Session | undefined,
-  events: HookEvent[],
+  events: WeaverEvent[],
 ): WebhookPayload | SimpleWebhookPayload {
   if (format === "simple") {
     return buildSimpleWebhookPayload(eventName, activity, sessionName, events);
@@ -42,7 +42,7 @@ function buildPayloadForFormat(
 
 export async function handleWebhookEvent(
   sessionId: string,
-  eventName: HookEventName | undefined,
+  eventName: WeaverEventName | undefined,
   sessionName: string,
   session: Session | undefined,
 ): Promise<void> {
@@ -69,14 +69,14 @@ export async function handleWebhookEvent(
     session,
     events,
   );
-  // Fire-and-forget: webhook delivery should not block the event response.
-  // DispatchResult intentionally ignored here: dispatchWebhook logs its own errors.
-  // The return value exists for callers that need delivery status (e.g., retry logic).
   void dispatchWebhook(config.webhook_url, payload);
 
-  if (eventName === "postToolUse" || eventName === "stop") {
+  if (
+    eventName === WeaverEventName.POST_TOOL_USE ||
+    eventName === WeaverEventName.STOP
+  ) {
     pendingTracker.cancel(sessionId);
-  } else if (eventName === "preToolUse") {
+  } else if (eventName === WeaverEventName.PRE_TOOL_USE) {
     pendingTracker.schedule(
       sessionId,
       PENDING_APPROVAL_THRESHOLD_MS,
@@ -96,7 +96,7 @@ export async function handleWebhookEvent(
             session,
             freshEvents,
           );
-          void dispatchWebhook(freshConfig.webhook_url, pendingPayload); // fire-and-forget
+          void dispatchWebhook(freshConfig.webhook_url, pendingPayload);
         } catch (err) {
           log({
             timestamp: new Date().toISOString(),

@@ -24,6 +24,8 @@ When running `npm run dev` from the monorepo root, both the server and client st
 | Sessions       | `/`                 | List of all sessions with activity status                   |
 | Session detail | `/sessions/:id`     | Conversation turns, tool calls, and validation results      |
 | Cherrypick     | `/cherrypick`       | Select and prune conversation turns                         |
+| Skills         | `/skills`           | Skill graph visualization                                   |
+| Skill detail   | `/skills/:name`     | Individual skill detail and category assignment             |
 | Orphans        | `/sessions/orphans` | Manage events from unmatched PIDs                           |
 | Settings       | `/settings`         | Configure display options, webhooks, and preferences        |
 | Mini           | `/mini`             | Compact session list (used by mini mode in the desktop app) |

@@ -7,7 +7,7 @@ describe("groupEventsByTurn", () => {
     const turns = groupEventsByTurn(events);
     expect(turns).toHaveLength(1);
     expect(turns[0].userPrompt).toBeNull();
-    expect(turns[0].events[0].event.hook_event_name).toBe("agentSpawn");
+    expect(turns[0].events[0].eventName).toBe("agent-spawn");
   });
 
   it("groups userPromptSubmit through stop as one turn", () => {
@@ -26,13 +26,13 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeTimedEvent("userPromptSubmit", 1000, { prompt: "test" }),
       makeTimedEvent("preToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("postToolUse", 3000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["ok"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["ok"] },
       }),
       makeTimedEvent("stop", 4000),
     ];
@@ -47,22 +47,22 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeTimedEvent("userPromptSubmit", 1000, { prompt: "test" }),
       makeTimedEvent("preToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("preToolUse", 2000, {
-        tool_name: "grep",
-        tool_input: { pattern: "x" },
+        toolName: "grep",
+        toolInput: { pattern: "x" },
       }),
       makeTimedEvent("postToolUse", 3000, {
-        tool_name: "grep",
-        tool_input: { pattern: "x" },
-        tool_response: { success: true, result: [] },
+        toolName: "grep",
+        toolInput: { pattern: "x" },
+        toolResponse: { success: true, result: [] },
       }),
       makeTimedEvent("postToolUse", 3500, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["data"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["data"] },
       }),
       makeTimedEvent("stop", 4000),
     ];
@@ -79,22 +79,22 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeTimedEvent("userPromptSubmit", 1000, { prompt: "test" }),
       makeTimedEvent("preToolUse", 2000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
       }),
       makeTimedEvent("postToolUse", 3000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/a" },
-        tool_response: { success: true, result: ["a"] },
+        toolName: "fs_read",
+        toolInput: { path: "/a" },
+        toolResponse: { success: true, result: ["a"] },
       }),
       makeTimedEvent("preToolUse", 4000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/b" },
+        toolName: "fs_read",
+        toolInput: { path: "/b" },
       }),
       makeTimedEvent("postToolUse", 5000, {
-        tool_name: "fs_read",
-        tool_input: { path: "/b" },
-        tool_response: { success: true, result: ["b"] },
+        toolName: "fs_read",
+        toolInput: { path: "/b" },
+        toolResponse: { success: true, result: ["b"] },
       }),
       makeTimedEvent("stop", 6000),
     ];
@@ -108,8 +108,8 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeTimedEvent("userPromptSubmit", 1000, { prompt: "test" }),
       makeTimedEvent("preToolUse", 2000, {
-        tool_name: "execute_bash",
-        tool_input: { command: "ls" },
+        toolName: "execute_bash",
+        toolInput: { command: "ls" },
       }),
     ];
     const turns = groupEventsByTurn(events);
@@ -138,14 +138,14 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeEvent("userPromptSubmit", { prompt: "fix it" }),
       makeEvent("postToolUse", {
-        tool_name: "fs_write",
-        tool_input: { path: "/a.ts" },
+        toolName: "fs_write",
+        toolInput: { path: "/a.ts" },
       }),
       makeEvent("validation", {
-        trigger: "stop",
-        results,
-        changed_files: ["/a.ts"],
-        agent_tested_dirs: [],
+        validationTrigger: "stop",
+        validationResults: results,
+        validationChangedFiles: ["/a.ts"],
+        validationAgentTestedDirs: [],
       }),
       makeEvent("stop"),
     ];
@@ -175,16 +175,16 @@ describe("groupEventsByTurn", () => {
     const events = [
       makeEvent("userPromptSubmit", { prompt: "go" }),
       makeEvent("validation", {
-        trigger: "postToolUse",
-        results: r1,
-        changed_files: [],
-        agent_tested_dirs: [],
+        validationTrigger: "postToolUse",
+        validationResults: r1,
+        validationChangedFiles: [],
+        validationAgentTestedDirs: [],
       }),
       makeEvent("validation", {
-        trigger: "stop",
-        results: r2,
-        changed_files: [],
-        agent_tested_dirs: [],
+        validationTrigger: "stop",
+        validationResults: r2,
+        validationChangedFiles: [],
+        validationAgentTestedDirs: [],
       }),
       makeEvent("stop"),
     ];
@@ -204,8 +204,11 @@ describe("groupEventsByTurn", () => {
   it("returns empty validationResults for malformed validation event", () => {
     const events = [
       makeEvent("userPromptSubmit", { prompt: "hello" }),
-      makeEvent("validation", { trigger: "stop", results: "not-an-array" }),
-      makeEvent("validation", { trigger: "stop" }),
+      makeEvent("validation", {
+        validationTrigger: "stop",
+        validationResults: "not-an-array",
+      }),
+      makeEvent("validation", { validationTrigger: "stop" }),
       makeEvent("stop"),
     ];
     const turns = groupEventsByTurn(events);

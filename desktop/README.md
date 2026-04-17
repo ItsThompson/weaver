@@ -23,3 +23,4 @@ npm run dist
 - **Mini mode**: Compact session list panel. See [mini mode](../docs/features/mini-mode.md).
 - **Always-on-top**: Window stays above other windows
 - **Embedded server**: The Electron app starts the Weaver server automatically
+- **Hook installation**: Automatically symlinks binding hook scripts to `/usr/local/lib/weaver/` on startup (may prompt for admin privileges)

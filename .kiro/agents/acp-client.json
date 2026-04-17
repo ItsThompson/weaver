@@ -41,7 +41,6 @@
         "./server/package.json",
         "./bin/weaver",
         "./cli/src/index.ts",
-        "./hook-handler/**",
         "./package.json",
         "./turbo.json",
         "./.gitignore",

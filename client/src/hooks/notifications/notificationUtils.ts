@@ -1,4 +1,5 @@
-import type { ActivityStatus, HookEventName } from "@weaver/shared/types";
+import type { ActivityStatus } from "@weaver/shared/types";
+import { WeaverEventName } from "@weaver/shared/types";
 
 const ACTIVITY_LABELS: Record<ActivityStatus, string> = {
   starting: "Starting",
@@ -8,13 +9,13 @@ const ACTIVITY_LABELS: Record<ActivityStatus, string> = {
   pending_approval: "Pending approval",
 };
 
-export function deriveActivity(eventName: HookEventName): ActivityStatus {
+export function deriveActivity(eventName: WeaverEventName): ActivityStatus {
   switch (eventName) {
-    case "agentSpawn":
+    case WeaverEventName.AGENT_SPAWN:
       return "starting";
-    case "stop":
+    case WeaverEventName.STOP:
       return "idle";
-    case "preToolUse":
+    case WeaverEventName.PRE_TOOL_USE:
       return "running_tool";
     default:
       return "processing";
@@ -26,14 +27,14 @@ export function deriveActivity(eventName: HookEventName): ActivityStatus {
  */
 export function resolveNotification(
   sessionId: string,
-  eventName: HookEventName,
+  eventName: WeaverEventName,
   sessionName: string | undefined,
   lastActivity: Map<string, string>,
 ): string | null {
   const name = sessionName || sessionId.slice(0, 8);
 
   // Validation events always produce a notification, bypassing activity dedup
-  if (eventName === "validation") {
+  if (eventName === WeaverEventName.VALIDATION) {
     return `${name} → Validation complete`;
   }
 

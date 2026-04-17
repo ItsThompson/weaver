@@ -1,50 +1,57 @@
 import { log } from "../../utils/logger";
 import { listSkillDirNames } from "./list-skill-dirs";
-import { loadAgentConfig } from "./agent-config";
 import { resolveSkillUri } from "./skill-uri";
-import { kiroSearchPaths } from "./kiro-paths";
 
 /**
  * Resolves configured skill names for a session's agent.
- * For the default agent (null), lists skill directories in workspace and global `.kiro/skills/`.
- * For custom agents, reads the agent config and resolves `skill://` URIs from its resources.
+ * For the default agent (null), lists skill directories from the provided search paths.
+ * For custom agents, the caller provides a config loader that returns the agent's config.
  * Returns `[]` on any failure.
  */
 export async function resolveConfiguredSkills(
   agentName: string | null,
-  cwd: string,
+  skillSearchPaths: string[],
+  loadAgentConfig?: (
+    agentName: string,
+  ) => Promise<Record<string, unknown> | null>,
+  cwd?: string,
 ): Promise<string[]> {
   try {
     if (!agentName) {
-      return await resolveDefaultAgentSkills(cwd);
+      return await resolveDefaultAgentSkills(skillSearchPaths);
     }
-    return await resolveCustomAgentSkills(agentName, cwd);
+    if (!loadAgentConfig || !cwd) {
+      return [];
+    }
+    return await resolveCustomAgentSkills(agentName, loadAgentConfig, cwd);
   } catch (error) {
     log({
       timestamp: new Date().toISOString(),
       event: "resolve_configured_skills_error",
       agentName,
-      cwd,
       error: String(error),
     });
     return [];
   }
 }
 
-/** Collects deduplicated skill directory names from workspace and global skill directories. */
-async function resolveDefaultAgentSkills(cwd: string): Promise<string[]> {
-  const names = await Promise.all(
-    kiroSearchPaths(cwd, "skills").map(listSkillDirNames),
-  );
+/** Collects deduplicated skill directory names from the provided skill directories. */
+async function resolveDefaultAgentSkills(
+  skillSearchPaths: string[],
+): Promise<string[]> {
+  const names = await Promise.all(skillSearchPaths.map(listSkillDirNames));
   return [...new Set(names.flat())];
 }
 
 /** Reads a custom agent's config and resolves its `skill://` resource URIs to skill directory names. */
 async function resolveCustomAgentSkills(
   agentName: string,
+  loadAgentConfig: (
+    agentName: string,
+  ) => Promise<Record<string, unknown> | null>,
   cwd: string,
 ): Promise<string[]> {
-  const config = await loadAgentConfig(agentName, cwd);
+  const config = await loadAgentConfig(agentName);
   if (!config) {
     return [];
   }

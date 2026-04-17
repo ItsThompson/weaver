@@ -7,10 +7,11 @@ import { config } from "./commands/config";
 import { sync } from "./commands/sync";
 import { print, printError } from "./utils/output";
 
-// argv: [node, script, callerPid, command, ...args]
+// argv: [node, script, callerPid, harness, command, ...args]
 const callerPid = parseInt(process.argv[2], 10);
-const command = process.argv[3];
-const args = process.argv.slice(4);
+const harness = process.argv[3] ?? "kiro-cli";
+const command = process.argv[4];
+const args = process.argv.slice(5);
 
 const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   view,
@@ -18,18 +19,18 @@ const COMMANDS: Record<string, (pid: number, args: string[]) => void> = {
   rename,
   toggle,
   config,
-  sync,
+  sync: (pid, cmdArgs) => sync(pid, cmdArgs, harness),
 };
 
 if (!command || command === "--help" || command === "-h") {
   print(`Usage: weaver <command>
 
 Commands:
-  view              Navigate dashboard to the current kiro-cli session
+  view              Navigate dashboard to the current session
   session           Navigate dashboard to the sessions list (default: list)
   session list      Navigate dashboard to the sessions list
   session <PID>     Navigate dashboard to a specific session by PID
-  rename <name>     Rename the current kiro-cli session
+  rename <name>     Rename the current session
   toggle            Toggle between main and mini mode
   config ghost      Toggle ghost mode (or: on | off)
   config ghost opacity <0-1>  Set ghost opacity

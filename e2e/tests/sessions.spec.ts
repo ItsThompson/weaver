@@ -1,5 +1,6 @@
 import { test, expect } from "../fixtures/app";
-import { seedSession, seedLogEvents, makeHookEvent } from "../fixtures/seed";
+import { seedSession, seedLogEvents, makeWeaverEvent } from "../fixtures/seed";
+import { WeaverEventName } from "@weaver/shared/types";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
@@ -34,17 +35,18 @@ test.describe("Session CRUD", () => {
   test("session detail with turns", async ({ page, serverUrl, tmpDir }) => {
     const session = await seedSession(tmpDir, {});
     const events = [
-      makeHookEvent({
+      makeWeaverEvent({
+        sessionId: session.id,
         timestamp: "2026-01-01T00:00:00.000Z",
-        event: {
-          hook_event_name: "userPromptSubmit",
-          cwd: "/tmp",
-          prompt: "hello",
-        },
+        eventName: WeaverEventName.USER_PROMPT_SUBMIT,
+        cwd: "/tmp",
+        prompt: "hello",
       }),
-      makeHookEvent({
+      makeWeaverEvent({
+        sessionId: session.id,
         timestamp: "2026-01-01T00:00:01.000Z",
-        event: { hook_event_name: "stop", cwd: "/tmp" },
+        eventName: WeaverEventName.STOP,
+        cwd: "/tmp",
       }),
     ];
     await seedLogEvents(tmpDir, session.id, events);
@@ -81,7 +83,9 @@ test.describe("Session CRUD", () => {
     tmpDir,
   }) => {
     const session = await seedSession(tmpDir, {});
-    await seedLogEvents(tmpDir, session.id, [makeHookEvent()]);
+    await seedLogEvents(tmpDir, session.id, [
+      makeWeaverEvent({ sessionId: session.id }),
+    ]);
     const logPath = join(tmpDir, ".weaver", "logs", `${session.id}.jsonl`);
 
     // Verify log file exists

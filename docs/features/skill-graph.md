@@ -1,6 +1,6 @@
 # Skill Graph
 
-The skill graph is a visual map of all skills available to kiro-cli and how they relate to each other.
+The skill graph is a visual map of all available skills and how they relate to each other.
 
 ## Accessing the graph
 
@@ -54,7 +54,7 @@ The detail page shows the skill's name, description, full markdown content, and 
 
 Weaver discovers skills from the following locations:
 
-- **Global skills**: `~/.kiro/skills/` (always included)
+- **Global skills**: the harness's global skills directory (e.g., `~/.kiro/skills/` for kiro-cli), always included
 - **Configured paths**: any directories listed in `skill_paths` in `~/.weaver/config.json`
 
 You can add skill paths from the Settings page using the "Skill paths" field, or by editing the config file directly. Each path should point to a directory containing skill subdirectories. Provide the full path (e.g., `~/projects/my-app/.kiro/skills`): Weaver does not auto-append `.kiro/skills`.

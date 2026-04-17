@@ -2,6 +2,8 @@ import { join } from "node:path";
 import { homedir } from "node:os";
 
 export const weaverDir = () => join(homedir(), ".weaver");
+export const WEAVER_SERVER_URL = "http://localhost:8143";
+export const WEAVER_NOTIFY_URL = `${WEAVER_SERVER_URL}/api/notify`;
 export const logsDir = () => join(weaverDir(), "logs");
 export const configPath = () => join(weaverDir(), "config.json");
 export const sessionsPath = () => join(weaverDir(), "sessions.jsonl");
@@ -16,7 +18,9 @@ export const snippetsPath = () => join(weaverDir(), "snippets.jsonl");
 export const dictationsPath = () => join(weaverDir(), "dictations.jsonl");
 export const modelsDir = () => join(weaverDir(), "models");
 export const appLogsDir = () => join(weaverDir(), "app-logs");
+/** @deprecated Use the kiro adapter's globalConfigDir() instead. */
 export const globalSkillsPath = () => join(globalKiroDir(), "skills");
+/** @deprecated Use the kiro adapter's globalConfigDir() instead. */
 export const globalKiroDir = () => join(homedir(), ".kiro");
 
 export function expandHome(filePath: string): string {
