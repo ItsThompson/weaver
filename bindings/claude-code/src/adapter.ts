@@ -7,6 +7,7 @@ import type {
 } from "@weaver/shared/types";
 import { Harness, WeaverEventName } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
+import { loadAgentConfig } from "./skills/agent-config";
 
 const EVENT_NAME_MAP: Record<string, WeaverEventName> = {
   SessionStart: WeaverEventName.SESSION_START,
@@ -96,4 +97,6 @@ export const claudeCodeAdapter: HarnessAdapter = {
   async cleanupSession(): Promise<void> {
     // No marker files for Claude Code (uses native session IDs)
   },
+
+  loadAgentConfig,
 };

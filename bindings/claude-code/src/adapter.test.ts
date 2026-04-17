@@ -225,4 +225,11 @@ describe("claudeCodeAdapter", () => {
       ).resolves.toBeUndefined();
     });
   });
+
+  describe("loadAgentConfig", () => {
+    it("is attached to the adapter", () => {
+      expect(claudeCodeAdapter.loadAgentConfig).toBeDefined();
+      expect(typeof claudeCodeAdapter.loadAgentConfig).toBe("function");
+    });
+  });
 });
