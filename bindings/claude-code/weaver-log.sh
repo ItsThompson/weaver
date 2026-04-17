@@ -44,9 +44,12 @@ EVENT=$(truncate_response "$EVENT")
 local_log_event="$BINDING_DIR/dist/log-event.mjs"
 if [ -f "$local_log_event" ]; then
   echo "$EVENT" | node "$local_log_event" --session-id "$SESSION_ID" --pid "$CALLER_PID" &
+  LOG_PID=$!
 fi
 
 if [ "$SESSION_ID" = "orphan" ]; then
+  # Wait for log-event to finish writing before exiting
+  [ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null || true
   echo "weaver: no session_id in event payload — event logged to orphan queue" >&2
   exit 1
 fi

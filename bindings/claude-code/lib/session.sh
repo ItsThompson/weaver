@@ -4,8 +4,8 @@
 # Requires: HOOK_EVENT_NAME, EVENT, CALLER_PID, WEAVER_DIR, LOGS_DIR, SESSIONS_FILE, CWD, TIMESTAMP
 
 manage_session() {
-  # Extract session_id from the event JSON
-  SESSION_ID=$(echo "$EVENT" | grep -o '"session_id":"[^"]*"' | head -1 | cut -d'"' -f4)
+  # Extract session_id from the event JSON (|| true to avoid pipefail on missing field)
+  SESSION_ID=$(echo "$EVENT" | grep -o '"session_id":"[^"]*"' | head -1 | cut -d'"' -f4 || true)
 
   if [ -z "$SESSION_ID" ]; then
     SESSION_ID="orphan"
