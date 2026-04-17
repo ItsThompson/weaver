@@ -5,7 +5,7 @@ import type {
   EventContext,
   SkillSearchPath,
 } from "@weaver/shared/types";
-import { Harness, WeaverEventName } from "@weaver/shared/types";
+import { Harness, WeaverEventName, resolveToolName } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
 import { loadAgentConfig } from "./skills/agent-config";
 
@@ -73,7 +73,7 @@ export const claudeCodeAdapter: HarnessAdapter = {
         ? String(data.transcript_path)
         : undefined,
       prompt: data.prompt ? String(data.prompt) : undefined,
-      toolName: data.tool_name ? String(data.tool_name) : undefined,
+      toolName: data.tool_name ? resolveToolName(String(data.tool_name)) : undefined,
       toolInput: data.tool_input as Record<string, unknown> | undefined,
       toolResponse: normalizeToolResponse(data.tool_response),
       permissionMode: data.permission_mode
