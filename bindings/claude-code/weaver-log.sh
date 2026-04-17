@@ -9,6 +9,8 @@ set -euo pipefail
 WEAVER_DIR="$HOME/.weaver"
 LOGS_DIR="$WEAVER_DIR/logs"
 SESSIONS_FILE="$WEAVER_DIR/sessions.jsonl"
+# Truncation limit for tool responses in the logged copy only.
+# This does not affect data passed back to the agent.
 MAX_RESPONSE_LENGTH="${WEAVER_MAX_RESPONSE_LENGTH:-500}"
 
 mkdir -p "$LOGS_DIR"
@@ -33,11 +35,12 @@ source "$LIB_DIR/validate.sh"
 source "$LIB_DIR/init.sh"
 
 # Extract a top-level string field from a JSON blob.
+# Only handles string values: the regex fallback matches "key":"value" patterns.
 # Falls back to regex when jq is unavailable. Returns empty string if field is missing.
 # Note: the regex fallback does not handle escaped quotes in values. This is
 # acceptable because it only activates when jq is absent, and Claude Code event
-# fields (hook_event_name, cwd, session_id) don't contain escaped quotes.
-json_field() {
+# fields (hook_event_name, cwd, session_id, tool_name) don't contain escaped quotes.
+json_string_field() {
   local json="$1" field="$2"
   local val=""
   val=$(echo "$json" | jq -r --arg f "$field" '.[$f] // empty' 2>/dev/null) || true
@@ -51,8 +54,8 @@ json_field() {
 # Read hook event JSON from STDIN
 EVENT=$(cat)
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-HOOK_EVENT_NAME=$(json_field "$EVENT" "hook_event_name")
-CWD=$(json_field "$EVENT" "cwd")
+HOOK_EVENT_NAME=$(json_string_field "$EVENT" "hook_event_name")
+CWD=$(json_string_field "$EVENT" "cwd")
 
 CALLER_PID=$(get_caller_pid)
 # Default to 0 if PID is non-numeric (e.g., ps unavailable in container)

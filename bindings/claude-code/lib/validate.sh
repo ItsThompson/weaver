@@ -14,14 +14,14 @@ run_validation() {
     return
   fi
 
-  if [ "$HOOK_EVENT_NAME" != "Stop" ] && [ "$HOOK_EVENT_NAME" != "PostToolUse" ]; then
+  if [ "$HOOK_EVENT_NAME" != "Stop" ] && [ "$HOOK_EVENT_NAME" != "PostToolUse" ] && [ "$HOOK_EVENT_NAME" != "PreToolUse" ]; then
     return
   fi
 
   [ -f "$validate_script" ] || return 0
 
   local tool_name
-  tool_name=$(json_field "$EVENT" "tool_name")
+  tool_name=$(json_string_field "$EVENT" "tool_name")
   local tool_path
   tool_path=$(echo "$EVENT" | jq -r '.tool_input.path // .tool_input.file_path // empty' 2>/dev/null || echo "")
   local validate_exit=0
