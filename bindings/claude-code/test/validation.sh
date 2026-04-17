@@ -27,7 +27,7 @@ teardown_validation() {
 # Start a session using the validation hook copy and return the session ID
 start_session_v() {
   echo '{"hook_event_name":"SessionStart","session_id":"val-session","cwd":"/tmp/project"}' | bash "$VHOOK"
-  sleep 0.3
+  sleep 1
   echo "val-session"
 }
 

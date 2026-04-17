@@ -125,8 +125,8 @@ export function patchSettings(
   const hooks = parsed.hooks as Record<string, unknown[]>;
 
   const defaultTimeout = MIN_TIMEOUT_SECONDS;
-  const stopSec = stopTimeout ? msToSeconds(stopTimeout) : defaultTimeout;
-  const postToolUseSec = postToolUseTimeout
+  const stopSec = stopTimeout != null ? msToSeconds(stopTimeout) : defaultTimeout;
+  const postToolUseSec = postToolUseTimeout != null
     ? msToSeconds(postToolUseTimeout)
     : defaultTimeout;
 

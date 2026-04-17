@@ -64,7 +64,7 @@ if [ "$SESSION_ID" = "orphan" ]; then
   # Wait for log-event to finish writing before exiting
   [ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null || true
   echo "weaver: no session_id in event payload — event logged to orphan queue" >&2
-  exit 1
+  exit 0
 fi
 
 run_init

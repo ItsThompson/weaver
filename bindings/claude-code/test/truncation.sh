@@ -21,7 +21,7 @@ teardown_truncation() {
 # Helper: start a session and return the session ID
 start_session_t() {
   echo '{"hook_event_name":"SessionStart","session_id":"trunc-session","cwd":"/tmp"}' | bash "$THOOK"
-  sleep 0.3
+  sleep 1
   echo "trunc-session"
 }
 
@@ -37,7 +37,7 @@ test_truncation_of_large_responses() {
   WEAVER_MAX_RESPONSE_LENGTH=20 bash "$THOOK" <<EOF
 {"hook_event_name":"PostToolUse","session_id":"trunc-session","cwd":"/tmp","tool_name":"Read","tool_input":{"path":"/a"},"tool_response":{"success":true,"result":["${long_result}"]}}
 EOF
-  sleep 0.3
+  sleep 1
 
   local last_line
   last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")
@@ -57,7 +57,7 @@ test_short_responses_not_truncated() {
   bash "$THOOK" <<'EOF'
 {"hook_event_name":"PostToolUse","session_id":"trunc-session","cwd":"/tmp","tool_name":"Read","tool_input":{},"tool_response":{"success":true,"result":["short"]}}
 EOF
-  sleep 0.3
+  sleep 1
 
   local last_line
   last_line=$(tail -1 "$HOME/.weaver/logs/$session_id.jsonl")

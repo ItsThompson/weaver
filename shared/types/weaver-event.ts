@@ -47,7 +47,7 @@ export interface WeaverEvent {
   toolInput?: Record<string, unknown>;
   toolResponse?: { success: boolean; result: unknown[] };
   validationResults?: ValidationResult[];
-  validationTrigger?: "stop" | "postToolUse";
+  validationTrigger?: "stop" | "postToolUse" | "preToolUse";
   validationChangedFiles?: string[];
   validationAgentTestedDirs?: string[];
   permissionMode?: string;

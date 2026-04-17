@@ -53,7 +53,7 @@ export interface ValidationResult {
 
 export interface ValidationEvent {
   hook_event_name: "validation";
-  trigger: "stop" | "postToolUse";
+  trigger: "stop" | "postToolUse" | "preToolUse";
   results: ValidationResult[];
   changed_files: string[];
   agent_tested_dirs: string[];

@@ -79,6 +79,20 @@ describe("parseArgs", () => {
     expect(result.trigger).toBe("postToolUse");
   });
 
+  it("normalizes PascalCase trigger 'PreToolUse' to 'preToolUse'", () => {
+    const result = parseArgs([
+      "node",
+      "validate.js",
+      "--session-id",
+      "sess-1",
+      "--cwd",
+      "/project",
+      "--trigger",
+      "PreToolUse",
+    ]);
+    expect(result.trigger).toBe("preToolUse");
+  });
+
   it("passes through already-camelCase triggers unchanged", () => {
     const result = parseArgs([
       "node",

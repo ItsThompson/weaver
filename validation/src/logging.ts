@@ -9,7 +9,7 @@ import { log } from "./utils/logger";
 export function writeValidationEvent(
   sessionLogPath: string,
   sessionId: string,
-  trigger: "stop" | "postToolUse",
+  trigger: "stop" | "postToolUse" | "preToolUse",
   results: ValidationResult[],
   changedFiles: string[],
   agentTestedDirs: string[],

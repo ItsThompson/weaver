@@ -3,7 +3,7 @@ import { Harness } from "@weaver/shared/types";
 export interface ValidateArgs {
   sessionId: string;
   cwd: string;
-  trigger: "stop" | "postToolUse";
+  trigger: "stop" | "postToolUse" | "preToolUse";
   harness: Harness;
   toolName?: string;
   toolPath?: string;
@@ -16,11 +16,13 @@ const VALID_HARNESSES = new Set<string>(Object.values(Harness));
  * form the validation pipeline expects. Values already in camelCase pass
  * through unchanged. Only validation-relevant triggers are mapped.
  */
-const TRIGGER_MAP: Record<string, "stop" | "postToolUse"> = {
+const TRIGGER_MAP: Record<string, "stop" | "postToolUse" | "preToolUse"> = {
   stop: "stop",
   Stop: "stop",
   postToolUse: "postToolUse",
   PostToolUse: "postToolUse",
+  preToolUse: "preToolUse",
+  PreToolUse: "preToolUse",
 };
 
 export function parseArgs(argv: string[]): ValidateArgs {

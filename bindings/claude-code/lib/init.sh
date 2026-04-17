@@ -8,5 +8,5 @@ run_init() {
   fi
 
   local sync_script="$BINDING_DIR/dist/sync-entry.mjs"
-  [ -f "$sync_script" ] && node "$sync_script" --cwd "$CWD" 2>>"$LOGS_DIR/sync-errors.log" || true
+  [ -f "$sync_script" ] && node "$sync_script" --cwd "$CWD" >>"$LOGS_DIR/sync-errors.log" 2>&1 || true
 }
