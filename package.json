@@ -9,6 +9,7 @@
     "cli",
     "bindings/kiro",
     "bindings/claude-code",
+    "bindings/pi",
     "validation",
     "desktop",
     "e2e"

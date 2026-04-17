@@ -1,0 +1,28 @@
+{
+  "name": "@weaver/binding-pi",
+  "version": "1.6.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.mjs"
+    }
+  },
+  "pi": {
+    "extensions": ["./src/extension.ts"]
+  },
+  "scripts": {
+    "build": "tsc --noEmit -p tsconfig.build.json && tsdown",
+    "test": "vitest run --passWithNoTests && bash weaver-log.test.sh"
+  },
+  "dependencies": {
+    "@weaver/shared": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "tsdown": "^0.21.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.0.18"
+  }
+}
