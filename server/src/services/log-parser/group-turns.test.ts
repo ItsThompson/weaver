@@ -7,7 +7,7 @@ describe("groupEventsByTurn", () => {
     const turns = groupEventsByTurn(events);
     expect(turns).toHaveLength(1);
     expect(turns[0].userPrompt).toBeNull();
-    expect(turns[0].events[0].eventName).toBe("agentSpawn");
+    expect(turns[0].events[0].eventName).toBe("agent-spawn");
   });
 
   it("groups userPromptSubmit through stop as one turn", () => {

@@ -113,10 +113,50 @@ function migrateSessionsFile(): void {
 
 // --- Event migration ---
 
+/** Maps legacy harness-native event names to canonical kebab-case values. */
+const CANONICAL_EVENT_NAME: Record<string, string> = {
+  // kiro-cli camelCase
+  agentSpawn: "agent-spawn",
+  stop: "stop",
+  preToolUse: "pre-tool-use",
+  postToolUse: "post-tool-use",
+  userPromptSubmit: "user-prompt-submit",
+  validation: "validation",
+  // Claude Code PascalCase
+  SessionStart: "session-start",
+  SessionEnd: "session-end",
+  SubagentStart: "subagent-start",
+  SubagentStop: "subagent-stop",
+  Notification: "notification",
+  PostToolUseFailure: "post-tool-use-failure",
+  PermissionRequest: "permission-request",
+  PermissionDenied: "permission-denied",
+  TaskCreated: "task-created",
+  TaskCompleted: "task-completed",
+  StopFailure: "stop-failure",
+  TeammateIdle: "teammate-idle",
+  ConfigChange: "config-change",
+  PreCompact: "pre-compact",
+  PostCompact: "post-compact",
+};
+
+const CANONICAL_VALUES = new Set(Object.values(CANONICAL_EVENT_NAME));
+
+function canonicalizeEventName(name: string): string {
+  return CANONICAL_EVENT_NAME[name] ?? name;
+}
+
 function convertEvent(raw: Record<string, unknown>, sessionId: string): string {
-  // Already canonical format
+  // Already canonical format: check if eventName needs re-canonicalization
   if ("eventName" in raw) {
-    summary.eventsSkipped++;
+    const currentName = String(raw.eventName);
+    if (CANONICAL_VALUES.has(currentName)) {
+      summary.eventsSkipped++;
+      return JSON.stringify(raw);
+    }
+    // Previously migrated with old non-canonical values: re-canonicalize
+    raw.eventName = canonicalizeEventName(currentName);
+    summary.eventsConverted++;
     return JSON.stringify(raw);
   }
 
@@ -131,7 +171,7 @@ function convertEvent(raw: Record<string, unknown>, sessionId: string): string {
     sessionId,
     timestamp: raw.timestamp,
     harness: "kiro-cli",
-    eventName: event.hook_event_name,
+    eventName: canonicalizeEventName(String(event.hook_event_name)),
     cwd: event.cwd,
   };
 

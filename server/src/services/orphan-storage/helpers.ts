@@ -1,12 +1,12 @@
 import { existsSync } from "node:fs";
-import type { HookEvent } from "@weaver/shared/types";
+import type { WeaverEvent } from "@weaver/shared/types";
 import { log } from "../../utils/logger";
 import { NotFoundError } from "./errors";
 import { orphanPath } from "@weaver/shared/paths";
 import { atomicWriteFile } from "../../utils/atomic-write";
 
 export interface PartitionResult {
-  matched: HookEvent[];
+  matched: WeaverEvent[];
   remainingLines: string[];
 }
 
@@ -22,7 +22,7 @@ export function partitionByPid(
         return acc;
       }
       try {
-        const event = JSON.parse(line) as HookEvent;
+        const event = JSON.parse(line) as WeaverEvent;
         if ((event.pid ?? 0) === pid) {
           acc.matched.push(event);
         } else {

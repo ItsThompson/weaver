@@ -28,7 +28,7 @@ describe("parseLogFile", () => {
     vi.mocked(readFile).mockResolvedValue(JSON.stringify(event) + "\n");
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
-    expect(result[0].eventName).toBe("agentSpawn");
+    expect(result[0].eventName).toBe("agent-spawn");
   });
 
   it("skips malformed lines without crashing", async () => {
@@ -49,7 +49,7 @@ describe("parseLogFile", () => {
     vi.mocked(readFile).mockResolvedValue(`${canonical}\n${legacy}\n`);
     const result = await parseLogFile("test-id");
     expect(result).toHaveLength(1);
-    expect(result[0].eventName).toBe("agentSpawn");
+    expect(result[0].eventName).toBe("agent-spawn");
   });
 });
 

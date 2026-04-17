@@ -124,7 +124,7 @@ describe("handleWebhookEvent (advanced)", () => {
       TEST_SESSION,
     );
     const body = JSON.parse((mockFetch.mock.calls[0] as any)[1].body);
-    expect(body.event).toBe("agentSpawn");
+    expect(body.event).toBe("agent-spawn");
     expect(body.source).toBe("weaver");
   });
 
@@ -148,7 +148,7 @@ describe("handleWebhookEvent (advanced)", () => {
 
     const pendingBody = JSON.parse((mockFetch.mock.calls[1] as any)[1].body);
     expect(pendingBody.activity).toBe("pending_approval");
-    expect(pendingBody.event).toBe("preToolUse");
+    expect(pendingBody.event).toBe("pre-tool-use");
     expect(pendingBody.source).toBe("weaver");
   });
 });

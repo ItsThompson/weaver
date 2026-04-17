@@ -45,7 +45,7 @@ const mockTurns: TurnGroup[] = [
         sessionId: "test-session-id",
         timestamp: "2024-01-01T10:00:00Z",
         harness: "kiro-cli",
-        eventName: "agentSpawn",
+        eventName: "agent-spawn",
         cwd: "/test/path",
       },
     ],

@@ -8,9 +8,18 @@ import type {
 } from "@weaver/shared/types";
 import { Harness, WeaverEventName } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
-import type { HookEventData } from "@weaver/shared/types";
 import { sessionMarkerPath } from "@weaver/shared/paths";
 import { loadAgentConfig } from "./skills/agent-config";
+
+/** Raw hook event payload as received from kiro-cli via STDIN. */
+interface KiroRawEvent {
+  hook_event_name: string;
+  cwd: string;
+  prompt?: string;
+  tool_name?: string;
+  tool_input?: Record<string, unknown>;
+  tool_response?: { success: boolean; result: unknown[] };
+}
 
 const EVENT_NAME_MAP: Record<string, WeaverEventName> = {
   agentSpawn: WeaverEventName.AGENT_SPAWN,
@@ -27,7 +36,7 @@ export const kiroAdapter: HarnessAdapter = {
   providesSessionId: false,
 
   parseEvent(raw: unknown, context: EventContext): WeaverEvent {
-    const data = raw as HookEventData;
+    const data = raw as KiroRawEvent;
     const eventName = EVENT_NAME_MAP[data.hook_event_name];
     if (!eventName) {
       throw new Error(`Unknown kiro-cli event: "${data.hook_event_name}"`);

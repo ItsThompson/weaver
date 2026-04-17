@@ -51,7 +51,7 @@ test.describe("seed helpers", () => {
       .split("\n")
       .map((l) => JSON.parse(l));
     expect(lines).toHaveLength(2);
-    expect(lines[0].eventName).toBe("userPromptSubmit");
+    expect(lines[0].eventName).toBe("user-prompt-submit");
     expect(lines[1].timestamp).toBe("2026-01-01T00:00:00Z");
   });
 
