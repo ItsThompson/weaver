@@ -47,9 +47,15 @@ function getCurrentTurnEvents(sessionLogPath: string): WeaverEvent[] {
 function extractFilePath(
   toolInput?: Record<string, unknown>,
 ): string | undefined {
-  if (!toolInput) return undefined;
-  if (typeof toolInput.path === "string") return toolInput.path;
-  if (typeof toolInput.file_path === "string") return toolInput.file_path;
+  if (!toolInput) {
+    return undefined;
+  }
+  if (typeof toolInput.path === "string") {
+    return toolInput.path;
+  }
+  if (typeof toolInput.file_path === "string") {
+    return toolInput.file_path;
+  }
   return undefined;
 }
 

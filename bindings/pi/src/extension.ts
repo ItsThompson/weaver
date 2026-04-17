@@ -141,7 +141,9 @@ export default function (pi: PiExtensionAPI) {
   // --- Tool events ---
 
   pi.on("tool_call", async (event) => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      return;
+    }
     await safeCallHook({
       ...baseEvent("pre-tool-use"),
       tool_name: event.toolName,
@@ -150,7 +152,9 @@ export default function (pi: PiExtensionAPI) {
   });
 
   pi.on("tool_result", async (event) => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      return;
+    }
     await safeCallHook({
       ...baseEvent("post-tool-use"),
       tool_name: event.toolName,
@@ -165,7 +169,9 @@ export default function (pi: PiExtensionAPI) {
   // --- User input ---
 
   pi.on("input", async (event) => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      return;
+    }
     const result = await safeCallHook({
       ...baseEvent("user-prompt-submit"),
       prompt: event.text,
@@ -184,7 +190,9 @@ export default function (pi: PiExtensionAPI) {
   // --- Agent turn end (stop hook) ---
 
   pi.on("agent_end", async () => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      return;
+    }
     await safeCallHook(baseEvent("stop"));
   });
 }
