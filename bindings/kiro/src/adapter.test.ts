@@ -68,6 +68,7 @@ describe("kiroAdapter", () => {
       );
       expect(event.eventName).toBe(WeaverEventName.POST_TOOL_USE);
       expect(event.toolName).toBe("write");
+      expect(event.toolResponse).toEqual({ success: true, result: ["ok"] });
     });
 
     it("maps userPromptSubmit with prompt", () => {
