@@ -74,3 +74,45 @@ assert_not_contains() {
     echo "  ✓ $label"
   fi
 }
+
+# Write a mock log-event.mjs that parses the event and writes structured JSONL.
+# Used by session tests that assert on individual fields (eventName, prompt, etc.).
+write_mock_log_event_parsed() {
+  local dist_dir="$1"
+  cat > "$dist_dir/log-event.mjs" << 'MOCK'
+import { appendFileSync } from "node:fs";
+const sidIdx = process.argv.indexOf("--session-id");
+const sid = sidIdx !== -1 ? process.argv[sidIdx + 1] : "orphan";
+const pidIdx = process.argv.indexOf("--pid");
+const pid = pidIdx !== -1 ? process.argv[pidIdx + 1] : "0";
+const chunks = [];
+process.stdin.on("data", (c) => chunks.push(c));
+process.stdin.on("end", () => {
+  const raw = Buffer.concat(chunks).toString();
+  const event = JSON.parse(raw);
+  const entry = JSON.stringify({ timestamp: new Date().toISOString(), sessionId: sid, pid: Number(pid), eventName: event.hook_event_name, cwd: event.cwd, prompt: event.prompt });
+  const dir = process.env.HOME + "/.weaver/logs";
+  const path = sid === "orphan" ? dir + "/orphan.jsonl" : dir + "/" + sid + ".jsonl";
+  appendFileSync(path, entry + "\n");
+});
+MOCK
+}
+
+# Write a mock log-event.mjs that writes the raw event JSON as-is.
+# Used by truncation and validation tests that assert on the full event shape.
+write_mock_log_event_raw() {
+  local dist_dir="$1"
+  cat > "$dist_dir/log-event.mjs" << 'MOCK'
+import { appendFileSync } from "node:fs";
+const sidIdx = process.argv.indexOf("--session-id");
+const sid = sidIdx !== -1 ? process.argv[sidIdx + 1] : "orphan";
+const chunks = [];
+process.stdin.on("data", (c) => chunks.push(c));
+process.stdin.on("end", () => {
+  const raw = Buffer.concat(chunks).toString().trim();
+  const dir = process.env.HOME + "/.weaver/logs";
+  const path = sid === "orphan" ? dir + "/orphan.jsonl" : dir + "/" + sid + ".jsonl";
+  appendFileSync(path, JSON.stringify({ timestamp: new Date().toISOString(), event: JSON.parse(raw) }) + "\n");
+});
+MOCK
+}

@@ -19,7 +19,7 @@ run_validation() {
   [ -f "$validate_script" ] || return 0
 
   local tool_name
-  tool_name=$(echo "$EVENT" | grep -o '"tool_name":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "")
+  tool_name=$(json_field "$EVENT" "tool_name")
   local tool_path
   tool_path=$(echo "$EVENT" | jq -r '.tool_input.path // .tool_input.file_path // empty' 2>/dev/null || echo "")
   local validate_exit=0

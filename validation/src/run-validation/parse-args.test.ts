@@ -44,11 +44,11 @@ describe("parseArgs", () => {
     expect(result.harness).toBe("kiro-cli");
   });
 
-  it("returns all undefined for empty argv", () => {
+  it("defaults trigger to 'stop' when missing", () => {
     const result = parseArgs(["node", "validate.js"]);
     expect(result.sessionId).toBeUndefined();
     expect(result.cwd).toBeUndefined();
-    expect(result.trigger).toBeUndefined();
+    expect(result.trigger).toBe("stop");
   });
 
   it("normalizes PascalCase trigger 'Stop' to 'stop'", () => {

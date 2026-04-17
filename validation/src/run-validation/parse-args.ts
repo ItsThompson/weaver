@@ -37,7 +37,7 @@ export function parseArgs(argv: string[]): ValidateArgs {
   return {
     sessionId: args["session-id"],
     cwd: args["cwd"],
-    trigger: TRIGGER_MAP[rawTrigger] ?? (rawTrigger as "stop" | "postToolUse"),
+    trigger: TRIGGER_MAP[rawTrigger] ?? "stop",
     harness: VALID_HARNESSES.has(harness)
       ? (harness as Harness)
       : Harness.KIRO_CLI,

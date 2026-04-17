@@ -4,6 +4,10 @@ import { isPlainObject } from "@weaver/shared/utils";
 import { WEAVER_LOG_HOOK } from "@weaver/shared/types";
 import type { SyncResult } from "@weaver/shared/sync";
 
+// Sync fs operations are intentional: this module runs as a standalone script
+// (sync-entry.mjs) at session start, not inside the long-lived server process.
+// Async would add complexity with no benefit in this context.
+
 /**
  * Minimum timeout in seconds for any hook entry.
  * Prevents zero or near-zero values from causing immediate timeouts.
@@ -103,12 +107,12 @@ export function patchSettings(
     }
     parsed = value;
   } catch (error: unknown) {
-    const err = error as NodeJS.ErrnoException;
-    if (err.code === "ENOENT") {
-      parsed = {};
-    } else if (err instanceof SyntaxError) {
+    if (error instanceof SyntaxError) {
       result.errors.push(`${filePath}: invalid JSON`);
       return;
+    }
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") {
+      parsed = {};
     } else {
       result.errors.push(`${filePath}: ${String(error)}`);
       return;

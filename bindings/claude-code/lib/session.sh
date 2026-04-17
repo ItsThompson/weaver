@@ -5,7 +5,7 @@
 
 manage_session() {
   # Extract session_id from the event JSON (|| true to avoid pipefail on missing field)
-  SESSION_ID=$(echo "$EVENT" | grep -o '"session_id":"[^"]*"' | head -1 | cut -d'"' -f4 || true)
+  SESSION_ID=$(echo "$EVENT" | jq -r '.session_id // empty' 2>/dev/null || true)
 
   if [ -z "$SESSION_ID" ]; then
     SESSION_ID="orphan"
@@ -13,16 +13,21 @@ manage_session() {
   fi
 
   if [ "$HOOK_EVENT_NAME" = "SessionStart" ]; then
-    # Try to extract agent name from the claude process args (--agent <name>)
+    # Extract agent name from the claude process args (--agent <name>).
+    # Assumes --agent value is a single token with no spaces. This is safe
+    # today because agent names are filesystem-derived identifiers.
     local agent_name
     agent_name=$(ps -p "$CALLER_PID" -o args= 2>/dev/null | grep -o '\-\-agent [^ ]*' | awk '{print $2}' || echo "")
-    local agent_json="null"
-    if [ -n "$agent_name" ]; then
-      agent_json="\"$agent_name\""
-    fi
 
-    # Append session metadata to the index (dedup happens at read time)
-    local session_meta="{\"id\":\"$SESSION_ID\",\"pid\":$CALLER_PID,\"customName\":null,\"cwd\":\"$CWD\",\"agentName\":$agent_json,\"startTime\":\"$TIMESTAMP\",\"lastEventTime\":\"$TIMESTAMP\",\"harness\":\"claude-code\"}"
+    # Build session metadata with jq to handle escaping of cwd/agent values
+    local session_meta
+    session_meta=$(jq -nc \
+      --arg id "$SESSION_ID" \
+      --argjson pid "$CALLER_PID" \
+      --arg cwd "$CWD" \
+      --arg ts "$TIMESTAMP" \
+      --arg agent "$agent_name" \
+      '{id:$id, pid:$pid, customName:null, cwd:$cwd, agentName:(if $agent == "" then null else $agent end), startTime:$ts, lastEventTime:$ts, harness:"claude-code"}')
     echo "$session_meta" >> "$SESSIONS_FILE"
 
     touch "$LOGS_DIR/$SESSION_ID.jsonl"

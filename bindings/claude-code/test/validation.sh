@@ -13,19 +13,7 @@ setup_validation() {
   cp -r "$(dirname "$HOOK")/lib" "$BINDING_TMP/lib"
   # Mock log-event.mjs in binding dist
   mkdir -p "$BINDING_TMP/dist"
-  cat > "$BINDING_TMP/dist/log-event.mjs" << 'MOCK'
-import { appendFileSync } from "node:fs";
-const sidIdx = process.argv.indexOf("--session-id");
-const sid = sidIdx !== -1 ? process.argv[sidIdx + 1] : "orphan";
-const chunks = [];
-process.stdin.on("data", (c) => chunks.push(c));
-process.stdin.on("end", () => {
-  const raw = Buffer.concat(chunks).toString().trim();
-  const dir = process.env.HOME + "/.weaver/logs";
-  const path = sid === "orphan" ? dir + "/orphan.jsonl" : dir + "/" + sid + ".jsonl";
-  appendFileSync(path, JSON.stringify({ timestamp: new Date().toISOString(), event: JSON.parse(raw) }) + "\n");
-});
-MOCK
+  write_mock_log_event_raw "$BINDING_TMP/dist"
   # Validation dist at ROOT_DIR/validation/dist/
   mkdir -p "$MONO_TMP/validation/dist"
   VHOOK="$BINDING_TMP/weaver-log.sh"

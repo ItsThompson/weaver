@@ -28,11 +28,24 @@ source "$LIB_DIR/session.sh"
 source "$LIB_DIR/validate.sh"
 source "$LIB_DIR/init.sh"
 
+# Extract a top-level string field from a JSON blob.
+# Falls back to regex when jq is unavailable. Returns empty string if field is missing.
+json_field() {
+  local json="$1" field="$2"
+  local val=""
+  val=$(echo "$json" | jq -r --arg f "$field" '.[$f] // empty' 2>/dev/null) || true
+  if [ -n "$val" ]; then
+    echo "$val"
+    return
+  fi
+  echo "$json" | grep -o "\"$field\":\"[^\"]*\"" | head -1 | cut -d'"' -f4 || true
+}
+
 # Read hook event JSON from STDIN
 EVENT=$(cat)
 TIMESTAMP=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-HOOK_EVENT_NAME=$(echo "$EVENT" | grep -o '"hook_event_name":"[^"]*"' | head -1 | cut -d'"' -f4)
-CWD=$(echo "$EVENT" | grep -o '"cwd":"[^"]*"' | head -1 | cut -d'"' -f4)
+HOOK_EVENT_NAME=$(json_field "$EVENT" "hook_event_name")
+CWD=$(json_field "$EVENT" "cwd")
 
 CALLER_PID=$(get_caller_pid)
 manage_session
