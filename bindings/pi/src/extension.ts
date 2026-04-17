@@ -4,7 +4,7 @@
 type ExtensionAPI = any;
 
 import { spawn } from "node:child_process";
-import { resolve, dirname } from "node:path";
+import { resolve as resolvePath, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 interface HookResult {
@@ -15,7 +15,7 @@ interface HookResult {
 
 export default function (pi: ExtensionAPI) {
   const extensionDir = dirname(fileURLToPath(import.meta.url));
-  const hookScript = resolve(extensionDir, "..", "weaver-log.sh");
+  const hookScript = resolvePath(extensionDir, "..", "weaver-log.sh");
 
   let sessionId: string | undefined;
   let cwd: string;
