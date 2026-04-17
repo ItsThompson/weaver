@@ -20,6 +20,7 @@ interface HookEntry {
 
 const HOOKS: HookEntry[] = [
   { name: "kiro", resourcePath: "bindings/kiro/weaver-log.sh" },
+  { name: "claude-code", resourcePath: "bindings/claude-code/weaver-log.sh" },
 ];
 
 function resolveHookTarget(entry: HookEntry): string {
