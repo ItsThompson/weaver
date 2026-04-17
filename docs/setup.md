@@ -118,6 +118,65 @@ ln -s ~/Documents/weaver/bin/weaver /usr/local/bin/weaver
 
 See the [CLI reference](cli.md) for available commands.
 
+### Claude Code
+
+Claude Code hooks are configured in `.claude/settings.json`. Weaver auto-patches this file on every `SessionStart` event, so manual setup is only needed for the initial hook installation.
+
+#### Auto-configuration (recommended)
+
+If you use the Weaver desktop app, the hook script is symlinked automatically on launch. Once the hook script is available, add a single bootstrap entry to your global Claude Code settings (`~/.claude/settings.json`):
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+On the first `SessionStart`, Weaver's init script patches the settings file with entries for all remaining events (`UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`, `SessionEnd`) and sets calculated timeouts based on your project's `.weaver.json`.
+
+#### Manual setup (alternative)
+
+If you prefer to configure all hooks up front, add the full hooks block to `.claude/settings.json` (project or global):
+
+```json
+{
+  "hooks": {
+    "SessionStart": [{ "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 10 }] }],
+    "UserPromptSubmit": [{ "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 10 }] }],
+    "PreToolUse": [{ "matcher": "*", "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 10 }] }],
+    "PostToolUse": [{ "matcher": "*", "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 60 }] }],
+    "Stop": [{ "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 120 }] }],
+    "SessionEnd": [{ "hooks": [{ "type": "command", "command": "/usr/local/lib/weaver/bindings/claude-code/weaver-log.sh", "timeout": 10 }] }]
+  }
+}
+```
+
+Adjust the `timeout` values for `Stop` and `PostToolUse` based on how long your validation hooks take. Timeouts are in seconds.
+
+#### What works with Claude Code
+
+- Event logging and session tracking
+- Validation hooks (runs on `Stop` and `PostToolUse`)
+- Skill resolution (reads `skills` from agent YAML frontmatter)
+- Session resume (native `session_id` prevents duplicates)
+- Auto-config patching (timeouts synced from `.weaver.json`)
+
+#### What is kiro-cli only
+
+- Cherrypick (interactive code selection UI)
+
 ## Validation hooks (optional)
 
 To enable automated validation (linting, type-checking, tests) after each agent turn, create a `.weaver.json` file in your project root. See [validation hooks](features/validation.md) for full details.
