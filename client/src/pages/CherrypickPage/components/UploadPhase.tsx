@@ -14,6 +14,10 @@ export function UploadPhase({ error, onFile }: UploadPhaseProps) {
   return (
     <SpaceBetween size="l">
       <Header variant="h1">Cherrypick</Header>
+      <Alert type="info">
+        Cherrypick currently supports kiro-cli only. It relies on kiro-cli's{" "}
+        <code>/chat save</code> and <code>/chat load</code> commands.
+      </Alert>
       {error && <Alert type="error">{error}</Alert>}
       <Container header={<Header variant="h2">Upload conversation</Header>}>
         <Box textAlign="center">
