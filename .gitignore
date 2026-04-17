@@ -10,3 +10,4 @@ e2e/playwright-report/
 test-results/
 .whisper-build/
 desktop/resources/whisper-server
+.claude/
