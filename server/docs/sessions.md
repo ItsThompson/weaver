@@ -22,13 +22,14 @@ None.
     "agentName": "dev",
     "startTime": "2026-03-15T10:00:00Z",
     "lastEventTime": "2026-03-15T10:05:00Z",
+    "harness": "kiro-cli",
     "status": "open",
     "activity": "idle"
   }
 ]
 ```
 
-`status` is `"open"` or `"closed"`. `activity` is only present for open sessions and is one of: `"starting"`, `"idle"`, `"processing"`, `"running_tool"`, `"pending_approval"`.
+`status` is `"open"` or `"closed"`. `activity` is only present for open sessions and is one of: `"starting"`, `"idle"`, `"processing"`, `"running_tool"`, `"pending_approval"`. `harness` identifies which AI coding assistant produced the session (e.g., `"kiro-cli"`, `"claude-code"`).
 
 ---
 
@@ -56,6 +57,7 @@ Get session detail with conversation turns.
     "agentName": "dev",
     "startTime": "2026-03-15T10:00:00Z",
     "lastEventTime": "2026-03-15T10:05:00Z",
+    "harness": "kiro-cli",
     "status": "open",
     "activity": "idle"
   },

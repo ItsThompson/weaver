@@ -2,7 +2,7 @@
 
 ## GET /api/skills
 
-Returns the full skill graph with nodes and edges. Includes skills from all configured paths plus `~/.kiro/skills`.
+Returns the full skill graph with nodes and edges. Includes skills from all configured paths plus the harness's global skills directory.
 
 ### Parameters
 

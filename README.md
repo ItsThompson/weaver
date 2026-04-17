@@ -1,6 +1,6 @@
 # Weaver
 
-A local developer tool that provides observability, conversation editing, and automated validation on top of kiro-cli. Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
+A local developer tool that provides observability, conversation editing, and automated validation on top of AI coding assistants (kiro-cli, Claude Code, and others). Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
 
 ## Features
 
@@ -11,7 +11,7 @@ A local developer tool that provides observability, conversation editing, and au
 - **Dictation**: Speak into your microphone and get cleaned-up text, fully offline with local whisper + Ollama
 - **Snippets**: Define trigger phrases that expand into predefined text during dictation
 - **Desktop app**: Electron wrapper with global hotkey (F5), tray icon, ghost mode, and mini mode
-- **CLI**: Control the dashboard and configure settings from inside kiro-cli sessions
+- **CLI**: Control the dashboard and configure settings from inside sessions
 - **Orphan management**: Recover events from sessions that failed to initialize properly
 
 ## Quick start

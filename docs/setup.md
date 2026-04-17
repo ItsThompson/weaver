@@ -4,7 +4,7 @@
 
 - Node.js 20+
 - npm 10+
-- kiro-cli installed and configured
+- A supported AI coding harness: [kiro-cli](https://kiro.dev) or [Claude Code](https://claude.ai/code)
 - macOS (required for the desktop app and E2E tests)
 
 ### For dictation (optional)
@@ -53,17 +53,21 @@ The dashboard is available at `http://localhost:8143` when running.
 
 ## Hook installation
 
-Weaver captures kiro-cli events through hook scripts. You need to symlink the hook script and register it in your agent config.
+Weaver captures events through hook scripts. The setup differs by harness.
 
-### 1. Symlink the hook script
+### kiro-cli
+
+Symlink the hook script and register it in your agent config.
+
+#### 1. Symlink the hook script
 
 ```bash
 mkdir -p ~/.config/amazonq/global/hooks
-ln -s ~/Documents/weaver/hook-handler/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
-chmod +x ~/Documents/weaver/hook-handler/weaver-log.sh
+ln -s ~/Documents/weaver/bindings/kiro/weaver-log.sh ~/.config/amazonq/global/hooks/weaver-log.sh
+chmod +x ~/Documents/weaver/bindings/kiro/weaver-log.sh
 ```
 
-### 2. Register hooks in your agent config
+#### 2. Register hooks in your agent config
 
 Add the following `hooks` block to your agent config file (e.g. `~/.config/amazonq/global/agents/your-agent.json`):
 
@@ -106,7 +110,7 @@ Add the following `hooks` block to your agent config file (e.g. `~/.config/amazo
 
 ### 3. Set up the CLI (optional)
 
-To use the `weaver` command inside kiro-cli sessions:
+To use the `weaver` command inside sessions:
 
 ```bash
 ln -s ~/Documents/weaver/bin/weaver /usr/local/bin/weaver
@@ -123,11 +127,11 @@ To enable automated validation (linting, type-checking, tests) after each agent 
 A reusable prompt is provided for instructing the LLM to fix validation failures. To make it available in kiro-cli:
 
 ```bash
-ln -s ~/Documents/weaver/hook-handler/prompts/fix-validation.md \
+ln -s ~/Documents/weaver/bindings/kiro/prompts/fix-validation.md \
   ~/.config/amazonq/global/prompts/fix-validation.md
 ```
 
-Then invoke it in a kiro-cli session with `/prompt fix-validation` after seeing validation failures.
+Then invoke it in a session with `/prompt fix-validation` after seeing validation failures.
 
 ## Packaging
 
