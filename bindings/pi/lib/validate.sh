@@ -14,9 +14,10 @@ run_validation() {
     return
   fi
 
-  if [ "$HOOK_EVENT_NAME" != "stop" ] && [ "$HOOK_EVENT_NAME" != "post-tool-use" ] && [ "$HOOK_EVENT_NAME" != "pre-tool-use" ]; then
-    return
-  fi
+  case "$HOOK_EVENT_NAME" in
+    stop|post-tool-use|pre-tool-use) ;;
+    *) return ;;
+  esac
 
   [ -f "$validate_script" ] || return 0
 
