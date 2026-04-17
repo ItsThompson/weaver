@@ -50,7 +50,7 @@ detect_harness() {
 
   case "$pname" in
     claude*) echo "claude-code" ;;
-    pi*)     echo "pi" ;;
+    pi)      echo "pi" ;;
     *)       echo "kiro-cli" ;;
   esac
 }
