@@ -11,4 +11,5 @@ const shared = {
 export default defineConfig([
   { entry: ["src/index.ts"], ...shared },
   { entry: ["src/log-event.ts"], ...shared },
+  { entry: ["src/sync/sync-entry.ts"], ...shared },
 ]);

@@ -56,8 +56,13 @@
         ]
       },
       {
-        "from": "../bindings/claude-code/dist",
-        "to": "bindings/claude-code/dist"
+        "from": "../bindings/claude-code",
+        "to": "bindings/claude-code",
+        "filter": [
+          "weaver-log.sh",
+          "lib/**",
+          "dist/**"
+        ]
       },
       {
         "from": "../validation/dist",

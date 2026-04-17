@@ -1,6 +1,6 @@
 import { appendFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
-import type { ValidationResult } from "@weaver/shared/types";
+import type { ValidationResult, ValidationTrigger } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
 import { Harness, WeaverEventName } from "@weaver/shared/types";
 import { WEAVER_NOTIFY_URL } from "@weaver/shared/paths";
@@ -9,7 +9,7 @@ import { log } from "./utils/logger";
 export function writeValidationEvent(
   sessionLogPath: string,
   sessionId: string,
-  trigger: "stop" | "postToolUse",
+  trigger: ValidationTrigger,
   results: ValidationResult[],
   changedFiles: string[],
   agentTestedDirs: string[],

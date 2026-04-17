@@ -1,15 +1,30 @@
 import { Harness } from "@weaver/shared/types";
+import type { ValidationTrigger } from "@weaver/shared/types";
 
 export interface ValidateArgs {
   sessionId: string;
   cwd: string;
-  trigger: "stop" | "postToolUse";
+  trigger: ValidationTrigger;
   harness: Harness;
   toolName?: string;
   toolPath?: string;
 }
 
 const VALID_HARNESSES = new Set<string>(Object.values(Harness));
+
+/**
+ * Normalizes PascalCase trigger values from Claude Code to the camelCase
+ * form the validation pipeline expects. Values already in camelCase pass
+ * through unchanged. Only validation-relevant triggers are mapped.
+ */
+const TRIGGER_MAP: Record<string, ValidationTrigger> = {
+  stop: "stop",
+  Stop: "stop",
+  postToolUse: "postToolUse",
+  PostToolUse: "postToolUse",
+  preToolUse: "preToolUse",
+  PreToolUse: "preToolUse",
+};
 
 export function parseArgs(argv: string[]): ValidateArgs {
   const args: Record<string, string> = {};
@@ -21,10 +36,11 @@ export function parseArgs(argv: string[]): ValidateArgs {
     }
   }
   const harness = args["harness"] ?? "kiro-cli";
+  const rawTrigger = args["trigger"];
   return {
     sessionId: args["session-id"],
     cwd: args["cwd"],
-    trigger: args["trigger"] as "stop" | "postToolUse",
+    trigger: TRIGGER_MAP[rawTrigger] ?? "stop",
     harness: VALID_HARNESSES.has(harness)
       ? (harness as Harness)
       : Harness.KIRO_CLI,

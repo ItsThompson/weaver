@@ -1,5 +1,5 @@
 import type { Harness } from "./harness";
-import type { ValidationResult } from "./validation";
+import type { ValidationResult, ValidationTrigger } from "./validation";
 
 /**
  * Canonical event names across all harnesses.
@@ -47,7 +47,7 @@ export interface WeaverEvent {
   toolInput?: Record<string, unknown>;
   toolResponse?: { success: boolean; result: unknown[] };
   validationResults?: ValidationResult[];
-  validationTrigger?: "stop" | "postToolUse";
+  validationTrigger?: ValidationTrigger;
   validationChangedFiles?: string[];
   validationAgentTestedDirs?: string[];
   permissionMode?: string;
