@@ -18,7 +18,7 @@ export default function (pi: ExtensionAPI) {
   const hookScript = resolvePath(extensionDir, "..", "weaver-log.sh");
 
   let sessionId: string | undefined;
-  let cwd: string;
+  let cwd: string = "";
 
   /**
    * Pipe event JSON to weaver-log.sh via stdin using child_process.spawn.
@@ -48,7 +48,7 @@ export default function (pi: ExtensionAPI) {
 
       const timer = setTimeout(() => {
         child.kill("SIGTERM");
-      }, 120_000);
+      }, 60_000);
 
       child.on("close", (code) => {
         clearTimeout(timer);
@@ -65,6 +65,20 @@ export default function (pi: ExtensionAPI) {
     });
   }
 
+  /**
+   * Call the hook script, swallowing spawn failures so a broken hook
+   * never crashes the user's coding session.
+   */
+  async function safeCallHook(
+    event: Record<string, unknown>,
+  ): Promise<HookResult | null> {
+    try {
+      return await callHook(event);
+    } catch {
+      return null;
+    }
+  }
+
   function baseEvent(hookEventName: string): Record<string, unknown> {
     return {
       hook_event_name: hookEventName,
@@ -79,7 +93,7 @@ export default function (pi: ExtensionAPI) {
     cwd = ctx.cwd;
     sessionId = ctx.sessionManager.getSessionId();
 
-    await callHook(baseEvent("session-start"));
+    await safeCallHook(baseEvent("session-start"));
   });
 
   pi.on("session_shutdown", async () => {
@@ -91,7 +105,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("tool_call", async (event: { toolName: string; input: Record<string, unknown> }) => {
     if (!sessionId) return;
-    await callHook({
+    await safeCallHook({
       ...baseEvent("pre-tool-use"),
       tool_name: event.toolName,
       tool_input: event.input,
@@ -100,7 +114,7 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("tool_result", async (event: { toolName: string; input: Record<string, unknown>; isError: boolean; content: unknown[] }) => {
     if (!sessionId) return;
-    await callHook({
+    await safeCallHook({
       ...baseEvent("post-tool-use"),
       tool_name: event.toolName,
       tool_input: event.input,
@@ -115,14 +129,14 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("input", async (event: { text: string }) => {
     if (!sessionId) return;
-    const result = await callHook({
+    const result = await safeCallHook({
       ...baseEvent("user-prompt-submit"),
       prompt: event.text,
     });
 
     // If inject.mjs found a pending file, stdout contains the formatted
     // validation failures. Prepend them to the user's message.
-    if (result.stdout?.trim()) {
+    if (result?.stdout?.trim()) {
       return {
         action: "transform" as const,
         text: `${result.stdout.trim()}\n\n${event.text}`,
@@ -134,6 +148,6 @@ export default function (pi: ExtensionAPI) {
 
   pi.on("agent_end", async () => {
     if (!sessionId) return;
-    await callHook(baseEvent("stop"));
+    await safeCallHook(baseEvent("stop"));
   });
 }

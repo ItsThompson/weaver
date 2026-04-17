@@ -35,8 +35,12 @@ run_validation() {
     --tool-name "$tool_name" \
     --tool-path "$tool_path" 2>&1 1>/dev/null) || validate_exit=$?
 
-  if [ "$validate_exit" -ne 0 ] && echo "$validate_stderr" | grep -q "⚠ weaver:"; then
-    echo "$validate_stderr" >&2
-    exit "$validate_exit"
+  if [ "$validate_exit" -ne 0 ]; then
+    if echo "$validate_stderr" | grep -q "⚠ weaver:"; then
+      echo "$validate_stderr" >&2
+      exit "$validate_exit"
+    else
+      echo "weaver: validation exited $validate_exit (unexpected error suppressed)" >&2
+    fi
   fi
 }

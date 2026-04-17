@@ -107,7 +107,7 @@ MOCK
 }
 
 test_validation_runner_crash() {
-  echo "test: validation runner crash -> logging succeeds, exit 0 fallback"
+  echo "test: validation runner crash -> logging succeeds, exit 0, stderr warns"
   setup_validation
 
   cat > "$MONO_TMP/validation/dist/validate.mjs" << 'MOCK'
@@ -117,9 +117,11 @@ MOCK
   start_session_v > /dev/null
 
   local exit_code=0
-  echo '{"hook_event_name":"stop","session_id":"val-session","cwd":"/tmp/project"}' | bash "$VHOOK" 2>/dev/null || exit_code=$?
+  local stderr_output
+  stderr_output=$(echo '{"hook_event_name":"stop","session_id":"val-session","cwd":"/tmp/project"}' | bash "$VHOOK" 2>&1 1>/dev/null) || exit_code=$?
 
   assert_eq "exit code is 0 (crash swallowed)" "0" "$exit_code"
+  assert_contains "stderr warns about suppressed error" "unexpected error suppressed" "$stderr_output"
 
   teardown_validation
 }

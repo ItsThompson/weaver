@@ -15,6 +15,12 @@ MAX_RESPONSE_LENGTH="${WEAVER_MAX_RESPONSE_LENGTH:-500}"
 
 mkdir -p "$LOGS_DIR"
 
+# jq is required for session metadata, response truncation, and JSON field extraction.
+if ! command -v jq >/dev/null 2>&1; then
+  echo "weaver: jq is required but not found in PATH" >&2
+  exit 1
+fi
+
 # Ensure the fire-and-forget log-event process finishes writing, even if
 # run_validation exits the script early (e.g., validation failure exit code).
 trap '[ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null' EXIT

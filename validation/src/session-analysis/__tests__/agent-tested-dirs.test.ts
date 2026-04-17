@@ -140,7 +140,7 @@ describe("extractAgentTestedDirs", () => {
     ).toEqual(["test/models"]);
   });
 
-  it("ignores non-test execute_bash commands", () => {
+  it("ignores non-test bash commands", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
@@ -161,7 +161,7 @@ describe("extractAgentTestedDirs", () => {
     ).toEqual([]);
   });
 
-  it("returns [] when no execute_bash events in turn", () => {
+  it("returns [] when no bash events in turn", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
