@@ -18,13 +18,13 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
         makeEvent("agentSpawn"),
         makeEvent("userPromptSubmit", { prompt: "first" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/old.ts" },
         }),
         makeEvent("stop"),
         makeEvent("userPromptSubmit", { prompt: "second" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/new.ts" },
         }),
       ].join("\n"),
@@ -39,7 +39,7 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
       [
         makeEvent("agentSpawn"),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/a.ts" },
         }),
       ].join("\n"),
@@ -53,7 +53,7 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/a.ts" },
         }),
         makeEvent("stop"),
@@ -81,7 +81,7 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
         makeEvent("userPromptSubmit", { prompt: "hi" }),
         "not valid json",
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/ok.ts" },
         }),
       ].join("\n"),
@@ -94,17 +94,17 @@ describe("getCurrentTurnEvents (via extractChangedFiles)", () => {
 // --- extractChangedFiles ---
 
 describe("extractChangedFiles", () => {
-  it("extracts file paths from fs_write postToolUse events in current turn", () => {
+  it("extracts file paths from write postToolUse events in current turn", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.ts" },
         }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/b.ts" },
         }),
       ].join("\n"),
@@ -122,11 +122,11 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.ts" },
         }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.ts" },
         }),
       ].join("\n"),
@@ -141,13 +141,13 @@ describe("extractChangedFiles", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "first" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/old.ts" },
         }),
         makeEvent("stop"),
         makeEvent("userPromptSubmit", { prompt: "second" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/new.ts" },
         }),
       ].join("\n"),
@@ -161,19 +161,49 @@ describe("extractChangedFiles", () => {
     expect(extractChangedFiles("/missing.jsonl")).toEqual([]);
   });
 
-  it("returns [] when no fs_write events in turn", () => {
+  it("returns [] when no write or edit events in turn", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "fs_read",
+          toolName: "read",
           toolInput: { path: "/project/x.ts" },
         }),
       ].join("\n"),
     );
 
     expect(extractChangedFiles("/log.jsonl")).toEqual([]);
+  });
+
+  it("detects files from edit tool events", () => {
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
+      [
+        makeEvent("userPromptSubmit", { prompt: "go" }),
+        makeEvent("postToolUse", {
+          toolName: "edit",
+          toolInput: { path: "/project/src/c.ts" },
+        }),
+      ].join("\n"),
+    );
+
+    expect(extractChangedFiles("/log.jsonl")).toEqual(["/project/src/c.ts"]);
+  });
+
+  it("detects files from file_path input shape (Claude Code)", () => {
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(readFileSync).mockReturnValue(
+      [
+        makeEvent("userPromptSubmit", { prompt: "go" }),
+        makeEvent("postToolUse", {
+          toolName: "write",
+          toolInput: { file_path: "/project/src/b.ts" },
+        }),
+      ].join("\n"),
+    );
+
+    expect(extractChangedFiles("/log.jsonl")).toEqual(["/project/src/b.ts"]);
   });
 
   it("handles malformed log lines gracefully", () => {
@@ -183,7 +213,7 @@ describe("extractChangedFiles", () => {
         makeEvent("userPromptSubmit", { prompt: "go" }),
         "broken json line",
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/ok.ts" },
         }),
       ].join("\n"),

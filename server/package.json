@@ -12,6 +12,7 @@
   "dependencies": {
     "@fastify/static": "^9.0.0",
     "@weaver/binding-claude-code": "*",
+    "@weaver/binding-pi": "*",
     "@weaver/binding-kiro": "*",
     "@weaver/shared": "*",
     "fastify": "^5.3.3",

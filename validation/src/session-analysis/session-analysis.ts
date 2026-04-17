@@ -1,7 +1,7 @@
 import { readFileSync, existsSync } from "node:fs";
 import { resolve, relative, isAbsolute } from "node:path";
 import type { WeaverEvent } from "@weaver/shared/types";
-import { WeaverEventName } from "@weaver/shared/types";
+import { WeaverEventName, CanonicalToolName } from "@weaver/shared/types";
 
 function getCurrentTurnEvents(sessionLogPath: string): WeaverEvent[] {
   if (!existsSync(sessionLogPath)) {
@@ -40,15 +40,31 @@ function getCurrentTurnEvents(sessionLogPath: string): WeaverEvent[] {
   return boundaryIndex === -1 ? events : events.slice(boundaryIndex);
 }
 
+/**
+ * Extract the file path from a tool's input object.
+ * Pi and kiro-cli use `path`; Claude Code uses `file_path`.
+ */
+function extractFilePath(
+  toolInput?: Record<string, unknown>,
+): string | undefined {
+  if (!toolInput) return undefined;
+  if (typeof toolInput.path === "string") return toolInput.path;
+  if (typeof toolInput.file_path === "string") return toolInput.file_path;
+  return undefined;
+}
+
 export function extractChangedFiles(sessionLogPath: string): string[] {
   const events = getCurrentTurnEvents(sessionLogPath);
   const files = events.reduce((acc, e) => {
     if (
       e.eventName === WeaverEventName.POST_TOOL_USE &&
-      e.toolName === "fs_write" &&
-      typeof e.toolInput?.path === "string"
+      (e.toolName === CanonicalToolName.WRITE ||
+        e.toolName === CanonicalToolName.EDIT)
     ) {
-      acc.add(e.toolInput.path);
+      const filePath = extractFilePath(e.toolInput);
+      if (filePath) {
+        acc.add(filePath);
+      }
     }
     return acc;
   }, new Set<string>());
@@ -81,7 +97,7 @@ export function extractAgentTestedDirs(
   return getCurrentTurnEvents(sessionLogPath).reduce<string[]>((dirs, e) => {
     if (
       e.eventName !== WeaverEventName.POST_TOOL_USE ||
-      e.toolName !== "execute_bash"
+      e.toolName !== CanonicalToolName.BASH
     ) {
       return dirs;
     }

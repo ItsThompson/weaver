@@ -65,6 +65,17 @@
         ]
       },
       {
+        "from": "../bindings/pi",
+        "to": "bindings/pi",
+        "filter": [
+          "weaver-log.sh",
+          "lib/**",
+          "dist/**",
+          "src/extension.ts",
+          "package.json"
+        ]
+      },
+      {
         "from": "../validation/dist",
         "to": "validation/dist"
       },

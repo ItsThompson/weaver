@@ -64,7 +64,7 @@ describe("claudeCodeAdapter", () => {
         context,
       );
       expect(event.eventName).toBe(WeaverEventName.PRE_TOOL_USE);
-      expect(event.toolName).toBe("Read");
+      expect(event.toolName).toBe("read");
       expect(event.toolInput).toEqual({ file_path: "/file.ts" });
     });
 
@@ -80,6 +80,7 @@ describe("claudeCodeAdapter", () => {
         context,
       );
       expect(event.eventName).toBe(WeaverEventName.POST_TOOL_USE);
+      expect(event.toolName).toBe("write");
       expect(event.toolResponse).toEqual({ success: true, result: ["ok"] });
     });
 
@@ -181,6 +182,19 @@ describe("claudeCodeAdapter", () => {
           context,
         ),
       ).toThrow('Unknown Claude Code event: "UnknownEvent"');
+    });
+
+    it("passes through unknown tool names unchanged", () => {
+      const event = claudeCodeAdapter.parseEvent(
+        {
+          hook_event_name: "PostToolUse",
+          session_id: "s1",
+          cwd: "/project",
+          tool_name: "mcp_builder_mcp__InternalSearch",
+        },
+        context,
+      );
+      expect(event.toolName).toBe("mcp_builder_mcp__InternalSearch");
     });
 
     it("falls back to context sessionId when session_id missing", () => {

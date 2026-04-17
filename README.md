@@ -1,6 +1,6 @@
 # Weaver
 
-A local developer tool that provides observability, conversation editing, and automated validation on top of AI coding assistants (kiro-cli, Claude Code, and others). Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
+A local developer tool that provides observability, conversation editing, and automated validation on top of AI coding assistants (kiro-cli, Claude Code, pi, and others). Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
 
 ## Features
 

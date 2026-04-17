@@ -4,7 +4,7 @@
 
 - Node.js 20+
 - npm 10+
-- A supported AI coding harness: [kiro-cli](https://kiro.dev) or [Claude Code](https://claude.ai/code)
+- A supported AI coding harness: [kiro-cli](https://kiro.dev), [Claude Code](https://claude.ai/code), or [pi](https://github.com/badlogic/pi-mono)
 - macOS (required for the desktop app and E2E tests)
 
 ### For dictation (optional)
@@ -177,9 +177,66 @@ Adjust the `timeout` values for `Stop` and `PostToolUse` based on how long your 
 
 - Cherrypick (interactive code selection UI)
 
+### pi
+
+pi uses an extension-based integration: no manual hook configuration needed.
+
+#### Install the weaver extension
+
+From a local weaver checkout:
+
+```bash
+pi install /path/to/weaver/bindings/pi
+```
+
+Or if using the packaged Weaver.app:
+
+```bash
+pi install /Applications/Weaver.app/Contents/Resources/bindings/pi
+```
+
+The extension automatically captures events and sends them to weaver. No manual hook configuration is needed.
+
+> **Note:** npm-published install (`pi install npm:@weaver/binding-pi`) is not yet supported because the validation scripts must be co-located with the weaver installation. This is planned for a future release.
+
+#### What works with pi
+
+- Event logging and session tracking
+- Validation hooks (runs on stop and postToolUse)
+- Validation failure injection into the next prompt
+- Session rename, view, and lifecycle management via `weaver` CLI
+- Skill resolution (reads from `.pi/skills/` and `~/.pi/agent/skills/`)
+
+#### What is kiro-cli only
+
+- Cherrypick (interactive code selection UI)
+
 ## Validation hooks (optional)
 
 To enable automated validation (linting, type-checking, tests) after each agent turn, create a `.weaver.json` file in your project root. See [validation hooks](features/validation.md) for full details.
+
+### Canonical Tool Names (v1.7+)
+
+`postToolUse` matchers use canonical tool names that work across all harnesses:
+
+| Canonical | kiro-cli native | Claude Code native | pi native |
+|-----------|-----------------|-------------------|----------|
+| `write`   | `fs_write`      | `Write`           | `write`  |
+| `edit`    | (n/a)           | `Edit`            | `edit`   |
+| `read`    | `fs_read`       | `Read`            | `read`   |
+| `bash`    | `execute_bash`  | `Bash`            | `bash`   |
+
+If your `.weaver.json` uses `fs_write`, update it to `write`:
+
+```json
+{
+  "validation": {
+    "postToolUse": [
+      { "matcher": "write", "name": "eslint", "command": "npx eslint --fix {{file}}" }
+    ]
+  }
+}
+```
 
 ## Fix-validation prompt (optional)
 

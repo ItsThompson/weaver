@@ -6,6 +6,7 @@ import fastifyStatic from "@fastify/static";
 import { registerAdapter } from "@weaver/shared/adapter-registry";
 import { kiroAdapter } from "@weaver/binding-kiro";
 import { claudeCodeAdapter } from "@weaver/binding-claude-code";
+import { piAdapter } from "@weaver/binding-pi";
 import { registerHealthRoute } from "./routes/health";
 import { registerSessionRoutes } from "./routes/sessions/index";
 import { registerEventRoutes } from "./routes/events/index";
@@ -33,6 +34,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 registerAdapter(kiroAdapter);
 registerAdapter(claudeCodeAdapter);
+registerAdapter(piAdapter);
 
 const PORT = 8143;
 

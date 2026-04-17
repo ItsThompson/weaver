@@ -62,7 +62,7 @@ const postToolArgs: ValidateArgs = {
   cwd: "/project",
   trigger: "postToolUse",
   harness: Harness.KIRO_CLI,
-  toolName: "fs_write",
+  toolName: "write",
 };
 
 describe("runValidation - stop trigger", () => {
@@ -224,7 +224,7 @@ describe("runValidation - postToolUse trigger", () => {
       config: {
         validation: {
           postToolUse: [
-            { matcher: "execute_bash", name: "fmt", command: "echo" },
+            { matcher: "bash", name: "fmt", command: "echo" },
           ],
         },
       },
@@ -239,11 +239,11 @@ describe("runValidation - postToolUse trigger", () => {
         validation: {
           postToolUse: [
             {
-              matcher: "fs_write",
+              matcher: "write",
               name: "format",
               command: "prettier --write {{file}}",
             },
-            { matcher: "execute_bash", name: "other", command: "echo" },
+            { matcher: "bash", name: "other", command: "echo" },
           ],
         },
       },
@@ -264,7 +264,7 @@ describe("runValidation - postToolUse trigger", () => {
       config: {
         validation: {
           postToolUse: [
-            { matcher: "fs_write", name: "fmt", command: "prettier {{file}}" },
+            { matcher: "write", name: "fmt", command: "prettier {{file}}" },
           ],
         },
       },

@@ -27,7 +27,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "npx jest src/features/auth/" },
         }),
       ].join("\n"),
@@ -44,7 +44,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "npm test" },
         }),
       ].join("\n"),
@@ -61,7 +61,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "vitest run src/" },
         }),
       ].join("\n"),
@@ -78,7 +78,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "pytest tests/" },
         }),
       ].join("\n"),
@@ -95,7 +95,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "cargo test" },
         }),
       ].join("\n"),
@@ -112,7 +112,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "bundle exec rspec spec/models/order/" },
         }),
       ].join("\n"),
@@ -129,7 +129,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "mix test test/models/" },
         }),
       ].join("\n"),
@@ -140,17 +140,17 @@ describe("extractAgentTestedDirs", () => {
     ).toEqual(["test/models"]);
   });
 
-  it("ignores non-test execute_bash commands", () => {
+  it("ignores non-test bash commands", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "ls -la" },
         }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "cat foo.ts" },
         }),
       ].join("\n"),
@@ -161,13 +161,13 @@ describe("extractAgentTestedDirs", () => {
     ).toEqual([]);
   });
 
-  it("returns [] when no execute_bash events in turn", () => {
+  it("returns [] when no bash events in turn", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     vi.mocked(readFileSync).mockReturnValue(
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/a.ts" },
         }),
       ].join("\n"),
@@ -191,7 +191,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "my-pytest-wrapper src/" },
         }),
       ].join("\n"),
@@ -208,7 +208,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "c++ test src/" },
         }),
       ].join("\n"),
@@ -225,7 +225,7 @@ describe("extractAgentTestedDirs", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "go" }),
         makeEvent("postToolUse", {
-          toolName: "execute_bash",
+          toolName: "bash",
           toolInput: { command: "npx jest src/" },
         }),
       ].join("\n"),

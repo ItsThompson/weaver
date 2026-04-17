@@ -6,7 +6,7 @@ import type {
   EventContext,
   SkillSearchPath,
 } from "@weaver/shared/types";
-import { Harness, WeaverEventName } from "@weaver/shared/types";
+import { Harness, WeaverEventName, resolveToolName } from "@weaver/shared/types";
 import type { WeaverEvent } from "@weaver/shared/types";
 import { sessionMarkerPath } from "@weaver/shared/paths";
 import { loadAgentConfig } from "./skills/agent-config";
@@ -49,7 +49,7 @@ export const kiroAdapter: HarnessAdapter = {
       cwd: data.cwd,
       pid: context.pid,
       prompt: data.prompt,
-      toolName: data.tool_name,
+      toolName: data.tool_name ? resolveToolName(data.tool_name) : undefined,
       toolInput: data.tool_input,
       toolResponse: data.tool_response,
     };

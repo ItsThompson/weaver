@@ -45,7 +45,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
         validation: {
           postToolUse: [
             {
-              matcher: "fs_write",
+              matcher: "write",
               name: "format",
               command: "prettier --write {{file}}",
             },
@@ -60,7 +60,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       cwd: "/project",
       trigger: "postToolUse",
       harness: Harness.KIRO_CLI,
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "/project/src/a.ts",
     };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
@@ -78,7 +78,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       cwd: "/project",
       trigger: "postToolUse",
       harness: Harness.KIRO_CLI,
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "/project/a.ts",
     };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
@@ -91,7 +91,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       "/project": {
         validation: {
           postToolUse: [
-            { matcher: "execute_bash", name: "fmt", command: "echo" },
+            { matcher: "bash", name: "fmt", command: "echo" },
           ],
         },
       },
@@ -101,7 +101,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       cwd: "/project",
       trigger: "postToolUse",
       harness: Harness.KIRO_CLI,
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "/project/a.ts",
     };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
@@ -114,7 +114,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       "/project": {
         validation: {
           postToolUse: [
-            { matcher: "fs_write", name: "fmt", command: "echo hi" },
+            { matcher: "write", name: "fmt", command: "echo hi" },
           ],
         },
       },
@@ -126,7 +126,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       cwd: "/project",
       trigger: "postToolUse",
       harness: Harness.KIRO_CLI,
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "",
     };
     const result = runPostToolUseTrigger(args, SESSION_LOG);
@@ -142,7 +142,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       "/project": {
         validation: {
           postToolUse: [
-            { matcher: "fs_write", name: "lint", command: "eslint {{file}}" },
+            { matcher: "write", name: "lint", command: "eslint {{file}}" },
           ],
         },
       },
@@ -156,7 +156,7 @@ describe("runPostToolUseTrigger (boundary)", () => {
       cwd: "/project",
       trigger: "postToolUse",
       harness: Harness.KIRO_CLI,
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "/project/a.ts",
     };
     const result = runPostToolUseTrigger(args, SESSION_LOG);

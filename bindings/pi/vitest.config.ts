@@ -4,6 +4,9 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    include: ["sync/**/*.test.ts", "logger/**/*.test.ts", "types/**/*.test.ts"],
+    include: ["src/**/*.test.ts"],
+    alias: {
+      "@weaver/shared/": new URL("../../shared/", import.meta.url).pathname,
+    },
   },
 });

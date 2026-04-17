@@ -51,7 +51,7 @@ describe("kiroAdapter", () => {
         context,
       );
       expect(event.eventName).toBe(WeaverEventName.PRE_TOOL_USE);
-      expect(event.toolName).toBe("fs_read");
+      expect(event.toolName).toBe("read");
       expect(event.toolInput).toEqual({ path: "/file.ts" });
     });
 
@@ -67,6 +67,7 @@ describe("kiroAdapter", () => {
         context,
       );
       expect(event.eventName).toBe(WeaverEventName.POST_TOOL_USE);
+      expect(event.toolName).toBe("write");
       expect(event.toolResponse).toEqual({ success: true, result: ["ok"] });
     });
 
@@ -101,6 +102,18 @@ describe("kiroAdapter", () => {
       expect(event.toolName).toBeUndefined();
       expect(event.toolInput).toBeUndefined();
       expect(event.toolResponse).toBeUndefined();
+    });
+
+    it("passes through unknown tool names unchanged", () => {
+      const event = kiroAdapter.parseEvent(
+        {
+          hook_event_name: "preToolUse",
+          cwd: "/project",
+          tool_name: "mcp_custom_tool",
+        },
+        context,
+      );
+      expect(event.toolName).toBe("mcp_custom_tool");
     });
   });
 
