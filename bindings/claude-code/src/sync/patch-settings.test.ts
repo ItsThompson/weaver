@@ -78,7 +78,7 @@ describe("msToSeconds", () => {
   it("converts milliseconds to seconds, rounding up", () => {
     expect(msToSeconds(105_000)).toBe(105);
     expect(msToSeconds(35_500)).toBe(36);
-    expect(msToSeconds(1000)).toBe(10); // min floor
+    expect(msToSeconds(3000)).toBe(10); // 3s < min floor of 10s
   });
 
   it("enforces minimum of 10 seconds", () => {

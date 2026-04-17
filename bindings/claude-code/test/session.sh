@@ -24,7 +24,7 @@ test_session_start_creates_session() {
 
   echo '{"hook_event_name":"SessionStart","session_id":"cc-abc-123","cwd":"/tmp/project"}' | bash "$SHOOK"
   # Give fire-and-forget log-event.mjs time to write
-  sleep 1
+  sleep 0.2
 
   local sessions_file="$HOME/.weaver/sessions.jsonl"
   assert_file_exists "sessions.jsonl created" "$sessions_file"
@@ -52,10 +52,10 @@ test_subsequent_events_append_to_session_log() {
   setup_session
 
   echo '{"hook_event_name":"SessionStart","session_id":"cc-sub-001","cwd":"/tmp"}' | bash "$SHOOK"
-  sleep 1
+  sleep 0.2
 
   echo '{"hook_event_name":"UserPromptSubmit","session_id":"cc-sub-001","cwd":"/tmp","prompt":"hello world"}' | bash "$SHOOK"
-  sleep 1
+  sleep 0.2
 
   local log_file="$HOME/.weaver/logs/cc-sub-001.jsonl"
   local line_count
@@ -76,7 +76,7 @@ test_orphan_when_no_session_id() {
 
   local stderr_output
   stderr_output=$(echo '{"hook_event_name":"UserPromptSubmit","cwd":"/tmp","prompt":"orphan"}' | bash "$SHOOK" 2>&1 1>/dev/null || true)
-  sleep 1
+  sleep 0.2
 
   assert_file_exists "orphan log created" "$HOME/.weaver/logs/orphan.jsonl"
 
@@ -93,10 +93,10 @@ test_session_resume_appends_new_entry() {
   setup_session
 
   echo '{"hook_event_name":"SessionStart","session_id":"cc-resume-001","cwd":"/tmp/project1"}' | bash "$SHOOK"
-  sleep 1
+  sleep 0.2
 
   echo '{"hook_event_name":"SessionStart","session_id":"cc-resume-001","cwd":"/tmp/project1"}' | bash "$SHOOK"
-  sleep 1
+  sleep 0.2
 
   local sessions_file="$HOME/.weaver/sessions.jsonl"
   local line_count
