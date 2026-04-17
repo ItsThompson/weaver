@@ -71,6 +71,47 @@ describe("readSessions", () => {
     expect(sessions[1].id).toBe("b");
   });
 
+  it("deduplicates by session ID, keeping the last entry", async () => {
+    vi.mocked(existsSync).mockReturnValue(true);
+    const first = JSON.stringify({
+      id: "dup",
+      pid: 1,
+      customName: null,
+      cwd: "/tmp",
+      agentName: null,
+      startTime: "t1",
+      lastEventTime: "t1",
+    });
+    const other = JSON.stringify({
+      id: "unique",
+      pid: 2,
+      customName: null,
+      cwd: "/home",
+      agentName: null,
+      startTime: "t2",
+      lastEventTime: "t2",
+    });
+    const second = JSON.stringify({
+      id: "dup",
+      pid: 1,
+      customName: null,
+      cwd: "/tmp",
+      agentName: "dev",
+      startTime: "t1",
+      lastEventTime: "t3",
+    });
+    vi.mocked(readFile).mockResolvedValue(`${first}\n${other}\n${second}\n`);
+
+    const sessions = await readSessions();
+    expect(sessions).toHaveLength(2);
+    // Last entry for "dup" wins (has agentName "dev" and lastEventTime "t3")
+    const dupSession = sessions.find((s) => s.id === "dup");
+    expect(dupSession?.agentName).toBe("dev");
+    expect(dupSession?.lastEventTime).toBe("t3");
+    // Unique session is preserved
+    expect(sessions.find((s) => s.id === "unique")).toBeDefined();
+  });
+
   it("skips malformed lines gracefully", async () => {
     vi.mocked(existsSync).mockReturnValue(true);
     const valid = JSON.stringify({

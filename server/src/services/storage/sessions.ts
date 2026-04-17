@@ -48,7 +48,12 @@ export function createSessionStore(): SessionStore {
         sessions.forEach((s) => {
           s.harness ??= Harness.KIRO_CLI;
         });
-        return sessions;
+        // Deduplicate by session ID (last entry wins). Claude Code's session
+        // resume flow appends a new entry for an existing session_id; this
+        // collapses duplicates so callers see at most one entry per session.
+        const byId = new Map<string, Session>();
+        sessions.forEach((s) => byId.set(s.id, s));
+        return [...byId.values()];
       });
     },
 
