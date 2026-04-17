@@ -61,7 +61,7 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix it" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.ts" },
         }),
       ],
@@ -88,7 +88,7 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.py" },
         }),
       ],
@@ -117,7 +117,7 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/src/a.ts" },
         }),
       ],
@@ -147,11 +147,11 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/mono/pkg-a/x.ts" },
         }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/mono/pkg-b/y.ts" },
         }),
       ],
@@ -179,7 +179,7 @@ describe("runStopTrigger (boundary)", () => {
       [
         makeEvent("userPromptSubmit", { prompt: "fix" }),
         makeEvent("postToolUse", {
-          toolName: "fs_write",
+          toolName: "write",
           toolInput: { path: "/project/a.ts" },
         }),
       ],

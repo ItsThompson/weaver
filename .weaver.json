@@ -22,13 +22,13 @@
     ],
     "postToolUse": [
       {
-        "matcher": "fs_write",
+        "matcher": "write",
         "name": "eslint",
         "command": "npx eslint --fix {{file}}",
         "timeout_ms": 10000
       },
       {
-        "matcher": "fs_write",
+        "matcher": "write",
         "name": "prettier",
         "command": "npx prettier --write {{file}} --ignore-unknown",
         "timeout_ms": 10000

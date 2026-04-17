@@ -23,7 +23,7 @@ describe("parseArgs", () => {
       cwd: "/project",
       trigger: "stop",
       harness: "kiro-cli",
-      toolName: "fs_write",
+      toolName: "write",
       toolPath: "/project/a.ts",
     });
   });
@@ -91,6 +91,50 @@ describe("parseArgs", () => {
       "PreToolUse",
     ]);
     expect(result.trigger).toBe("preToolUse");
+  });
+
+  it("normalizes kebab-case trigger 'post-tool-use' to 'postToolUse'", () => {
+    const result = parseArgs([
+      "node",
+      "validate.js",
+      "--session-id",
+      "sess-1",
+      "--cwd",
+      "/project",
+      "--trigger",
+      "post-tool-use",
+    ]);
+    expect(result.trigger).toBe("postToolUse");
+  });
+
+  it("normalizes kebab-case trigger 'pre-tool-use' to 'preToolUse'", () => {
+    const result = parseArgs([
+      "node",
+      "validate.js",
+      "--session-id",
+      "sess-1",
+      "--cwd",
+      "/project",
+      "--trigger",
+      "pre-tool-use",
+    ]);
+    expect(result.trigger).toBe("preToolUse");
+  });
+
+  it("resolves native tool names to canonical form", () => {
+    const result = parseArgs([
+      "node",
+      "validate.js",
+      "--session-id",
+      "sess-1",
+      "--cwd",
+      "/project",
+      "--trigger",
+      "postToolUse",
+      "--tool-name",
+      "fs_write",
+    ]);
+    expect(result.toolName).toBe("write");
   });
 
   it("passes through already-camelCase triggers unchanged", () => {
