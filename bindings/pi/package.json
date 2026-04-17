@@ -1,6 +1,6 @@
 {
   "name": "@weaver/binding-pi",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "private": true,
   "type": "module",
   "exports": {
@@ -10,7 +10,9 @@
     }
   },
   "pi": {
-    "extensions": ["./src/extension.ts"]
+    "extensions": [
+      "./src/extension.ts"
+    ]
   },
   "scripts": {
     "build": "tsc --noEmit -p tsconfig.build.json && tsc --noEmit -p tsconfig.json && tsdown",
