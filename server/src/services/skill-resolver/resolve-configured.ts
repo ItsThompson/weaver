@@ -43,7 +43,7 @@ async function resolveDefaultAgentSkills(
   return [...new Set(names.flat())];
 }
 
-/** Reads a custom agent's config and resolves its `skill://` resource URIs to skill directory names. */
+/** Reads a custom agent's config and resolves its skill references to skill directory names. */
 async function resolveCustomAgentSkills(
   agentName: string,
   loadAgentConfig: (
@@ -56,6 +56,13 @@ async function resolveCustomAgentSkills(
     return [];
   }
 
+  // Claude Code agents: direct skill directory name array
+  const skills = config.skills;
+  if (Array.isArray(skills)) {
+    return skills.filter((s): s is string => typeof s === "string");
+  }
+
+  // Kiro agents: skill:// URI resolution
   const resources = config.resources;
   if (!Array.isArray(resources)) {
     return [];

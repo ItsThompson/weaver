@@ -232,5 +232,51 @@ describe("resolveConfiguredSkills", () => {
       const result = await resolveConfiguredSkills("dev", []);
       expect(result).toEqual([]);
     });
+
+    it("resolves direct skill names from skills key (Claude Code format)", async () => {
+      const agentConfig = {
+        skills: ["coding-practices", "testing-practices"],
+      };
+      mockLoadConfig.mockResolvedValue(agentConfig);
+
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
+      expect(result).toEqual(["coding-practices", "testing-practices"]);
+    });
+
+    it("filters non-string entries from skills array", async () => {
+      const agentConfig = {
+        skills: ["coding-practices", 42, null, "testing"],
+      };
+      mockLoadConfig.mockResolvedValue(agentConfig);
+
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
+      expect(result).toEqual(["coding-practices", "testing"]);
+    });
+
+    it("prefers skills key over resources key when both present", async () => {
+      const agentConfig = {
+        skills: ["direct-skill"],
+        resources: ["skill://~/.kiro/skills/*/SKILL.md"],
+      };
+      mockLoadConfig.mockResolvedValue(agentConfig);
+
+      const result = await resolveConfiguredSkills(
+        "dev",
+        [],
+        mockLoadConfig,
+        "/project",
+      );
+      expect(result).toEqual(["direct-skill"]);
+    });
   });
 });
