@@ -167,4 +167,20 @@ describe("parseArgs", () => {
     expect(result.harness).toBe("claude-code");
     expect(result.trigger).toBe("stop");
   });
+
+  it("accepts pi harness", () => {
+    const result = parseArgs([
+      "node",
+      "validate.js",
+      "--harness",
+      "pi",
+      "--session-id",
+      "s1",
+      "--cwd",
+      "/project",
+      "--trigger",
+      "stop",
+    ]);
+    expect(result.harness).toBe("pi");
+  });
 });
