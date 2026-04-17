@@ -3,6 +3,7 @@ import type { WeaverEvent } from "./weaver-event";
 export enum Harness {
   KIRO_CLI = "kiro-cli",
   CLAUDE_CODE = "claude-code",
+  PI = "pi",
 }
 
 export interface SkillSearchPath {
