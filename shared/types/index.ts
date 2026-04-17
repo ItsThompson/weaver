@@ -7,3 +7,4 @@ export * from "./dictation";
 export * from "./services";
 export * from "./harness";
 export * from "./weaver-event";
+export * from "./tool-names";
