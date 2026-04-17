@@ -24,7 +24,7 @@ run_validation() {
   local tool_name
   tool_name=$(json_string_field "$EVENT" "tool_name")
   local tool_path
-  tool_path=$(echo "$EVENT" | jq -r '.tool_input.path // empty' 2>/dev/null || echo "")
+  tool_path=$(echo "$EVENT" | jq -r '.tool_input.path // .tool_input.file_path // empty' 2>/dev/null || echo "")
   local validate_exit=0
   local validate_stderr
   validate_stderr=$(node "$validate_script" \

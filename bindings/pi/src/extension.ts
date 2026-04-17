@@ -1,11 +1,48 @@
 // Pi extension entry point: loaded by pi's jiti runtime as TypeScript source.
 // @mariozechner/pi-coding-agent is a peer dependency provided at runtime.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type ExtensionAPI = any;
 
 import { spawn } from "node:child_process";
 import { resolve as resolvePath, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+
+// --- Pi extension API types ---
+// Minimal interface covering only the surface area weaver uses.
+// Pi's actual API is broader; extend as needed when new hooks are wired.
+
+interface SessionContext {
+  cwd: string;
+  sessionManager: { getSessionId(): string };
+}
+
+interface ToolCallEvent {
+  toolName: string;
+  input: Record<string, unknown>;
+}
+
+interface ToolResultEvent {
+  toolName: string;
+  input: Record<string, unknown>;
+  isError: boolean;
+  content: unknown[];
+}
+
+interface InputEvent {
+  text: string;
+}
+
+interface InputTransform {
+  action: "transform";
+  text: string;
+}
+
+interface PiExtensionAPI {
+  on(event: "session_start", cb: (event: unknown, ctx: SessionContext) => Promise<void>): void;
+  on(event: "session_shutdown", cb: () => Promise<void>): void;
+  on(event: "tool_call", cb: (event: ToolCallEvent) => Promise<void>): void;
+  on(event: "tool_result", cb: (event: ToolResultEvent) => Promise<void>): void;
+  on(event: "input", cb: (event: InputEvent) => Promise<InputTransform | void>): void;
+  on(event: "agent_end", cb: () => Promise<void>): void;
+}
 
 interface HookResult {
   stdout: string;
@@ -13,7 +50,7 @@ interface HookResult {
   code: number;
 }
 
-export default function (pi: ExtensionAPI) {
+export default function (pi: PiExtensionAPI) {
   const extensionDir = dirname(fileURLToPath(import.meta.url));
   const hookScript = resolvePath(extensionDir, "..", "weaver-log.sh");
 
@@ -89,7 +126,7 @@ export default function (pi: ExtensionAPI) {
 
   // --- Session lifecycle ---
 
-  pi.on("session_start", async (_event: unknown, ctx: { cwd: string; sessionManager: { getSessionId(): string } }) => {
+  pi.on("session_start", async (_event, ctx) => {
     cwd = ctx.cwd;
     sessionId = ctx.sessionManager.getSessionId();
 
@@ -103,7 +140,7 @@ export default function (pi: ExtensionAPI) {
 
   // --- Tool events ---
 
-  pi.on("tool_call", async (event: { toolName: string; input: Record<string, unknown> }) => {
+  pi.on("tool_call", async (event) => {
     if (!sessionId) return;
     await safeCallHook({
       ...baseEvent("pre-tool-use"),
@@ -112,7 +149,7 @@ export default function (pi: ExtensionAPI) {
     });
   });
 
-  pi.on("tool_result", async (event: { toolName: string; input: Record<string, unknown>; isError: boolean; content: unknown[] }) => {
+  pi.on("tool_result", async (event) => {
     if (!sessionId) return;
     await safeCallHook({
       ...baseEvent("post-tool-use"),
@@ -127,7 +164,7 @@ export default function (pi: ExtensionAPI) {
 
   // --- User input ---
 
-  pi.on("input", async (event: { text: string }) => {
+  pi.on("input", async (event) => {
     if (!sessionId) return;
     const result = await safeCallHook({
       ...baseEvent("user-prompt-submit"),
