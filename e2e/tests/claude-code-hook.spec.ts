@@ -6,7 +6,7 @@ import {
   makeWeaverEvent,
 } from "../fixtures/seed";
 import { Harness, WeaverEventName } from "@weaver/shared/types";
-import { appendFile, readFile } from "node:fs/promises";
+import { appendFile } from "node:fs/promises";
 import { join } from "node:path";
 
 test.describe("Claude Code integration", () => {

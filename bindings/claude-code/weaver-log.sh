@@ -48,6 +48,10 @@ HOOK_EVENT_NAME=$(json_field "$EVENT" "hook_event_name")
 CWD=$(json_field "$EVENT" "cwd")
 
 CALLER_PID=$(get_caller_pid)
+# Default to 0 if PID is non-numeric (e.g., ps unavailable in container)
+case "$CALLER_PID" in
+  ''|*[!0-9]*) CALLER_PID=0 ;;
+esac
 manage_session
 
 # Truncate large tool responses before logging
@@ -63,7 +67,7 @@ fi
 if [ "$SESSION_ID" = "orphan" ]; then
   # Wait for log-event to finish writing before exiting
   [ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null || true
-  echo "weaver: no session_id in event payload — event logged to orphan queue" >&2
+  echo "weaver: no session_id in event payload: event logged to orphan queue" >&2
   exit 0
 fi
 
