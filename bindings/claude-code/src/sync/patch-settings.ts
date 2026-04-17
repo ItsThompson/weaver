@@ -165,6 +165,7 @@ export function patchSettings(
   if (!dryRun) {
     try {
       mkdirSync(dirname(filePath), { recursive: true });
+      // Trailing newline for POSIX compliance and clean diffs
       writeFileSync(filePath, JSON.stringify(parsed, null, 2) + "\n");
     } catch (error) {
       result.errors.push(`${filePath}: write failed: ${String(error)}`);

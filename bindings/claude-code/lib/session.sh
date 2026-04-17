@@ -28,6 +28,8 @@ manage_session() {
       --arg ts "$TIMESTAMP" \
       --arg agent "$agent_name" \
       '{id:$id, pid:$pid, customName:null, cwd:$cwd, agentName:(if $agent == "" then null else $agent end), startTime:$ts, lastEventTime:$ts, harness:"claude-code"}')
+    # Append is effectively atomic for small payloads on local filesystems
+    # (POSIX write(2) up to PIPE_BUF). No explicit file locking needed.
     echo "$session_meta" >> "$SESSIONS_FILE"
 
     touch "$LOGS_DIR/$SESSION_ID.jsonl"

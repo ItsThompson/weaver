@@ -13,6 +13,10 @@ MAX_RESPONSE_LENGTH="${WEAVER_MAX_RESPONSE_LENGTH:-500}"
 
 mkdir -p "$LOGS_DIR"
 
+# Ensure the fire-and-forget log-event process finishes writing, even if
+# run_validation exits the script early (e.g., validation failure exit code).
+trap '[ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null' EXIT
+
 # Resolve binding directory (follow symlinks)
 SCRIPT_PATH="$0"
 if [ -L "$SCRIPT_PATH" ]; then
@@ -30,6 +34,9 @@ source "$LIB_DIR/init.sh"
 
 # Extract a top-level string field from a JSON blob.
 # Falls back to regex when jq is unavailable. Returns empty string if field is missing.
+# Note: the regex fallback does not handle escaped quotes in values. This is
+# acceptable because it only activates when jq is absent, and Claude Code event
+# fields (hook_event_name, cwd, session_id) don't contain escaped quotes.
 json_field() {
   local json="$1" field="$2"
   local val=""
@@ -65,7 +72,8 @@ if [ -f "$local_log_event" ]; then
 fi
 
 if [ "$SESSION_ID" = "orphan" ]; then
-  # Wait for log-event to finish writing before exiting
+  # Wait explicitly so the warning message prints after log-event finishes.
+  # (The EXIT trap also waits, but we want ordering guarantees here.)
   [ -n "${LOG_PID:-}" ] && wait "$LOG_PID" 2>/dev/null || true
   echo "weaver: no session_id in event payload: event logged to orphan queue" >&2
   exit 0

@@ -8,7 +8,9 @@ run_validation() {
   local inject_script="$ROOT_DIR/validation/dist/inject.mjs"
 
   if [ "$HOOK_EVENT_NAME" = "UserPromptSubmit" ]; then
-    [ -f "$inject_script" ] && node "$inject_script" --session-id "$SESSION_ID" 2>/dev/null || true
+    if [ -f "$inject_script" ]; then
+      node "$inject_script" --session-id "$SESSION_ID" 2>/dev/null || true
+    fi
     return
   fi
 
