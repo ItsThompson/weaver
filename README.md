@@ -1,3 +1,6 @@
+> [!NOTE]
+> No longer working on this project. Current state is functional and feature complete, but scope creep has made this do too many things that I no longer need it to do. Originally it was meant to work for only kiro and I have since moved to pi. For users of pi, I encourage you to check out [pi-watch](https://github.com/ItsThompson/pi-watch): a simplified & improved version of the "mini mode" feature in weaver, built specifically for pi and using it within tmux.
+
 # Weaver
 
 A local developer tool that provides observability, conversation editing, and automated validation on top of AI coding assistants (kiro-cli, Claude Code, pi, and others). Runs as a standalone Electron desktop app with a global hotkey, or in the browser for development.
