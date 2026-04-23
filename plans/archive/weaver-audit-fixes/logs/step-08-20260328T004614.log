@@ -1,0 +1,1440 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","~/Desktop/weaver-audit-fixes/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+I'll start by reading the task and progress files, then examine the source files I need to understand.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: My task is Step 8: CherrypickPage tests. I need to:
+1. Read the relevant source files to understand the hook and types
+2. Create test file for useCherrypick hook
+3. Run tests to verify
+4. Commit and update progress
+
+Let me start by reading all the relevant files.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mLooking up symbols: ["[38;5;141museCherrypick[0m", "[38;5;141mPageState[0m", "[38;5;141mCherrypickState[0m", "[38;5;141mCherrypickActions[0m", "[38;5;141mparseConversation[0m", "[38;5;141mpruneConversation[0m", "[38;5;141mSavedConversation[0m", "[38;5;141mParsedConversation[0m", "[38;5;141mConversationExchange[0m"][0m[38;5;244m (using tool: code)[0m
+⠋ Loading...⠙ Loading...⠹ Loading...⠸ Loading...⠼ Loading...⠴ Loading...⠦ Loading...[2K[1G[1A[?25l
+Found [38;5;141m9[0m of [38;5;141m9[0m symbols:
+  1. [38;5;12mFunction[0m [38;5;141museCherrypick[0m at [38;5;141mclient/src/pages/CherrypickPage/hooks/useCherrypick.ts[0m:[38;5;244m33:8
+[0m  2. [38;5;12mType[0m [38;5;141mPageState[0m at [38;5;141mclient/src/pages/CherrypickPage/types.ts[0m:[38;5;244m7:8
+[0m  3. [38;5;12mInterface[0m [38;5;141mCherrypickState[0m at [38;5;141mclient/src/pages/CherrypickPage/types.ts[0m:[38;5;244m29:8
+[0m  4. [38;5;12mInterface[0m [38;5;141mCherrypickActions[0m at [38;5;141mclient/src/pages/CherrypickPage/types.ts[0m:[38;5;244m17:8
+[0m  5. [38;5;12mFunction[0m [38;5;141mparseConversation[0m at [38;5;141mclient/src/utils/group-exchanges.ts[0m:[38;5;244m83:8
+[0m  [38;5;244m(4 more items found)
+[0m[38;5;244m - Completed in 0.499s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/types/conversation.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/CherrypickPage/hooks/useCherrypick.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2503 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/types/conversation.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3831 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/pages/CherrypickPage/hooks/useCherrypick.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me look at existing test fixtures and patterns:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for files: [38;5;141mclient/src/utils/*test*[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m3 files[0m under current directory
+[38;5;244m - Completed in 0.3s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/utils/conversation-parser.test-utils.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/utils/group-exchanges.test.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/package.json[0m, from line [38;5;141m1[0m to [38;5;141m30[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3087 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/utils/conversation-parser.test-utils.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3591 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/utils/group-exchanges.test.ts
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m845 bytes[0m from /Users/thompsnt/Documents/weaver/client/package.json
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check if there are any existing test patterns in the client for hooks:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for files: [38;5;141mclient/src/**/*.test.{ts,tsx}[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m37 files[0m under current directory
+[38;5;244m - Completed in 0.2s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mLet me look at an existing hook test to understand the pattern used:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/hooks/useNavigateOnView/useNavigateOnView.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[0m, from line [38;5;141m1[0m to [38;5;141m30[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1585 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/hooks/useNavigateOnView/useNavigateOnView.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m953 bytes[0m from /Users/thompsnt/Documents/weaver/client/src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the vitest setup for the client:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for files: [38;5;141mclient/vitest*[0m[38;5;244m (using tool: glob)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m1 files[0m under current directory
+[38;5;244m - Completed in 0.2s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/vitest.config.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m437 bytes[0m from /Users/thompsnt/Documents/weaver/client/vitest.config.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.26 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/client/__tests__/setup.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m988 bytes[0m from /Users/thompsnt/Documents/weaver/client/__tests__/setup.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a good understanding of the codebase. Let me plan the test file:
+
+1. I need to use `renderHook` and `act` from `@testing-library/react`
+2. I need to mock `FileReader` to simulate file upload
+3. I need to mock `URL.createObjectURL` and `URL.revokeObjectURL` for download tests
+4. I'll use the existing test utilities: `promptResponse`, `makeSavedConversation` from `conversation-parser.test-utils.ts`
+5. The tests are sociable - use real `parseConversation` and `pruneConversation`
+
+Key things to note:
+- `handleFile` uses `FileReader` with `onload` callback - I need to mock FileReader
+- The setup file already mocks `URL.createObjectURL` as `() => "blob:mock"` but doesn't mock `URL.revokeObjectURL`
+- I need to create a File mock and trigger the FileReader's onload
+
+Let me write the test file. The fixture needs at least 2 exchanges so I can test selection toggling.
+
+For the FileReader mock, I need to:
+- Create a mock that captures the `onload` handler
+- When `readAsText` is called, trigger `onload` with the file content
+
+Let me think about the structure:
+
+```typescript
+// Helper to create a mock File and trigger FileReader
+function createMockFile(content: string, name = "test.json"): File {
+  return new File([content], name, { type: "application/json" });
+}
+```
+
+Actually, since `handleFile` creates a `new FileReader()` internally, I need to mock the global `FileReader`. Let me create a mock that:
+1. Captures the `onload` handler when it's set
+2. When `readAsText` is called, sets `result` and calls `onload`
+
+Let me write the test file now.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow I have everything I need. Let me create the test file:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[0m[38;5;244m (using tool: write)[0m
+Purpose: Create useCherrypick hook test file covering all 5 BDD scenarios: phase transitions, error handling, selection toggling, download, and reset
+
+[49m[38;5;10m+      1[0m:[38;5;10m[49m import { renderHook, act } from "@testing-library/react";
+[0m[49m[38;5;10m+      2[0m:[38;5;10m[49m import { useCherrypick } from "./useCherrypick";
+[0m[49m[38;5;10m+      3[0m:[38;5;10m[49m import {
+[0m[49m[38;5;10m+      4[0m:[38;5;10m[49m   promptResponse,
+[0m[49m[38;5;10m+      5[0m:[38;5;10m[49m   makeSavedConversation,
+[0m[49m[38;5;10m+      6[0m:[38;5;10m[49m } from "../../../utils/conversation-parser.test-utils";
+[0m[49m[38;5;10m+      7[0m:[38;5;10m[49m import type { SavedConversation } from "../../../types/conversation";
+[0m[49m[38;5;10m+      8[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      9[0m:[38;5;10m[49m // Mock FileReader so readAsText synchronously triggers onload
+[0m[49m[38;5;10m+     10[0m:[38;5;10m[49m class MockFileReader {
+[0m[49m[38;5;10m+     11[0m:[38;5;10m[49m   result: string | null = null;
+[0m[49m[38;5;10m+     12[0m:[38;5;10m[49m   onload: (() => void) | null = null;
+[0m[49m[38;5;10m+     13[0m:[38;5;10m[49m   readAsText(file: File) {
+[0m[49m[38;5;10m+     14[0m:[38;5;10m[49m     file.text().then((text) => {
+[0m[49m[38;5;10m+     15[0m:[38;5;10m[49m       this.result = text;
+[0m[49m[38;5;10m+     16[0m:[38;5;10m[49m       this.onload?.();
+[0m[49m[38;5;10m+     17[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     18[0m:[38;5;10m[49m   }
+[0m[49m[38;5;10m+     19[0m:[38;5;10m[49m }
+[0m[49m[38;5;10m+     20[0m:[38;5;10m[49m vi.stubGlobal("FileReader", MockFileReader);
+[0m[49m[38;5;10m+     21[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     22[0m:[38;5;10m[49m function makeFile(content: string, name = "test.json"): File {
+[0m[49m[38;5;10m+     23[0m:[38;5;10m[49m   return new File([content], name, { type: "application/json" });
+[0m[49m[38;5;10m+     24[0m:[38;5;10m[49m }
+[0m[49m[38;5;10m+     25[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     26[0m:[38;5;10m[49m // Minimal valid conversation with 2 exchanges
+[0m[49m[38;5;10m+     27[0m:[38;5;10m[49m const validConversation = makeSavedConversation([
+[0m[49m[38;5;10m+     28[0m:[38;5;10m[49m   promptResponse("first question", "first answer", "2026-03-02T10:00:00Z"),
+[0m[49m[38;5;10m+     29[0m:[38;5;10m[49m   promptResponse("second question", "second answer", "2026-03-02T10:01:00Z"),
+[0m[49m[38;5;10m+     30[0m:[38;5;10m[49m ]);
+[0m[49m[38;5;10m+     31[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     32[0m:[38;5;10m[49m const validJson = JSON.stringify(validConversation);
+[0m[49m[38;5;10m+     33[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     34[0m:[38;5;10m[49m async function uploadFile(
+[0m[49m[38;5;10m+     35[0m:[38;5;10m[49m   result: ReturnType<typeof renderHook<ReturnType<typeof useCherrypick>>>,
+[0m[49m[38;5;10m+     36[0m:[38;5;10m[49m   content: string,
+[0m[49m[38;5;10m+     37[0m:[38;5;10m[49m   name = "test.json",
+[0m[49m[38;5;10m+     38[0m:[38;5;10m[49m ) {
+[0m[49m[38;5;10m+     39[0m:[38;5;10m[49m   await act(async () => {
+[0m[49m[38;5;10m+     40[0m:[38;5;10m[49m     result.result.current.actions.handleFile(makeFile(content, name));
+[0m[49m[38;5;10m+     41[0m:[38;5;10m[49m     // flush microtask for File.text() promise
+[0m[49m[38;5;10m+     42[0m:[38;5;10m[49m     await Promise.resolve();
+[0m[49m[38;5;10m+     43[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     44[0m:[38;5;10m[49m }
+[0m[49m[38;5;10m+     45[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     46[0m:[38;5;10m[49m describe("useCherrypick", () => {
+[0m[49m[38;5;10m+     47[0m:[38;5;10m[49m   beforeEach(() => {
+[0m[49m[38;5;10m+     48[0m:[38;5;10m[49m     vi.restoreAllMocks();
+[0m[49m[38;5;10m+     49[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     50[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     51[0m:[38;5;10m[49m   describe("phase transitions", () => {
+[0m[49m[38;5;10m+     52[0m:[38;5;10m[49m     it("initial state is upload phase with no error", () => {
+[0m[49m[38;5;10m+     53[0m:[38;5;10m[49m       const { result } = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+     54[0m:[38;5;10m[49m       expect(result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+     55[0m:[38;5;10m[49m       expect(result.current.state.error).toBeNull();
+[0m[49m[38;5;10m+     56[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     57[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     58[0m:[38;5;10m[49m     it("transitions to edit phase after handleFile with valid JSON", async () => {
+[0m[49m[38;5;10m+     59[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+     60[0m:[38;5;10m[49m       await uploadFile(hook, validJson, "convo.json");
+[0m[49m[38;5;10m+     61[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     62[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("edit");
+[0m[49m[38;5;10m+     63[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBeNull();
+[0m[49m[38;5;10m+     64[0m:[38;5;10m[49m       const ps = hook.result.current.state.pageState;
+[0m[49m[38;5;10m+     65[0m:[38;5;10m[49m       if (ps.phase === "edit") {
+[0m[49m[38;5;10m+     66[0m:[38;5;10m[49m         expect(ps.fileName).toBe("convo.json");
+[0m[49m[38;5;10m+     67[0m:[38;5;10m[49m         expect(ps.parsed.mainExchanges).toHaveLength(2);
+[0m[49m[38;5;10m+     68[0m:[38;5;10m[49m       }
+[0m[49m[38;5;10m+     69[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     70[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     71[0m:[38;5;10m[49m     it("transitions to preview phase after handlePreview", async () => {
+[0m[49m[38;5;10m+     72[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+     73[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+     74[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     75[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handlePreview());
+[0m[49m[38;5;10m+     76[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     77[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("preview");
+[0m[49m[38;5;10m+     78[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     79[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     80[0m:[38;5;10m[49m     it("returns to upload phase after handleReset", async () => {
+[0m[49m[38;5;10m+     81[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+     82[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+     83[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     84[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handleReset());
+[0m[49m[38;5;10m+     85[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     86[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+     87[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBeNull();
+[0m[49m[38;5;10m+     88[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     89[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     90[0m:[38;5;10m[49m     it("returns to edit phase after goBackToEdit from preview", async () => {
+[0m[49m[38;5;10m+     91[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+     92[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+     93[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handlePreview());
+[0m[49m[38;5;10m+     94[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("preview");
+[0m[49m[38;5;10m+     95[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     96[0m:[38;5;10m[49m       act(() => hook.result.current.actions.goBackToEdit());
+[0m[49m[38;5;10m+     97[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     98[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("edit");
+[0m[49m[38;5;10m+     99[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    100[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+    101[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    102[0m:[38;5;10m[49m   describe("error handling", () => {
+[0m[49m[38;5;10m+    103[0m:[38;5;10m[49m     it("sets error for invalid JSON", async () => {
+[0m[49m[38;5;10m+    104[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    105[0m:[38;5;10m[49m       await uploadFile(hook, "{not valid json");
+[0m[49m[38;5;10m+    106[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    107[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBe(
+[0m[49m[38;5;10m+    108[0m:[38;5;10m[49m         "Failed to parse JSON file",
+[0m[49m[38;5;10m+    109[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+    110[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+    111[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    112[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    113[0m:[38;5;10m[49m     it("sets error when history is missing", async () => {
+[0m[49m[38;5;10m+    114[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    115[0m:[38;5;10m[49m       await uploadFile(hook, JSON.stringify({ conversation_id: "x" }));
+[0m[49m[38;5;10m+    116[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    117[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBe(
+[0m[49m[38;5;10m+    118[0m:[38;5;10m[49m         "Invalid file: missing history or conversation_id",
+[0m[49m[38;5;10m+    119[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+    120[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+    121[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    122[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    123[0m:[38;5;10m[49m     it("sets error when conversation_id is missing", async () => {
+[0m[49m[38;5;10m+    124[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    125[0m:[38;5;10m[49m       await uploadFile(hook, JSON.stringify({ history: [] }));
+[0m[49m[38;5;10m+    126[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    127[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBe(
+[0m[49m[38;5;10m+    128[0m:[38;5;10m[49m         "Invalid file: missing history or conversation_id",
+[0m[49m[38;5;10m+    129[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+    130[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+    131[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    132[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+    133[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    134[0m:[38;5;10m[49m   describe("selection toggling", () => {
+[0m[49m[38;5;10m+    135[0m:[38;5;10m[49m     it("toggleMainId adds and removes ids", async () => {
+[0m[49m[38;5;10m+    136[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    137[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    138[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    139[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleMainId(1));
+[0m[49m[38;5;10m+    140[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteMainIds.has(1)).toBe(true);
+[0m[49m[38;5;10m+    141[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(1);
+[0m[49m[38;5;10m+    142[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    143[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleMainId(1));
+[0m[49m[38;5;10m+    144[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteMainIds.has(1)).toBe(false);
+[0m[49m[38;5;10m+    145[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(0);
+[0m[49m[38;5;10m+    146[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    147[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    148[0m:[38;5;10m[49m     it("toggleTangentId adds and removes ids", async () => {
+[0m[49m[38;5;10m+    149[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    150[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    151[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    152[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleTangentId(2));
+[0m[49m[38;5;10m+    153[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteTangentIds.has(2)).toBe(true);
+[0m[49m[38;5;10m+    154[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(1);
+[0m[49m[38;5;10m+    155[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    156[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleTangentId(2));
+[0m[49m[38;5;10m+    157[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteTangentIds.has(2)).toBe(false);
+[0m[49m[38;5;10m+    158[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(0);
+[0m[49m[38;5;10m+    159[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    160[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    161[0m:[38;5;10m[49m     it("toggleAllMain selects all then deselects all", async () => {
+[0m[49m[38;5;10m+    162[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    163[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    164[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    165[0m:[38;5;10m[49m       const ps = hook.result.current.state.pageState;
+[0m[49m[38;5;10m+    166[0m:[38;5;10m[49m       if (ps.phase !== "edit") {
+[0m[49m[38;5;10m+    167[0m:[38;5;10m[49m         throw new Error("expected edit phase");
+[0m[49m[38;5;10m+    168[0m:[38;5;10m[49m       }
+[0m[49m[38;5;10m+    169[0m:[38;5;10m[49m       const exchanges = ps.parsed.mainExchanges;
+[0m[49m[38;5;10m+    170[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    171[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleAllMain(exchanges));
+[0m[49m[38;5;10m+    172[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteMainIds.size).toBe(
+[0m[49m[38;5;10m+    173[0m:[38;5;10m[49m         exchanges.length,
+[0m[49m[38;5;10m+    174[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+    175[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    176[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleAllMain(exchanges));
+[0m[49m[38;5;10m+    177[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteMainIds.size).toBe(0);
+[0m[49m[38;5;10m+    178[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    179[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    180[0m:[38;5;10m[49m     it("totalSelected reflects sum of both sets", async () => {
+[0m[49m[38;5;10m+    181[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    182[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    183[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    184[0m:[38;5;10m[49m       act(() => {
+[0m[49m[38;5;10m+    185[0m:[38;5;10m[49m         hook.result.current.actions.toggleMainId(1);
+[0m[49m[38;5;10m+    186[0m:[38;5;10m[49m       });
+[0m[49m[38;5;10m+    187[0m:[38;5;10m[49m       act(() => {
+[0m[49m[38;5;10m+    188[0m:[38;5;10m[49m         hook.result.current.actions.toggleTangentId(2);
+[0m[49m[38;5;10m+    189[0m:[38;5;10m[49m       });
+[0m[49m[38;5;10m+    190[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(2);
+[0m[49m[38;5;10m+    191[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    192[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+    193[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    194[0m:[38;5;10m[49m   describe("download", () => {
+[0m[49m[38;5;10m+    195[0m:[38;5;10m[49m     it("creates blob and triggers download in preview phase", async () => {
+[0m[49m[38;5;10m+    196[0m:[38;5;10m[49m       const mockCreateObjectURL = vi.fn(() => "blob:test");
+[0m[49m[38;5;10m+    197[0m:[38;5;10m[49m       const mockRevokeObjectURL = vi.fn();
+[0m[49m[38;5;10m+    198[0m:[38;5;10m[49m       URL.createObjectURL = mockCreateObjectURL;
+[0m[49m[38;5;10m+    199[0m:[38;5;10m[49m       URL.revokeObjectURL = mockRevokeObjectURL;
+[0m[49m[38;5;10m+    200[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    201[0m:[38;5;10m[49m       const clickSpy = vi.fn();
+[0m[49m[38;5;10m+    202[0m:[38;5;10m[49m       vi.spyOn(document, "createElement").mockReturnValue({
+[0m[49m[38;5;10m+    203[0m:[38;5;10m[49m         set href(_: string) {},
+[0m[49m[38;5;10m+    204[0m:[38;5;10m[49m         set download(_: string) {},
+[0m[49m[38;5;10m+    205[0m:[38;5;10m[49m         click: clickSpy,
+[0m[49m[38;5;10m+    206[0m:[38;5;10m[49m       } as unknown as HTMLElement);
+[0m[49m[38;5;10m+    207[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    208[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    209[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    210[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handlePreview());
+[0m[49m[38;5;10m+    211[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    212[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handleDownload());
+[0m[49m[38;5;10m+    213[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    214[0m:[38;5;10m[49m       expect(mockCreateObjectURL).toHaveBeenCalled();
+[0m[49m[38;5;10m+    215[0m:[38;5;10m[49m       expect(clickSpy).toHaveBeenCalled();
+[0m[49m[38;5;10m+    216[0m:[38;5;10m[49m       expect(mockRevokeObjectURL).toHaveBeenCalledWith("blob:test");
+[0m[49m[38;5;10m+    217[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    218[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    219[0m:[38;5;10m[49m     it("does nothing outside preview phase", async () => {
+[0m[49m[38;5;10m+    220[0m:[38;5;10m[49m       const mockCreateObjectURL = vi.fn();
+[0m[49m[38;5;10m+    221[0m:[38;5;10m[49m       URL.createObjectURL = mockCreateObjectURL;
+[0m[49m[38;5;10m+    222[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    223[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    224[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    225[0m:[38;5;10m[49m       // In edit phase, not preview
+[0m[49m[38;5;10m+    226[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handleDownload());
+[0m[49m[38;5;10m+    227[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    228[0m:[38;5;10m[49m       expect(mockCreateObjectURL).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+    229[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    230[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+    231[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    232[0m:[38;5;10m[49m   describe("reset clears everything", () => {
+[0m[49m[38;5;10m+    233[0m:[38;5;10m[49m     it("clears selections, error, and returns to upload", async () => {
+[0m[49m[38;5;10m+    234[0m:[38;5;10m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[38;5;10m+    235[0m:[38;5;10m[49m       await uploadFile(hook, validJson);
+[0m[49m[38;5;10m+    236[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    237[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleMainId(1));
+[0m[49m[38;5;10m+    238[0m:[38;5;10m[49m       act(() => hook.result.current.actions.toggleTangentId(2));
+[0m[49m[38;5;10m+    239[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(2);
+[0m[49m[38;5;10m+    240[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    241[0m:[38;5;10m[49m       act(() => hook.result.current.actions.handleReset());
+[0m[49m[38;5;10m+    242[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+    243[0m:[38;5;10m[49m       expect(hook.result.current.state.pageState.phase).toBe("upload");
+[0m[49m[38;5;10m+    244[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteMainIds.size).toBe(0);
+[0m[49m[38;5;10m+    245[0m:[38;5;10m[49m       expect(hook.result.current.state.deleteTangentIds.size).toBe(0);
+[0m[49m[38;5;10m+    246[0m:[38;5;10m[49m       expect(hook.result.current.state.totalSelected).toBe(0);
+[0m[49m[38;5;10m+    247[0m:[38;5;10m[49m       expect(hook.result.current.state.error).toBeNull();
+[0m[49m[38;5;10m+    248[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+    249[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+    250[0m:[38;5;10m[49m });
+[0m[K
+Creating: [38;5;141m/Users/thompsnt/Documents/weaver/client/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.23 s
+[0m[?25l[0m[38;5;141m> [0mNow let me run the tests:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/client && npx vitest run src/pages/CherrypickPage/hooks/useCherrypick.test.ts 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run the new useCherrypick tests
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/client[39m
+
+ [31m❯[39m src/pages/CherrypickPage/hooks/useCherrypick.test.ts [2m([22m[2m15 tests[22m[2m | [22m[31m1 failed[39m[2m)[22m[32m 18[2mms[22m[39m
+       [32m✓[39m initial state is upload phase with no error[32m 5[2mms[22m[39m
+       [32m✓[39m transitions to edit phase after handleFile with valid JSON[32m 2[2mms[22m[39m
+       [32m✓[39m transitions to preview phase after handlePreview[32m 2[2mms[22m[39m
+       [32m✓[39m returns to upload phase after handleReset[32m 1[2mms[22m[39m
+       [32m✓[39m returns to edit phase after goBackToEdit from preview[32m 1[2mms[22m[39m
+       [32m✓[39m sets error for invalid JSON[32m 1[2mms[22m[39m
+       [32m✓[39m sets error when history is missing[32m 1[2mms[22m[39m
+       [32m✓[39m sets error when conversation_id is missing[32m 0[2mms[22m[39m
+       [32m✓[39m toggleMainId adds and removes ids[32m 1[2mms[22m[39m
+       [32m✓[39m toggleTangentId adds and removes ids[32m 1[2mms[22m[39m
+       [32m✓[39m toggleAllMain selects all then deselects all[32m 0[2mms[22m[39m
+       [32m✓[39m totalSelected reflects sum of both sets[32m 0[2mms[22m[39m
+[31m       [31m×[31m creates blob and triggers download in preview phase[39m[32m 2[2mms[22m[39m
+       [32m✓[39m does nothing outside preview phase[32m 0[2mms[22m[39m
+       [32m✓[39m clears selections, error, and returns to upload[32m 0[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[39m[1m[41m Failed Tests 1 [49m[22m[31m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[41m[1m FAIL [22m[49m src/pages/CherrypickPage/hooks/useCherrypick.test.ts[2m > [22museCherrypick[2m > [22mdownload[2m > [22mcreates blob and triggers download in preview phase
+[31m[1mTypeError[22m: Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.[39m
+[90m [2m❯[22m Object.exports.convert ../node_modules/jsdom/lib/generated/idl/Node.js:[2m27:9[22m[39m
+[90m [2m❯[22m HTMLBodyElement.appendChild ../node_modules/jsdom/lib/generated/idl/Node.js:[2m406:26[22m[39m
+[90m [2m❯[22m render ../node_modules/@testing-library/react/dist/pure.js:[2m259:29[22m[39m
+[90m [2m❯[22m renderHook ../node_modules/@testing-library/react/dist/pure.js:[2m339:7[22m[39m
+[36m [2m❯[22m src/pages/CherrypickPage/hooks/useCherrypick.test.ts:[2m206:20[22m[39m
+    [90m204| [39m      } [35mas[39m unknown [35mas[39m [33mHTMLElement[39m)[33m;[39m
+    [90m205| [39m
+    [90m206| [39m      [35mconst[39m hook [33m=[39m [34mrenderHook[39m(() [33m=>[39m [34museCherrypick[39m())[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m207| [39m      [35mawait[39m [34muploadFile[39m(hook[33m,[39m validJson)[33m;[39m
+    [90m208| [39m      [34mact[39m(() [33m=>[39m hook[33m.[39mresult[33m.[39mcurrent[33m.[39mactions[33m.[39m[34mhandlePreview[39m())[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m14 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m 00:47:51
+[2m   Duration [22m 818ms[2m (transform 40ms, setup 78ms, import 87ms, tests 18ms, environment 566ms)[22m
+
+[38;5;244m - Completed in 1.371s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mThe [38;5;10mdocument.createElement[0m mock is breaking [38;5;10mrenderHook[0m because it uses [38;5;10mdocument.createElement[0m internally. I need to scope the mock more carefully:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll modify the following file: [38;5;141mclient/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[0m[38;5;244m (using tool: write)[0m
+Purpose: Fix createElement mock to only intercept anchor tags, pass through for other elements
+
+[49m[39m  193, 193[0m:[39m[49m     it("creates blob and triggers download in preview phase", async () => {
+[0m[49m[39m  194, 194[0m:[39m[49m       const mockCreateObjectURL = vi.fn(() => "blob:test");
+[0m[49m[39m  195, 195[0m:[39m[49m       const mockRevokeObjectURL = vi.fn();
+[0m[49m[39m  196, 196[0m:[39m[49m       URL.createObjectURL = mockCreateObjectURL;
+[0m[49m[39m  197, 197[0m:[39m[49m       URL.revokeObjectURL = mockRevokeObjectURL;
+[0m[49m[39m  198, 198[0m:[39m[49m 
+[0m[49m[39m  199, 199[0m:[39m[49m       const clickSpy = vi.fn();
+[0m[49m[38;5;9m- 200     [0m:[38;5;9m[49m       vi.spyOn(document, "createElement").mockReturnValue({
+[0m[49m[38;5;9m- 201     [0m:[38;5;9m[49m         set href(_: string) {},
+[0m[49m[38;5;9m- 202     [0m:[38;5;9m[49m         set download(_: string) {},
+[0m[49m[38;5;9m- 203     [0m:[38;5;9m[49m         click: clickSpy,
+[0m[49m[38;5;9m- 204     [0m:[38;5;9m[49m       } as unknown as HTMLElement);
+[0m[49m[38;5;10m+      200[0m:[38;5;10m[49m       const origCreateElement = document.createElement.bind(document);
+[0m[49m[38;5;10m+      201[0m:[38;5;10m[49m       vi.spyOn(document, "createElement").mockImplementation((tag) => {
+[0m[49m[38;5;10m+      202[0m:[38;5;10m[49m         if (tag === "a") {
+[0m[49m[38;5;10m+      203[0m:[38;5;10m[49m           return { click: clickSpy } as unknown as HTMLAnchorElement;
+[0m[49m[38;5;10m+      204[0m:[38;5;10m[49m         }
+[0m[49m[38;5;10m+      205[0m:[38;5;10m[49m         return origCreateElement(tag);
+[0m[49m[38;5;10m+      206[0m:[38;5;10m[49m       });
+[0m[49m[39m  205, 207[0m:[39m[49m 
+[0m[49m[39m  206, 208[0m:[39m[49m       const hook = renderHook(() => useCherrypick());
+[0m[49m[39m  207, 209[0m:[39m[49m       await uploadFile(hook, validJson);
+[0m[49m[39m  208, 210[0m:[39m[49m       act(() => hook.result.current.actions.handlePreview());
+[0m[49m[39m  209, 211[0m:[39m[49m 
+[0m[49m[39m  210, 212[0m:[39m[49m       act(() => hook.result.current.actions.handleDownload());
+[0m[49m[39m  211, 213[0m:[39m[49m 
+[0m[49m[39m  212, 214[0m:[39m[49m       expect(mockCreateObjectURL).toHaveBeenCalled();
+[0m[49m[39m  213, 215[0m:[39m[49m       expect(clickSpy).toHaveBeenCalled();
+[0m[49m[39m  214, 216[0m:[39m[49m       expect(mockRevokeObjectURL).toHaveBeenCalledWith("blob:test");
+[0m[49m[39m  215, 217[0m:[39m[49m     });
+[0m[K
+Updating: [38;5;141mclient/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.30 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/client && npx vitest run src/pages/CherrypickPage/hooks/useCherrypick.test.ts 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Re-run the tests after fixing the createElement mock
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/client[39m
+
+ [32m✓[39m src/pages/CherrypickPage/hooks/useCherrypick.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m15 passed[39m[22m[90m (15)[39m
+[2m   Start at [22m 00:48:09
+[2m   Duration [22m 677ms[2m (transform 53ms, setup 75ms, import 87ms, tests 22ms, environment 421ms)[22m
+
+[38;5;244m - Completed in 1.231s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mAll 15 tests pass. Now let me run the full client test suite to make sure nothing is broken:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/client && npx vitest run 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run full client test suite to verify no regressions
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/client[39m
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mreturns default config while loading
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mreturns server config once loaded
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mshows empty state when no open sessions
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mrenders open session names
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mexposes warnings from server response
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mfalls back to cwd basename when customName is null
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mhandleSave calls updateConfig and notifies success
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mexcludes closed sessions
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mhandleSave notifies error on failure
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mnavigates to session detail on click
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2msetConfig updates the config state
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2muses theme background and text colors
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/MiniPage/MiniPage.test.tsx[2m > [22m[2mMiniPage[2m > [22m[2mrenders MiniActivityLog
+[22m[39mAn update to MiniPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/MiniPage/MiniPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 259[2mms[22m[39m
+[90mstderr[2m | src/pages/SettingsPage/hooks/useSettings.test.tsx[2m > [22m[2museSettings[2m > [22m[2mstays loading until server config is available
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mreturns loading state initially
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2muses composite ids from API for node ids and dagre layout
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/SettingsPage/hooks/useSettings.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 328[2mms[22m[39m
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mincludes skillName and project in node data
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mformats label with project suffix for workspace skills
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mappends (global) only when name collision exists
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mappends (global) when workspace skill has same name
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mmaps edges using composite ids from API
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mreturns empty arrays when API returns empty graph
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts[2m > [22m[2museSkillGraph[2m > [22m[2mpasses error state through from SWR
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/SkillGraphPage/hooks/useSkillGraph.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 433[2mms[22m[39m
+ [32m✓[39m src/pages/SettingsPage/components/SkillPathsField/SkillPathsField.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 161[2mms[22m[39m
+ [32m✓[39m src/pages/SettingsPage/components/TestRunnersField/TestRunnersField.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 245[2mms[22m[39m
+ [32m✓[39m src/pages/OrphansPage/components/OrphanGroupCard.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[33m 301[2mms[22m[39m
+[90mstderr[2m | src/pages/SessionDetailPage/SessionDetailPage.test.tsx[2m > [22m[2mSessionDetailPage[2m > [22m[2mrenders session data after fetch
+[22m[39mIn HTML, <div> cannot be a descendant of <p>.
+This will cause a hydration error.
+
+  ...
+    <SessionDetailPage>
+      <SpaceBetween size="l">
+        <div className="awsui_root..." ref={function}>
+          <div>
+          <div className="awsui_chil...">
+            <SpaceBetween size="m">
+              <div className="awsui_root..." ref={function}>
+                <div className="awsui_chil...">
+                  <Header variant="h1" description={<SpaceBetween>} actions={<div>}>
+                    <InternalHeader __headingTagTabIndex={-1} variant="h1" description={<SpaceBetween>} actions={<div>} ...>
+                      <div className="awsui_root..." ref={{current:null}}>
+                        <div>
+                        <Description variantOverride="h1">
+>                         <p
+>                           className="awsui_description_2qdw9_m18q1_348 awsui_description-variant-h1_2qdw9_m18q1_355 ..."
+>                         >
+                            <SpaceBetween direction="horizontal" size="xs">
+                              <div className="awsui_root..." ref={function}>
+>                               <div className="awsui_child_18582_1jqoe_149">
+                                ...
+                ...
+
+<p> cannot contain a nested <div>.
+See this log for the ancestor stack trace.
+
+ [32m✓[39m src/pages/OrphansPage/components/DeleteOrphanModal.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 230[2mms[22m[39m
+ [32m✓[39m src/pages/OrphansPage/OrphansPage.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 583[2mms[22m[39m
+ [32m✓[39m src/pages/SettingsPage/components/SkillGraphCategoriesField/SkillGraphCategoriesField.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 783[2mms[22m[39m
+[90mstderr[2m | src/components/CommandPalette/CommandPalette.test.tsx[2m > [22m[2mCommandPalette[2m > [22m[2mis not visible by default
+[22m[39mAn update to CommandPalette inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillDetailPage/SkillDetailPage.test.tsx[2m > [22m[2mSkillDetailPage[2m > [22m[2mshows project badge when skill has a project
+[22m[39mAn update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to ForwardRef(PlainList) inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to InternalContainer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/SessionDetailPage/SessionDetailPage.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 809[2mms[22m[39m
+[90mstderr[2m | src/pages/OrphansPage/hooks/useOrphansPage.test.tsx[2m > [22m[2museOrphansPage[2m > [22m[2mreturns loading state initially
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/OrphansPage/hooks/useOrphansPage.test.tsx[2m > [22m[2museOrphansPage[2m > [22m[2mderives sessionOptions sorted by startTime descending
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/components/CommandPalette/CommandPalette.test.tsx[2m > [22m[2mCommandPalette[2m > [22m[2mopens on Cmd+K
+[22m[39m[AwsUi] [Autosuggest] A value for enteredTextLabel must be provided.
+An update to CommandPalette inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/components/CommandPalette/CommandPalette.test.tsx[2m > [22m[2mCommandPalette[2m > [22m[2mcloses on Escape
+[22m[39mAn update to CommandPalette inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/OrphansPage/hooks/useOrphansPage.test.tsx[2m > [22m[2museOrphansPage[2m > [22m[2mselectSession updates selectedSessions
+[22m[39mAn update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to TestComponent inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/OrphansPage/hooks/useOrphansPage.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+[90mstderr[2m | src/components/CommandPalette/CommandPalette.test.tsx[2m > [22m[2mCommandPalette[2m > [22m[2mcloses when clicking the overlay backdrop
+[22m[39mAn update to CommandPalette inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/components/CommandPalette/CommandPalette.test.tsx[2m > [22m[2mCommandPalette[2m > [22m[2mrenders autosuggest options from window list
+[22m[39mAn update to CommandPalette inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/components/CommandPalette/CommandPalette.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 182[2mms[22m[39m
+[90mstderr[2m | src/pages/SkillDetailPage/SkillDetailPage.test.tsx[2m > [22m[2mSkillDetailPage[2m > [22m[2mshows Global badge for source=global
+[22m[39mAn update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to ForwardRef(PlainList) inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to InternalContainer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/components/DirectoryPicker/DirectoryPicker.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 130[2mms[22m[39m
+ [32m✓[39m src/components/ToolCallCard/ToolCallCard.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 43[2mms[22m[39m
+[90mstderr[2m | src/pages/SessionsPage/components/SessionTable.test.tsx[2m > [22m[2mSessionTable[2m > [22m[2mdisplays all sessions by default
+[22m[39mAn update to SessionTable inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+[90mstderr[2m | src/pages/SkillDetailPage/SkillDetailPage.test.tsx[2m > [22m[2mSkillDetailPage breadcrumbs[2m > [22m[2mshows Skills breadcrumb when navigated directly
+[22m[39mAn update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to ForwardRef(PlainList) inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to InternalContainer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/SettingsPage/SettingsPage.test.tsx [2m([22m[2m8 tests[22m[2m)[22m[33m 1694[2mms[22m[39m
+     [33m[2m✓[22m[39m renders current config values [33m 318[2mms[22m[39m
+[90mstderr[2m | src/pages/SkillDetailPage/SkillDetailPage.test.tsx[2m > [22m[2mSkillDetailPage breadcrumbs[2m > [22m[2mshows Sessions breadcrumb when navigated from a session
+[22m[39mAn update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to SkillDetailPage inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to ForwardRef(PlainList) inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+An update to InternalContainer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+ [32m✓[39m src/pages/SkillDetailPage/SkillDetailPage.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[33m 1409[2mms[22m[39m
+     [33m[2m✓[22m[39m shows project badge when skill has a project [33m 464[2mms[22m[39m
+     [33m[2m✓[22m[39m shows Global badge for source=global [33m 308[2mms[22m[39m
+     [33m[2m✓[22m[39m shows Skills breadcrumb when navigated directly [33m 307[2mms[22m[39m
+     [33m[2m✓[22m[39m shows Sessions breadcrumb when navigated from a session [33m 329[2mms[22m[39m
+ [32m✓[39m src/pages/SessionsPage/SessionsPage.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[33m 759[2mms[22m[39m
+     [33m[2m✓[22m[39m renders header and tabs [33m 303[2mms[22m[39m
+ [32m✓[39m src/pages/SessionsPage/components/SessionTable.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[33m 892[2mms[22m[39m
+ [32m✓[39m src/pages/MiniPage/MiniActivityLog.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/components/ValidationBanner/ValidationBanner.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m src/components/ActivityIndicator/ActivityIndicator.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/context/NotificationContext/NotificationContext.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/pages/CherrypickPage/hooks/useCherrypick.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/components/ToolCallCard/JsonBlock.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m src/pages/SessionDetailPage/components/SkillTags.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/hooks/useSessionEvents/useSessionEvents.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/context/ActivityLogContext/ActivityLogContext.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/hooks/useWindowList/useWindowList.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/context/WindowContext/WindowContext.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/hooks/useSessionNotifications/useSessionNotifications.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/hooks/useNavigateOnView/useNavigateOnView.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/utils/prune-conversation.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/pages/SkillDetailPage/utils.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/components/ToolCallCard/utils.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+ [32m✓[39m src/utils/group-exchanges.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/pages/SettingsPage/components/SkillGraphCategoriesField/utils.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/hooks/notifications/notificationUtils.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/pages/SessionDetailPage/utils.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m38 passed[39m[22m[90m (38)[39m
+[2m      Tests [22m [1m[32m232 passed[39m[22m[90m (232)[39m
+[2m   Start at [22m 00:48:14
+[2m   Duration [22m 6.79s[2m (transform 12.58s, setup 5.67s, import 25.29s, tests 9.64s, environment 39.29s)[22m
+
+[38;5;244m - Completed in 7.460s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mAll 38 test files pass (232 tests), including the new 15 tests. No regressions. Now let me commit and update progress:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver && git add client/src/pages/CherrypickPage/hooks/useCherrypick.test.ts && git commit -m "test(client): add useCherrypick hook tests covering 3-phase state machine (step 8)"[0m[38;5;244m (using tool: shell)[0m
+Purpose: Commit the new test file
+
+[weaver-audit-fixes 420f787] test(client): add useCherrypick hook tests covering 3-phase state machine (step 8)
+ 1 file changed, 250 insertions(+)
+ create mode 100644 client/src/pages/CherrypickPage/hooks/useCherrypick.test.ts
+[38;5;244m - Completed in 0.117s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow update progress:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI'll modify the following file: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;79;40;40m[39m- 14    [0m:[39m[48;2;36;25;28m [38;2;192;197;206m|[38;2;192;197;206m 8 [38;2;192;197;206m|[38;2;192;197;206m CherrypickPage tests [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;40;67;43m[39m+     14[0m:[39m[48;2;24;38;30m [38;2;192;197;206m|[38;2;192;197;206m 8 [38;2;192;197;206m|[38;2;192;197;206m CherrypickPage tests [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[K
+Updating: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll modify the following file: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;40;67;43m[39m+      109[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 8: CherrypickPage tests[K
+[0m[48;2;40;67;43m[39m+      110[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mCreated [38;2;163;190;140m`[38;2;163;190;140mclient/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[38;2;163;190;140m`[38;2;191;97;106m with 15 tests across 5 describe blocks[K
+[0m[48;2;40;67;43m[39m+      111[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mPhase transitions[38;2;235;203;139m**[38;2;191;97;106m (5 tests): initial upload state, valid file → edit, edit → preview, reset → upload, goBackToEdit → edit[K
+[0m[48;2;40;67;43m[39m+      112[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mError handling[38;2;235;203;139m**[38;2;191;97;106m (3 tests): invalid JSON, missing [38;2;163;190;140m`[38;2;163;190;140mhistory[38;2;163;190;140m`[38;2;191;97;106m, missing [38;2;163;190;140m`[38;2;163;190;140mconversation_id[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+      113[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mSelection toggling[38;2;235;203;139m**[38;2;191;97;106m (4 tests): toggleMainId add/remove, toggleTangentId add/remove, toggleAllMain select/deselect all, totalSelected reflects both sets[K
+[0m[48;2;40;67;43m[39m+      114[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mDownload[38;2;235;203;139m**[38;2;191;97;106m (2 tests): creates blob + triggers download in preview phase, does nothing outside preview[K
+[0m[48;2;40;67;43m[39m+      115[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;235;203;139m**[38;2;235;203;139mReset[38;2;235;203;139m**[38;2;191;97;106m (1 test): clears selections, error, and returns to upload phase[K
+[0m[48;2;40;67;43m[39m+      116[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Sociable tests: uses real [38;2;163;190;140m`[38;2;163;190;140mparseConversation[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mpruneConversation[38;2;163;190;140m`[38;2;191;97;106m (no mocks)[K
+[0m[48;2;40;67;43m[39m+      117[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Mocked [38;2;163;190;140m`[38;2;163;190;140mFileReader[38;2;163;190;140m`[38;2;191;97;106m globally via [38;2;163;190;140m`[38;2;163;190;140mvi.stubGlobal[38;2;163;190;140m`[38;2;191;97;106m to simulate file upload (uses [38;2;163;190;140m`[38;2;163;190;140mFile.text()[38;2;163;190;140m`[38;2;191;97;106m promise internally)[K
+[0m[48;2;40;67;43m[39m+      118[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Mocked [38;2;163;190;140m`[38;2;163;190;140mdocument.createElement[38;2;163;190;140m`[38;2;191;97;106m selectively (only intercepts [38;2;163;190;140m`[38;2;163;190;140m"a"[38;2;163;190;140m`[38;2;191;97;106m tags, passes through for others) to avoid breaking [38;2;163;190;140m`[38;2;163;190;140mrenderHook[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+      119[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Used existing test utilities from [38;2;163;190;140m`[38;2;163;190;140mconversation-parser.test-utils.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mpromptResponse[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mmakeSavedConversation[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+      120[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m All 38 client test files pass (232 tests), 0 failures[K
+[0m[48;2;40;67;43m[39m+      121[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;43;48;59m[39m  109, 122[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mNotes for Next Agent[K
+[0m[K
+Updating: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mStep 8 is complete. Here's a summary of what was done:[0m[0m
+[0m[0m
+- Created [38;5;10mclient/src/pages/CherrypickPage/hooks/useCherrypick.test.ts[0m with 15 tests across 5 describe blocks covering all acceptance criteria:[0m[0m
+  - **Phase transitions** (5 tests): upload → edit → preview, reset → upload, goBackToEdit → edit[0m[0m
+  - **Error handling** (3 tests): invalid JSON, missing [38;5;10mhistory[0m, missing [38;5;10mconversation_id[0m[0m[0m
+  - **Selection toggling** (4 tests): toggleMainId, toggleTangentId, toggleAllMain, totalSelected[0m[0m
+  - **Download** (2 tests): blob creation + download trigger in preview, no-op outside preview[0m[0m
+  - **Reset** (1 test): clears all state back to upload[0m[0m
+[0m[0m
+All 38 client test files pass (232 tests), 0 failures. The tests are sociable — they use real [38;5;10mparseConversation[0m and [38;5;10mpruneConversation[0m without mocking them.[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠠ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⢀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;9m✗ [0mstop "~/.config/amazonq/global/hooks/weaver-log.sh"[38;5;9m failed with exit code: 1, stderr: ⚠ weaver: 1/2 validations failed (build))
+[0m[38;5;12m[38;5;9m✗[39m [38;5;12m0[39m of [38;5;12m1[39m hooks finished in [38;5;11m3.73 s
+[0m[38;5;8m
+ ▸ Credits: 2.27 • Time: 2m 35s
+
+[0m[1G[0m[0m[?25h

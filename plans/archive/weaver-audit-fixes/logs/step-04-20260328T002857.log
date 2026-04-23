@@ -1,0 +1,555 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","~/Desktop/weaver-audit-fixes/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+I'll start by reading the current step and progress files, then examine the reference pattern and current event-bus code.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mLooking up symbols: ["[38;5;141mcreatePendingTracker[0m"][0m in [38;5;244mserver/src/services/webhook/pending-tracker.ts[0m[38;5;244m (using tool: code)[0m⠋ Loading...
+⠙ Loading...[2K[1G[1A[?25l
+Found [38;5;141m1[0m of [38;5;141m1[0m symbols:
+  1. [38;5;12mFunction[0m [38;5;141mcreatePendingTracker[0m at [38;5;141mserver/src/services/webhook/pending-tracker.ts[0m:[38;5;244m13:8
+[0m[38;5;244m - Completed in 0.86s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1404 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me read the current event-bus implementation and its tests:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1250 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3648 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.test.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I understand the current code and the reference pattern. Let me plan the refactor:
+
+1. Define an `EventBus` interface with the 4 public methods
+2. Create `createEventBus()` factory that encapsulates `listeners` Set
+3. Wrap listener calls in `emit()` with try/catch
+4. Create default instance and re-export destructured methods
+5. Update tests: keep existing, add isolation and error-handling tests
+
+The existing tests import `{ subscribe, broadcast, emit, sseReply }` from `./event-bus` - these will continue to work since we re-export from the default instance.
+
+One thing to note: the existing tests use a shared default instance, so listeners from one test could leak into another. The existing tests already clean up with `unsub()` calls, so they should be fine.
+
+Let me also check if there's a mock for event-bus that might need updating.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mLet me check if there's a mock for event-bus anywhere:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141mevent-bus[0m in [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks[0m[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m1 matches[0m in [38;5;244m1 files[0m under /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts[0m for pattern: [38;5;141mevent-bus[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mFound 1 matches for pattern 'event-bus' in /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/services.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mGood — the mock only mocks the named exports. Since we're re-exporting from the default instance, the mock will continue to work fine. Now let me implement the refactored event-bus:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI'll create the following file: [38;5;141mserver/src/services/event-bus.ts[0m[38;5;244m (using tool: write)[0m
+Purpose: Refactor event-bus to factory pattern with createEventBus(), EventBus interface, try/catch in emit, and backward-compatible default exports
+
+[49m[39m   1,  1[0m:[39m[49m import type { HookEventName } from "@weaver/shared/types";
+[0m[49m[39m   2,  2[0m:[39m[49m 
+[0m[49m[39m   3,  3[0m:[39m[49m export interface SSETarget {
+[0m[49m[39m   4,  4[0m:[39m[49m   raw: {
+[0m[49m[39m   5,  5[0m:[39m[49m     writeHead(statusCode: number, headers: Record<string, string>): void;
+[0m[49m[39m   6,  6[0m:[39m[49m     write(chunk: string): boolean;
+[0m[49m[39m   7,  7[0m:[39m[49m     on(event: string, listener: () => void): void;
+[0m[49m[39m   8,  8[0m:[39m[49m   };
+[0m[49m[39m   9,  9[0m:[39m[49m }
+[0m[49m[39m  10, 10[0m:[39m[49m 
+[0m[49m[39m  11, 11[0m:[39m[49m interface SSEMessage {
+[0m[49m[39m  12, 12[0m:[39m[49m   event: string;
+[0m[49m[39m  13, 13[0m:[39m[49m   data: Record<string, unknown>;
+[0m[49m[39m  14, 14[0m:[39m[49m }
+[0m[49m[39m  15, 15[0m:[39m[49m 
+[0m[49m[39m  16, 16[0m:[39m[49m type Listener = (msg: SSEMessage) => void;
+[0m[49m[39m  17, 17[0m:[39m[49m 
+[0m[49m[38;5;9m- 18    [0m:[38;5;9m[49m const listeners = new Set<Listener>();
+[0m[49m[38;5;9m- 19    [0m:[38;5;9m[49m 
+[0m[49m[38;5;9m- 20    [0m:[38;5;9m[49m export function subscribe(listener: Listener): () => void {
+[0m[49m[38;5;9m- 21    [0m:[38;5;9m[49m   listeners.add(listener);
+[0m[49m[38;5;9m- 22    [0m:[38;5;9m[49m   return () => listeners.delete(listener);
+[0m[49m[38;5;10m+     18[0m:[38;5;10m[49m export interface EventBus {
+[0m[49m[38;5;10m+     19[0m:[38;5;10m[49m   subscribe(listener: Listener): () => void;
+[0m[49m[38;5;10m+     20[0m:[38;5;10m[49m   broadcast(
+[0m[49m[38;5;10m+     21[0m:[38;5;10m[49m     sessionId: string,
+[0m[49m[38;5;10m+     22[0m:[38;5;10m[49m     eventName?: HookEventName,
+[0m[49m[38;5;10m+     23[0m:[38;5;10m[49m     sessionName?: string,
+[0m[49m[38;5;10m+     24[0m:[38;5;10m[49m   ): void;
+[0m[49m[38;5;10m+     25[0m:[38;5;10m[49m   emit(msg: SSEMessage): void;
+[0m[49m[38;5;10m+     26[0m:[38;5;10m[49m   sseReply(reply: SSETarget): () => void;
+[0m[49m[39m  23, 27[0m:[39m[49m }
+[0m[49m[39m  24, 28[0m:[39m[49m 
+[0m[49m[38;5;9m- 25    [0m:[38;5;9m[49m export function broadcast(
+[0m[49m[38;5;9m- 26    [0m:[38;5;9m[49m   sessionId: string,
+[0m[49m[38;5;9m- 27    [0m:[38;5;9m[49m   eventName?: HookEventName,
+[0m[49m[38;5;9m- 28    [0m:[38;5;9m[49m   sessionName?: string,
+[0m[49m[38;5;9m- 29    [0m:[38;5;9m[49m ): void {
+[0m[49m[38;5;9m- 30    [0m:[38;5;9m[49m   emit({ event: "update", data: { sessionId, eventName, sessionName } });
+[0m[49m[38;5;9m- 31    [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+     29[0m:[38;5;10m[49m export function createEventBus(): EventBus {
+[0m[49m[38;5;10m+     30[0m:[38;5;10m[49m   const listeners = new Set<Listener>();
+[0m[49m[39m  32, 31[0m:[39m[49m 
+[0m[49m[38;5;9m- 33    [0m:[38;5;9m[49m export function emit(msg: SSEMessage): void {
+[0m[49m[38;5;9m- 34    [0m:[38;5;9m[49m   listeners.forEach((listener) => listener(msg));
+[0m[49m[38;5;9m- 35    [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+     32[0m:[38;5;10m[49m   const bus: EventBus = {
+[0m[49m[38;5;10m+     33[0m:[38;5;10m[49m     subscribe(listener) {
+[0m[49m[38;5;10m+     34[0m:[38;5;10m[49m       listeners.add(listener);
+[0m[49m[38;5;10m+     35[0m:[38;5;10m[49m       return () => listeners.delete(listener);
+[0m[49m[38;5;10m+     36[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     37[0m:[38;5;10m[49m     broadcast(sessionId, eventName?, sessionName?) {
+[0m[49m[38;5;10m+     38[0m:[38;5;10m[49m       bus.emit({ event: "update", data: { sessionId, eventName, sessionName } });
+[0m[49m[38;5;10m+     39[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     40[0m:[38;5;10m[49m     emit(msg) {
+[0m[49m[38;5;10m+     41[0m:[38;5;10m[49m       listeners.forEach((listener) => {
+[0m[49m[38;5;10m+     42[0m:[38;5;10m[49m         try {
+[0m[49m[38;5;10m+     43[0m:[38;5;10m[49m           listener(msg);
+[0m[49m[38;5;10m+     44[0m:[38;5;10m[49m         } catch {
+[0m[49m[38;5;10m+     45[0m:[38;5;10m[49m           /* prevent one broken listener from blocking others */
+[0m[49m[38;5;10m+     46[0m:[38;5;10m[49m         }
+[0m[49m[38;5;10m+     47[0m:[38;5;10m[49m       });
+[0m[49m[38;5;10m+     48[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     49[0m:[38;5;10m[49m     sseReply(reply) {
+[0m[49m[38;5;10m+     50[0m:[38;5;10m[49m       reply.raw.writeHead(200, {
+[0m[49m[38;5;10m+     51[0m:[38;5;10m[49m         "Content-Type": "text/event-stream",
+[0m[49m[38;5;10m+     52[0m:[38;5;10m[49m         "Cache-Control": "no-cache",
+[0m[49m[38;5;10m+     53[0m:[38;5;10m[49m         Connection: "keep-alive",
+[0m[49m[38;5;10m+     54[0m:[38;5;10m[49m       });
+[0m[49m[39m  36, 55[0m:[39m[49m 
+[0m[49m[38;5;9m- 37    [0m:[38;5;9m[49m export function sseReply(reply: SSETarget): () => void {
+[0m[49m[38;5;9m- 38    [0m:[38;5;9m[49m   reply.raw.writeHead(200, {
+[0m[49m[38;5;9m- 39    [0m:[38;5;9m[49m     "Content-Type": "text/event-stream",
+[0m[49m[38;5;9m- 40    [0m:[38;5;9m[49m     "Cache-Control": "no-cache",
+[0m[49m[38;5;9m- 41    [0m:[38;5;9m[49m     Connection: "keep-alive",
+[0m[49m[38;5;9m- 42    [0m:[38;5;9m[49m   });
+[0m[49m[38;5;10m+     56[0m:[38;5;10m[49m       const unsubscribe = bus.subscribe((msg) => {
+[0m[49m[38;5;10m+     57[0m:[38;5;10m[49m         reply.raw.write(
+[0m[49m[38;5;10m+     58[0m:[38;5;10m[49m           `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`,
+[0m[49m[38;5;10m+     59[0m:[38;5;10m[49m         );
+[0m[49m[38;5;10m+     60[0m:[38;5;10m[49m       });
+[0m[49m[39m  43, 61[0m:[39m[49m 
+[0m[49m[38;5;9m- 44    [0m:[38;5;9m[49m   const unsubscribe = subscribe((msg) => {
+[0m[49m[38;5;9m- 45    [0m:[38;5;9m[49m     reply.raw.write(
+[0m[49m[38;5;9m- 46    [0m:[38;5;9m[49m       `event: ${msg.event}\ndata: ${JSON.stringify(msg.data)}\n\n`,
+[0m[49m[38;5;9m- 47    [0m:[38;5;9m[49m     );
+[0m[49m[38;5;9m- 48    [0m:[38;5;9m[49m   });
+[0m[49m[38;5;10m+     62[0m:[38;5;10m[49m       reply.raw.on("close", unsubscribe);
+[0m[49m[38;5;10m+     63[0m:[38;5;10m[49m       return unsubscribe;
+[0m[49m[38;5;10m+     64[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     65[0m:[38;5;10m[49m   };
+[0m[49m[39m  49, 66[0m:[39m[49m 
+[0m[49m[38;5;9m- 50    [0m:[38;5;9m[49m   reply.raw.on("close", unsubscribe);
+[0m[49m[38;5;9m- 51    [0m:[38;5;9m[49m   return unsubscribe;
+[0m[49m[38;5;10m+     67[0m:[38;5;10m[49m   return bus;
+[0m[49m[39m  52, 68[0m:[39m[49m }
+[0m[49m[38;5;10m+     69[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     70[0m:[38;5;10m[49m const defaultBus = createEventBus();
+[0m[49m[38;5;10m+     71[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     72[0m:[38;5;10m[49m export const { subscribe, broadcast, emit, sseReply } = defaultBus;
+[0m[K
+Replacing: [38;5;141mserver/src/services/event-bus.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.21 s
+[0m[?25l[0m[38;5;141m> [0mNow update the test file — keep all existing tests and add new ones for isolation and error handling:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141mserver/src/services/event-bus.test.ts[0m[38;5;244m (using tool: write)[0m
+Purpose: Update event-bus tests: keep all existing tests, add createEventBus isolation, unsubscribe, and error-handling tests
+
+[49m[38;5;9m-   1     [0m:[38;5;9m[49m import { subscribe, broadcast, emit, sseReply } from "./event-bus";
+[0m[49m[38;5;10m+        1[0m:[38;5;10m[49m import {
+[0m[49m[38;5;10m+        2[0m:[38;5;10m[49m   subscribe,
+[0m[49m[38;5;10m+        3[0m:[38;5;10m[49m   broadcast,
+[0m[49m[38;5;10m+        4[0m:[38;5;10m[49m   emit,
+[0m[49m[38;5;10m+        5[0m:[38;5;10m[49m   sseReply,
+[0m[49m[38;5;10m+        6[0m:[38;5;10m[49m   createEventBus,
+[0m[49m[38;5;10m+        7[0m:[38;5;10m[49m } from "./event-bus";
+[0m[49m[39m    2,   8[0m:[39m[49m import type { SSETarget } from "./event-bus";
+[0m[49m[39m    3,   9[0m:[39m[49m 
+[0m[49m[39m    4,  10[0m:[39m[49m beforeEach(() => {
+[0m[49m[39m    5,  11[0m:[39m[49m   vi.clearAllMocks();
+[0m[49m[39m    6,  12[0m:[39m[49m });
+[0m[49m[39m    7,  13[0m:[39m[49m 
+[0m[49m[39m    8,  14[0m:[39m[49m describe("subscribe", () => {
+[0m[49m[39m    9,  15[0m:[39m[49m   it("returns an unsubscribe function", () => {
+[0m[49m[39m   10,  16[0m:[39m[49m     const listener = vi.fn();
+[0m[49m[39m   11,  17[0m:[39m[49m     const unsub = subscribe(listener);
+[0m[49m[39m   12,  18[0m:[39m[49m     expect(typeof unsub).toBe("function");
+[0m[49m[39m   13,  19[0m:[39m[49m     unsub();
+[0m[49m[39m   14,  20[0m:[39m[49m   });
+[0m[49m[39m   15,  21[0m:[39m[49m 
+[0m[49m[39m   16,  22[0m:[39m[49m   it("delivers messages to subscribed listeners", () => {
+[0m[49m[39m   17,  23[0m:[39m[49m     const listener = vi.fn();
+[0m[49m[39m   18,  24[0m:[39m[49m     const unsub = subscribe(listener);
+[0m[49m[39m   19,  25[0m:[39m[49m     emit({ event: "test", data: { a: 1 } });
+[0m[49m[39m   20,  26[0m:[39m[49m     expect(listener).toHaveBeenCalledWith({ event: "test", data: { a: 1 } });
+[0m[49m[39m   21,  27[0m:[39m[49m     unsub();
+[0m[49m[39m   22,  28[0m:[39m[49m   });
+[0m[49m[39m   23,  29[0m:[39m[49m 
+[0m[49m[39m   24,  30[0m:[39m[49m   it("stops delivering after unsubscribe", () => {
+[0m[49m[39m   25,  31[0m:[39m[49m     const listener = vi.fn();
+[0m[49m[39m   26,  32[0m:[39m[49m     const unsub = subscribe(listener);
+[0m[49m[39m   27,  33[0m:[39m[49m     unsub();
+[0m[49m[39m   28,  34[0m:[39m[49m     emit({ event: "test", data: {} });
+[0m[49m[39m   29,  35[0m:[39m[49m     expect(listener).not.toHaveBeenCalled();
+[0m[49m[39m   30,  36[0m:[39m[49m   });
+[0m[49m[39m   31,  37[0m:[39m[49m });
+[0m[49m[39m   32,  38[0m:[39m[49m 
+[0m[49m[39m   33,  39[0m:[39m[49m describe("emit", () => {
+[0m[49m[39m   34,  40[0m:[39m[49m   it("fans out to all listeners", () => {
+[0m[49m[39m   35,  41[0m:[39m[49m     const a = vi.fn();
+[0m[49m[39m   36,  42[0m:[39m[49m     const b = vi.fn();
+[0m[49m[39m   37,  43[0m:[39m[49m     const unsubA = subscribe(a);
+[0m[49m[39m   38,  44[0m:[39m[49m     const unsubB = subscribe(b);
+[0m[49m[39m   39,  45[0m:[39m[49m     emit({ event: "ping", data: { x: true } });
+[0m[49m[39m   40,  46[0m:[39m[49m     expect(a).toHaveBeenCalledTimes(1);
+[0m[49m[39m   41,  47[0m:[39m[49m     expect(b).toHaveBeenCalledTimes(1);
+[0m[49m[39m   42,  48[0m:[39m[49m     unsubA();
+[0m[49m[39m   43,  49[0m:[39m[49m     unsubB();
+[0m[49m[39m   44,  50[0m:[39m[49m   });
+[0m[49m[39m   45,  51[0m:[39m[49m 
+[0m[49m[39m   46,  52[0m:[39m[49m   it("does nothing with no listeners", () => {
+[0m[49m[39m   47,  53[0m:[39m[49m     expect(() => emit({ event: "noop", data: {} })).not.toThrow();
+[0m[49m[39m   48,  54[0m:[39m[49m   });
+[0m[49m[39m   49,  55[0m:[39m[49m });
+[0m[49m[39m   50,  56[0m:[39m[49m 
+[0m[49m[39m   51,  57[0m:[39m[49m describe("broadcast", () => {
+[0m[49m[39m   52,  58[0m:[39m[49m   it("emits an update event with session data", () => {
+[0m[49m[39m   53,  59[0m:[39m[49m     const listener = vi.fn();
+[0m[49m[39m   54,  60[0m:[39m[49m     const unsub = subscribe(listener);
+[0m[49m[39m   55,  61[0m:[39m[49m     broadcast("sess-1", "agentSpawn", "my-project");
+[0m[49m[39m   56,  62[0m:[39m[49m     expect(listener).toHaveBeenCalledWith({
+[0m[49m[39m   57,  63[0m:[39m[49m       event: "update",
+[0m[49m[39m   58,  64[0m:[39m[49m       data: {
+[0m[49m[39m   59,  65[0m:[39m[49m         sessionId: "sess-1",
+[0m[49m[39m   60,  66[0m:[39m[49m         eventName: "agentSpawn",
+[0m[49m[39m   61,  67[0m:[39m[49m         sessionName: "my-project",
+[0m[49m[39m   62,  68[0m:[39m[49m       },
+[0m[49m[39m   63,  69[0m:[39m[49m     });
+[0m[49m[39m   64,  70[0m:[39m[49m     unsub();
+[0m[49m[39m   65,  71[0m:[39m[49m   });
+[0m[49m[39m   66,  72[0m:[39m[49m 
+[0m[49m[39m   67,  73[0m:[39m[49m   it("passes undefined for optional fields when omitted", () => {
+[0m[49m[39m   68,  74[0m:[39m[49m     const listener = vi.fn();
+[0m[49m[39m   69,  75[0m:[39m[49m     const unsub = subscribe(listener);
+[0m[49m[39m   70,  76[0m:[39m[49m     broadcast("sess-1");
+[0m[49m[39m   71,  77[0m:[39m[49m     expect(listener).toHaveBeenCalledWith({
+[0m[49m[39m   72,  78[0m:[39m[49m       event: "update",
+[0m[49m[39m   73,  79[0m:[39m[49m       data: {
+[0m[49m[39m   74,  80[0m:[39m[49m         sessionId: "sess-1",
+[0m[49m[39m   75,  81[0m:[39m[49m         eventName: undefined,
+[0m[49m[39m   76,  82[0m:[39m[49m         sessionName: undefined,
+[0m[49m[39m   77,  83[0m:[39m[49m       },
+[0m[49m[39m   78,  84[0m:[39m[49m     });
+[0m[49m[39m   79,  85[0m:[39m[49m     unsub();
+[0m[49m[39m   80,  86[0m:[39m[49m   });
+[0m[49m[39m   81,  87[0m:[39m[49m });
+[0m[49m[39m   82,  88[0m:[39m[49m 
+[0m[49m[39m   83,  89[0m:[39m[49m describe("sseReply", () => {
+[0m[49m[39m   84,  90[0m:[39m[49m   function mockReply(): SSETarget {
+[0m[49m[39m   85,  91[0m:[39m[49m     return {
+[0m[49m[39m   86,  92[0m:[39m[49m       raw: {
+[0m[49m[39m   87,  93[0m:[39m[49m         writeHead: vi.fn(),
+[0m[49m[39m   88,  94[0m:[39m[49m         write: vi.fn<() => boolean>(),
+[0m[49m[39m   89,  95[0m:[39m[49m         on: vi.fn(),
+[0m[49m[39m   90,  96[0m:[39m[49m       },
+[0m[49m[39m   91,  97[0m:[39m[49m     };
+[0m[49m[39m   92,  98[0m:[39m[49m   }
+[0m[49m[39m   93,  99[0m:[39m[49m 
+[0m[49m[39m   94, 100[0m:[39m[49m   it("sets SSE headers", () => {
+[0m[49m[39m   95, 101[0m:[39m[49m     const reply = mockReply();
+[0m[49m[39m   96, 102[0m:[39m[49m     sseReply(reply);
+[0m[49m[39m   97, 103[0m:[39m[49m     expect(reply.raw.writeHead).toHaveBeenCalledWith(200, {
+[0m[49m[39m   98, 104[0m:[39m[49m       "Content-Type": "text/event-stream",
+[0m[49m[39m   99, 105[0m:[39m[49m       "Cache-Control": "no-cache",
+[0m[49m[39m  100, 106[0m:[39m[49m       Connection: "keep-alive",
+[0m[49m[39m  101, 107[0m:[39m[49m     });
+[0m[49m[39m  102, 108[0m:[39m[49m   });
+[0m[49m[39m  103, 109[0m:[39m[49m 
+[0m[49m[39m  104, 110[0m:[39m[49m   it("writes SSE-formatted data on broadcast", () => {
+[0m[49m[39m  105, 111[0m:[39m[49m     const reply = mockReply();
+[0m[49m[39m  106, 112[0m:[39m[49m     const unsub = sseReply(reply);
+[0m[49m[39m  107, 113[0m:[39m[49m     emit({ event: "update", data: { sessionId: "s1" } });
+[0m[49m[39m  108, 114[0m:[39m[49m     expect(reply.raw.write).toHaveBeenCalledWith(
+[0m[49m[39m  109, 115[0m:[39m[49m       'event: update\ndata: {"sessionId":"s1"}\n\n',
+[0m[49m[39m  110, 116[0m:[39m[49m     );
+[0m[49m[39m  111, 117[0m:[39m[49m     unsub();
+[0m[49m[39m  112, 118[0m:[39m[49m   });
+[0m[49m[39m  113, 119[0m:[39m[49m 
+[0m[49m[39m  114, 120[0m:[39m[49m   it("stops writing after unsubscribe", () => {
+[0m[49m[39m  115, 121[0m:[39m[49m     const reply = mockReply();
+[0m[49m[39m  116, 122[0m:[39m[49m     const unsub = sseReply(reply);
+[0m[49m[39m  117, 123[0m:[39m[49m     unsub();
+[0m[49m[39m  118, 124[0m:[39m[49m     emit({ event: "update", data: { sessionId: "s1" } });
+[0m[49m[39m  119, 125[0m:[39m[49m     expect(reply.raw.write).not.toHaveBeenCalled();
+[0m[49m[39m  120, 126[0m:[39m[49m   });
+[0m[49m[39m  121, 127[0m:[39m[49m 
+[0m[49m[39m  122, 128[0m:[39m[49m   it("unsubscribes when the connection closes", () => {
+[0m[49m[39m  123, 129[0m:[39m[49m     const reply = mockReply();
+[0m[49m[39m  124, 130[0m:[39m[49m     sseReply(reply);
+[0m[49m[39m  125, 131[0m:[39m[49m     const onClose = (reply.raw.on as ReturnType<typeof vi.fn>).mock.calls.find(
+[0m[49m[39m  126, 132[0m:[39m[49m       (call) => call[0] === "close",
+[0m[49m[39m  127, 133[0m:[39m[49m     );
+[0m[49m[39m  128, 134[0m:[39m[49m     expect(onClose).toBeDefined();
+[0m[49m[39m  129, 135[0m:[39m[49m 
+[0m[49m[39m  130, 136[0m:[39m[49m     // Simulate connection close
+[0m[49m[39m  131, 137[0m:[39m[49m     const closeHandler = onClose![1] as () => void;
+[0m[49m[39m  132, 138[0m:[39m[49m     closeHandler();
+[0m[49m[39m  133, 139[0m:[39m[49m 
+[0m[49m[39m  134, 140[0m:[39m[49m     emit({ event: "update", data: { sessionId: "s1" } });
+[0m[49m[39m  135, 141[0m:[39m[49m     expect(reply.raw.write).not.toHaveBeenCalled();
+[0m[49m[39m  136, 142[0m:[39m[49m   });
+[0m[49m[39m  137, 143[0m:[39m[49m });
+[0m[49m[38;5;10m+      144[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      145[0m:[38;5;10m[49m describe("createEventBus", () => {
+[0m[49m[38;5;10m+      146[0m:[38;5;10m[49m   it("returns isolated instances with separate listener sets", () => {
+[0m[49m[38;5;10m+      147[0m:[38;5;10m[49m     const busA = createEventBus();
+[0m[49m[38;5;10m+      148[0m:[38;5;10m[49m     const busB = createEventBus();
+[0m[49m[38;5;10m+      149[0m:[38;5;10m[49m     const listenerA = vi.fn();
+[0m[49m[38;5;10m+      150[0m:[38;5;10m[49m     const listenerB = vi.fn();
+[0m[49m[38;5;10m+      151[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      152[0m:[38;5;10m[49m     busA.subscribe(listenerA);
+[0m[49m[38;5;10m+      153[0m:[38;5;10m[49m     busB.subscribe(listenerB);
+[0m[49m[38;5;10m+      154[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      155[0m:[38;5;10m[49m     busB.emit({ event: "test", data: {} });
+[0m[49m[38;5;10m+      156[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      157[0m:[38;5;10m[49m     expect(listenerA).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+      158[0m:[38;5;10m[49m     expect(listenerB).toHaveBeenCalledTimes(1);
+[0m[49m[38;5;10m+      159[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      160[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      161[0m:[38;5;10m[49m   it("removes listener when unsubscribe is called", () => {
+[0m[49m[38;5;10m+      162[0m:[38;5;10m[49m     const bus = createEventBus();
+[0m[49m[38;5;10m+      163[0m:[38;5;10m[49m     const listener = vi.fn();
+[0m[49m[38;5;10m+      164[0m:[38;5;10m[49m     const unsub = bus.subscribe(listener);
+[0m[49m[38;5;10m+      165[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      166[0m:[38;5;10m[49m     unsub();
+[0m[49m[38;5;10m+      167[0m:[38;5;10m[49m     bus.emit({ event: "test", data: {} });
+[0m[49m[38;5;10m+      168[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      169[0m:[38;5;10m[49m     expect(listener).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+      170[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      171[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      172[0m:[38;5;10m[49m   it("delivers to remaining listeners when one throws", () => {
+[0m[49m[38;5;10m+      173[0m:[38;5;10m[49m     const bus = createEventBus();
+[0m[49m[38;5;10m+      174[0m:[38;5;10m[49m     const throwing = vi.fn(() => {
+[0m[49m[38;5;10m+      175[0m:[38;5;10m[49m       throw new Error("boom");
+[0m[49m[38;5;10m+      176[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+      177[0m:[38;5;10m[49m     const healthy = vi.fn();
+[0m[49m[38;5;10m+      178[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      179[0m:[38;5;10m[49m     bus.subscribe(throwing);
+[0m[49m[38;5;10m+      180[0m:[38;5;10m[49m     bus.subscribe(healthy);
+[0m[49m[38;5;10m+      181[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      182[0m:[38;5;10m[49m     bus.emit({ event: "test", data: { x: 1 } });
+[0m[49m[38;5;10m+      183[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      184[0m:[38;5;10m[49m     expect(throwing).toHaveBeenCalledTimes(1);
+[0m[49m[38;5;10m+      185[0m:[38;5;10m[49m     expect(healthy).toHaveBeenCalledWith({ event: "test", data: { x: 1 } });
+[0m[49m[38;5;10m+      186[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      187[0m:[38;5;10m[49m });
+[0m[K
+Replacing: [38;5;141mserver/src/services/event-bus.test.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.21 s
+[0m[?25l[0m[38;5;141m> [0mNow let's run the event-bus tests first:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx vitest run src/services/event-bus.test.ts 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run event-bus tests to verify the refactored code
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/server[39m
+
+ [32m✓[39m src/services/event-bus.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 00:30:00
+[2m   Duration [22m 118ms[2m (transform 39ms, setup 0ms, import 44ms, tests 5ms, environment 0ms)[22m
+
+[38;5;244m - Completed in 0.686s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mAll 14 tests pass (11 existing + 3 new). Now let's run the full server test suite:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx vitest run 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run all server tests to verify no regressions
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/server[39m
+
+ [32m✓[39m src/services/webhook/pending-tracker.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/services/webhook/dispatch.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/services/config/validators/field.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/keep-awake.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/services/webhook/__tests__/webhook-advanced.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/services/webhook/__tests__/webhook-simple.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/get-skill-detail.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/discover.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/services/storage/lifecycle.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/delete.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 101[2mms[22m[39m
+ [32m✓[39m src/routes/skills/skills.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 91[2mms[22m[39m
+ [32m✓[39m src/routes/orphans/orphans.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 116[2mms[22m[39m
+ [32m✓[39m src/routes/events/events.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 125[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/build-graph.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/tool-calls.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/group-turns.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/storage/sessions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/event-bus.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/assign.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/delete.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/list-skill-dirs.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/services/config/config.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/parse.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/routes/config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 145[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/sessions.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 136[2mms[22m[39m
+ [32m✓[39m src/services/file-cache/file-cache.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/read.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/parse-skill.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/config/validators/validate-paths.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/utils.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/utils/atomic-write.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/webhook/context.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/activity.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/skill-uri.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/helpers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/resolve-configured.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/kiro-paths.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/webhook/session-tracker.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/agent-config.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/category.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/skill-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m42 passed[39m[22m[90m (42)[39m
+[2m      Tests [22m [1m[32m383 passed[39m[22m[90m (383)[39m
+[2m   Start at [22m 00:30:05
+[2m   Duration [22m 819ms[2m (transform 2.13s, setup 0ms, import 4.09s, tests 931ms, environment 2ms)[22m
+
+[38;5;244m - Completed in 1.428s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mAll 42 test files pass, 383 tests total (up from 380 — 3 new tests added). Now let's commit:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver && git add server/src/services/event-bus.ts server/src/services/event-bus.test.ts && git commit -m "feat(server): convert event-bus to factory pattern with createEventBus (step 4)"[0m[38;5;244m (using tool: shell)[0m
+Purpose: Commit the event-bus factory refactor
+
+[weaver-audit-fixes 2385f17] feat(server): convert event-bus to factory pattern with createEventBus (step 4)
+ 2 files changed, 104 insertions(+), 31 deletions(-)
+[38;5;244m - Completed in 0.87s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow update progress:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll modify the following file: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: write)[0m
+Purpose: Mark step 4 as complete in progress table
+
+[48;2;79;40;40m[39m- 10    [0m:[39m[48;2;36;25;28m [38;2;192;197;206m|[38;2;192;197;206m 4 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: event-bus [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;40;67;43m[39m+     10[0m:[39m[48;2;24;38;30m [38;2;192;197;206m|[38;2;192;197;206m 4 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: event-bus [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[K
+Updating: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mWait — step 4 was already marked complete in the progress file. Let me re-read it to check:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching: [38;5;141m/Users/thompsnt/Desktop/weaver-audit-fixes/progress.md[0m for pattern: [38;5;141mstep 4[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mFound 0 matches for pattern 'Step 4' in /Users/thompsnt/Desktop/weaver-audit-fixes/progress.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching: [38;5;141m/Users/thompsnt/Desktop/weaver-audit-fixes/progress.md[0m for pattern: [38;5;141mevent-bus[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mFound 1 matches for pattern 'event-bus' in /Users/thompsnt/Desktop/weaver-audit-fixes/progress.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mIt was already marked ✅ in the context provided — but the actual file on disk had [38;5;10m⬜ Not started[0m (since my str_replace succeeded). Good. Now let me add the completed task details:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll modify the following file: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: write)[0m
+Purpose: Add step 4 completion details to progress
+
+[48;2;40;67;43m[39m+     44[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 4: Factory pattern — event-bus[K
+[0m[48;2;40;67;43m[39m+     45[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mRefactored [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m to factory pattern following [38;2;163;190;140m`[38;2;163;190;140mcreatePendingTracker[38;2;163;190;140m`[38;2;191;97;106m reference[K
+[0m[48;2;40;67;43m[39m+     46[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Defined [38;2;163;190;140m`[38;2;163;190;140mEventBus[38;2;163;190;140m`[38;2;191;97;106m interface with 4 methods: [38;2;163;190;140m`[38;2;163;190;140msubscribe[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140memit[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     47[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mcreateEventBus()[38;2;163;190;140m`[38;2;191;97;106m factory that encapsulates [38;2;163;190;140m`[38;2;163;190;140mlisteners[38;2;163;190;140m`[38;2;191;97;106m Set internally[K
+[0m[48;2;40;67;43m[39m+     48[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Default instance created at module level; 4 functions re-exported for backward compatibility[K
+[0m[48;2;40;67;43m[39m+     49[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Added try/catch in [38;2;163;190;140m`[38;2;163;190;140memit()[38;2;163;190;140m`[38;2;191;97;106m to prevent one broken listener from blocking others[K
+[0m[48;2;40;67;43m[39m+     50[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Added 3 new tests: isolated instances, unsubscribe, and listener error isolation[K
+[0m[48;2;40;67;43m[39m+     51[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m All 42 server test files pass (383 tests, up from 380)[K
+[0m[48;2;40;67;43m[39m+     52[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;43;48;59m[39m  44, 53[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mNotes for Next Agent[K
+[0m[K
+Updating: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check if there's already a step 4 entry in the completed tasks section (from the context it looked pre-filled):[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching: [38;5;141m/Users/thompsnt/Desktop/weaver-audit-fixes/progress.md[0m for pattern: [38;5;141mstep 4[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mFound 1 matches for pattern 'Step 4' in /Users/thompsnt/Desktop/weaver-audit-fixes/progress.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mThere was already a Step 4 entry from the context. Let me check if there are now duplicates:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for: [38;5;141m### Step 4[0m in [38;5;141m/Users/thompsnt/Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m1 matches[0m in [38;5;244m1 files[0m under /Users/thompsnt/Desktop/weaver-audit-fixes/progress.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mOnly one entry. The progress file is correctly updated. Let me verify the final state:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.08 s
+[0mReading file: [38;5;141m/Users/thompsnt/Desktop/weaver-audit-fixes/progress.md[0m, from line [38;5;141m44[0m to [38;5;141m55[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1013 bytes[0m from /Users/thompsnt/Desktop/weaver-audit-fixes/progress.md
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mStep 4 is complete. Here's a summary of what was done:[0m[0m
+[0m[0m
+[1mStep 4: Factory pattern — event-bus[22m ✅[0m[0m
+[0m[0m
+- Refactored [38;5;10mserver/src/services/event-bus.ts[0m to the factory pattern following the [38;5;10mcreatePendingTracker[0m reference:[0m[0m
+  - Defined [38;5;10mEventBus[0m interface with 4 methods: [38;5;10msubscribe[0m, [38;5;10mbroadcast[0m, [38;5;10memit[0m, [38;5;10msseReply[0m[0m[0m
+  - Created [38;5;10mcreateEventBus()[0m factory encapsulating the [38;5;10mlisteners[0m Set internally[0m[0m
+  - Created a default instance at module level with destructured re-exports for backward compatibility[0m[0m
+  - Added try/catch in [38;5;10memit()[0m so one broken listener can't block others[0m[0m
+- Updated [38;5;10mevent-bus.test.ts[0m with 3 new tests:[0m[0m
+  - Isolated instances (emit on bus B doesn't trigger bus A's listener)[0m[0m
+  - Unsubscribe removes listener correctly[0m[0m
+  - Listener error isolation (throwing listener doesn't prevent others from receiving)[0m[0m
+- All 42 server test files pass (383 tests, up from 380)[0m[0m
+- Committed as [38;5;10mfeat(server): convert event-bus to factory pattern with createEventBus (step 4)[0m[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠠ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⢀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠀⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m3.79 s
+[0m[38;5;8m
+ ▸ Credits: 1.50 • Time: 1m 52s
+
+[0m[1G[0m[0m[?25h

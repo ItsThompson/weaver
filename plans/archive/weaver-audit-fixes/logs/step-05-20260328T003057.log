@@ -1,0 +1,1391 @@
+[32mAll tools are now trusted ([0m[31m![0m[32m). Kiro will execute tools without asking for confirmation.[0m
+Agents can sometimes do unexpected things so understand the risks.
+
+Learn more at [38;5;141mhttps://kiro.dev/docs/cli/chat/security/#using-tools-trust-all-safely[0m
+
+
+[38;5;11mWARNING: [0mYou have trusted [38;5;10mfs_read[0m tool, which overrides the toolsSettings: [38;5;141mallowedPaths: ["./**","~/Desktop/weaver-audit-fixes/**"][0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;252m[0m[?25l[38;5;141m> [0m[0m[0m
+[0m[0m
+I'll start by reading the current step and progress files, then examine the existing code.[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: I've already read the current-step.md and progress.md from the context entries. Step 5 is my task: Factory pattern for storage (sessions + lifecycle) + lifecycle tests. Let me examine the existing files.
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mLet me examine the existing source files I need to modify:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mGetting symbols from: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts[0m[38;5;244m (using tool: code)[0m
+⠋ Loading...⠙ Loading...[2K[1G[1A[?25l
+  1. [38;5;12mFunction[0m [38;5;141mwriteSessions[0m at [38;5;141mserver/src/services/storage/sessions.ts[0m:[38;5;244m43:8
+[0m  2. [38;5;12mFunction[0m [38;5;141mappendSession[0m at [38;5;141mserver/src/services/storage/sessions.ts[0m:[38;5;244m38:8
+[0m  3. [38;5;12mFunction[0m [38;5;141mreadSessions[0m at [38;5;141mserver/src/services/storage/sessions.ts[0m:[38;5;244m25:8
+[0m  4. [38;5;12mFunction[0m [38;5;141mensureDataDir[0m at [38;5;141mserver/src/services/storage/sessions.ts[0m:[38;5;244m11:8
+[0m[38;5;244m - Completed in 0.85s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1545 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m3331 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m260 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the existing test file and the reference factory pattern:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2439 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/lifecycle.test.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1404 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/webhook/pending-tracker.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the event-bus factory (step 4 reference) and the FileCache class:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mBatch fs_read operation with [38;5;141m2[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/file-cache/index.ts[0m, from line [38;5;141m1[0m to [38;5;141m20[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1788 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/event-bus.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m29 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/file-cache/index.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 2 operations processed, 2 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m1482 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/file-cache/file-cache.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the logger and shared types to understand the LogEntry type:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/utils/logger.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m179 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/utils/logger.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mLet me also check the existing mocks and any tests that reference [38;5;10m_sessionCache[0m:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mSearching for: [38;5;141m_sessionCache[0m in [38;5;141m/Users/thompsnt/Documents/weaver/server[0m[38;5;244m (using tool: grep)[0m
+[38;5;10m ✓ [0mSuccessfully found [38;5;244m4 matches[0m in [38;5;244m3 files[0m under /Users/thompsnt/Documents/weaver/server
+[38;5;244m - Completed in 0.20s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.test.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m2907 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/sessions.test.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mNow let me check the mocks directory and the services mock:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mBatch fs_read operation with [38;5;141m3[0m operations[38;5;244m (using tool: read)[0m
+
+↱ Operation 1: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/child-process.ts[0m, all lines
+↱ Operation 2: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/logger.ts[0m, all lines
+↱ Operation 3: Reading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/fs.ts[0m, all lines
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m76 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/child-process.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m59 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/logger.ts
+
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m661 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/__tests__/mocks/fs.ts
+
+ ⋮ 
+
+[38;5;244m- [0mSummary: 3 operations processed, 3 successful, 0 failed
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[?25l[0m[38;5;141m> [0mLet me also check the Session type:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mSearching for symbols matching: [38;5;141m"Session"[0m in [38;5;244m/Users/thompsnt/Documents/weaver/shared[0m[38;5;244m (using tool: code)[0m
+⠋ Loading...⠙ Loading...[2K[1G[1A[?25l
+  1. [38;5;12mInterface[0m [38;5;141mSession[0m at [38;5;141mshared/types/session.ts[0m:[38;5;244m4:8
+[0m  2. [38;5;12mInterface[0m [38;5;141mSessionWithStatus[0m at [38;5;141mshared/types/session.ts[0m:[38;5;244m22:8
+[0m[38;5;244m - Completed in 0.85s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/shared/types/session.ts[0m, from line [38;5;141m1[0m to [38;5;141m15[0m[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m372 bytes[0m from /Users/thompsnt/Documents/weaver/shared/types/session.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Now I have a clear picture. Let me plan the implementation:
+
+1. **Refactor `sessions.ts`**: Create `SessionStore` interface and `createSessionStore()` factory. The FileCache is created inside the factory. Export default instance + destructured exports for backward compat. Also export `_sessionCache` from the default instance.
+
+2. **Refactor `lifecycle.ts`**: Create `LifecycleManager` interface and `LifecycleDeps` interface. Create `createLifecycleManager(deps)` factory. Default instance wired to real implementations. Re-export destructured for backward compat.
+
+3. **Rewrite `lifecycle.test.ts`**: Use factory with injected deps instead of module-level mocks. Test all the TDD units specified.
+
+4. **Barrel `index.ts`**: Plan says no changes needed, but I need to also export the new types/factories. Let me re-read... "Update `server/src/services/storage/index.ts` barrel — no changes needed since the same symbols are exported." OK, so I should also export the new factory functions and interfaces. Actually, the plan says "no changes needed since the same symbols are exported." But I should probably also export the factory functions. Let me think... The plan says "no changes needed" but also says the factories should be exported. The factories are exported from the source files. The barrel just re-exports. If consumers need the factories, they'd need them in the barrel. But the plan explicitly says "no changes needed". I'll follow the plan and not change the barrel. If someone needs the factory, they can import directly from the module file.
+
+Wait, actually the plan says: "Update `server/src/services/storage/index.ts` barrel — no changes needed since the same symbols are exported." This means the existing barrel exports are sufficient because the same named exports still exist. The factory functions are additional exports but the barrel doesn't need to re-export them for backward compatibility. I'll add the factory exports to the barrel though, since that's the pattern from step 4 (event-bus). Let me check if event-bus has a barrel...
+
+Actually, event-bus.ts is directly imported, not through a barrel. The plan says "no changes needed" for the barrel. I'll follow that exactly.
+
+Actually wait - I should also export `createSessionStore` and `createLifecycleManager` from the barrel so tests and other code can use them. But the plan says "no changes needed". Let me follow the plan strictly and not change the barrel. Tests can import directly from the module files.
+
+Let me now write the code.
+
+For sessions.ts:
+- Define `SessionStore` interface
+- Create `createSessionStore()` factory
+- Default instance + destructured exports
+- Export `_sessionCache`
+
+For lifecycle.ts:
+- Define `LifecycleManager` and `LifecycleDeps` interfaces
+- Create `createLifecycleManager(deps)` factory
+- Default instance wired to real deps
+- Destructured exports
+
+For lifecycle.test.ts:
+- Complete rewrite using factory + injected deps
+- Tests for startPidPolling, cleanStaleSessions, isProcessRunning
+- Use vi.useFakeTimers() for interval tests
+
+Let me think about the lifecycle factory more carefully. The `isProcessRunning` function uses `process.kill` and `execFileAsync`. In the factory, should `isProcessRunning` be part of the factory or should it be injected? Looking at the plan:
+
+The plan says `LifecycleManager` interface includes `isProcessRunning`. And the factory implements it internally. So `isProcessRunning` is implemented inside the factory, not injected. That makes sense - it's a method of the manager.
+
+But wait, for testing `startPidPolling`, we need to control what `isProcessRunning` returns. Since `isProcessRunning` is a method on the manager, and `startPidPolling` calls it internally... hmm. The tests need to be able to mock `isProcessRunning` behavior.
+
+Looking at the plan more carefully: the `LifecycleDeps` only has `readSessions`, `log`, and `weaverDir`. `isProcessRunning` is not injected - it's implemented inside the factory. But for testing `startPidPolling`, we need to control PID liveness.
+
+For the `isProcessRunning` TDD tests, we can test the actual implementation by mocking `process.kill` and `execFile`. But for `startPidPolling` tests, we'd need to either:
+1. Mock `process.kill` and `execFile` at the module level
+2. Or make `isProcessRunning` injectable too
+
+Looking at the plan again: "Each test should create a fresh `createLifecycleManager(mockDeps)` instance. No module-level mocking needed."
+
+But `isProcessRunning` uses `process.kill` and `execFileAsync` which are module-level imports. To test `startPidPolling` without module-level mocking, we'd need `isProcessRunning` to be injectable or overridable.
+
+Hmm, let me re-read the plan... The `LifecycleDeps` interface only has `readSessions`, `log`, `weaverDir`. But the `startPidPolling` tests need to control PID liveness. 
+
+I think the approach is: for `startPidPolling` tests, we still need to mock `process.kill` and `execFile` since `isProcessRunning` is implemented inside the factory. But the plan says "No module-level mocking needed." 
+
+Actually, I think we can use `vi.spyOn(process, 'kill')` and mock `execFile` at the test level. Or... we could add `isProcessRunning` as an optional dep. Let me look at the test scenarios again:
+
+"RED: Test that when a PID disappears between polls, `onSessionClosed` is called with the session ID"
+
+For this to work without module-level mocking, we need to control `isProcessRunning`. The cleanest approach would be to make `isProcessRunning` behavior controllable through the deps or through the process.kill/execFile mocks.
+
+Actually, I think the simplest approach that matches the plan is:
+- For `isProcessRunning` tests: use `vi.spyOn(process, 'kill')` and mock `execFile` (these are per-test, not module-level vi.mock)
+- For `startPidPolling` tests: same approach - control process.kill and execFile behavior
+
+Wait, but `execFile` is imported at the top of the module. To mock it without `vi.mock('node:child_process')`, we'd need... hmm.
+
+Actually, let me reconsider. The plan says "No module-level mocking needed" in the context of the factory tests. But `execFile` is a module import. The way to handle this cleanly is to either:
+1. Still use vi.mock for child_process (it's a test infrastructure thing, not "module-level mocking of the module under test")
+2. Or inject isProcessRunning as a dep
+
+I think the plan's intent is that we don't need to mock `./sessions` or `../../utils/logger` at the module level because those are injected via deps. But we might still need to mock Node.js built-ins like `child_process` and `fs/promises`.
+
+Actually, looking more carefully, for `cleanStaleSessions` tests, we need `readdir` and `unlink` from `node:fs/promises`. These are used inside the factory. They're not injected. So we'd still need to mock `node:fs/promises`.
+
+Hmm, but the plan says "No module-level mocking needed." Let me re-read...
+
+"Each test should create a fresh `createLifecycleManager(mockDeps)` instance. No module-level mocking needed."
+
+I think "no module-level mocking needed" refers to not needing to mock the application modules (sessions, logger, paths) since those are injected. We'll still need to mock Node.js built-ins (fs, child_process) for the fs operations and process checking.
+
+OK let me just go with a pragmatic approach:
+- Mock `node:fs/promises` for readdir/unlink (needed by cleanStaleSessions)
+- Mock `node:child_process` for execFile (needed by isProcessRunning)
+- Inject readSessions, log, weaverDir via deps (no need to mock those modules)
+- Use vi.useFakeTimers() for interval tests
+
+Actually wait, I just realized something. The `isProcessRunning` inside the factory uses `process.kill` and `execFileAsync`. For the `startPidPolling` tests, we need to control which PIDs are "alive". 
+
+The cleanest approach: since `isProcessRunning` is a method on the `LifecycleManager` interface, we could potentially spy on it. But it's called internally by the factory's `startPidPolling` and `cleanStaleSessions`.
+
+Let me think about this differently. The factory creates a manager object. The `startPidPolling` method internally calls `isProcessRunning` which is also on the same object. If we create the manager and then spy on `manager.isProcessRunning`, the internal calls might not go through the spy because they reference the closure variable, not `this.isProcessRunning`.
+
+Looking at the factory pattern from event-bus:
+```typescript
+const bus: EventBus = {
+  subscribe(listener) { ... },
+  emit(msg) {
+    listeners.forEach((listener) => { ... });
+  },
+  ...
+};
+```
+
+The methods reference each other through `bus.emit(...)` etc. So if we spy on `bus.emit`, internal calls would go through the spy.
+
+For lifecycle, if I structure it so that `startPidPolling` calls `manager.isProcessRunning(pid)` (through the object reference), then we can spy on it in tests. That would be the cleanest approach.
+
+Let me structure the factory so internal method calls go through the manager object reference. Then in tests:
+```typescript
+const manager = createLifecycleManager(mockDeps);
+vi.spyOn(manager, 'isProcessRunning').mockResolvedValue(true);
+```
+
+This is clean and doesn't require module-level mocking for the PID checking. We'd still need fs mocks for readdir/unlink in cleanStaleSessions though.
+
+Actually, for `cleanStaleSessions`, it uses `readdir` and `unlink` from `node:fs/promises`, and `join` from `node:path`. These are imported at the module level. We need to mock them.
+
+Let me just accept that we need `vi.mock("node:fs/promises")` and `vi.mock("node:child_process")` for the low-level Node.js operations, but we DON'T need to mock `./sessions`, `../../utils/logger`, or `@weaver/shared/paths` because those are injected.
+
+This is a significant improvement over the old tests which had to mock all of those.
+
+OK, let me write the code now.
+
+For the lifecycle factory, I'll make internal calls go through the `manager` object so they can be spied on in tests. This is the key design decision.
+
+Let me also think about `cleanStaleSessions` - it uses `weaverDir()` from deps, `readdir`, `unlink`, and `isProcessRunning`. The `readdir` and `unlink` are from `node:fs/promises`. I could inject those too, but that seems excessive. The plan only specifies `readSessions`, `log`, and `weaverDir` as deps.
+
+OK, final plan:
+1. Mock `node:fs/promises` and `node:child_process` at the top of the test file (these are Node built-ins, not app modules)
+2. Inject `readSessions`, `log`, `weaverDir` via deps
+3. Use `vi.spyOn(manager, 'isProcessRunning')` to control PID liveness in startPidPolling tests
+4. Use `vi.useFakeTimers()` for interval tests
+
+Let me write the code now.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mNow I have a clear picture. Let me implement the changes.[0m[0m
+[0m[0m
+[38;5;252m[1m## 1. Refactor [38;5;10msessions.ts[0m — add factory pattern[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.35 s
+[0mI'll create the following file: [38;5;141mserver/src/services/storage/sessions.ts[0m[38;5;244m (using tool: write)[0m
+
+[49m[39m   1,  1[0m:[39m[49m import { mkdir, appendFile } from "node:fs/promises";
+[0m[49m[39m   2,  2[0m:[39m[49m import { atomicWriteFile } from "../../utils/atomic-write";
+[0m[49m[39m   3,  3[0m:[39m[49m import type { Session } from "@weaver/shared/types";
+[0m[49m[39m   4,  4[0m:[39m[49m import { weaverDir, logsDir, sessionsPath } from "@weaver/shared/paths";
+[0m[49m[39m   5,  5[0m:[39m[49m import { log } from "../../utils/logger";
+[0m[49m[39m   6,  6[0m:[39m[49m import { FileCache, parseJsonlFile } from "../file-cache/index";
+[0m[49m[39m   7,  7[0m:[39m[49m 
+[0m[49m[38;5;9m-  8    [0m:[38;5;9m[49m const sessionCache = new FileCache<Session[]>();
+[0m[49m[38;5;9m-  9    [0m:[38;5;9m[49m export const _sessionCache = sessionCache;
+[0m[49m[38;5;10m+      8[0m:[38;5;10m[49m export interface SessionStore {
+[0m[49m[38;5;10m+      9[0m:[38;5;10m[49m   ensureDataDir(): Promise<void>;
+[0m[49m[38;5;10m+     10[0m:[38;5;10m[49m   readSessions(): Promise<Session[]>;
+[0m[49m[38;5;10m+     11[0m:[38;5;10m[49m   appendSession(session: Session): Promise<void>;
+[0m[49m[38;5;10m+     12[0m:[38;5;10m[49m   writeSessions(sessions: Session[]): Promise<void>;
+[0m[49m[38;5;10m+     13[0m:[38;5;10m[49m   _sessionCache: FileCache<Session[]>;
+[0m[49m[38;5;10m+     14[0m:[38;5;10m[49m }
+[0m[49m[38;5;10m+     15[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     16[0m:[38;5;10m[49m export function createSessionStore(): SessionStore {
+[0m[49m[38;5;10m+     17[0m:[38;5;10m[49m   const sessionCache = new FileCache<Session[]>();
+[0m[49m[39m  10, 18[0m:[39m[49m 
+[0m[49m[38;5;9m- 11    [0m:[38;5;9m[49m export async function ensureDataDir(): Promise<void> {
+[0m[49m[38;5;9m- 12    [0m:[38;5;9m[49m   try {
+[0m[49m[38;5;9m- 13    [0m:[38;5;9m[49m     await mkdir(weaverDir(), { recursive: true });
+[0m[49m[38;5;9m- 14    [0m:[38;5;9m[49m     await mkdir(logsDir(), { recursive: true });
+[0m[49m[38;5;9m- 15    [0m:[38;5;9m[49m   } catch (err) {
+[0m[49m[38;5;9m- 16    [0m:[38;5;9m[49m     log({
+[0m[49m[38;5;9m- 17    [0m:[38;5;9m[49m       timestamp: new Date().toISOString(),
+[0m[49m[38;5;9m- 18    [0m:[38;5;9m[49m       event: "ensure_data_dir_failed",
+[0m[49m[38;5;9m- 19    [0m:[38;5;9m[49m       error: String(err),
+[0m[49m[38;5;9m- 20    [0m:[38;5;9m[49m     });
+[0m[49m[38;5;9m- 21    [0m:[38;5;9m[49m     throw err;
+[0m[49m[38;5;9m- 22    [0m:[38;5;9m[49m   }
+[0m[49m[38;5;9m- 23    [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+     19[0m:[38;5;10m[49m   const store: SessionStore = {
+[0m[49m[38;5;10m+     20[0m:[38;5;10m[49m     _sessionCache: sessionCache,
+[0m[49m[38;5;10m+     21[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     22[0m:[38;5;10m[49m     async ensureDataDir(): Promise<void> {
+[0m[49m[38;5;10m+     23[0m:[38;5;10m[49m       try {
+[0m[49m[38;5;10m+     24[0m:[38;5;10m[49m         await mkdir(weaverDir(), { recursive: true });
+[0m[49m[38;5;10m+     25[0m:[38;5;10m[49m         await mkdir(logsDir(), { recursive: true });
+[0m[49m[38;5;10m+     26[0m:[38;5;10m[49m       } catch (err) {
+[0m[49m[38;5;10m+     27[0m:[38;5;10m[49m         log({
+[0m[49m[38;5;10m+     28[0m:[38;5;10m[49m           timestamp: new Date().toISOString(),
+[0m[49m[38;5;10m+     29[0m:[38;5;10m[49m           event: "ensure_data_dir_failed",
+[0m[49m[38;5;10m+     30[0m:[38;5;10m[49m           error: String(err),
+[0m[49m[38;5;10m+     31[0m:[38;5;10m[49m         });
+[0m[49m[38;5;10m+     32[0m:[38;5;10m[49m         throw err;
+[0m[49m[38;5;10m+     33[0m:[38;5;10m[49m       }
+[0m[49m[38;5;10m+     34[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     35[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     36[0m:[38;5;10m[49m     async readSessions(): Promise<Session[]> {
+[0m[49m[38;5;10m+     37[0m:[38;5;10m[49m       const filePath = sessionsPath();
+[0m[49m[38;5;10m+     38[0m:[38;5;10m[49m       return sessionCache.get(filePath, () =>
+[0m[49m[38;5;10m+     39[0m:[38;5;10m[49m         parseJsonlFile<Session>(filePath, (line) =>
+[0m[49m[38;5;10m+     40[0m:[38;5;10m[49m           log({
+[0m[49m[38;5;10m+     41[0m:[38;5;10m[49m             timestamp: new Date().toISOString(),
+[0m[49m[38;5;10m+     42[0m:[38;5;10m[49m             event: "malformed_session_line",
+[0m[49m[38;5;10m+     43[0m:[38;5;10m[49m             line,
+[0m[49m[38;5;10m+     44[0m:[38;5;10m[49m           }),
+[0m[49m[38;5;10m+     45[0m:[38;5;10m[49m         ),
+[0m[49m[38;5;10m+     46[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+     47[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     48[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     49[0m:[38;5;10m[49m     async appendSession(session: Session): Promise<void> {
+[0m[49m[38;5;10m+     50[0m:[38;5;10m[49m       await appendFile(sessionsPath(), JSON.stringify(session) + "\n", "utf-8");
+[0m[49m[38;5;10m+     51[0m:[38;5;10m[49m       sessionCache.invalidate(sessionsPath());
+[0m[49m[38;5;10m+     52[0m:[38;5;10m[49m     },
+[0m[49m[39m  24, 53[0m:[39m[49m 
+[0m[49m[38;5;9m- 25    [0m:[38;5;9m[49m export async function readSessions(): Promise<Session[]> {
+[0m[49m[38;5;9m- 26    [0m:[38;5;9m[49m   const filePath = sessionsPath();
+[0m[49m[38;5;9m- 27    [0m:[38;5;9m[49m   return sessionCache.get(filePath, () =>
+[0m[49m[38;5;9m- 28    [0m:[38;5;9m[49m     parseJsonlFile<Session>(filePath, (line) =>
+[0m[49m[38;5;9m- 29    [0m:[38;5;9m[49m       log({
+[0m[49m[38;5;9m- 30    [0m:[38;5;9m[49m         timestamp: new Date().toISOString(),
+[0m[49m[38;5;9m- 31    [0m:[38;5;9m[49m         event: "malformed_session_line",
+[0m[49m[38;5;9m- 32    [0m:[38;5;9m[49m         line,
+[0m[49m[38;5;9m- 33    [0m:[38;5;9m[49m       }),
+[0m[49m[38;5;9m- 34    [0m:[38;5;9m[49m     ),
+[0m[49m[38;5;9m- 35    [0m:[38;5;9m[49m   );
+[0m[49m[38;5;9m- 36    [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+     54[0m:[38;5;10m[49m     async writeSessions(sessions: Session[]): Promise<void> {
+[0m[49m[38;5;10m+     55[0m:[38;5;10m[49m       const content =
+[0m[49m[38;5;10m+     56[0m:[38;5;10m[49m         sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
+[0m[49m[38;5;10m+     57[0m:[38;5;10m[49m       await atomicWriteFile(sessionsPath(), content);
+[0m[49m[38;5;10m+     58[0m:[38;5;10m[49m       sessionCache.invalidate(sessionsPath());
+[0m[49m[38;5;10m+     59[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+     60[0m:[38;5;10m[49m   };
+[0m[49m[39m  37, 61[0m:[39m[49m 
+[0m[49m[38;5;9m- 38    [0m:[38;5;9m[49m export async function appendSession(session: Session): Promise<void> {
+[0m[49m[38;5;9m- 39    [0m:[38;5;9m[49m   await appendFile(sessionsPath(), JSON.stringify(session) + "\n", "utf-8");
+[0m[49m[38;5;9m- 40    [0m:[38;5;9m[49m   sessionCache.invalidate(sessionsPath());
+[0m[49m[38;5;10m+     62[0m:[38;5;10m[49m   return store;
+[0m[49m[39m  41, 63[0m:[39m[49m }
+[0m[49m[39m  42, 64[0m:[39m[49m 
+[0m[49m[38;5;9m- 43    [0m:[38;5;9m[49m export async function writeSessions(sessions: Session[]): Promise<void> {
+[0m[49m[38;5;9m- 44    [0m:[38;5;9m[49m   const content =
+[0m[49m[38;5;9m- 45    [0m:[38;5;9m[49m     sessions.map((session) => JSON.stringify(session)).join("\n") + "\n";
+[0m[49m[38;5;9m- 46    [0m:[38;5;9m[49m   await atomicWriteFile(sessionsPath(), content);
+[0m[49m[38;5;9m- 47    [0m:[38;5;9m[49m   sessionCache.invalidate(sessionsPath());
+[0m[49m[38;5;9m- 48    [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+     65[0m:[38;5;10m[49m const defaultStore = createSessionStore();
+[0m[49m[38;5;10m+     66[0m:[38;5;10m[49m export const { ensureDataDir, readSessions, appendSession, writeSessions, _sessionCache } = defaultStore;
+[0m[K
+Replacing: [38;5;141mserver/src/services/storage/sessions.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.09 s
+[0m[?25l[0m[38;5;141m> [0m[38;5;252m[1m## 2. Refactor [38;5;10mlifecycle.ts[0m — add factory pattern with dependency injection[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141mserver/src/services/storage/lifecycle.ts[0m[38;5;244m (using tool: write)[0m
+
+[49m[39m    1,   1[0m:[39m[49m import { readdir, unlink } from "node:fs/promises";
+[0m[49m[39m    2,   2[0m:[39m[49m import { execFile } from "node:child_process";
+[0m[49m[39m    3,   3[0m:[39m[49m import { promisify } from "node:util";
+[0m[49m[39m    4,   4[0m:[39m[49m import { join } from "node:path";
+[0m[49m[39m    5,   5[0m:[39m[49m import type { Session } from "@weaver/shared/types";
+[0m[49m[38;5;9m-   6     [0m:[38;5;9m[49m import { weaverDir } from "@weaver/shared/paths";
+[0m[49m[38;5;9m-   7     [0m:[38;5;9m[49m import { log } from "../../utils/logger";
+[0m[49m[38;5;9m-   8     [0m:[38;5;9m[49m import { readSessions } from "./sessions";
+[0m[49m[38;5;10m+        6[0m:[38;5;10m[49m import type { LogEntry } from "../../utils/logger";
+[0m[49m[39m    9,   7[0m:[39m[49m 
+[0m[49m[39m   10,   8[0m:[39m[49m const execFileAsync = promisify(execFile);
+[0m[49m[39m   11,   9[0m:[39m[49m 
+[0m[49m[39m   12,  10[0m:[39m[49m const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+[0m[49m[39m   13,  11[0m:[39m[49m const PID_POLL_INTERVAL_MS = 30 * 1000;
+[0m[49m[39m   14,  12[0m:[39m[49m 
+[0m[49m[38;5;9m-  15     [0m:[38;5;9m[49m let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[38;5;9m-  16     [0m:[38;5;9m[49m let pidPollInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[38;5;9m-  17     [0m:[38;5;9m[49m const openPids = new Set<number>();
+[0m[49m[38;5;10m+       13[0m:[38;5;10m[49m export interface LifecycleManager {
+[0m[49m[38;5;10m+       14[0m:[38;5;10m[49m   isProcessRunning(pid: number): Promise<boolean>;
+[0m[49m[38;5;10m+       15[0m:[38;5;10m[49m   cleanStaleSessions(): Promise<void>;
+[0m[49m[38;5;10m+       16[0m:[38;5;10m[49m   startStaleSessionCleanup(): void;
+[0m[49m[38;5;10m+       17[0m:[38;5;10m[49m   startPidPolling(onSessionClosed: (sessionId: string) => void): void;
+[0m[49m[38;5;10m+       18[0m:[38;5;10m[49m   stopStaleSessionCleanup(): void;
+[0m[49m[38;5;10m+       19[0m:[38;5;10m[49m }
+[0m[49m[39m   18,  20[0m:[39m[49m 
+[0m[49m[38;5;9m-  19     [0m:[38;5;9m[49m export async function isProcessRunning(pid: number): Promise<boolean> {
+[0m[49m[38;5;9m-  20     [0m:[38;5;9m[49m   try {
+[0m[49m[38;5;9m-  21     [0m:[38;5;9m[49m     process.kill(pid, 0);
+[0m[49m[38;5;9m-  22     [0m:[38;5;9m[49m   } catch {
+[0m[49m[38;5;9m-  23     [0m:[38;5;9m[49m     return false;
+[0m[49m[38;5;9m-  24     [0m:[38;5;9m[49m   }
+[0m[49m[38;5;9m-  25     [0m:[38;5;9m[49m   // Guard against PID reuse: verify the process is actually kiro-cli
+[0m[49m[38;5;9m-  26     [0m:[38;5;9m[49m   try {
+[0m[49m[38;5;9m-  27     [0m:[38;5;9m[49m     const { stdout } = await execFileAsync("ps", [
+[0m[49m[38;5;9m-  28     [0m:[38;5;9m[49m       "-p",
+[0m[49m[38;5;9m-  29     [0m:[38;5;9m[49m       String(pid),
+[0m[49m[38;5;9m-  30     [0m:[38;5;9m[49m       "-o",
+[0m[49m[38;5;9m-  31     [0m:[38;5;9m[49m       "args=",
+[0m[49m[38;5;9m-  32     [0m:[38;5;9m[49m     ]);
+[0m[49m[38;5;9m-  33     [0m:[38;5;9m[49m     return stdout.includes("kiro-cli");
+[0m[49m[38;5;9m-  34     [0m:[38;5;9m[49m   } catch {
+[0m[49m[38;5;9m-  35     [0m:[38;5;9m[49m     return false;
+[0m[49m[38;5;9m-  36     [0m:[38;5;9m[49m   }
+[0m[49m[38;5;10m+       21[0m:[38;5;10m[49m export interface LifecycleDeps {
+[0m[49m[38;5;10m+       22[0m:[38;5;10m[49m   readSessions: () => Promise<Session[]>;
+[0m[49m[38;5;10m+       23[0m:[38;5;10m[49m   log: (entry: LogEntry) => void;
+[0m[49m[38;5;10m+       24[0m:[38;5;10m[49m   weaverDir: () => string;
+[0m[49m[39m   37,  25[0m:[39m[49m }
+[0m[49m[39m   38,  26[0m:[39m[49m 
+[0m[49m[38;5;9m-  39     [0m:[38;5;9m[49m export async function cleanStaleSessions(): Promise<void> {
+[0m[49m[38;5;9m-  40     [0m:[38;5;9m[49m   const dataDir = weaverDir();
+[0m[49m[38;5;9m-  41     [0m:[38;5;9m[49m   let entries: string[];
+[0m[49m[38;5;9m-  42     [0m:[38;5;9m[49m   try {
+[0m[49m[38;5;9m-  43     [0m:[38;5;9m[49m     entries = await readdir(dataDir);
+[0m[49m[38;5;9m-  44     [0m:[38;5;9m[49m   } catch {
+[0m[49m[38;5;9m-  45     [0m:[38;5;9m[49m     return;
+[0m[49m[38;5;9m-  46     [0m:[38;5;9m[49m   }
+[0m[49m[38;5;10m+       27[0m:[38;5;10m[49m export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
+[0m[49m[38;5;10m+       28[0m:[38;5;10m[49m   let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[38;5;10m+       29[0m:[38;5;10m[49m   let pidPollInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[38;5;10m+       30[0m:[38;5;10m[49m   const openPids = new Set<number>();
+[0m[49m[39m   47,  31[0m:[39m[49m 
+[0m[49m[38;5;9m-  48     [0m:[38;5;9m[49m   const sessionFiles = entries.filter((f) => f.startsWith(".current-session-"));
+[0m[49m[38;5;9m-  49     [0m:[38;5;9m[49m 
+[0m[49m[38;5;9m-  50     [0m:[38;5;9m[49m   const checked = await Promise.all(
+[0m[49m[38;5;9m-  51     [0m:[38;5;9m[49m     sessionFiles.map(async (file) => {
+[0m[49m[38;5;9m-  52     [0m:[38;5;9m[49m       const pid = parseInt(file.replace(".current-session-", ""), 10);
+[0m[49m[38;5;9m-  53     [0m:[38;5;9m[49m       if (isNaN(pid)) {
+[0m[49m[38;5;9m-  54     [0m:[38;5;9m[49m         return null;
+[0m[49m[38;5;10m+       32[0m:[38;5;10m[49m   const manager: LifecycleManager = {
+[0m[49m[38;5;10m+       33[0m:[38;5;10m[49m     async isProcessRunning(pid: number): Promise<boolean> {
+[0m[49m[38;5;10m+       34[0m:[38;5;10m[49m       try {
+[0m[49m[38;5;10m+       35[0m:[38;5;10m[49m         process.kill(pid, 0);
+[0m[49m[38;5;10m+       36[0m:[38;5;10m[49m       } catch {
+[0m[49m[38;5;10m+       37[0m:[38;5;10m[49m         return false;
+[0m[49m[38;5;10m+       38[0m:[38;5;10m[49m       }
+[0m[49m[38;5;10m+       39[0m:[38;5;10m[49m       try {
+[0m[49m[38;5;10m+       40[0m:[38;5;10m[49m         const { stdout } = await execFileAsync("ps", [
+[0m[49m[38;5;10m+       41[0m:[38;5;10m[49m           "-p",
+[0m[49m[38;5;10m+       42[0m:[38;5;10m[49m           String(pid),
+[0m[49m[38;5;10m+       43[0m:[38;5;10m[49m           "-o",
+[0m[49m[38;5;10m+       44[0m:[38;5;10m[49m           "args=",
+[0m[49m[38;5;10m+       45[0m:[38;5;10m[49m         ]);
+[0m[49m[38;5;10m+       46[0m:[38;5;10m[49m         return stdout.includes("kiro-cli");
+[0m[49m[38;5;10m+       47[0m:[38;5;10m[49m       } catch {
+[0m[49m[38;5;10m+       48[0m:[38;5;10m[49m         return false;
+[0m[49m[39m   55,  49[0m:[39m[49m       }
+[0m[49m[38;5;9m-  56     [0m:[38;5;9m[49m       const alive = await isProcessRunning(pid);
+[0m[49m[38;5;9m-  57     [0m:[38;5;9m[49m       return alive ? null : { file, pid };
+[0m[49m[38;5;9m-  58     [0m:[38;5;9m[49m     }),
+[0m[49m[38;5;9m-  59     [0m:[38;5;9m[49m   );
+[0m[49m[38;5;9m-  60     [0m:[38;5;9m[49m   const staleFiles = checked.filter(
+[0m[49m[38;5;9m-  61     [0m:[38;5;9m[49m     (entry): entry is { file: string; pid: number } => entry !== null,
+[0m[49m[38;5;9m-  62     [0m:[38;5;9m[49m   );
+[0m[49m[38;5;10m+       50[0m:[38;5;10m[49m     },
+[0m[49m[39m   63,  51[0m:[39m[49m 
+[0m[49m[38;5;9m-  64     [0m:[38;5;9m[49m   await Promise.all(
+[0m[49m[38;5;9m-  65     [0m:[38;5;9m[49m     staleFiles.map(async ({ file, pid }) => {
+[0m[49m[38;5;10m+       52[0m:[38;5;10m[49m     async cleanStaleSessions(): Promise<void> {
+[0m[49m[38;5;10m+       53[0m:[38;5;10m[49m       const dataDir = deps.weaverDir();
+[0m[49m[38;5;10m+       54[0m:[38;5;10m[49m       let entries: string[];
+[0m[49m[39m   66,  55[0m:[39m[49m       try {
+[0m[49m[38;5;9m-  67     [0m:[38;5;9m[49m         await unlink(join(dataDir, file));
+[0m[49m[38;5;9m-  68     [0m:[38;5;9m[49m         log({
+[0m[49m[38;5;9m-  69     [0m:[38;5;9m[49m           timestamp: new Date().toISOString(),
+[0m[49m[38;5;9m-  70     [0m:[38;5;9m[49m           event: "stale_session_cleaned",
+[0m[49m[38;5;9m-  71     [0m:[38;5;9m[49m           pid,
+[0m[49m[38;5;9m-  72     [0m:[38;5;9m[49m           file,
+[0m[49m[38;5;9m-  73     [0m:[38;5;9m[49m         });
+[0m[49m[38;5;10m+       56[0m:[38;5;10m[49m         entries = await readdir(dataDir);
+[0m[49m[39m   74,  57[0m:[39m[49m       } catch {
+[0m[49m[38;5;9m-  75     [0m:[38;5;9m[49m         // File may have been removed between readdir and unlink
+[0m[49m[38;5;10m+       58[0m:[38;5;10m[49m         return;
+[0m[49m[39m   76,  59[0m:[39m[49m       }
+[0m[49m[38;5;9m-  77     [0m:[38;5;9m[49m     }),
+[0m[49m[38;5;9m-  78     [0m:[38;5;9m[49m   );
+[0m[49m[38;5;9m-  79     [0m:[38;5;9m[49m }
+[0m[49m[39m   80,  60[0m:[39m[49m 
+[0m[49m[38;5;9m-  81     [0m:[38;5;9m[49m export function startStaleSessionCleanup(): void {
+[0m[49m[38;5;9m-  82     [0m:[38;5;9m[49m   cleanStaleSessions();
+[0m[49m[38;5;9m-  83     [0m:[38;5;9m[49m   cleanupInterval = setInterval(cleanStaleSessions, CLEANUP_INTERVAL_MS);
+[0m[49m[38;5;9m-  84     [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+       61[0m:[38;5;10m[49m       const sessionFiles = entries.filter((f) =>
+[0m[49m[38;5;10m+       62[0m:[38;5;10m[49m         f.startsWith(".current-session-"),
+[0m[49m[38;5;10m+       63[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+       64[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+       65[0m:[38;5;10m[49m       const checked = await Promise.all(
+[0m[49m[38;5;10m+       66[0m:[38;5;10m[49m         sessionFiles.map(async (file) => {
+[0m[49m[38;5;10m+       67[0m:[38;5;10m[49m           const pid = parseInt(file.replace(".current-session-", ""), 10);
+[0m[49m[38;5;10m+       68[0m:[38;5;10m[49m           if (isNaN(pid)) {
+[0m[49m[38;5;10m+       69[0m:[38;5;10m[49m             return null;
+[0m[49m[38;5;10m+       70[0m:[38;5;10m[49m           }
+[0m[49m[38;5;10m+       71[0m:[38;5;10m[49m           const alive = await manager.isProcessRunning(pid);
+[0m[49m[38;5;10m+       72[0m:[38;5;10m[49m           return alive ? null : { file, pid };
+[0m[49m[38;5;10m+       73[0m:[38;5;10m[49m         }),
+[0m[49m[38;5;10m+       74[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+       75[0m:[38;5;10m[49m       const staleFiles = checked.filter(
+[0m[49m[38;5;10m+       76[0m:[38;5;10m[49m         (entry): entry is { file: string; pid: number } => entry !== null,
+[0m[49m[38;5;10m+       77[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+       78[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+       79[0m:[38;5;10m[49m       await Promise.all(
+[0m[49m[38;5;10m+       80[0m:[38;5;10m[49m         staleFiles.map(async ({ file, pid }) => {
+[0m[49m[38;5;10m+       81[0m:[38;5;10m[49m           try {
+[0m[49m[38;5;10m+       82[0m:[38;5;10m[49m             await unlink(join(dataDir, file));
+[0m[49m[38;5;10m+       83[0m:[38;5;10m[49m             deps.log({
+[0m[49m[38;5;10m+       84[0m:[38;5;10m[49m               timestamp: new Date().toISOString(),
+[0m[49m[38;5;10m+       85[0m:[38;5;10m[49m               event: "stale_session_cleaned",
+[0m[49m[38;5;10m+       86[0m:[38;5;10m[49m               pid,
+[0m[49m[38;5;10m+       87[0m:[38;5;10m[49m               file,
+[0m[49m[38;5;10m+       88[0m:[38;5;10m[49m             });
+[0m[49m[38;5;10m+       89[0m:[38;5;10m[49m           } catch {
+[0m[49m[38;5;10m+       90[0m:[38;5;10m[49m             // File may have been removed between readdir and unlink
+[0m[49m[38;5;10m+       91[0m:[38;5;10m[49m           }
+[0m[49m[38;5;10m+       92[0m:[38;5;10m[49m         }),
+[0m[49m[38;5;10m+       93[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+       94[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+       95[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+       96[0m:[38;5;10m[49m     startStaleSessionCleanup(): void {
+[0m[49m[38;5;10m+       97[0m:[38;5;10m[49m       manager.cleanStaleSessions();
+[0m[49m[38;5;10m+       98[0m:[38;5;10m[49m       cleanupInterval = setInterval(
+[0m[49m[38;5;10m+       99[0m:[38;5;10m[49m         () => manager.cleanStaleSessions(),
+[0m[49m[38;5;10m+      100[0m:[38;5;10m[49m         CLEANUP_INTERVAL_MS,
+[0m[49m[38;5;10m+      101[0m:[38;5;10m[49m       );
+[0m[49m[38;5;10m+      102[0m:[38;5;10m[49m     },
+[0m[49m[38;5;10m+      103[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      104[0m:[38;5;10m[49m     startPidPolling(onSessionClosed: (sessionId: string) => void): void {
+[0m[49m[38;5;10m+      105[0m:[38;5;10m[49m       const poll = async () => {
+[0m[49m[38;5;10m+      106[0m:[38;5;10m[49m         const sessions = await deps.readSessions();
+[0m[49m[38;5;10m+      107[0m:[38;5;10m[49m         const results = await Promise.all(
+[0m[49m[38;5;10m+      108[0m:[38;5;10m[49m           sessions.map(async (s) => ({
+[0m[49m[38;5;10m+      109[0m:[38;5;10m[49m             session: s,
+[0m[49m[38;5;10m+      110[0m:[38;5;10m[49m             alive: await manager.isProcessRunning(s.pid),
+[0m[49m[38;5;10m+      111[0m:[38;5;10m[49m           })),
+[0m[49m[38;5;10m+      112[0m:[38;5;10m[49m         );
+[0m[49m[38;5;10m+      113[0m:[38;5;10m[49m         const currentPids = new Set(
+[0m[49m[38;5;10m+      114[0m:[38;5;10m[49m           results.filter((r) => r.alive).map((r) => r.session.pid),
+[0m[49m[38;5;10m+      115[0m:[38;5;10m[49m         );
+[0m[49m[38;5;10m+      116[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      117[0m:[38;5;10m[49m         openPids.forEach((pid) => {
+[0m[49m[38;5;10m+      118[0m:[38;5;10m[49m           if (currentPids.has(pid)) {
+[0m[49m[38;5;10m+      119[0m:[38;5;10m[49m             return;
+[0m[49m[38;5;10m+      120[0m:[38;5;10m[49m           }
+[0m[49m[38;5;10m+      121[0m:[38;5;10m[49m           const session = sessions.find((s) => s.pid === pid);
+[0m[49m[38;5;10m+      122[0m:[38;5;10m[49m           if (session) {
+[0m[49m[38;5;10m+      123[0m:[38;5;10m[49m             onSessionClosed(session.id);
+[0m[49m[38;5;10m+      124[0m:[38;5;10m[49m           }
+[0m[49m[38;5;10m+      125[0m:[38;5;10m[49m         });
+[0m[49m[39m   85, 126[0m:[39m[49m 
+[0m[49m[38;5;9m-  86     [0m:[38;5;9m[49m export function startPidPolling(
+[0m[49m[38;5;9m-  87     [0m:[38;5;9m[49m   onSessionClosed: (sessionId: string) => void,
+[0m[49m[38;5;9m-  88     [0m:[38;5;9m[49m ): void {
+[0m[49m[38;5;9m-  89     [0m:[38;5;9m[49m   const poll = async () => {
+[0m[49m[38;5;9m-  90     [0m:[38;5;9m[49m     const sessions = await readSessions();
+[0m[49m[38;5;9m-  91     [0m:[38;5;9m[49m     const results = await Promise.all(
+[0m[49m[38;5;9m-  92     [0m:[38;5;9m[49m       sessions.map(async (s) => ({
+[0m[49m[38;5;9m-  93     [0m:[38;5;9m[49m         session: s,
+[0m[49m[38;5;9m-  94     [0m:[38;5;9m[49m         alive: await isProcessRunning(s.pid),
+[0m[49m[38;5;9m-  95     [0m:[38;5;9m[49m       })),
+[0m[49m[38;5;9m-  96     [0m:[38;5;9m[49m     );
+[0m[49m[38;5;9m-  97     [0m:[38;5;9m[49m     const currentPids = new Set(
+[0m[49m[38;5;9m-  98     [0m:[38;5;9m[49m       results.filter((r) => r.alive).map((r) => r.session.pid),
+[0m[49m[38;5;9m-  99     [0m:[38;5;9m[49m     );
+[0m[49m[38;5;10m+      127[0m:[38;5;10m[49m         openPids.clear();
+[0m[49m[38;5;10m+      128[0m:[38;5;10m[49m         currentPids.forEach((pid) => openPids.add(pid));
+[0m[49m[38;5;10m+      129[0m:[38;5;10m[49m       };
+[0m[49m[38;5;10m+      130[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      131[0m:[38;5;10m[49m       poll();
+[0m[49m[38;5;10m+      132[0m:[38;5;10m[49m       pidPollInterval = setInterval(poll, PID_POLL_INTERVAL_MS);
+[0m[49m[38;5;10m+      133[0m:[38;5;10m[49m     },
+[0m[49m[39m  100, 134[0m:[39m[49m 
+[0m[49m[38;5;9m- 101     [0m:[38;5;9m[49m     openPids.forEach((pid) => {
+[0m[49m[38;5;9m- 102     [0m:[38;5;9m[49m       if (currentPids.has(pid)) {
+[0m[49m[38;5;9m- 103     [0m:[38;5;9m[49m         return;
+[0m[49m[38;5;10m+      135[0m:[38;5;10m[49m     stopStaleSessionCleanup(): void {
+[0m[49m[38;5;10m+      136[0m:[38;5;10m[49m       if (cleanupInterval) {
+[0m[49m[38;5;10m+      137[0m:[38;5;10m[49m         clearInterval(cleanupInterval);
+[0m[49m[38;5;10m+      138[0m:[38;5;10m[49m         cleanupInterval = null;
+[0m[49m[39m  104, 139[0m:[39m[49m       }
+[0m[49m[38;5;9m- 105     [0m:[38;5;9m[49m       const session = sessions.find((s) => s.pid === pid);
+[0m[49m[38;5;9m- 106     [0m:[38;5;9m[49m       if (session) {
+[0m[49m[38;5;9m- 107     [0m:[38;5;9m[49m         onSessionClosed(session.id);
+[0m[49m[38;5;10m+      140[0m:[38;5;10m[49m       if (pidPollInterval) {
+[0m[49m[38;5;10m+      141[0m:[38;5;10m[49m         clearInterval(pidPollInterval);
+[0m[49m[38;5;10m+      142[0m:[38;5;10m[49m         pidPollInterval = null;
+[0m[49m[39m  108, 143[0m:[39m[49m       }
+[0m[49m[38;5;9m- 109     [0m:[38;5;9m[49m     });
+[0m[49m[38;5;9m- 110     [0m:[38;5;9m[49m 
+[0m[49m[38;5;9m- 111     [0m:[38;5;9m[49m     openPids.clear();
+[0m[49m[38;5;9m- 112     [0m:[38;5;9m[49m     currentPids.forEach((pid) => openPids.add(pid));
+[0m[49m[38;5;10m+      144[0m:[38;5;10m[49m     },
+[0m[49m[39m  113, 145[0m:[39m[49m   };
+[0m[49m[39m  114, 146[0m:[39m[49m 
+[0m[49m[38;5;9m- 115     [0m:[38;5;9m[49m   poll();
+[0m[49m[38;5;9m- 116     [0m:[38;5;9m[49m   pidPollInterval = setInterval(poll, PID_POLL_INTERVAL_MS);
+[0m[49m[38;5;10m+      147[0m:[38;5;10m[49m   return manager;
+[0m[49m[39m  117, 148[0m:[39m[49m }
+[0m[49m[39m  118, 149[0m:[39m[49m 
+[0m[49m[38;5;9m- 119     [0m:[38;5;9m[49m export function stopStaleSessionCleanup(): void {
+[0m[49m[38;5;9m- 120     [0m:[38;5;9m[49m   if (cleanupInterval) {
+[0m[49m[38;5;9m- 121     [0m:[38;5;9m[49m     clearInterval(cleanupInterval);
+[0m[49m[38;5;9m- 122     [0m:[38;5;9m[49m     cleanupInterval = null;
+[0m[49m[38;5;9m- 123     [0m:[38;5;9m[49m   }
+[0m[49m[38;5;9m- 124     [0m:[38;5;9m[49m   if (pidPollInterval) {
+[0m[49m[38;5;9m- 125     [0m:[38;5;9m[49m     clearInterval(pidPollInterval);
+[0m[49m[38;5;9m- 126     [0m:[38;5;9m[49m     pidPollInterval = null;
+[0m[49m[38;5;9m- 127     [0m:[38;5;9m[49m   }
+[0m[49m[38;5;9m- 128     [0m:[38;5;9m[49m }
+[0m[49m[38;5;10m+      150[0m:[38;5;10m[49m // Default instance wired to real implementations
+[0m[49m[38;5;10m+      151[0m:[38;5;10m[49m import { readSessions } from "./sessions";
+[0m[49m[38;5;10m+      152[0m:[38;5;10m[49m import { log } from "../../utils/logger";
+[0m[49m[38;5;10m+      153[0m:[38;5;10m[49m import { weaverDir } from "@weaver/shared/paths";
+[0m[49m[38;5;10m+      154[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      155[0m:[38;5;10m[49m const defaultManager = createLifecycleManager({ readSessions, log, weaverDir });
+[0m[49m[38;5;10m+      156[0m:[38;5;10m[49m export const {
+[0m[49m[38;5;10m+      157[0m:[38;5;10m[49m   isProcessRunning,
+[0m[49m[38;5;10m+      158[0m:[38;5;10m[49m   cleanStaleSessions,
+[0m[49m[38;5;10m+      159[0m:[38;5;10m[49m   startStaleSessionCleanup,
+[0m[49m[38;5;10m+      160[0m:[38;5;10m[49m   startPidPolling,
+[0m[49m[38;5;10m+      161[0m:[38;5;10m[49m   stopStaleSessionCleanup,
+[0m[49m[38;5;10m+      162[0m:[38;5;10m[49m } = defaultManager;
+[0m[K
+Replacing: [38;5;141mserver/src/services/storage/lifecycle.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.52 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[38;5;12mI'll share my reasoning process[0m[38;5;244m (using tool: thinking)[0m: Wait, I have the imports at the bottom of the file after the function. TypeScript/ESM requires imports at the top level. Let me restructure - I'll move the imports to the top but only use them for the default instance wiring at the bottom. The factory function itself uses deps, not the imports directly.
+
+Actually, in ESM, imports must be at the top of the file. They can't be in the middle. Let me fix this.
+
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141mserver/src/services/storage/lifecycle.ts[0m[38;5;244m (using tool: write)[0m
+
+[49m[39m    1,   1[0m:[39m[49m import { readdir, unlink } from "node:fs/promises";
+[0m[49m[39m    2,   2[0m:[39m[49m import { execFile } from "node:child_process";
+[0m[49m[39m    3,   3[0m:[39m[49m import { promisify } from "node:util";
+[0m[49m[39m    4,   4[0m:[39m[49m import { join } from "node:path";
+[0m[49m[39m    5,   5[0m:[39m[49m import type { Session } from "@weaver/shared/types";
+[0m[49m[39m    6,   6[0m:[39m[49m import type { LogEntry } from "../../utils/logger";
+[0m[49m[38;5;10m+        7[0m:[38;5;10m[49m import { readSessions } from "./sessions";
+[0m[49m[38;5;10m+        8[0m:[38;5;10m[49m import { log } from "../../utils/logger";
+[0m[49m[38;5;10m+        9[0m:[38;5;10m[49m import { weaverDir } from "@weaver/shared/paths";
+[0m[49m[39m    7,  10[0m:[39m[49m 
+[0m[49m[39m    8,  11[0m:[39m[49m const execFileAsync = promisify(execFile);
+[0m[49m[39m    9,  12[0m:[39m[49m 
+[0m[49m[39m   10,  13[0m:[39m[49m const CLEANUP_INTERVAL_MS = 5 * 60 * 1000;
+[0m[49m[39m   11,  14[0m:[39m[49m const PID_POLL_INTERVAL_MS = 30 * 1000;
+[0m[49m[39m   12,  15[0m:[39m[49m 
+[0m[49m[39m   13,  16[0m:[39m[49m export interface LifecycleManager {
+[0m[49m[39m   14,  17[0m:[39m[49m   isProcessRunning(pid: number): Promise<boolean>;
+[0m[49m[39m   15,  18[0m:[39m[49m   cleanStaleSessions(): Promise<void>;
+[0m[49m[39m   16,  19[0m:[39m[49m   startStaleSessionCleanup(): void;
+[0m[49m[39m   17,  20[0m:[39m[49m   startPidPolling(onSessionClosed: (sessionId: string) => void): void;
+[0m[49m[39m   18,  21[0m:[39m[49m   stopStaleSessionCleanup(): void;
+[0m[49m[39m   19,  22[0m:[39m[49m }
+[0m[49m[39m   20,  23[0m:[39m[49m 
+[0m[49m[39m   21,  24[0m:[39m[49m export interface LifecycleDeps {
+[0m[49m[39m   22,  25[0m:[39m[49m   readSessions: () => Promise<Session[]>;
+[0m[49m[39m   23,  26[0m:[39m[49m   log: (entry: LogEntry) => void;
+[0m[49m[39m   24,  27[0m:[39m[49m   weaverDir: () => string;
+[0m[49m[39m   25,  28[0m:[39m[49m }
+[0m[49m[39m   26,  29[0m:[39m[49m 
+[0m[49m[39m   27,  30[0m:[39m[49m export function createLifecycleManager(deps: LifecycleDeps): LifecycleManager {
+[0m[49m[39m   28,  31[0m:[39m[49m   let cleanupInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[39m   29,  32[0m:[39m[49m   let pidPollInterval: ReturnType<typeof setInterval> | null = null;
+[0m[49m[39m   30,  33[0m:[39m[49m   const openPids = new Set<number>();
+[0m[49m[39m   31,  34[0m:[39m[49m 
+[0m[49m[39m   32,  35[0m:[39m[49m   const manager: LifecycleManager = {
+[0m[49m[39m   33,  36[0m:[39m[49m     async isProcessRunning(pid: number): Promise<boolean> {
+[0m[49m[39m   34,  37[0m:[39m[49m       try {
+[0m[49m[39m   35,  38[0m:[39m[49m         process.kill(pid, 0);
+[0m[49m[39m   36,  39[0m:[39m[49m       } catch {
+[0m[49m[39m   37,  40[0m:[39m[49m         return false;
+[0m[49m[39m   38,  41[0m:[39m[49m       }
+[0m[49m[39m   39,  42[0m:[39m[49m       try {
+[0m[49m[39m   40,  43[0m:[39m[49m         const { stdout } = await execFileAsync("ps", [
+[0m[49m[39m   41,  44[0m:[39m[49m           "-p",
+[0m[49m[39m   42,  45[0m:[39m[49m           String(pid),
+[0m[49m[39m   43,  46[0m:[39m[49m           "-o",
+[0m[49m[39m   44,  47[0m:[39m[49m           "args=",
+[0m[49m[39m   45,  48[0m:[39m[49m         ]);
+[0m[49m[39m   46,  49[0m:[39m[49m         return stdout.includes("kiro-cli");
+[0m[49m[39m   47,  50[0m:[39m[49m       } catch {
+[0m[49m[39m   48,  51[0m:[39m[49m         return false;
+[0m[49m[39m   49,  52[0m:[39m[49m       }
+[0m[49m[39m   50,  53[0m:[39m[49m     },
+[0m[49m[39m   51,  54[0m:[39m[49m 
+[0m[49m[39m   52,  55[0m:[39m[49m     async cleanStaleSessions(): Promise<void> {
+[0m[49m[39m   53,  56[0m:[39m[49m       const dataDir = deps.weaverDir();
+[0m[49m[39m   54,  57[0m:[39m[49m       let entries: string[];
+[0m[49m[39m   55,  58[0m:[39m[49m       try {
+[0m[49m[39m   56,  59[0m:[39m[49m         entries = await readdir(dataDir);
+[0m[49m[39m   57,  60[0m:[39m[49m       } catch {
+[0m[49m[39m   58,  61[0m:[39m[49m         return;
+[0m[49m[39m   59,  62[0m:[39m[49m       }
+[0m[49m[39m   60,  63[0m:[39m[49m 
+[0m[49m[39m   61,  64[0m:[39m[49m       const sessionFiles = entries.filter((f) =>
+[0m[49m[39m   62,  65[0m:[39m[49m         f.startsWith(".current-session-"),
+[0m[49m[39m   63,  66[0m:[39m[49m       );
+[0m[49m[39m   64,  67[0m:[39m[49m 
+[0m[49m[39m   65,  68[0m:[39m[49m       const checked = await Promise.all(
+[0m[49m[39m   66,  69[0m:[39m[49m         sessionFiles.map(async (file) => {
+[0m[49m[39m   67,  70[0m:[39m[49m           const pid = parseInt(file.replace(".current-session-", ""), 10);
+[0m[49m[39m   68,  71[0m:[39m[49m           if (isNaN(pid)) {
+[0m[49m[39m   69,  72[0m:[39m[49m             return null;
+[0m[49m[39m   70,  73[0m:[39m[49m           }
+[0m[49m[39m   71,  74[0m:[39m[49m           const alive = await manager.isProcessRunning(pid);
+[0m[49m[39m   72,  75[0m:[39m[49m           return alive ? null : { file, pid };
+[0m[49m[39m   73,  76[0m:[39m[49m         }),
+[0m[49m[39m   74,  77[0m:[39m[49m       );
+[0m[49m[39m   75,  78[0m:[39m[49m       const staleFiles = checked.filter(
+[0m[49m[39m   76,  79[0m:[39m[49m         (entry): entry is { file: string; pid: number } => entry !== null,
+[0m[49m[39m   77,  80[0m:[39m[49m       );
+[0m[49m[39m   78,  81[0m:[39m[49m 
+[0m[49m[39m   79,  82[0m:[39m[49m       await Promise.all(
+[0m[49m[39m   80,  83[0m:[39m[49m         staleFiles.map(async ({ file, pid }) => {
+[0m[49m[39m   81,  84[0m:[39m[49m           try {
+[0m[49m[39m   82,  85[0m:[39m[49m             await unlink(join(dataDir, file));
+[0m[49m[39m   83,  86[0m:[39m[49m             deps.log({
+[0m[49m[39m   84,  87[0m:[39m[49m               timestamp: new Date().toISOString(),
+[0m[49m[39m   85,  88[0m:[39m[49m               event: "stale_session_cleaned",
+[0m[49m[39m   86,  89[0m:[39m[49m               pid,
+[0m[49m[39m   87,  90[0m:[39m[49m               file,
+[0m[49m[39m   88,  91[0m:[39m[49m             });
+[0m[49m[39m   89,  92[0m:[39m[49m           } catch {
+[0m[49m[39m   90,  93[0m:[39m[49m             // File may have been removed between readdir and unlink
+[0m[49m[39m   91,  94[0m:[39m[49m           }
+[0m[49m[39m   92,  95[0m:[39m[49m         }),
+[0m[49m[39m   93,  96[0m:[39m[49m       );
+[0m[49m[39m   94,  97[0m:[39m[49m     },
+[0m[49m[39m   95,  98[0m:[39m[49m 
+[0m[49m[39m   96,  99[0m:[39m[49m     startStaleSessionCleanup(): void {
+[0m[49m[39m   97, 100[0m:[39m[49m       manager.cleanStaleSessions();
+[0m[49m[39m   98, 101[0m:[39m[49m       cleanupInterval = setInterval(
+[0m[49m[39m   99, 102[0m:[39m[49m         () => manager.cleanStaleSessions(),
+[0m[49m[39m  100, 103[0m:[39m[49m         CLEANUP_INTERVAL_MS,
+[0m[49m[39m  101, 104[0m:[39m[49m       );
+[0m[49m[39m  102, 105[0m:[39m[49m     },
+[0m[49m[39m  103, 106[0m:[39m[49m 
+[0m[49m[39m  104, 107[0m:[39m[49m     startPidPolling(onSessionClosed: (sessionId: string) => void): void {
+[0m[49m[39m  105, 108[0m:[39m[49m       const poll = async () => {
+[0m[49m[39m  106, 109[0m:[39m[49m         const sessions = await deps.readSessions();
+[0m[49m[39m  107, 110[0m:[39m[49m         const results = await Promise.all(
+[0m[49m[39m  108, 111[0m:[39m[49m           sessions.map(async (s) => ({
+[0m[49m[39m  109, 112[0m:[39m[49m             session: s,
+[0m[49m[39m  110, 113[0m:[39m[49m             alive: await manager.isProcessRunning(s.pid),
+[0m[49m[39m  111, 114[0m:[39m[49m           })),
+[0m[49m[39m  112, 115[0m:[39m[49m         );
+[0m[49m[39m  113, 116[0m:[39m[49m         const currentPids = new Set(
+[0m[49m[39m  114, 117[0m:[39m[49m           results.filter((r) => r.alive).map((r) => r.session.pid),
+[0m[49m[39m  115, 118[0m:[39m[49m         );
+[0m[49m[39m  116, 119[0m:[39m[49m 
+[0m[49m[39m  117, 120[0m:[39m[49m         openPids.forEach((pid) => {
+[0m[49m[39m  118, 121[0m:[39m[49m           if (currentPids.has(pid)) {
+[0m[49m[39m  119, 122[0m:[39m[49m             return;
+[0m[49m[39m  120, 123[0m:[39m[49m           }
+[0m[49m[39m  121, 124[0m:[39m[49m           const session = sessions.find((s) => s.pid === pid);
+[0m[49m[39m  122, 125[0m:[39m[49m           if (session) {
+[0m[49m[39m  123, 126[0m:[39m[49m             onSessionClosed(session.id);
+[0m[49m[39m  124, 127[0m:[39m[49m           }
+[0m[49m[39m  125, 128[0m:[39m[49m         });
+[0m[49m[39m  126, 129[0m:[39m[49m 
+[0m[49m[39m  127, 130[0m:[39m[49m         openPids.clear();
+[0m[49m[39m  128, 131[0m:[39m[49m         currentPids.forEach((pid) => openPids.add(pid));
+[0m[49m[39m  129, 132[0m:[39m[49m       };
+[0m[49m[39m  130, 133[0m:[39m[49m 
+[0m[49m[39m  131, 134[0m:[39m[49m       poll();
+[0m[49m[39m  132, 135[0m:[39m[49m       pidPollInterval = setInterval(poll, PID_POLL_INTERVAL_MS);
+[0m[49m[39m  133, 136[0m:[39m[49m     },
+[0m[49m[39m  134, 137[0m:[39m[49m 
+[0m[49m[39m  135, 138[0m:[39m[49m     stopStaleSessionCleanup(): void {
+[0m[49m[39m  136, 139[0m:[39m[49m       if (cleanupInterval) {
+[0m[49m[39m  137, 140[0m:[39m[49m         clearInterval(cleanupInterval);
+[0m[49m[39m  138, 141[0m:[39m[49m         cleanupInterval = null;
+[0m[49m[39m  139, 142[0m:[39m[49m       }
+[0m[49m[39m  140, 143[0m:[39m[49m       if (pidPollInterval) {
+[0m[49m[39m  141, 144[0m:[39m[49m         clearInterval(pidPollInterval);
+[0m[49m[39m  142, 145[0m:[39m[49m         pidPollInterval = null;
+[0m[49m[39m  143, 146[0m:[39m[49m       }
+[0m[49m[39m  144, 147[0m:[39m[49m     },
+[0m[49m[39m  145, 148[0m:[39m[49m   };
+[0m[49m[39m  146, 149[0m:[39m[49m 
+[0m[49m[39m  147, 150[0m:[39m[49m   return manager;
+[0m[49m[39m  148, 151[0m:[39m[49m }
+[0m[49m[38;5;9m- 149     [0m:[38;5;9m[49m 
+[0m[49m[38;5;9m- 150     [0m:[38;5;9m[49m // Default instance wired to real implementations
+[0m[49m[38;5;9m- 151     [0m:[38;5;9m[49m import { readSessions } from "./sessions";
+[0m[49m[38;5;9m- 152     [0m:[38;5;9m[49m import { log } from "../../utils/logger";
+[0m[49m[38;5;9m- 153     [0m:[38;5;9m[49m import { weaverDir } from "@weaver/shared/paths";
+[0m[49m[39m  154, 152[0m:[39m[49m 
+[0m[49m[39m  155, 153[0m:[39m[49m const defaultManager = createLifecycleManager({ readSessions, log, weaverDir });
+[0m[49m[39m  156, 154[0m:[39m[49m export const {
+[0m[49m[39m  157, 155[0m:[39m[49m   isProcessRunning,
+[0m[49m[39m  158, 156[0m:[39m[49m   cleanStaleSessions,
+[0m[49m[39m  159, 157[0m:[39m[49m   startStaleSessionCleanup,
+[0m[49m[39m  160, 158[0m:[39m[49m   startPidPolling,
+[0m[49m[39m  161, 159[0m:[39m[49m   stopStaleSessionCleanup,
+[0m[49m[39m  162, 160[0m:[39m[49m } = defaultManager;
+[0m[K
+Replacing: [38;5;141mserver/src/services/storage/lifecycle.ts[0m
+[38;5;244m - Completed in 0.1s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.00 s
+[0m[?25l[0m[38;5;141m> [0mNow let me verify the barrel exports still work:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mReading file: [38;5;141m/Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts[0m, all lines[38;5;244m (using tool: read)[0m
+[38;5;10m ✓ [0mSuccessfully read [38;5;244m260 bytes[0m from /Users/thompsnt/Documents/weaver/server/src/services/storage/index.ts
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0mGood — the barrel re-exports the same named symbols, which still exist. No changes needed.[0m[0m
+[0m[0m
+[38;5;252m[1m## 3. Write comprehensive lifecycle tests[0m[0m
+[0m[0m
+Now let me write the test file:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141mserver/src/services/storage/lifecycle.test.ts[0m[38;5;244m (using tool: write)[0m
+
+[49m[39m   1,   1[0m:[39m[49m import "../../__tests__/mocks/fs";
+[0m[49m[39m   2,   2[0m:[39m[49m import "../../__tests__/mocks/child-process";
+[0m[49m[38;5;9m-  3     [0m:[38;5;9m[49m import "../../__tests__/mocks/logger";
+[0m[49m[39m   4,   3[0m:[39m[49m 
+[0m[49m[39m   5,   4[0m:[39m[49m import { readdir, unlink } from "node:fs/promises";
+[0m[49m[39m   6,   5[0m:[39m[49m import { execFile } from "node:child_process";
+[0m[49m[38;5;9m-  7     [0m:[38;5;9m[49m import { cleanStaleSessions, isProcessRunning } from "./lifecycle";
+[0m[49m[38;5;10m+       6[0m:[38;5;10m[49m import type { Session } from "@weaver/shared/types";
+[0m[49m[38;5;10m+       7[0m:[38;5;10m[49m import {
+[0m[49m[38;5;10m+       8[0m:[38;5;10m[49m   createLifecycleManager,
+[0m[49m[38;5;10m+       9[0m:[38;5;10m[49m   type LifecycleDeps,
+[0m[49m[38;5;10m+      10[0m:[38;5;10m[49m   type LifecycleManager,
+[0m[49m[38;5;10m+      11[0m:[38;5;10m[49m } from "./lifecycle";
+[0m[49m[39m   8,  12[0m:[39m[49m 
+[0m[49m[38;5;9m-  9     [0m:[38;5;9m[49m beforeEach(() => {
+[0m[49m[38;5;9m- 10     [0m:[38;5;9m[49m   vi.clearAllMocks();
+[0m[49m[38;5;9m- 11     [0m:[38;5;9m[49m });
+[0m[49m[38;5;10m+      13[0m:[38;5;10m[49m function makeSession(overrides: Partial<Session> = {}): Session {
+[0m[49m[38;5;10m+      14[0m:[38;5;10m[49m   return {
+[0m[49m[38;5;10m+      15[0m:[38;5;10m[49m     id: "sess-1",
+[0m[49m[38;5;10m+      16[0m:[38;5;10m[49m     pid: 100,
+[0m[49m[38;5;10m+      17[0m:[38;5;10m[49m     customName: null,
+[0m[49m[38;5;10m+      18[0m:[38;5;10m[49m     cwd: "/tmp",
+[0m[49m[38;5;10m+      19[0m:[38;5;10m[49m     agentName: null,
+[0m[49m[38;5;10m+      20[0m:[38;5;10m[49m     startTime: "t1",
+[0m[49m[38;5;10m+      21[0m:[38;5;10m[49m     lastEventTime: "t1",
+[0m[49m[38;5;10m+      22[0m:[38;5;10m[49m     ...overrides,
+[0m[49m[38;5;10m+      23[0m:[38;5;10m[49m   };
+[0m[49m[38;5;10m+      24[0m:[38;5;10m[49m }
+[0m[49m[39m  12,  25[0m:[39m[49m 
+[0m[49m[38;5;9m- 13     [0m:[38;5;9m[49m /** Helper: make the mocked execFile invoke its callback with the given stdout */
+[0m[49m[38;5;10m+      26[0m:[38;5;10m[49m function makeDeps(overrides: Partial<LifecycleDeps> = {}): LifecycleDeps {
+[0m[49m[38;5;10m+      27[0m:[38;5;10m[49m   return {
+[0m[49m[38;5;10m+      28[0m:[38;5;10m[49m     readSessions: vi.fn<() => Promise<Session[]>>().mockResolvedValue([]),
+[0m[49m[38;5;10m+      29[0m:[38;5;10m[49m     log: vi.fn(),
+[0m[49m[38;5;10m+      30[0m:[38;5;10m[49m     weaverDir: vi.fn<() => string>().mockReturnValue("/fake/.weaver"),
+[0m[49m[38;5;10m+      31[0m:[38;5;10m[49m     ...overrides,
+[0m[49m[38;5;10m+      32[0m:[38;5;10m[49m   };
+[0m[49m[38;5;10m+      33[0m:[38;5;10m[49m }
+[0m[49m[38;5;10m+      34[0m:[38;5;10m[49m 
+[0m[49m[39m  14,  35[0m:[39m[49m function mockExecFileOutput(stdout: string) {
+[0m[49m[39m  15,  36[0m:[39m[49m   vi.mocked(execFile).mockImplementation(((
+[0m[49m[39m  16,  37[0m:[39m[49m     _cmd: unknown,
+[0m[49m[39m  17,  38[0m:[39m[49m     _args: unknown,
+[0m[49m[39m  18,  39[0m:[39m[49m     cb: (err: Error | null, result: { stdout: string; stderr: string }) => void,
+[0m[49m[39m  19,  40[0m:[39m[49m   ) => {
+[0m[49m[39m  20,  41[0m:[39m[49m     cb(null, { stdout, stderr: "" });
+[0m[49m[39m  21,  42[0m:[39m[49m   }) as any);
+[0m[49m[39m  22,  43[0m:[39m[49m }
+[0m[49m[39m  23,  44[0m:[39m[49m 
+[0m[49m[38;5;10m+      45[0m:[38;5;10m[49m beforeEach(() => {
+[0m[49m[38;5;10m+      46[0m:[38;5;10m[49m   vi.clearAllMocks();
+[0m[49m[38;5;10m+      47[0m:[38;5;10m[49m   vi.useRealTimers();
+[0m[49m[38;5;10m+      48[0m:[38;5;10m[49m });
+[0m[49m[38;5;10m+      49[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      50[0m:[38;5;10m[49m describe("isProcessRunning", () => {
+[0m[49m[38;5;10m+      51[0m:[38;5;10m[49m   it("returns true for a running kiro-cli process", async () => {
+[0m[49m[38;5;10m+      52[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      53[0m:[38;5;10m[49m     mockExecFileOutput("/path/to/kiro-cli chat --agent dev\n");
+[0m[49m[38;5;10m+      54[0m:[38;5;10m[49m     await expect(manager.isProcessRunning(process.pid)).resolves.toBe(true);
+[0m[49m[38;5;10m+      55[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      56[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      57[0m:[38;5;10m[49m   it("returns false for a non-existent process", async () => {
+[0m[49m[38;5;10m+      58[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      59[0m:[38;5;10m[49m     await expect(manager.isProcessRunning(999999)).resolves.toBe(false);
+[0m[49m[38;5;10m+      60[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      61[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      62[0m:[38;5;10m[49m   it("returns false when PID is alive but not kiro-cli (PID reuse)", async () => {
+[0m[49m[38;5;10m+      63[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      64[0m:[38;5;10m[49m     mockExecFileOutput("/usr/bin/some-other-process\n");
+[0m[49m[38;5;10m+      65[0m:[38;5;10m[49m     await expect(manager.isProcessRunning(process.pid)).resolves.toBe(false);
+[0m[49m[38;5;10m+      66[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+      67[0m:[38;5;10m[49m });
+[0m[49m[38;5;10m+      68[0m:[38;5;10m[49m 
+[0m[49m[39m  24,  69[0m:[39m[49m describe("cleanStaleSessions", () => {
+[0m[49m[39m  25,  70[0m:[39m[49m   it("deletes marker files for dead PIDs", async () => {
+[0m[49m[38;5;9m- 26     [0m:[38;5;9m[49m     const deadPid = 999999;
+[0m[49m[38;5;10m+      71[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      72[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(false);
+[0m[49m[39m  27,  73[0m:[39m[49m     vi.mocked(readdir).mockResolvedValue([
+[0m[49m[38;5;9m- 28     [0m:[38;5;9m[49m       `.current-session-${deadPid}`,
+[0m[49m[38;5;10m+      74[0m:[38;5;10m[49m       ".current-session-999",
+[0m[49m[39m  29,  75[0m:[39m[49m     ] as any);
+[0m[49m[39m  30,  76[0m:[39m[49m 
+[0m[49m[38;5;9m- 31     [0m:[38;5;9m[49m     await cleanStaleSessions();
+[0m[49m[38;5;10m+      77[0m:[38;5;10m[49m     await manager.cleanStaleSessions();
+[0m[49m[39m  32,  78[0m:[39m[49m     expect(vi.mocked(unlink)).toHaveBeenCalledWith(
+[0m[49m[38;5;9m- 33     [0m:[38;5;9m[49m       expect.stringContaining(`.current-session-${deadPid}`),
+[0m[49m[38;5;10m+      79[0m:[38;5;10m[49m       expect.stringContaining(".current-session-999"),
+[0m[49m[39m  34,  80[0m:[39m[49m     );
+[0m[49m[39m  35,  81[0m:[39m[49m   });
+[0m[49m[39m  36,  82[0m:[39m[49m 
+[0m[49m[38;5;9m- 37     [0m:[38;5;9m[49m   it("leaves marker files for live PIDs", async () => {
+[0m[49m[38;5;9m- 38     [0m:[38;5;9m[49m     const livePid = process.pid;
+[0m[49m[38;5;10m+      83[0m:[38;5;10m[49m   it("preserves marker files for live PIDs", async () => {
+[0m[49m[38;5;10m+      84[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      85[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(true);
+[0m[49m[39m  39,  86[0m:[39m[49m     vi.mocked(readdir).mockResolvedValue([
+[0m[49m[38;5;9m- 40     [0m:[38;5;9m[49m       `.current-session-${livePid}`,
+[0m[49m[38;5;10m+      87[0m:[38;5;10m[49m       ".current-session-123",
+[0m[49m[39m  41,  88[0m:[39m[49m     ] as any);
+[0m[49m[38;5;9m- 42     [0m:[38;5;9m[49m     mockExecFileOutput(`/path/to/kiro-cli chat\n`);
+[0m[49m[39m  43,  89[0m:[39m[49m 
+[0m[49m[38;5;9m- 44     [0m:[38;5;9m[49m     await cleanStaleSessions();
+[0m[49m[38;5;10m+      90[0m:[38;5;10m[49m     await manager.cleanStaleSessions();
+[0m[49m[39m  45,  91[0m:[39m[49m     expect(vi.mocked(unlink)).not.toHaveBeenCalled();
+[0m[49m[39m  46,  92[0m:[39m[49m   });
+[0m[49m[39m  47,  93[0m:[39m[49m 
+[0m[49m[38;5;10m+      94[0m:[38;5;10m[49m   it("handles readdir failure gracefully", async () => {
+[0m[49m[38;5;10m+      95[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[38;5;10m+      96[0m:[38;5;10m[49m     vi.mocked(readdir).mockRejectedValue(new Error("no such directory"));
+[0m[49m[38;5;10m+      97[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+      98[0m:[38;5;10m[49m     await expect(manager.cleanStaleSessions()).resolves.toBeUndefined();
+[0m[49m[38;5;10m+      99[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     100[0m:[38;5;10m[49m 
+[0m[49m[39m  48, 101[0m:[39m[49m   it("skips files with non-numeric PID suffixes", async () => {
+[0m[49m[38;5;10m+     102[0m:[38;5;10m[49m     const manager = createLifecycleManager(makeDeps());
+[0m[49m[39m  49, 103[0m:[39m[49m     vi.mocked(readdir).mockResolvedValue([".current-session-abc"] as any);
+[0m[49m[39m  50, 104[0m:[39m[49m 
+[0m[49m[38;5;9m- 51     [0m:[38;5;9m[49m     await cleanStaleSessions();
+[0m[49m[38;5;10m+     105[0m:[38;5;10m[49m     await manager.cleanStaleSessions();
+[0m[49m[39m  52, 106[0m:[39m[49m     expect(vi.mocked(unlink)).not.toHaveBeenCalled();
+[0m[49m[39m  53, 107[0m:[39m[49m   });
+[0m[49m[39m  54, 108[0m:[39m[49m 
+[0m[49m[38;5;9m- 55     [0m:[38;5;9m[49m   it("handles readdir failure gracefully", async () => {
+[0m[49m[38;5;9m- 56     [0m:[38;5;9m[49m     vi.mocked(readdir).mockRejectedValue(new Error("no such directory"));
+[0m[49m[38;5;10m+     109[0m:[38;5;10m[49m   it("logs when a stale file is deleted", async () => {
+[0m[49m[38;5;10m+     110[0m:[38;5;10m[49m     const deps = makeDeps();
+[0m[49m[38;5;10m+     111[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     112[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(false);
+[0m[49m[38;5;10m+     113[0m:[38;5;10m[49m     vi.mocked(readdir).mockResolvedValue([
+[0m[49m[38;5;10m+     114[0m:[38;5;10m[49m       ".current-session-999",
+[0m[49m[38;5;10m+     115[0m:[38;5;10m[49m     ] as any);
+[0m[49m[39m  57, 116[0m:[39m[49m 
+[0m[49m[38;5;9m- 58     [0m:[38;5;9m[49m     await expect(cleanStaleSessions()).resolves.toBeUndefined();
+[0m[49m[38;5;10m+     117[0m:[38;5;10m[49m     await manager.cleanStaleSessions();
+[0m[49m[38;5;10m+     118[0m:[38;5;10m[49m     expect(deps.log).toHaveBeenCalledWith(
+[0m[49m[38;5;10m+     119[0m:[38;5;10m[49m       expect.objectContaining({ event: "stale_session_cleaned", pid: 999 }),
+[0m[49m[38;5;10m+     120[0m:[38;5;10m[49m     );
+[0m[49m[39m  59, 121[0m:[39m[49m   });
+[0m[49m[39m  60, 122[0m:[39m[49m });
+[0m[49m[39m  61, 123[0m:[39m[49m 
+[0m[49m[38;5;9m- 62     [0m:[38;5;9m[49m describe("isProcessRunning", () => {
+[0m[49m[38;5;9m- 63     [0m:[38;5;9m[49m   it("returns true for a running kiro-cli process", async () => {
+[0m[49m[38;5;9m- 64     [0m:[38;5;9m[49m     mockExecFileOutput(`/path/to/kiro-cli chat --agent dev\n`);
+[0m[49m[38;5;9m- 65     [0m:[38;5;9m[49m     await expect(isProcessRunning(process.pid)).resolves.toBe(true);
+[0m[49m[38;5;10m+     124[0m:[38;5;10m[49m describe("startPidPolling", () => {
+[0m[49m[38;5;10m+     125[0m:[38;5;10m[49m   it("calls readSessions on first invocation", async () => {
+[0m[49m[38;5;10m+     126[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     127[0m:[38;5;10m[49m     const deps = makeDeps();
+[0m[49m[38;5;10m+     128[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     129[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(true);
+[0m[49m[38;5;10m+     130[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     131[0m:[38;5;10m[49m     manager.startPidPolling(vi.fn());
+[0m[49m[38;5;10m+     132[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     133[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     134[0m:[38;5;10m[49m     expect(deps.readSessions).toHaveBeenCalledTimes(1);
+[0m[49m[38;5;10m+     135[0m:[38;5;10m[49m     manager.stopStaleSessionCleanup();
+[0m[49m[39m  66, 136[0m:[39m[49m   });
+[0m[49m[39m  67, 137[0m:[39m[49m 
+[0m[49m[38;5;9m- 68     [0m:[38;5;9m[49m   it("returns false for a non-existent process", async () => {
+[0m[49m[38;5;9m- 69     [0m:[38;5;9m[49m     await expect(isProcessRunning(999999)).resolves.toBe(false);
+[0m[49m[38;5;10m+     138[0m:[38;5;10m[49m   it("calls onSessionClosed when a PID disappears between polls", async () => {
+[0m[49m[38;5;10m+     139[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     140[0m:[38;5;10m[49m     const session = makeSession({ id: "s1", pid: 100 });
+[0m[49m[38;5;10m+     141[0m:[38;5;10m[49m     const deps = makeDeps({
+[0m[49m[38;5;10m+     142[0m:[38;5;10m[49m       readSessions: vi.fn<() => Promise<Session[]>>().mockResolvedValue([session]),
+[0m[49m[38;5;10m+     143[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     144[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     145[0m:[38;5;10m[49m     const isRunning = vi
+[0m[49m[38;5;10m+     146[0m:[38;5;10m[49m       .spyOn(manager, "isProcessRunning")
+[0m[49m[38;5;10m+     147[0m:[38;5;10m[49m       .mockResolvedValue(true);
+[0m[49m[38;5;10m+     148[0m:[38;5;10m[49m     const onClosed = vi.fn();
+[0m[49m[38;5;10m+     149[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     150[0m:[38;5;10m[49m     manager.startPidPolling(onClosed);
+[0m[49m[38;5;10m+     151[0m:[38;5;10m[49m     // First poll: PID 100 alive → tracked
+[0m[49m[38;5;10m+     152[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     153[0m:[38;5;10m[49m     expect(onClosed).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+     154[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     155[0m:[38;5;10m[49m     // Second poll: PID 100 dead
+[0m[49m[38;5;10m+     156[0m:[38;5;10m[49m     isRunning.mockResolvedValue(false);
+[0m[49m[38;5;10m+     157[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(30_000);
+[0m[49m[38;5;10m+     158[0m:[38;5;10m[49m     expect(onClosed).toHaveBeenCalledWith("s1");
+[0m[49m[38;5;10m+     159[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     160[0m:[38;5;10m[49m     manager.stopStaleSessionCleanup();
+[0m[49m[38;5;10m+     161[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     162[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     163[0m:[38;5;10m[49m   it("tracks new PIDs without calling onSessionClosed", async () => {
+[0m[49m[38;5;10m+     164[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     165[0m:[38;5;10m[49m     const session = makeSession({ id: "s1", pid: 200 });
+[0m[49m[38;5;10m+     166[0m:[38;5;10m[49m     const deps = makeDeps({
+[0m[49m[38;5;10m+     167[0m:[38;5;10m[49m       readSessions: vi.fn<() => Promise<Session[]>>().mockResolvedValue([session]),
+[0m[49m[38;5;10m+     168[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     169[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     170[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(true);
+[0m[49m[38;5;10m+     171[0m:[38;5;10m[49m     const onClosed = vi.fn();
+[0m[49m[38;5;10m+     172[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     173[0m:[38;5;10m[49m     manager.startPidPolling(onClosed);
+[0m[49m[38;5;10m+     174[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     175[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     176[0m:[38;5;10m[49m     expect(onClosed).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+     177[0m:[38;5;10m[49m     manager.stopStaleSessionCleanup();
+[0m[49m[38;5;10m+     178[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     179[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     180[0m:[38;5;10m[49m   it("correctly tracks PID transitions across multiple poll cycles", async () => {
+[0m[49m[38;5;10m+     181[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     182[0m:[38;5;10m[49m     const s1 = makeSession({ id: "s1", pid: 100 });
+[0m[49m[38;5;10m+     183[0m:[38;5;10m[49m     const s2 = makeSession({ id: "s2", pid: 200 });
+[0m[49m[38;5;10m+     184[0m:[38;5;10m[49m     const readSessions = vi.fn<() => Promise<Session[]>>();
+[0m[49m[38;5;10m+     185[0m:[38;5;10m[49m     const deps = makeDeps({ readSessions });
+[0m[49m[38;5;10m+     186[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     187[0m:[38;5;10m[49m     const isRunning = vi.spyOn(manager, "isProcessRunning");
+[0m[49m[38;5;10m+     188[0m:[38;5;10m[49m     const onClosed = vi.fn();
+[0m[49m[38;5;10m+     189[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     190[0m:[38;5;10m[49m     // Poll 1: both alive
+[0m[49m[38;5;10m+     191[0m:[38;5;10m[49m     readSessions.mockResolvedValue([s1, s2]);
+[0m[49m[38;5;10m+     192[0m:[38;5;10m[49m     isRunning.mockResolvedValue(true);
+[0m[49m[38;5;10m+     193[0m:[38;5;10m[49m     manager.startPidPolling(onClosed);
+[0m[49m[38;5;10m+     194[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     195[0m:[38;5;10m[49m     expect(onClosed).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+     196[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     197[0m:[38;5;10m[49m     // Poll 2: PID 100 dies, PID 200 still alive
+[0m[49m[38;5;10m+     198[0m:[38;5;10m[49m     isRunning.mockImplementation(async (pid) => pid === 200);
+[0m[49m[38;5;10m+     199[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(30_000);
+[0m[49m[38;5;10m+     200[0m:[38;5;10m[49m     expect(onClosed).toHaveBeenCalledWith("s1");
+[0m[49m[38;5;10m+     201[0m:[38;5;10m[49m     expect(onClosed).toHaveBeenCalledTimes(1);
+[0m[49m[38;5;10m+     202[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     203[0m:[38;5;10m[49m     // Poll 3: PID 200 also dies
+[0m[49m[38;5;10m+     204[0m:[38;5;10m[49m     isRunning.mockResolvedValue(false);
+[0m[49m[38;5;10m+     205[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(30_000);
+[0m[49m[38;5;10m+     206[0m:[38;5;10m[49m     expect(onClosed).toHaveBeenCalledWith("s2");
+[0m[49m[38;5;10m+     207[0m:[38;5;10m[49m     expect(onClosed).toHaveBeenCalledTimes(2);
+[0m[49m[38;5;10m+     208[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     209[0m:[38;5;10m[49m     manager.stopStaleSessionCleanup();
+[0m[49m[38;5;10m+     210[0m:[38;5;10m[49m   });
+[0m[49m[38;5;10m+     211[0m:[38;5;10m[49m });
+[0m[49m[38;5;10m+     212[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     213[0m:[38;5;10m[49m describe("stopStaleSessionCleanup", () => {
+[0m[49m[38;5;10m+     214[0m:[38;5;10m[49m   it("clears all intervals", async () => {
+[0m[49m[38;5;10m+     215[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     216[0m:[38;5;10m[49m     const deps = makeDeps();
+[0m[49m[38;5;10m+     217[0m:[38;5;10m[49m     const manager = createLifecycleManager(deps);
+[0m[49m[38;5;10m+     218[0m:[38;5;10m[49m     vi.spyOn(manager, "isProcessRunning").mockResolvedValue(true);
+[0m[49m[38;5;10m+     219[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     220[0m:[38;5;10m[49m     manager.startStaleSessionCleanup();
+[0m[49m[38;5;10m+     221[0m:[38;5;10m[49m     manager.startPidPolling(vi.fn());
+[0m[49m[38;5;10m+     222[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     223[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     224[0m:[38;5;10m[49m     manager.stopStaleSessionCleanup();
+[0m[49m[38;5;10m+     225[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     226[0m:[38;5;10m[49m     // After stopping, advancing time should not trigger more calls
+[0m[49m[38;5;10m+     227[0m:[38;5;10m[49m     const callCount = vi.mocked(deps.readSessions).mock.calls.length;
+[0m[49m[38;5;10m+     228[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(300_000);
+[0m[49m[38;5;10m+     229[0m:[38;5;10m[49m     expect(vi.mocked(deps.readSessions).mock.calls.length).toBe(callCount);
+[0m[49m[39m  70, 230[0m:[39m[49m   });
+[0m[49m[38;5;10m+     231[0m:[38;5;10m[49m });
+[0m[49m[39m  71, 232[0m:[39m[49m 
+[0m[49m[38;5;9m- 72     [0m:[38;5;9m[49m   it("returns false when PID is alive but not kiro-cli (PID reuse)", async () => {
+[0m[49m[38;5;9m- 73     [0m:[38;5;9m[49m     mockExecFileOutput(`/usr/bin/some-other-process\n`);
+[0m[49m[38;5;9m- 74     [0m:[38;5;9m[49m     await expect(isProcessRunning(process.pid)).resolves.toBe(false);
+[0m[49m[38;5;10m+     233[0m:[38;5;10m[49m describe("isolated instances", () => {
+[0m[49m[38;5;10m+     234[0m:[38;5;10m[49m   it("two managers have independent state", async () => {
+[0m[49m[38;5;10m+     235[0m:[38;5;10m[49m     vi.useFakeTimers();
+[0m[49m[38;5;10m+     236[0m:[38;5;10m[49m     const session = makeSession({ id: "s1", pid: 100 });
+[0m[49m[38;5;10m+     237[0m:[38;5;10m[49m     const deps1 = makeDeps({
+[0m[49m[38;5;10m+     238[0m:[38;5;10m[49m       readSessions: vi.fn<() => Promise<Session[]>>().mockResolvedValue([session]),
+[0m[49m[38;5;10m+     239[0m:[38;5;10m[49m     });
+[0m[49m[38;5;10m+     240[0m:[38;5;10m[49m     const deps2 = makeDeps();
+[0m[49m[38;5;10m+     241[0m:[38;5;10m[49m     const m1 = createLifecycleManager(deps1);
+[0m[49m[38;5;10m+     242[0m:[38;5;10m[49m     const m2 = createLifecycleManager(deps2);
+[0m[49m[38;5;10m+     243[0m:[38;5;10m[49m     vi.spyOn(m1, "isProcessRunning").mockResolvedValue(true);
+[0m[49m[38;5;10m+     244[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     245[0m:[38;5;10m[49m     m1.startPidPolling(vi.fn());
+[0m[49m[38;5;10m+     246[0m:[38;5;10m[49m     await vi.advanceTimersByTimeAsync(0);
+[0m[49m[38;5;10m+     247[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     248[0m:[38;5;10m[49m     // m2 was never started, so its deps should not have been called
+[0m[49m[38;5;10m+     249[0m:[38;5;10m[49m     expect(deps2.readSessions).not.toHaveBeenCalled();
+[0m[49m[38;5;10m+     250[0m:[38;5;10m[49m 
+[0m[49m[38;5;10m+     251[0m:[38;5;10m[49m     m1.stopStaleSessionCleanup();
+[0m[49m[39m  75, 252[0m:[39m[49m   });
+[0m[49m[39m  76, 253[0m:[39m[49m });
+[0m[K
+Replacing: [38;5;141mserver/src/services/storage/lifecycle.test.ts[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m2.08 s
+[0m[?25l[0m[38;5;141m> [0mNow let's run the tests to see if everything passes:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx vitest run src/services/storage/lifecycle.test.ts 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run lifecycle tests
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/server[39m
+
+ [32m✓[39m src/services/storage/lifecycle.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m14 passed[39m[22m[90m (14)[39m
+[2m   Start at [22m 00:34:30
+[2m   Duration [22m 136ms[2m (transform 45ms, setup 0ms, import 60ms, tests 7ms, environment 0ms)[22m
+
+[38;5;244m - Completed in 0.726s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.24 s
+[0m[?25l[0m[38;5;141m> [0mAll 14 lifecycle tests pass. Now let's run the sessions tests to make sure the refactor didn't break them:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx vitest run src/services/storage/sessions.test.ts 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run sessions tests
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/server[39m
+
+ [32m✓[39m src/services/storage/sessions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 00:34:34
+[2m   Duration [22m 145ms[2m (transform 53ms, setup 0ms, import 67ms, tests 5ms, environment 0ms)[22m
+
+[38;5;244m - Completed in 0.723s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mNow let's run the full server test suite:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx vitest run 2>&1[0m[38;5;244m (using tool: shell)[0m
+Purpose: Run all server tests
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/Users/thompsnt/Documents/weaver/server[39m
+
+ [32m✓[39m src/services/webhook/pending-tracker.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/webhook/dispatch.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/parse.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/discover.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/services/keep-awake.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/tool-calls.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/webhook/__tests__/webhook-advanced.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/helpers.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/webhook/__tests__/webhook-simple.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/delete.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 97[2mms[22m[39m
+ [32m✓[39m src/routes/skills/skills.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m src/routes/orphans/orphans.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 118[2mms[22m[39m
+ [32m✓[39m src/routes/events/events.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 127[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/list-skill-dirs.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/get-skill-detail.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/services/config/validators/field.test.ts [2m([22m[2m61 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/group-turns.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/services/file-cache/file-cache.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/assign.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/event-bus.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/delete.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/storage/lifecycle.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/services/storage/sessions.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/routes/config.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 151[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/sessions.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 129[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/build-graph.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/services/config/config.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/log-parser/activity.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/services/config/validators/validate-paths.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/orphan-storage/read.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/parse-skill.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/utils/atomic-write.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/webhook/context.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/utils.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/skill-uri.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/resolve-configured.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32m✓[39m src/services/webhook/session-tracker.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/agent-config.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/kiro-paths.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+ [32m✓[39m src/routes/sessions/helpers.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-graph/category.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 2[2mms[22m[39m
+ [32m✓[39m src/services/skill-resolver/skill-name.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m42 passed[39m[22m[90m (42)[39m
+[2m      Tests [22m [1m[32m390 passed[39m[22m[90m (390)[39m
+[2m   Start at [22m 00:34:39
+[2m   Duration [22m 808ms[2m (transform 2.55s, setup 0ms, import 4.29s, tests 923ms, environment 2ms)[22m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[38;5;244m - Completed in 1.429s[0m
+
+⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mAll 42 test files pass (390 tests). Let me also verify the build works:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver/server && npx tsdown src/index.ts --dts 2>&1 | tail -5[0m[38;5;244m (using tool: shell)[0m
+Purpose: Verify server builds
+
+ [38;5;240m   │[0m 
+ [38;5;240m   │[0m [38;5;115mHelp[0m: Consider using indirect eval. For more information, check the documentation: https://rolldown.rs/guide/troubleshooting#avoiding-direct-eval
+[38;5;246m────╯[0m
+
+[32m✔[39m Build complete in [32m745ms[39m
+[38;5;244m - Completed in 1.283s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mBuild succeeds. Now let me commit the changes:[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver && git add server/src/services/storage/sessions.ts server/src/services/storage/lifecycle.ts server/src/services/storage/lifecycle.test.ts[0m[38;5;244m (using tool: shell)[0m
+Purpose: Stage the 3 changed files
+
+[38;5;244m - Completed in 0.45s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.16 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver && git diff --cached --stat[0m[38;5;244m (using tool: shell)[0m
+Purpose: Verify staged files
+
+ server/src/services/storage/lifecycle.test.ts | 241 ++++++++++++++++++++++----
+ server/src/services/storage/lifecycle.ts      | 236 ++++++++++++++-----------
+ server/src/services/storage/sessions.ts       |  96 ++++++----
+ 3 files changed, 403 insertions(+), 170 deletions(-)
+[38;5;244m - Completed in 0.38s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI will run the following command: [38;5;141mcd /Users/thompsnt/Documents/weaver && git commit -m "feat(storage): factory pattern for sessions + lifecycle with lifecycle tests (step 5)"[0m[38;5;244m (using tool: shell)[0m
+Purpose: Commit the changes
+
+[weaver-audit-fixes a07fef4] feat(storage): factory pattern for sessions + lifecycle with lifecycle tests (step 5)
+ 3 files changed, 403 insertions(+), 170 deletions(-)
+[38;5;244m - Completed in 0.57s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0m[?25l[0m[38;5;141m> [0m[38;5;252m[1m## 4. Update progress[0m[0m
+[?25l[0m[0m⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.17 s
+[0mI'll create the following file: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m[38;5;244m (using tool: write)[0m
+
+[48;2;43;48;59m[39m   1,  1[0m:[39m[48;2;43;48;59m [38;2;143;161;179m#[38;2;192;197;206m [38;2;143;161;179mProgress[K
+[0m[48;2;43;48;59m[39m   2,  2[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m   3,  3[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mStatus[K
+[0m[48;2;43;48;59m[39m   4,  4[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m   5,  5[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m Step [38;2;192;197;206m|[38;2;192;197;206m Description [38;2;192;197;206m|[38;2;192;197;206m Status [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m   6,  6[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m------[38;2;192;197;206m|[38;2;192;197;206m-------------[38;2;192;197;206m|[38;2;192;197;206m--------[38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m   7,  7[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 1 [38;2;192;197;206m|[38;2;192;197;206m Atomic file writes [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m   8,  8[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 2 [38;2;192;197;206m|[38;2;192;197;206m Async [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;192;197;206m [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m   9,  9[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 3 [38;2;192;197;206m|[38;2;192;197;206m Structured logging: print/log split [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  10, 10[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 4 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: event-bus [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[48;2;79;40;40m[39m- 11    [0m:[39m[48;2;36;25;28m [38;2;192;197;206m|[38;2;192;197;206m 5 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: storage (sessions + lifecycle) + lifecycle tests [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;40;67;43m[39m+     11[0m:[39m[48;2;24;38;30m [38;2;192;197;206m|[38;2;192;197;206m 5 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: storage (sessions + lifecycle) + lifecycle tests [38;2;192;197;206m|[38;2;192;197;206m ✅ Complete [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  12, 12[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 6 [38;2;192;197;206m|[38;2;192;197;206m Factory pattern: keep-awake + log-parser cache [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  13, 13[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 7 [38;2;192;197;206m|[38;2;192;197;206m Zod route validation [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  14, 14[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 8 [38;2;192;197;206m|[38;2;192;197;206m CherrypickPage tests [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  15, 15[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 9 [38;2;192;197;206m|[38;2;192;197;206m SkillDetailPage hook extraction [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  16, 16[0m:[39m[48;2;43;48;59m [38;2;192;197;206m|[38;2;192;197;206m 10 [38;2;192;197;206m|[38;2;192;197;206m SessionDetailPage hook extraction [38;2;192;197;206m|[38;2;192;197;206m ⬜ Not started [38;2;192;197;206m|[K
+[0m[48;2;43;48;59m[39m  17, 17[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  18, 18[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mCompleted tasks[K
+[0m[48;2;43;48;59m[39m  19, 19[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  20, 20[0m:[39m[48;2;43;48;59m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 1: Atomic file writes[K
+[0m[48;2;43;48;59m[39m  21, 21[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mCreated [38;2;163;190;140m`[38;2;163;190;140mserver/src/utils/atomic-write.ts[38;2;163;190;140m`[38;2;191;97;106m with [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile()[38;2;163;190;140m`[38;2;191;97;106m (write to [38;2;163;190;140m`[38;2;163;190;140m.tmp[38;2;163;190;140m`[38;2;191;97;106m then [38;2;163;190;140m`[38;2;163;190;140mrename[38;2;163;190;140m`[38;2;191;97;106m)[K
+[0m[48;2;43;48;59m[39m  22, 22[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mserver/src/utils/atomic-write.test.ts[38;2;163;190;140m`[38;2;191;97;106m with 4 tests (happy path, ordering, writeFile error propagation, rename error propagation)[K
+[0m[48;2;43;48;59m[39m  23, 23[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Updated 3 call sites:[K
+[0m[48;2;43;48;59m[39m  24, 24[0m:[39m[48;2;43;48;59m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mwriteSessions()[38;2;163;190;140m`[38;2;191;97;106m now uses [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  25, 25[0m:[39m[48;2;43;48;59m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/config/config.ts[38;2;163;190;140m`[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mwriteConfig()[38;2;163;190;140m`[38;2;191;97;106m now uses [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  26, 26[0m:[39m[48;2;43;48;59m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/orphan-storage/helpers.ts[38;2;163;190;140m`[38;2;191;97;106m — [38;2;163;190;140m`[38;2;163;190;140mwriteRemaining()[38;2;163;190;140m`[38;2;191;97;106m now uses [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  27, 27[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Added [38;2;163;190;140m`[38;2;163;190;140mrename[38;2;163;190;140m`[38;2;191;97;106m to shared fs mock ([38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/mocks/fs.ts[38;2;163;190;140m`[38;2;191;97;106m) since [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile[38;2;163;190;140m`[38;2;191;97;106m uses it[K
+[0m[48;2;43;48;59m[39m  28, 28[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Updated assertions in [38;2;163;190;140m`[38;2;163;190;140mhelpers.test.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mdelete.test.ts[38;2;163;190;140m`[38;2;191;97;106m to account for [38;2;163;190;140m`[38;2;163;190;140m.tmp[38;2;163;190;140m`[38;2;191;97;106m path and [38;2;163;190;140m`[38;2;163;190;140mutf-8[38;2;163;190;140m`[38;2;191;97;106m encoding arg from [38;2;163;190;140m`[38;2;163;190;140matomicWriteFile[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  29, 29[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m All 42 test files pass (380 tests), 0 failures[K
+[0m[48;2;43;48;59m[39m  30, 30[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  31, 31[0m:[39m[48;2;43;48;59m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 2: Async [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  32, 32[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  33, 33[0m:[39m[48;2;43;48;59m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 3: Structured logging — print/log split[K
+[0m[48;2;43;48;59m[39m  34, 34[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mCreated [38;2;163;190;140m`[38;2;163;190;140mcli/src/utils/output.ts[38;2;163;190;140m`[38;2;191;97;106m with [38;2;163;190;140m`[38;2;163;190;140mprint()[38;2;163;190;140m`[38;2;191;97;106m (stdout), [38;2;163;190;140m`[38;2;163;190;140mprintError()[38;2;163;190;140m`[38;2;191;97;106m (stderr, user-facing), [38;2;163;190;140m`[38;2;163;190;140mcliLog()[38;2;163;190;140m`[38;2;191;97;106m (stderr, structured JSON)[K
+[0m[48;2;43;48;59m[39m  35, 35[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/utils/logger.ts[38;2;163;190;140m`[38;2;191;97;106m with [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[38;2;191;97;106m (stderr, structured JSON) — stderr since stdout is reserved for kiro-cli[K
+[0m[48;2;43;48;59m[39m  36, 36[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/utils/logger.ts[38;2;163;190;140m`[38;2;191;97;106m with [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[38;2;191;97;106m (stdout, structured JSON) — stdout since desktop logs go to Electron[K
+[0m[48;2;43;48;59m[39m  37, 37[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Updated 7 CLI files: [38;2;163;190;140m`[38;2;163;190;140mconfig.ts[38;2;163;190;140m`[38;2;191;97;106m (14 calls), [38;2;163;190;140m`[38;2;163;190;140msession.ts[38;2;163;190;140m`[38;2;191;97;106m (9), [38;2;163;190;140m`[38;2;163;190;140mrename.ts[38;2;163;190;140m`[38;2;191;97;106m (5), [38;2;163;190;140m`[38;2;163;190;140mview.ts[38;2;163;190;140m`[38;2;191;97;106m (4), [38;2;163;190;140m`[38;2;163;190;140msync.ts[38;2;163;190;140m`[38;2;191;97;106m (3), [38;2;163;190;140m`[38;2;163;190;140mtoggle.ts[38;2;163;190;140m`[38;2;191;97;106m (3), [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m (2) — [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mprint()[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m → [38;2;163;190;140m`[38;2;163;190;140mprintError()[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  38, 38[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Updated 4 hook-handler files: [38;2;163;190;140m`[38;2;163;190;140mrun-inject.ts[38;2;163;190;140m`[38;2;191;97;106m (3 calls), [38;2;163;190;140m`[38;2;163;190;140mexit.ts[38;2;163;190;140m`[38;2;191;97;106m (1), [38;2;163;190;140m`[38;2;163;190;140mlogging.ts[38;2;163;190;140m`[38;2;191;97;106m (2 — including silent [38;2;163;190;140m`[38;2;163;190;140m.catch(() => {})[38;2;163;190;140m`[38;2;191;97;106m), [38;2;163;190;140m`[38;2;163;190;140mtest-runners.ts[38;2;163;190;140m`[38;2;191;97;106m (1) — all → structured [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  39, 39[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Updated 4 desktop files: [38;2;163;190;140m`[38;2;163;190;140minstall-cli.ts[38;2;163;190;140m`[38;2;191;97;106m (3 calls), [38;2;163;190;140m`[38;2;163;190;140mserver.ts[38;2;163;190;140m`[38;2;191;97;106m (2), [38;2;163;190;140m`[38;2;163;190;140mmain.ts[38;2;163;190;140m`[38;2;191;97;106m (1), [38;2;163;190;140m`[38;2;163;190;140msse.ts[38;2;163;190;140m`[38;2;191;97;106m (1) — all → structured [38;2;163;190;140m`[38;2;163;190;140mlog()[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  40, 40[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Design decision: CLI [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m calls are user-facing error messages (usage strings, validation errors), not diagnostic. Used [38;2;163;190;140m`[38;2;163;190;140mprintError()[38;2;163;190;140m`[38;2;191;97;106m (wraps [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m) to preserve test compatibility. [38;2;163;190;140m`[38;2;163;190;140mcliLog()[38;2;163;190;140m`[38;2;191;97;106m available for future structured diagnostic use.[K
+[0m[48;2;43;48;59m[39m  41, 41[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Zero raw [38;2;163;190;140m`[38;2;163;190;140mconsole.*[38;2;163;190;140m`[38;2;191;97;106m calls remain in source files (only in utility files themselves)[K
+[0m[48;2;43;48;59m[39m  42, 42[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m All tests pass: cli (36), hook-handler (135), server (380)[K
+[0m[48;2;43;48;59m[39m  43, 43[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  44, 44[0m:[39m[48;2;43;48;59m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 4: Factory pattern — event-bus[K
+[0m[48;2;43;48;59m[39m  45, 45[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mRefactored [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/event-bus.ts[38;2;163;190;140m`[38;2;191;97;106m to factory pattern following [38;2;163;190;140m`[38;2;163;190;140mcreatePendingTracker[38;2;163;190;140m`[38;2;191;97;106m reference[K
+[0m[48;2;43;48;59m[39m  46, 46[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Defined [38;2;163;190;140m`[38;2;163;190;140mEventBus[38;2;163;190;140m`[38;2;191;97;106m interface with 4 methods: [38;2;163;190;140m`[38;2;163;190;140msubscribe[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mbroadcast[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140memit[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140msseReply[38;2;163;190;140m`[K
+[0m[48;2;43;48;59m[39m  47, 47[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mcreateEventBus()[38;2;163;190;140m`[38;2;191;97;106m factory that encapsulates [38;2;163;190;140m`[38;2;163;190;140mlisteners[38;2;163;190;140m`[38;2;191;97;106m Set internally[K
+[0m[48;2;43;48;59m[39m  48, 48[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Default instance created at module level; 4 functions re-exported for backward compatibility[K
+[0m[48;2;43;48;59m[39m  49, 49[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Added try/catch in [38;2;163;190;140m`[38;2;163;190;140memit()[38;2;163;190;140m`[38;2;191;97;106m to prevent one broken listener from blocking others[K
+[0m[48;2;43;48;59m[39m  50, 50[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Added 3 new tests: isolated instances, unsubscribe, and listener error isolation[K
+[0m[48;2;43;48;59m[39m  51, 51[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m All 42 server test files pass (383 tests, up from 380)[K
+[0m[48;2;43;48;59m[39m  52, 52[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;40;67;43m[39m+     53[0m:[39m[48;2;24;38;30m [38;2;143;161;179m###[38;2;192;197;206m [38;2;143;161;179mStep 5: Factory pattern — storage (sessions + lifecycle) + lifecycle tests[K
+[0m[48;2;40;67;43m[39m+     54[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;191;97;106mRefactored [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/sessions.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     55[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Defined [38;2;163;190;140m`[38;2;163;190;140mSessionStore[38;2;163;190;140m`[38;2;191;97;106m interface with [38;2;163;190;140m`[38;2;163;190;140mensureDataDir[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mappendSession[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mwriteSessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140m_sessionCache[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     56[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mcreateSessionStore()[38;2;163;190;140m`[38;2;191;97;106m factory that encapsulates [38;2;163;190;140m`[38;2;163;190;140mFileCache[38;2;163;190;140m`[38;2;191;97;106m internally[K
+[0m[48;2;40;67;43m[39m+     57[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Default instance created at module level; all functions + [38;2;163;190;140m`[38;2;163;190;140m_sessionCache[38;2;163;190;140m`[38;2;191;97;106m re-exported for backward compatibility[K
+[0m[48;2;40;67;43m[39m+     58[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Refactored [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m:[K
+[0m[48;2;40;67;43m[39m+     59[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Defined [38;2;163;190;140m`[38;2;163;190;140mLifecycleManager[38;2;163;190;140m`[38;2;191;97;106m interface with 5 methods: [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mcleanStaleSessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstartStaleSessionCleanup[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mstopStaleSessionCleanup[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     60[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Defined [38;2;163;190;140m`[38;2;163;190;140mLifecycleDeps[38;2;163;190;140m`[38;2;191;97;106m interface for injectable dependencies: [38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlog[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mweaverDir[38;2;163;190;140m`[K
+[0m[48;2;40;67;43m[39m+     61[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Created [38;2;163;190;140m`[38;2;163;190;140mcreateLifecycleManager(deps)[38;2;163;190;140m`[38;2;191;97;106m factory that encapsulates [38;2;163;190;140m`[38;2;163;190;140mcleanupInterval[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mpidPollInterval[38;2;163;190;140m`[38;2;191;97;106m, and [38;2;163;190;140m`[38;2;163;190;140mopenPids[38;2;163;190;140m`[38;2;191;97;106m Set internally[K
+[0m[48;2;40;67;43m[39m+     62[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Internal method calls go through the [38;2;163;190;140m`[38;2;163;190;140mmanager[38;2;163;190;140m`[38;2;191;97;106m object reference (not closure), enabling [38;2;163;190;140m`[38;2;163;190;140mvi.spyOn()[38;2;163;190;140m`[38;2;191;97;106m in tests[K
+[0m[48;2;40;67;43m[39m+     63[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m Default instance wired to real implementations ([38;2;163;190;140m`[38;2;163;190;140mreadSessions[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140m./sessions[38;2;163;190;140m`[38;2;191;97;106m, [38;2;163;190;140m`[38;2;163;190;140mlog[38;2;163;190;140m`[38;2;191;97;106m from logger, [38;2;163;190;140m`[38;2;163;190;140mweaverDir[38;2;163;190;140m`[38;2;191;97;106m from shared)[K
+[0m[48;2;40;67;43m[39m+     64[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m All 5 functions re-exported for backward compatibility[K
+[0m[48;2;40;67;43m[39m+     65[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Rewrote [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/lifecycle.test.ts[38;2;163;190;140m`[38;2;191;97;106m with 14 tests using factory + injected deps:[K
+[0m[48;2;40;67;43m[39m+     66[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;191;97;106m: 3 tests (running kiro-cli → true, dead PID → false, PID reuse → false)[K
+[0m[48;2;40;67;43m[39m+     67[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mcleanStaleSessions[38;2;163;190;140m`[38;2;191;97;106m: 5 tests (deletes dead PIDs, preserves live PIDs, handles readdir failure, skips non-numeric suffixes, logs deletions)[K
+[0m[48;2;40;67;43m[39m+     68[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m: 4 tests (calls readSessions, onSessionClosed on PID disappearance, tracks new PIDs silently, multi-cycle PID transitions)[K
+[0m[48;2;40;67;43m[39m+     69[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mstopStaleSessionCleanup[38;2;163;190;140m`[38;2;191;97;106m: 1 test (clears all intervals)[K
+[0m[48;2;40;67;43m[39m+     70[0m:[39m[48;2;24;38;30m [38;2;191;97;106m  [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140misolated instances[38;2;163;190;140m`[38;2;191;97;106m: 1 test (two managers have independent state)[K
+[0m[48;2;40;67;43m[39m+     71[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Barrel [38;2;163;190;140m`[38;2;163;190;140mserver/src/services/storage/index.ts[38;2;163;190;140m`[38;2;191;97;106m unchanged — same symbols exported[K
+[0m[48;2;40;67;43m[39m+     72[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m All 42 server test files pass (390 tests), 0 failures[K
+[0m[48;2;40;67;43m[39m+     73[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m Server build succeeds[K
+[0m[48;2;40;67;43m[39m+     74[0m:[39m[48;2;24;38;30m [K
+[0m[48;2;43;48;59m[39m  53, 75[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mNotes for Next Agent[K
+[0m[48;2;43;48;59m[39m  54, 76[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140misProcessRunning[38;2;163;190;140m`[38;2;191;97;106m is now async everywhere. Any new code calling it must [38;2;163;190;140m`[38;2;163;190;140mawait[38;2;163;190;140m`[38;2;191;97;106m the result.[K
+[0m[48;2;43;48;59m[39m  55, 77[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m The [38;2;163;190;140m`[38;2;163;190;140mexecFile[38;2;163;190;140m`[38;2;191;97;106m mock in [38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/mocks/child-process.ts[38;2;163;190;140m`[38;2;191;97;106m is a bare [38;2;163;190;140m`[38;2;163;190;140mvi.fn()[38;2;163;190;140m`[38;2;191;97;106m. Tests that need to control its output should use [38;2;163;190;140m`[38;2;163;190;140mvi.mocked(execFile).mockImplementation(...)[38;2;163;190;140m`[38;2;191;97;106m with the callback pattern (3rd arg is [38;2;163;190;140m`[38;2;163;190;140m(err, result) => void[38;2;163;190;140m`[38;2;191;97;106m).[K
+[0m[48;2;43;48;59m[39m  56, 78[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m The shared services mock at [38;2;163;190;140m`[38;2;163;190;140mserver/src/__tests__/mocks/services.ts[38;2;163;190;140m`[38;2;191;97;106m has [38;2;163;190;140m`[38;2;163;190;140misProcessRunning: vi.fn().mockResolvedValue(false)[38;2;163;190;140m`[38;2;191;97;106m — route tests that need it alive should use [38;2;163;190;140m`[38;2;163;190;140m.mockResolvedValue(true)[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140m.mockImplementation((pid) => Promise.resolve(...))[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;43;48;59m[39m  57, 79[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m CLI output utilities are in [38;2;163;190;140m`[38;2;163;190;140mcli/src/utils/output.ts[38;2;163;190;140m`[38;2;191;97;106m: [38;2;163;190;140m`[38;2;163;190;140mprint()[38;2;163;190;140m`[38;2;191;97;106m (stdout), [38;2;163;190;140m`[38;2;163;190;140mprintError()[38;2;163;190;140m`[38;2;191;97;106m (stderr, user-facing), [38;2;163;190;140m`[38;2;163;190;140mcliLog()[38;2;163;190;140m`[38;2;191;97;106m (stderr, structured JSON). Use [38;2;163;190;140m`[38;2;163;190;140mprint[38;2;163;190;140m`[38;2;191;97;106m for user-facing messages, [38;2;163;190;140m`[38;2;163;190;140mprintError[38;2;163;190;140m`[38;2;191;97;106m for user-facing errors, [38;2;163;190;140m`[38;2;163;190;140mcliLog[38;2;163;190;140m`[38;2;191;97;106m for diagnostic/structured logs.[K
+[0m[48;2;43;48;59m[39m  58, 80[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Hook-handler structured logger is at [38;2;163;190;140m`[38;2;163;190;140mhook-handler/src/utils/logger.ts[38;2;163;190;140m`[38;2;191;97;106m — uses [38;2;163;190;140m`[38;2;163;190;140mconsole.error[38;2;163;190;140m`[38;2;191;97;106m (stderr) since stdout is reserved for kiro-cli output.[K
+[0m[48;2;43;48;59m[39m  59, 81[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m Desktop structured logger is at [38;2;163;190;140m`[38;2;163;190;140mdesktop/src/utils/logger.ts[38;2;163;190;140m`[38;2;191;97;106m — uses [38;2;163;190;140m`[38;2;163;190;140mconsole.log[38;2;163;190;140m`[38;2;191;97;106m (stdout) since desktop logs go to Electron's stdout.[K
+[0m[48;2;43;48;59m[39m  60, 82[0m:[39m[48;2;43;48;59m [38;2;191;97;106m-[38;2;191;97;106m All [38;2;163;190;140m`[38;2;163;190;140mLogEntry[38;2;163;190;140m`[38;2;191;97;106m objects require [38;2;163;190;140m`[38;2;163;190;140mtimestamp[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mevent[38;2;163;190;140m`[38;2;191;97;106m fields. The [38;2;163;190;140m`[38;2;163;190;140mtimestamp[38;2;163;190;140m`[38;2;191;97;106m is set at call site via [38;2;163;190;140m`[38;2;163;190;140mnew Date().toISOString()[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;40;67;43m[39m+     83[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m [38;2;163;190;140m`[38;2;163;190;140mcreateSessionStore()[38;2;163;190;140m`[38;2;191;97;106m is exported from [38;2;163;190;140m`[38;2;163;190;140msessions.ts[38;2;163;190;140m`[38;2;191;97;106m and [38;2;163;190;140m`[38;2;163;190;140mcreateLifecycleManager(deps)[38;2;163;190;140m`[38;2;191;97;106m from [38;2;163;190;140m`[38;2;163;190;140mlifecycle.ts[38;2;163;190;140m`[38;2;191;97;106m. These are NOT re-exported through the barrel [38;2;163;190;140m`[38;2;163;190;140mindex.ts[38;2;163;190;140m`[38;2;191;97;106m — import directly from the module file if needed.[K
+[0m[48;2;40;67;43m[39m+     84[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m The [38;2;163;190;140m`[38;2;163;190;140mLifecycleDeps[38;2;163;190;140m`[38;2;191;97;106m interface uses [38;2;163;190;140m`[38;2;163;190;140mLogEntry[38;2;163;190;140m`[38;2;191;97;106m type from [38;2;163;190;140m`[38;2;163;190;140m../../utils/logger[38;2;163;190;140m`[38;2;191;97;106m. Import it from there when creating mock deps.[K
+[0m[48;2;40;67;43m[39m+     85[0m:[39m[48;2;24;38;30m [38;2;191;97;106m-[38;2;191;97;106m In lifecycle tests, [38;2;163;190;140m`[38;2;163;190;140mvi.spyOn(manager, 'isProcessRunning')[38;2;163;190;140m`[38;2;191;97;106m works because internal calls go through the [38;2;163;190;140m`[38;2;163;190;140mmanager[38;2;163;190;140m`[38;2;191;97;106m object reference. This avoids needing module-level mocks for [38;2;163;190;140m`[38;2;163;190;140mnode:child_process[38;2;163;190;140m`[38;2;191;97;106m when testing [38;2;163;190;140m`[38;2;163;190;140mstartPidPolling[38;2;163;190;140m`[38;2;191;97;106m or [38;2;163;190;140m`[38;2;163;190;140mcleanStaleSessions[38;2;163;190;140m`[38;2;191;97;106m.[K
+[0m[48;2;43;48;59m[39m  61, 86[0m:[39m[48;2;43;48;59m [K
+[0m[48;2;43;48;59m[39m  62, 87[0m:[39m[48;2;43;48;59m [38;2;143;161;179m##[38;2;192;197;206m [38;2;143;161;179mOpen Questions / Blockers[K
+[0m[48;2;43;48;59m[39m  63, 88[0m:[39m[48;2;43;48;59m [38;2;192;197;206m(none)[K
+[0m[K
+Replacing: [38;5;141m../../Desktop/weaver-audit-fixes/progress.md[0m
+[38;5;244m - Completed in 0.0s[0m
+
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m0.25 s
+[0m[?25l[0m[38;5;141m> [0mStep 5 is complete. Here's a summary of what was done:[0m[0m
+[0m[0m
+[1mFiles modified (3):[22m[0m[0m
+- [38;5;10mserver/src/services/storage/sessions.ts[0m — Added [38;5;10mSessionStore[0m interface and [38;5;10mcreateSessionStore()[0m factory. FileCache is encapsulated inside the factory. Default instance + destructured exports preserve backward compatibility.[0m[0m
+- [38;5;10mserver/src/services/storage/lifecycle.ts[0m — Added [38;5;10mLifecycleManager[0m and [38;5;10mLifecycleDeps[0m interfaces. Created [38;5;10mcreateLifecycleManager(deps)[0m factory with dependency injection for [38;5;10mreadSessions[0m, [38;5;10mlog[0m, and [38;5;10mweaverDir[0m. Internal calls go through the [38;5;10mmanager[0m object reference so [38;5;10mvi.spyOn()[0m works in tests. Default instance wired to real implementations.[0m[0m
+- [38;5;10mserver/src/services/storage/lifecycle.test.ts[0m — Rewrote with 14 tests using factory + injected deps. Covers [38;5;10misProcessRunning[0m (3), [38;5;10mcleanStaleSessions[0m (5), [38;5;10mstartPidPolling[0m (4), [38;5;10mstopStaleSessionCleanup[0m (1), and isolated instances (1).[0m[0m
+[0m[0m
+[1mResults:[22m All 42 server test files pass (390 tests), server build succeeds, no regressions.[0m[0m
+⢀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠄⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢂⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡂⢘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠅⡘ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢃⠨ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡃⢐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡐ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠠ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⢀ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⡁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⢋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⡋⠁ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠍⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠋⠉ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠉⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⡙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠈⠩ [38;5;12m0[39m of [38;5;12m1[39m hooks finished⠀⢙ [38;5;12m0[39m of [38;5;12m1[39m hooks finished[1G[2K[?25l[38;5;12m[38;5;10m✓[39m [38;5;12m1[39m of [38;5;12m1[39m hooks finished in [38;5;11m3.72 s
+[0m[38;5;8m
+ ▸ Credits: 3.27 • Time: 4m 52s
+
+[0m[1G[0m[0m[?25h
